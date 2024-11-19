@@ -5,7 +5,7 @@ interface User {
     id: string;
     email: string | null | undefined;
     first_name?: string | null;
-    last_name?: string| null | undefined;
+    last_name?: string | null | undefined;
     // 添加其他用户字段
 }
 
@@ -19,6 +19,10 @@ interface AuthState {
 //     password: string;
 //     redirect?: string; // 可选参数，表示把用户重定向到某个页面
 // }
+
+// 关于存储登录状态：
+// 用户数据中有一个关键的数据叫做token（用来标识当前用户是否登录），而Token持续一段时间才会过期
+// Pinia的存储是基于内存的，刷新就会丢失，为了保持登录状态，就要做到刷新不丢失，需要配合持久化进行存储
 
 export const useAuth = defineStore("auth", {
     state: (): AuthState => ({
@@ -57,8 +61,9 @@ export const useAuth = defineStore("auth", {
                 // 注意一定要先判断directusUser.value是否存在，否则会报错
                 if (directusUser.value) {
                     // 使用解构赋值提取所需的字段
-                    const {id , email, first_name, last_name} = directusUser.value;
-                    this.user = {id , email, first_name, last_name};
+                    const { id, email, first_name, last_name } =
+                        directusUser.value;
+                    this.user = { id, email, first_name, last_name };
                 }
                 // Update the auth store with the user data
                 this.loggedIn = true;
@@ -104,8 +109,9 @@ export const useAuth = defineStore("auth", {
                 this.loggedIn = true;
                 if (directusUser.value) {
                     // 使用解构赋值提取所需的字段
-                    const {id , email, first_name, last_name} = directusUser.value;
-                    this.user = {id , email, first_name, last_name};
+                    const { id, email, first_name, last_name } =
+                        directusUser.value;
+                    this.user = { id, email, first_name, last_name };
                 }
             } catch (e) {
                 console.log(e);
@@ -115,4 +121,7 @@ export const useAuth = defineStore("auth", {
             this.$reset();
         },
     },
+    persist: true, // 持久化存储，这样刷新页面不会丢失登录状态
+    // 其实即使这里不做持久化，也能正常在刷新后做需要用户权限的操作，因为nuxt-directus会存储token。
+    // 但是如果不持久化，那么会影响要用到state的页面显示，因为刷新后state会重置。
 });

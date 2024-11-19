@@ -28,6 +28,9 @@ const onSubmit = async () => {
         <input type="password" placeholder="输入密码" v-model="password"/>
         <button @click="onSubmit">点击登录</button>
     </div>
+    <div>
+        <p>{{ isLoggedIn }}</p>
+    </div>
     <div style="margin-top: 55px" v-if="user"> 
         <h1>当前用户</h1> 
         <pre>{{ user }}</pre> 
