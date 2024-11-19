@@ -1,9 +1,9 @@
 <template>
     <div>
-        <h1>Registration</h1>
-        <input type="email" placeholder="Your E-Mail Address" v-model="email" />
-        <input type="password" placeholder="Your Password" v-model="password" />
-        <button @click="onSubmit">Register</button>
+        <h1>注册页</h1>
+        <input type="email" placeholder="输入邮箱" v-model="email" />
+        <input type="password" placeholder="输入密码" v-model="password" />
+        <button @click="onSubmit">点击注册</button>
     </div>
 </template>
 

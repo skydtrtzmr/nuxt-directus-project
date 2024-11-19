@@ -5,19 +5,18 @@
 <script setup lang="ts">
 const { createItems } = useDirectusItems();
 
-interface Product {
+interface Question {
     id?: number;
     title: string;
-    price: string;
 }
 
-const newProducts: Product[] = [
-    { title: "Banana", price: "0.29€" },
-    { title: "Vue.js Handbook", price: "29.99€"}
+const newQuestions: Question[] = [
+    { title: "Banana" },
+    { title: "Vue.js Handbook"}
 ];
 
-await createItems<Product>({
-    collection: "product",
-    items: newProducts
+await createItems<Question>({
+    collection: "questions",
+    items: newQuestions
 });
 </script>
