@@ -9,26 +9,33 @@
                 v-for="submitted_exam in submitted_exams"
                 :key="submitted_exam.id"
             >
-                <h2
-                    class="exam-name"
-                    v-if="typeof submitted_exam.exam !== 'string'"
-                >
-                    {{ submitted_exam.exam.title }}
-                </h2>
-                <p v-if="typeof submitted_exam.exam !== 'string'">
-                    <strong>开始时间:</strong>
-                    {{ dayjs(submitted_exam.exam.start_time).format("YYYY-MM-DD HH:mm:ss") }}
-                </p>
-                <p v-if="typeof submitted_exam.exam !== 'string'">
-                    <strong>结束时间:</strong>
-                    {{ dayjs(submitted_exam.exam.start_time).format("YYYY-MM-DD HH:mm:ss") }}
-                </p>
-                <button
-                    @click="joinExam(submitted_exam.id)"
-                    class="join-button"
-                >
-                    参加考试
-                </button>
+                <div v-if="typeof submitted_exam.exam === 'object'">
+                    <h2 class="exam-name">
+                        {{ submitted_exam.exam.title }}
+                    </h2>
+                    <p>
+                        <strong>开始时间:</strong>
+                        {{
+                            dayjs(submitted_exam.exam.start_time).format(
+                                "YYYY-MM-DD HH:mm:ss"
+                            )
+                        }}
+                    </p>
+                    <p>
+                        <strong>结束时间:</strong>
+                        {{
+                            dayjs(submitted_exam.exam.start_time).format(
+                                "YYYY-MM-DD HH:mm:ss"
+                            )
+                        }}
+                    </p>
+                    <button
+                        @click="joinExam(submitted_exam.id)"
+                        class="join-button"
+                    >
+                        参加考试
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -37,7 +44,11 @@
 <script setup lang="ts">
 import dayjs from "dayjs";
 import { useAuth } from "@/stores/auth";
-import type { SubmittedExams, SubmittedPapers, Exams } from "~/types/directus_types";
+import type {
+    SubmittedExams,
+    SubmittedPapers,
+    Exams,
+} from "~/types/directus_types";
 const auth = useAuth();
 const current_user = auth.user; // 获取当前用户
 console.log(current_user);

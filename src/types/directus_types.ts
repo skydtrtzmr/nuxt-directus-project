@@ -926,7 +926,7 @@ export type SubmittedExams = {
   actual_start_time?: string | null;
   date_created?: string | null;
   date_updated?: string | null;
-  exam?: string | Exams | null;
+  exam: string | Exams;
   expected_end_time?: string | null;
   extra_time?: number | null;
   id: string;
