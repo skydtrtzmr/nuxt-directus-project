@@ -137,7 +137,9 @@ const fetchSubmittedPaper = async (paperId: string) => {
 };
 
 // 获取提交的试卷的章节
-const fetchSubmittedChapterList = async (chapters: SubmittedPaperChapters[]) => {
+const fetchSubmittedChapterList = async (
+    chapters: SubmittedPaperChapters[]
+) => {
     const chaptersResponse = await getItems<SubmittedPaperChapters>({
         collection: "submitted_paper_chapters",
         params: {
@@ -178,6 +180,8 @@ const fetchSubmittedChapterList = async (chapters: SubmittedPaperChapters[]) => 
 //     });
 //     submittedQuestions.value = questionsResponse;
 // };
+
+// NOTE：不再使用专门的题目列表，而是直接从章节中获取题目列表。因为我的题目和章节信息是高度关联的，所以直接从章节中获取题目列表更合理。
 
 // 选择一个题目
 const selectQuestion = (question: SubmittedQuestions) => {
