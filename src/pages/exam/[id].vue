@@ -43,18 +43,74 @@
                     </div>
                     <h4>{{ chapter.title }}</h4>
                     <ul>
-                        <!-- 章节下的题目列表 -->
-                        <li
+                        <!-- 1 章节下的题目列表，列表式 -->
+                        <!-- <li
                             v-for="question in chapter.submitted_questions"
                             :key="question.id"
                         >
                             <button @click="selectQuestion(question)">
                                 {{ question.sort_in_chapter }}
                             </button>
-                        </li>
+                        </li> -->
+                        <!-- 2 章节下的题目列表，卡片式 -->
+                        <div class="question-card-container">
+                            <button
+                                v-for="question in chapter.submitted_questions"
+                                :key="question.id"
+                                class="question-card"
+                                @click="selectQuestion(question)"
+                            >
+                                {{ question.sort_in_chapter }}
+                            </button>
+                        </div>
                     </ul>
+                    <br />
                 </li>
             </ul>
+        </div>
+        <!-- 右侧：题目详情和答题区 -->
+        <div class="main-content">
+            <div v-if="selectedQuestion">
+                <h3>题目详情</h3>
+                <p>{{ selectedQuestion.question }}</p>
+
+                <!-- 这里可以显示题目选项，供用户选择 -->
+                <div v-if="selectedQuestion.option_number">
+                    <p>选择题</p>
+                    <!-- <ul>
+                        <li
+                            v-for="option in selectedQuestion.options"
+                            :key="option"
+                        >
+                            <input
+                                type="radio"
+                                :name="selectedQuestion.id"
+                                :value="option"
+                                v-model="selectedAnswer"
+                            />
+                            {{ option }}
+                        </li>
+                    </ul> -->
+                </div>
+
+                <!-- 其他题型，例如填空题 -->
+                <div v-else>
+                    <textarea
+                        v-model="selectedAnswer"
+                        placeholder="输入答案..."
+                    ></textarea>
+                </div>
+            </div>
+
+            <!-- 答题区：这里可以展示当前题目的答题区 -->
+            <div v-if="selectedQuestion">
+                <h3>答题区</h3>
+                <p>请选择您的答案：</p>
+                <textarea
+                    v-model="selectedAnswer"
+                    placeholder="输入答案..."
+                ></textarea>
+            </div>
         </div>
     </div>
 </template>
@@ -194,3 +250,39 @@ onMounted(() => {
     fetchSubmittedExam();
 });
 </script>
+
+<style scoped>
+.sidebar {
+    width: 260px;
+    /* 固定宽度 */
+    float: left;
+    padding: 15px;
+    border-right: 2px solid #ddd;
+    margin: 20px;
+}
+
+.question-card-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5列布局 */
+    gap: 10px; /* 卡片间距 */
+    margin-top: 10px;
+    margin-right: 10px;
+    padding-left: 0%;
+}
+
+.question-card {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+}
+
+.question-card:hover {
+    background-color: #0056b3;
+}
+</style>
