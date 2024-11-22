@@ -36,6 +36,35 @@ export const useAuth = defineStore("auth", {
     },
 
     actions: {
+        async validateSession() {
+            const { refreshTokens } = useDirectusToken();
+
+            try {
+                // 刷新 token，确保仍然有效
+                const newToken = refreshTokens();
+                // 返回一个DirectusAuthResponse
+                // {
+                //     user: DirectusUser;
+                //     access_token: string;
+                //     expires: number;
+                //     refresh_token: string;
+                // }
+
+                // 检查用户是否仍然认证
+                const directusUser = useDirectusUser();
+                // 如果directusUser.value不存在，说明token无效
+                if (!directusUser.value) {
+                    this.$reset(); // 无效的token，重置状态
+                } else {
+                    // 如果仍然有效，确保用户数据同步
+                    await this.getUser();
+                }
+            } catch (e) {
+                console.error("验证会话失败", e);
+                this.$reset(); // 无法验证时，重置状态
+            }
+        },
+
         async login({
             email,
             password,
