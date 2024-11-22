@@ -37,12 +37,12 @@
 <script setup lang="ts">
 import dayjs from "dayjs";
 import { useAuth } from "@/stores/auth";
-import type { SubmittedExams, SubmittedPapers, Exams } from "@/types/directus";
+import type { SubmittedExams, SubmittedPapers, Exams } from "~/types/directus_types";
 const auth = useAuth();
 const current_user = auth.user; // 获取当前用户
 console.log(current_user);
 
-// 如果当前用户未登录ortoken失效，则跳转到登录页面
+// 如果当前用户未登录，或者token失效，则跳转到登录页面
 definePageMeta({
     middleware: ["auth"],
 });

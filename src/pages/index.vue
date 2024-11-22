@@ -5,6 +5,8 @@
             <nav>
                 <ul>
                     <li><router-link to="/">首页</router-link></li>
+                    <li><router-link to="/login">登录</router-link></li>
+                    <li><router-link to="/exams">考试</router-link></li>
                     <li><router-link to="/about">关于我们</router-link></li>
                     <li><router-link to="/contact">联系我们</router-link></li>
                 </ul>
@@ -43,7 +45,7 @@ export default {
 }
 
 header {
-    background: #35495e;
+    background: #90b2d7;
     color: white;
     padding: 20px;
 }
