@@ -7,24 +7,22 @@
 
         <!-- 显示试卷详情 -->
         <div v-if="submittedPaper">
-            <h2
+            <div
                 v-if="
                     submittedPaper.source_paper_prototype &&
-                    typeof submittedPaper.source_paper_prototype !== 'string'
+                    typeof submittedPaper.source_paper_prototype === 'object'
                 "
             >
-                试卷标题: {{ submittedPaper.source_paper_prototype.title }}
-            </h2>
-            <p
-                v-if="
-                    submittedPaper.source_paper_prototype &&
-                    typeof submittedPaper.source_paper_prototype !== 'string'
-                "
-            >
-                试卷总分:
-                {{ submittedPaper.source_paper_prototype.total_point_value }}
-            </p>
-            <!-- <p v-if="submittedPaper.source_paper_prototype">状态: {{ submittedPaper.status }}</p> -->
+                <h2>
+                    试卷标题: {{ submittedPaper.source_paper_prototype.title }}
+                </h2>
+                <p>
+                    试卷总分:
+                    {{
+                        submittedPaper.source_paper_prototype.total_point_value
+                    }}
+                </p>
+            </div>
         </div>
 
         <!-- 章节列表 -->
@@ -32,7 +30,17 @@
             <h3>章节</h3>
             <ul>
                 <li v-for="chapter in submittedPaperChapters" :key="chapter.id">
-                    {{ chapter.title }} ({{ chapter.status }})
+                    <div
+                        v-if="
+                            chapter.source_paper_prototype_chapter &&
+                            typeof chapter.source_paper_prototype_chapter ===
+                                'object'
+                        "
+                    >
+                        {{ chapter.sort_in_paper }}、{{
+                            chapter.source_paper_prototype_chapter.title
+                        }}
+                    </div>
                 </li>
             </ul>
         </div>
@@ -42,14 +50,19 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import type { SubmittedExams, SubmittedPapers, SubmittedPaperChapters } from "~/types/directus_types";
+import type {
+    SubmittedExams,
+    SubmittedPapers,
+    SubmittedPaperChapters,
+    SubmittedQuestions,
+} from "~/types/directus_types";
 
 // 如果当前用户未登录ortoken失效，则跳转到登录页面
 definePageMeta({
     middleware: ["auth"],
 });
 
-const { getItemById } = useDirectusItems();
+const { getItemById, getItems } = useDirectusItems();
 
 // 路由参数：submitted_exam 的 ID
 const route = useRoute();
@@ -63,6 +76,7 @@ const submitted_exam_id = Array.isArray(route.params.id)
 const submittedExam = ref<SubmittedExams | null>(null);
 const submittedPaper = ref<SubmittedPapers | null>(null);
 const submittedPaperChapters = ref<SubmittedPaperChapters[]>([]);
+const submittedQuestions = ref<SubmittedQuestions[]>([]);
 
 // 获取提交的考试信息。先获取试卷，再获取试卷的章节。
 const fetchSubmittedExam = async () => {
@@ -104,9 +118,51 @@ const fetchSubmittedPaper = async (paperId: string) => {
     });
     if (paperResponse) {
         submittedPaper.value = paperResponse;
+        fetchSubmittedChapters(paperResponse.submitted_paper_chapters);
     }
 };
 
+// 获取提交的试卷的章节
+const fetchSubmittedChapters = async (chapters: SubmittedPaperChapters[]) => {
+    const chaptersResponse = await getItems<SubmittedPaperChapters>({
+        collection: "submitted_paper_chapters",
+        params: {
+            filter: {
+                id: { _in: chapters },
+            },
+            fields: [
+                "id",
+                "sort_in_paper",
+                "title",
+                "submitted_questions",
+                "source_paper_prototype_chapter.title",
+            ],
+            sort: "sort_in_paper",
+        },
+    });
+    if (chaptersResponse) {
+        submittedPaperChapters.value = chaptersResponse;
+        // 获取题目数据
+        fetchSubmittedQuestions(submittedPaperChapters.value);
+    }
+};
+
+// 获取题目数据
+const fetchSubmittedQuestions = async (chapters: SubmittedPaperChapters[]) => {
+    const questionIds = chapters.flatMap(
+        (chapter) => chapter.submitted_questions
+    );
+    const questionsResponse = await getItems<SubmittedQuestions>({
+        collection: "submitted_questions",
+        params: {
+            filter: {
+                id: { _in: questionIds },
+            },
+            fields: ["id", "question", "option_number", "score"],
+        },
+    });
+    submittedQuestions.value = questionsResponse;
+};
 
 // 页面加载时调用
 onMounted(() => {
