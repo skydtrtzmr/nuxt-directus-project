@@ -25,8 +25,8 @@
             </div>
         </div>
 
-        <!-- 章节列表 -->
-        <div v-if="submittedPaperChapters.length > 0">
+        <!-- 左侧：题目列表 -->
+        <div class="sidebar" v-if="submittedPaperChapters.length > 0">
             <h3>章节</h3>
             <ul>
                 <li v-for="chapter in submittedPaperChapters" :key="chapter.id">
@@ -41,6 +41,18 @@
                             chapter.source_paper_prototype_chapter.title
                         }}
                     </div>
+                    <h4>{{ chapter.title }}</h4>
+                    <ul>
+                        <!-- 章节下的题目列表 -->
+                        <li
+                            v-for="question in chapter.submitted_questions"
+                            :key="question.id"
+                        >
+                            <button @click="selectQuestion(question)">
+                                {{ question.sort_in_chapter }}
+                            </button>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </div>
@@ -77,6 +89,8 @@ const submittedExam = ref<SubmittedExams | null>(null);
 const submittedPaper = ref<SubmittedPapers | null>(null);
 const submittedPaperChapters = ref<SubmittedPaperChapters[]>([]);
 const submittedQuestions = ref<SubmittedQuestions[]>([]);
+const selectedQuestion = ref<SubmittedQuestions | null>(null); // 当前选中的题目
+const selectedAnswer = ref(""); // 当前题目的答案
 
 // 获取提交的考试信息。先获取试卷，再获取试卷的章节。
 const fetchSubmittedExam = async () => {
@@ -118,12 +132,12 @@ const fetchSubmittedPaper = async (paperId: string) => {
     });
     if (paperResponse) {
         submittedPaper.value = paperResponse;
-        fetchSubmittedChapters(paperResponse.submitted_paper_chapters);
+        fetchSubmittedChapterList(paperResponse.submitted_paper_chapters);
     }
 };
 
 // 获取提交的试卷的章节
-const fetchSubmittedChapters = async (chapters: SubmittedPaperChapters[]) => {
+const fetchSubmittedChapterList = async (chapters: SubmittedPaperChapters[]) => {
     const chaptersResponse = await getItems<SubmittedPaperChapters>({
         collection: "submitted_paper_chapters",
         params: {
@@ -134,7 +148,7 @@ const fetchSubmittedChapters = async (chapters: SubmittedPaperChapters[]) => {
                 "id",
                 "sort_in_paper",
                 "title",
-                "submitted_questions",
+                "submitted_questions.*",
                 "source_paper_prototype_chapter.title",
             ],
             sort: "sort_in_paper",
@@ -143,25 +157,32 @@ const fetchSubmittedChapters = async (chapters: SubmittedPaperChapters[]) => {
     if (chaptersResponse) {
         submittedPaperChapters.value = chaptersResponse;
         // 获取题目数据
-        fetchSubmittedQuestions(submittedPaperChapters.value);
+        // fetchSubmittedQuestionList(submittedPaperChapters.value);
     }
 };
 
 // 获取题目数据
-const fetchSubmittedQuestions = async (chapters: SubmittedPaperChapters[]) => {
-    const questionIds = chapters.flatMap(
-        (chapter) => chapter.submitted_questions
-    );
-    const questionsResponse = await getItems<SubmittedQuestions>({
-        collection: "submitted_questions",
-        params: {
-            filter: {
-                id: { _in: questionIds },
-            },
-            fields: ["id", "question", "option_number", "score"],
-        },
-    });
-    submittedQuestions.value = questionsResponse;
+// 注意，需要按照题目在章节中的顺序排序
+// const fetchSubmittedQuestionList = async (chapters: SubmittedPaperChapters[]) => {
+//     const questionIds = chapters.flatMap(
+//         (chapter) => chapter.submitted_questions
+//     );
+//     const questionsResponse = await getItems<SubmittedQuestions>({
+//         collection: "submitted_questions",
+//         params: {
+//             filter: {
+//                 id: { _in: questionIds },
+//             },
+//             fields: ["id", "question", "option_number", "score"],
+//         },
+//     });
+//     submittedQuestions.value = questionsResponse;
+// };
+
+// 选择一个题目
+const selectQuestion = (question: SubmittedQuestions) => {
+    selectedQuestion.value = question;
+    selectedAnswer.value = ""; // 清空答案
 };
 
 // 页面加载时调用

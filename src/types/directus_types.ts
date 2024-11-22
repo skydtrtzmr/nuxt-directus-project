@@ -987,6 +987,7 @@ export type SubmittedQuestions = {
   question_type?: string | null;
   score?: number | null;
   sort?: number | null;
+  sort_in_chapter?: number | null;
   status: string;
   student?: string | Students | null;
   submitted_ans_q_mc_binary?: string | null;
