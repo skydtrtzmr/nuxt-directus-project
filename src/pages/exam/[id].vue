@@ -6,68 +6,14 @@
         <!-- 显示考试的其他信息 -->
 
         <!-- 显示试卷详情 -->
-        <div v-if="submittedPaper">
-            <div
-                v-if="
-                    submittedPaper.source_paper_prototype &&
-                    typeof submittedPaper.source_paper_prototype === 'object'
-                "
-            >
-                <h2>
-                    试卷标题: {{ submittedPaper.source_paper_prototype.title }}
-                </h2>
-                <p>
-                    试卷总分:
-                    {{
-                        submittedPaper.source_paper_prototype.total_point_value
-                    }}
-                </p>
-            </div>
-        </div>
+        <PaperInfo :submittedPaper="submittedPaper"></PaperInfo>
 
         <!-- 左侧：题目列表 -->
-        <div class="sidebar" v-if="submittedPaperChapters.length > 0">
-            <h3>章节</h3>
-            <ul>
-                <li v-for="chapter in submittedPaperChapters" :key="chapter.id">
-                    <div
-                        v-if="
-                            chapter.source_paper_prototype_chapter &&
-                            typeof chapter.source_paper_prototype_chapter ===
-                                'object'
-                        "
-                    >
-                        {{ chapter.sort_in_paper }}、{{
-                            chapter.source_paper_prototype_chapter.title
-                        }}
-                    </div>
-                    <h4>{{ chapter.title }}</h4>
-                    <ul>
-                        <!-- 1 章节下的题目列表，列表式 -->
-                        <!-- <li
-                            v-for="question in chapter.submitted_questions"
-                            :key="question.id"
-                        >
-                            <button @click="selectQuestion(question)">
-                                {{ question.sort_in_chapter }}
-                            </button>
-                        </li> -->
-                        <!-- 2 章节下的题目列表，卡片式 -->
-                        <div class="question-card-container">
-                            <button
-                                v-for="question in chapter.submitted_questions"
-                                :key="question.id"
-                                class="question-card"
-                                @click="selectQuestion(question)"
-                            >
-                                {{ question.sort_in_chapter }}
-                            </button>
-                        </div>
-                    </ul>
-                    <br />
-                </li>
-            </ul>
-        </div>
+        <QuestionList
+            :submittedPaperChapters="submittedPaperChapters"
+            :selectQuestion="selectQuestion"
+        ></QuestionList>
+
         <!-- 右侧：题目详情和答题区 -->
         <div class="main-content">
             <div v-if="selectedQuestion">
@@ -125,7 +71,7 @@ import type {
     SubmittedQuestions,
 } from "~/types/directus_types";
 
-// 如果当前用户未登录ortoken失效，则跳转到登录页面
+// 如果当前用户未登录或者token失效，则跳转到登录页面
 definePageMeta({
     middleware: ["auth"],
 });
@@ -259,30 +205,5 @@ onMounted(() => {
     padding: 15px;
     border-right: 2px solid #ddd;
     margin: 20px;
-}
-
-.question-card-container {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5列布局 */
-    gap: 10px; /* 卡片间距 */
-    margin-top: 10px;
-    margin-right: 10px;
-    padding-left: 0%;
-}
-
-.question-card {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    text-align: center;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.2s;
-}
-
-.question-card:hover {
-    background-color: #0056b3;
 }
 </style>
