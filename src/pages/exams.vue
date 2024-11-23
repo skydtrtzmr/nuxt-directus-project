@@ -51,7 +51,7 @@ import type {
 } from "~/types/directus_types";
 const auth = useAuth();
 const current_user = auth.user; // 获取当前用户
-console.log(current_user);
+console.log('current_user:\n', current_user);
 
 // 如果当前用户未登录，或者token失效，则跳转到登录页面
 definePageMeta({
@@ -63,8 +63,8 @@ if (!current_user) {
     router.push("/login");
 }
 
-const { refreshTokens } = useDirectusToken();
-refreshTokens();
+// const { refreshTokens } = useDirectusToken();
+// refreshTokens();
 // 设置了refreshTokens之后，只要还继续访问这个页面，就会自动刷新token，
 // 保证一直在用的用户的token是最新的，不会突然失效。
 
@@ -104,5 +104,5 @@ const submitted_exams = await getItems<SubmittedExams>({
     },
 });
 
-console.log(submitted_exams);
+// console.log(submitted_exams);
 </script>

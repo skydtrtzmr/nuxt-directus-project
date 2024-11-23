@@ -12,6 +12,14 @@ interface User {
 interface AuthState {
     loggedIn: boolean;
     user: User | null;
+    access_token: string | null;
+    refresh_token: string | null; // 如果你有 refresh token，可以存储它
+}
+
+interface AuthResponse {
+    access_token: string;
+    expires: number;
+    refresh_token: string;
 }
 
 // interface LoginParams {
@@ -28,6 +36,8 @@ export const useAuth = defineStore("auth", {
     state: (): AuthState => ({
         loggedIn: false,
         user: null,
+        access_token: null,
+        refresh_token: null,
     }),
 
     getters: {
@@ -36,29 +46,49 @@ export const useAuth = defineStore("auth", {
     },
 
     actions: {
-        async validateSession() {
-            const { refreshTokens } = useDirectusToken();
-
+        // 刷新 token 的逻辑
+        async refreshToken() {
             try {
-                // 刷新 token，确保仍然有效
-                const newToken = refreshTokens();
-                // 返回一个DirectusAuthResponse
-                // {
-                //     user: DirectusUser;
-                //     access_token: string;
-                //     expires: number;
-                //     refresh_token: string;
-                // }
+                const { refreshTokens } = useDirectusToken();
+                const newToken = await refreshTokens();
+
+                if (newToken) {
+                    // 更新 token
+                    this.access_token = newToken.access_token; // 假设你能从 response 中获取新的 access_token
+                    this.refresh_token = newToken.refresh_token; // 如果有新的 refresh_token 也要更新
+                }
+            } catch (error) {
+                console.error("刷新 token 失败", error);
+                // this.$reset(); // 如果刷新失败，清空状态
+            }
+        },
+
+        async validateSession() {
+            try {
+                console.log("验证会话");
 
                 // 检查用户是否仍然认证
                 const directusUser = useDirectusUser();
                 // 如果directusUser.value不存在，说明token无效
                 if (!directusUser.value) {
                     this.$reset(); // 无效的token，重置状态
-                } else {
-                    // 如果仍然有效，确保用户数据同步
-                    await this.getUser();
+                    console.log("token 无效，重置状态");
+
+                    return false; // 用户未登录或 token 已过期
+                } // 如果用户信息存在，检查 token 是否有效
+                console.log("token 有效，验证用户信息");
+                // 如果 token 即将过期，尝试刷新 token
+                console.log("token:", this.access_token, this.refresh_token);
+
+                if (this.access_token && this.refresh_token) {
+                    // TODO 这里应该判断 token 是否即将过期，如果即将过期，则刷新 token
+                    console.log("token 即将过期，尝试刷新 token");
+                    await this.refreshToken();
                 }
+
+                // 如果用户验证成功，确保用户数据同步
+                await this.getUser();
+                return true; // 会话有效
             } catch (e) {
                 console.error("验证会话失败", e);
                 this.$reset(); // 无法验证时，重置状态
@@ -79,7 +109,7 @@ export const useAuth = defineStore("auth", {
 
             try {
                 // Try to login
-                await login({
+                const loginResponse: AuthResponse = await login({
                     email,
                     password,
                 });
@@ -96,6 +126,11 @@ export const useAuth = defineStore("auth", {
                 }
                 // Update the auth store with the user data
                 this.loggedIn = true;
+
+                // 获取和保存 token 和 refreshToken
+                const { access_token, refresh_token } = loginResponse;
+                this.access_token = access_token; // 保存新的 access token
+                this.refresh_token = refresh_token; // 保存新的 refresh token
 
                 // If there's a redirect, send the user there
                 if (redirect) {

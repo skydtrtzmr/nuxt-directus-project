@@ -71,6 +71,21 @@ import type {
     SubmittedQuestions,
 } from "~/types/directus_types";
 
+// const { refreshTokens } = useDirectusToken();
+
+// // 刷新 token，确保仍然有效
+// const newToken = refreshTokens();
+// // 返回一个DirectusAuthResponse，与login返回的结构一致
+// // {
+// //     user: DirectusUser;
+// //     access_token: string;
+// //     expires: number;
+// //     refresh_token: string;
+// // }
+// console.log("触发refreshTokens()。");
+
+// console.log("newToken:", newToken);
+
 // 如果当前用户未登录或者token失效，则跳转到登录页面
 definePageMeta({
     middleware: ["auth"],
