@@ -15,49 +15,7 @@
         ></QuestionList>
 
         <!-- 右侧：题目详情和答题区 -->
-        <div class="main-content">
-            <div v-if="selectedQuestion">
-                <h3>题目详情</h3>
-                <p>{{ selectedQuestion.question }}</p>
-
-                <!-- 这里可以显示题目选项，供用户选择 -->
-                <div v-if="selectedQuestion.option_number">
-                    <p>选择题</p>
-                    <!-- <ul>
-                        <li
-                            v-for="option in selectedQuestion.options"
-                            :key="option"
-                        >
-                            <input
-                                type="radio"
-                                :name="selectedQuestion.id"
-                                :value="option"
-                                v-model="selectedAnswer"
-                            />
-                            {{ option }}
-                        </li>
-                    </ul> -->
-                </div>
-
-                <!-- 其他题型，例如填空题 -->
-                <div v-else>
-                    <textarea
-                        v-model="selectedAnswer"
-                        placeholder="输入答案..."
-                    ></textarea>
-                </div>
-            </div>
-
-            <!-- 答题区：这里可以展示当前题目的答题区 -->
-            <div v-if="selectedQuestion">
-                <h3>答题区</h3>
-                <p>请选择您的答案：</p>
-                <textarea
-                    v-model="selectedAnswer"
-                    placeholder="输入答案..."
-                ></textarea>
-            </div>
-        </div>
+        <QuestionDetail :selectedQuestion="selectedQuestion"></QuestionDetail>
     </div>
 </template>
 
@@ -154,6 +112,7 @@ const fetchSubmittedPaper = async (paperId: string) => {
 };
 
 // 获取提交的试卷的章节
+// 一次性获取所有章节及其关联的题目信息
 const fetchSubmittedChapterList = async (
     chapters: SubmittedPaperChapters[]
 ) => {
@@ -168,6 +127,7 @@ const fetchSubmittedChapterList = async (
                 "sort_in_paper",
                 "title",
                 "submitted_questions.*",
+                "submitted_questions.submitted_paper_chapter.source_paper_prototype_chapter.*",
                 "source_paper_prototype_chapter.title",
             ],
             sort: "sort_in_paper",
@@ -175,8 +135,8 @@ const fetchSubmittedChapterList = async (
     });
     if (chaptersResponse) {
         submittedPaperChapters.value = chaptersResponse;
-        // 获取题目数据
-        // fetchSubmittedQuestionList(submittedPaperChapters.value);
+        // 默认选择第一个题目
+        selectedQuestion.value = chaptersResponse[0].submitted_questions[0];
     }
 };
 
