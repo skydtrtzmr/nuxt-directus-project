@@ -15,7 +15,9 @@
         ></QuestionList>
 
         <!-- 右侧：题目详情和答题区 -->
-        <QuestionDetail :selectedQuestion="selectedQuestion"></QuestionDetail>
+        <QuestionDetail
+            :selectedSubmittedQuestion="selectedSubmittedQuestion"
+        ></QuestionDetail>
     </div>
 </template>
 
@@ -64,7 +66,7 @@ const submittedExam = ref<SubmittedExams | null>(null);
 const submittedPaper = ref<SubmittedPapers | null>(null);
 const submittedPaperChapters = ref<SubmittedPaperChapters[]>([]);
 const submittedQuestions = ref<SubmittedQuestions[]>([]);
-const selectedQuestion = ref<SubmittedQuestions | null>(null); // 当前选中的题目
+const selectedSubmittedQuestion = ref<SubmittedQuestions | null>(null); // 当前选中的题目
 const selectedAnswer = ref(""); // 当前题目的答案
 
 // 获取提交的考试信息。先获取试卷，再获取试卷的章节。
@@ -127,6 +129,7 @@ const fetchSubmittedChapterList = async (
                 "sort_in_paper",
                 "title",
                 "submitted_questions.*",
+                "submitted_questions.question.*.*",
                 "submitted_questions.submitted_paper_chapter.source_paper_prototype_chapter.*",
                 "source_paper_prototype_chapter.title",
             ],
@@ -136,7 +139,8 @@ const fetchSubmittedChapterList = async (
     if (chaptersResponse) {
         submittedPaperChapters.value = chaptersResponse;
         // 默认选择第一个题目
-        selectedQuestion.value = chaptersResponse[0].submitted_questions[0];
+        selectedSubmittedQuestion.value =
+            chaptersResponse[0].submitted_questions[0];
     }
 };
 
@@ -162,7 +166,7 @@ const fetchSubmittedChapterList = async (
 
 // 选择一个题目
 const selectQuestion = (question: SubmittedQuestions) => {
-    selectedQuestion.value = question;
+    selectedSubmittedQuestion.value = question;
     selectedAnswer.value = ""; // 清空答案
 };
 

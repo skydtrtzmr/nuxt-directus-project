@@ -11,9 +11,7 @@
                             'object'
                     "
                 >
-                    {{
-                        chapter.source_paper_prototype_chapter.title
-                    }}
+                    {{ chapter.source_paper_prototype_chapter.title }}
                 </div>
                 <h4>{{ chapter.title }}</h4>
                 <ul>
@@ -32,7 +30,12 @@
                             v-for="question in chapter.submitted_questions"
                             :key="question.id"
                             class="question-card"
-                            :class="{ selected: selectedQuestion && selectedQuestion.id === question.id }"
+                            :class="{
+                                selected:
+                                    selectedSubmittedQuestion &&
+                                    selectedSubmittedQuestion.id ===
+                                        question.id,
+                            }"
                             @click="handleQuestionClick(question)"
                         >
                             {{ question.sort_in_chapter }}
@@ -47,7 +50,10 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import type { SubmittedPaperChapters, SubmittedQuestions } from "~/types/directus_types";
+import type {
+    SubmittedPaperChapters,
+    SubmittedQuestions,
+} from "~/types/directus_types";
 
 const props = defineProps<{
     submittedPaperChapters: SubmittedPaperChapters[];
@@ -55,14 +61,13 @@ const props = defineProps<{
 }>();
 
 // 当前选中题目
-const selectedQuestion = ref<SubmittedQuestions | null>(null);
+const selectedSubmittedQuestion = ref<SubmittedQuestions | null>(null);
 
 const handleQuestionClick = (question: SubmittedQuestions) => {
-    selectedQuestion.value = question; // 更新选中题目
+    console.log("handleQuestionClick", question);
+    selectedSubmittedQuestion.value = question; // 更新选中题目
     props.selectQuestion(question); // 调用父组件传递的选择方法
 };
-
-
 </script>
 
 <style scoped>
@@ -99,12 +104,12 @@ const handleQuestionClick = (question: SubmittedQuestions) => {
 }
 
 /* .accordion { */
-    /* 样式设置 */
+/* 样式设置 */
 /* } */
 /* .accordion-header { */
-    /* 样式设置 */
+/* 样式设置 */
 /* } */
 /* .accordion-body { */
-    /* 样式设置 */
+/* 样式设置 */
 /* } */
 </style>

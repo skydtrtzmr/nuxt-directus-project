@@ -1,4 +1,5 @@
 <!-- components/QuestionCard.vue -->
+<!-- 暂时不用 -->
 <template>
     <div class="question-card" @click="handleClick">
         <h4>{{ question.title }}</h4>
@@ -7,19 +8,19 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits } from "vue";
 
 const props = defineProps({
     question: {
         type: Object,
-        required: true
-    }
+        required: true,
+    },
 });
 
 const emit = defineEmits();
 
 const handleClick = () => {
-    emit('click', props.question);
+    emit("click", props.question);
 };
 </script>
 

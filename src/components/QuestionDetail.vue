@@ -1,66 +1,77 @@
+<!-- components/QuestionDetail.vue -->
+ <!-- 题目详情页。这里是包含整个题目详情的页面，包括题目所属的章节、公共题干、题目内容、答题区、 -->
 <template>
     <div class="main-content">
-        <div v-if="selectedQuestion">
+        <div v-if="selectedSubmittedQuestion">
             <h2>
                 {{
-                    selectedQuestion.submitted_paper_chapter
+                    selectedSubmittedQuestion.submitted_paper_chapter
                         .source_paper_prototype_chapter.title
                 }}
             </h2>
             <p>
                 {{
-                    selectedQuestion.submitted_paper_chapter
+                    selectedSubmittedQuestion.submitted_paper_chapter
                         .source_paper_prototype_chapter.description
                 }}
             </p>
             <hr />
             <h3>题目详情</h3>
-            <p>{{ selectedQuestion.question }}</p>
+            <div
+                :class="{
+                    'desktop-layout': isDesktop,
+                    'mobile-layout': !isDesktop,
+                }"
+            >
+                <!-- 电脑端：左侧是公共题干，右侧是题目内容 -->
+                <div v-if="isDesktop" class="desktop-left">
+                    <CommonQuestionContent
+                        v-if="selectedSubmittedQuestion.question_group"
+                        :selectedSubmittedQuestion="selectedSubmittedQuestion"
+                    />
+                </div>
 
-            <!-- 这里可以显示题目选项，供用户选择 -->
-            <div v-if="selectedQuestion.option_number">
-                <p>选择题</p>
-                <!-- <ul>
-                        <li
-                            v-for="option in selectedQuestion.options"
-                            :key="option"
-                        >
-                            <input
-                                type="radio"
-                                :name="selectedQuestion.id"
-                                :value="option"
-                                v-model="selectedAnswer"
-                            />
-                            {{ option }}
-                        </li>
-                    </ul> -->
+                <!-- 右侧：题目内容 -->
+                <div v-if="isDesktop" class="desktop-right">
+                    <QuestionContent :selectedSubmittedQuestion="selectedSubmittedQuestion" />
+                </div>
             </div>
-
-            <!-- 其他题型，例如填空题 -->
-            <div v-else>
-                <textarea
-                    v-model="selectedAnswer"
-                    placeholder="输入答案..."
-                ></textarea>
-            </div>
-        </div>
-
-        <!-- 答题区：这里可以展示当前题目的答题区 -->
-        <div v-if="selectedQuestion">
-            <h3>答题区</h3>
-            <p>请选择您的答案：</p>
-            <textarea
-                v-model="selectedAnswer"
-                placeholder="输入答案..."
-            ></textarea>
         </div>
     </div>
 </template>
 
 <script setup>
+import { computed } from "vue";
+import CommonQuestionContent from "./CommonQuestionContent.vue";
+import QuestionContent from "./QuestionContent.vue";
 const props = defineProps({
-    selectedQuestion: Object | null,
+    selectedSubmittedQuestion: Object | null,
 });
 
 const selectedAnswer = ref("");
+const isDesktop = computed(() => window.innerWidth > 1024); // 根据屏幕大小判断是否为电脑端
 </script>
+
+<style scoped>
+.desktop-layout {
+    display: flex;
+}
+
+.desktop-left {
+    flex: 1;
+    padding-right: 20px;
+}
+
+.desktop-right {
+    flex: 2;
+}
+
+.mobile-layout {
+    display: block;
+}
+
+.mobile-layout .desktop-left,
+.mobile-layout .desktop-right {
+    width: 100%;
+}
+</style>
