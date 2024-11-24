@@ -65,9 +65,9 @@ const submitted_exam_id = Array.isArray(route.params.id)
 const submittedExam = ref<SubmittedExams | null>(null);
 const submittedPaper = ref<SubmittedPapers | null>(null);
 const submittedPaperChapters = ref<SubmittedPaperChapters[]>([]);
-const submittedQuestions = ref<SubmittedQuestions[]>([]);
+// const submittedQuestions = ref<SubmittedQuestions[]>([]);
 const selectedSubmittedQuestion = ref<SubmittedQuestions | null>(null); // 当前选中的题目
-const selectedAnswer = ref(""); // 当前题目的答案
+// const selectedAnswer = ref(""); // 当前题目的答案
 
 // 获取提交的考试信息。先获取试卷，再获取试卷的章节。
 const fetchSubmittedExam = async () => {
@@ -167,7 +167,7 @@ const fetchSubmittedChapterList = async (
 // 选择一个题目
 const selectQuestion = (question: SubmittedQuestions) => {
     selectedSubmittedQuestion.value = question;
-    selectedAnswer.value = ""; // 清空答案
+    // selectedAnswer.value = ""; // 清空答案
 };
 
 // 页面加载时调用
