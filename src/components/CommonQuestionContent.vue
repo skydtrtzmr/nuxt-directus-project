@@ -2,9 +2,8 @@
 <!-- 这里是公共题干 -->
 <template>
     <div>
-        <p>公共题干</p>
-        <h2>{{ questionTitle }}</h2>
-        <p>{{ questionDescription }}</p>
+        <h4>公共题干</h4>
+        <p>{{ selectedSubmittedQuestion.question.question_group.shared_stem }}</p>
     </div>
 </template>
 
@@ -12,8 +11,5 @@
 const props = defineProps({
     selectedSubmittedQuestion: Object,
 });
-
-const question_shared_stem = props.selectedSubmittedQuestion.question.shared_stem;
-
 
 </script>

@@ -1,5 +1,5 @@
 <!-- components/QuestionDetail.vue -->
- <!-- 题目详情页。这里是包含整个题目详情的页面，包括题目所属的章节、公共题干、题目内容、答题区、 -->
+<!-- 题目详情页。这里是包含整个题目详情的页面，包括题目所属的章节、公共题干、题目内容、答题区、 -->
 <template>
     <div class="main-content">
         <div v-if="selectedSubmittedQuestion">
@@ -26,14 +26,20 @@
                 <!-- 电脑端：左侧是公共题干，右侧是题目内容 -->
                 <div v-if="isDesktop" class="desktop-left">
                     <CommonQuestionContent
-                        v-if="selectedSubmittedQuestion.question_group"
+                        v-if="selectedSubmittedQuestion.question.question_group"
                         :selectedSubmittedQuestion="selectedSubmittedQuestion"
                     />
                 </div>
 
+                <!-- 竖线分割 -->
+                <!-- TODO 这个竖线分割还没有生效…… -->
+                <div v-if="isDesktop" class="desktop-divider"></div>
+
                 <!-- 右侧：题目内容 -->
                 <div v-if="isDesktop" class="desktop-right">
-                    <QuestionContent :selectedSubmittedQuestion="selectedSubmittedQuestion" />
+                    <QuestionContent
+                        :selectedSubmittedQuestion="selectedSubmittedQuestion"
+                    />
                 </div>
             </div>
         </div>
@@ -59,11 +65,23 @@ const isDesktop = computed(() => window.innerWidth > 1024); // 根据屏幕大�
 
 .desktop-left {
     flex: 1;
-    padding-right: 20px;
+    /* padding-right: 20px;  */
 }
 
 .desktop-right {
     flex: 2;
+}
+
+.desktop-left,
+.desktop-right {
+    vertical-align: top;
+    padding: 10px;
+}
+
+.desktop-divider {
+    width: 10px; /* 设置竖线的宽度 */
+    background-color: #1d1a1a; /* 设置竖线的颜色 */
+    height: 100%; /* 使竖线充满整个高度 */
 }
 
 .mobile-layout {
