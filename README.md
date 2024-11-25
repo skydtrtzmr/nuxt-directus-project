@@ -1,8 +1,14 @@
 # Nuxt Minimal Starter
 
+Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+
+## 进度
+
 终于完成了连接directus的基础配置。
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## 关于UI
+
+使用[primevue](https://primevue.org/)。
 
 ## Setup
 
