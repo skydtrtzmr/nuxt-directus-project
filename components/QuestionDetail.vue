@@ -2,45 +2,39 @@
 <!-- 题目详情页。这里是包含整个题目详情的页面，包括题目所属的章节、公共题干、题目内容、答题区、 -->
 <template>
     <div class="main-content">
-        <div v-if="selectedSubmittedQuestion">
-            <h2>
+        <div v-if="selectedSubmittedQuestion" class="h-full">
+            <h3 class="m-4 red-text">
                 {{
                     selectedSubmittedQuestion.submitted_paper_chapter
                         .source_paper_prototype_chapter.title
                 }}
-            </h2>
+            </h3>
             <p>
                 {{
                     selectedSubmittedQuestion.submitted_paper_chapter
                         .source_paper_prototype_chapter.description
                 }}
             </p>
-            <hr />
-            <h3>题目详情</h3>
-            <div
-                :class="{
-                    'desktop-layout': isDesktop,
-                    'mobile-layout': !isDesktop,
-                }"
-            >
-                <!-- 电脑端：左侧是公共题干，右侧是题目内容 -->
-                <div v-if="isDesktop" class="desktop-left">
-                    <CommonQuestionContent
-                        v-if="selectedSubmittedQuestion.question.question_group"
-                        :selectedSubmittedQuestion="selectedSubmittedQuestion"
-                    />
-                </div>
+            <Divider />
+            <br />
+            <div class="flex flex-row gap-4 h-full">
+                <!-- 公共题干 -->
+                <CommonQuestionContent
+                    class="basis-2/5 h-full"
+                    v-if="selectedSubmittedQuestion.question.question_group"
+                    :selectedSubmittedQuestion="selectedSubmittedQuestion"
+                />
 
-                <!-- 竖线分割 -->
-                <!-- TODO 这个竖线分割还没有生效…… -->
-                <div v-if="isDesktop" class="desktop-divider"></div>
+                <Divider
+                    layout="vertical"
+                    v-if="selectedSubmittedQuestion.question.question_group"
+                />
 
-                <!-- 右侧：题目内容 -->
-                <div v-if="isDesktop" class="desktop-right">
-                    <QuestionContent
-                        :selectedSubmittedQuestion="selectedSubmittedQuestion"
-                    />
-                </div>
+                <!-- 题目内容 -->
+                <QuestionContent
+                    class="basis-3/5 h-full"
+                    :selectedSubmittedQuestion="selectedSubmittedQuestion"
+                />
             </div>
         </div>
     </div>
@@ -59,10 +53,6 @@ const isDesktop = computed(() => window.innerWidth > 1024); // 根据屏幕大�
 </script>
 
 <style scoped>
-.desktop-layout {
-    display: flex;
-}
-
 .desktop-left {
     flex: 1;
     /* padding-right: 20px;  */

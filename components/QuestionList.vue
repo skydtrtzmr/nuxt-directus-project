@@ -1,7 +1,7 @@
 <!-- components/QuestionList.vue -->
 <template>
     <div class="sidebar" v-if="submittedPaperChapters.length > 0">
-        <h3>章节</h3>
+        <h5>题目列表</h5>
         <ul>
             <li v-for="chapter in submittedPaperChapters" :key="chapter.id">
                 <div
@@ -53,7 +53,7 @@ import { ref } from "vue";
 import type {
     SubmittedPaperChapters,
     SubmittedQuestions,
-} from "~/types/directus_types";
+} from "~~/types/directus_types";
 
 const props = defineProps<{
     submittedPaperChapters: SubmittedPaperChapters[];
@@ -71,6 +71,12 @@ const handleQuestionClick = (question: SubmittedQuestions) => {
 </script>
 
 <style scoped>
+ul {
+    list-style: none;
+    padding-inline-start: 10px; 
+    /* 不要缩进太多！ */
+}
+
 .question-card-container {
     display: grid;
     grid-template-columns: repeat(5, 1fr); /* 5列布局 */

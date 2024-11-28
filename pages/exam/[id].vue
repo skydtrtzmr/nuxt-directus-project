@@ -1,23 +1,27 @@
 <!-- pages/exam/[id].vue -->
 <template>
     <div>
-        <h1>考试详情</h1>
+        <!-- <h2>考试详情</h2> -->
         <p>考试ID: {{ submitted_exam_id }}</p>
         <!-- 显示考试的其他信息 -->
 
         <!-- 显示试卷详情 -->
         <PaperInfo :submittedPaper="submittedPaper"></PaperInfo>
 
-        <!-- 左侧：题目列表 -->
-        <QuestionList
-            :submittedPaperChapters="submittedPaperChapters"
-            :selectQuestion="selectQuestion"
-        ></QuestionList>
+        <div class="flex">
+            <!-- 左侧：题目列表 -->
+            <QuestionList
+                class="basis-1/5"
+                :submittedPaperChapters="submittedPaperChapters"
+                :selectQuestion="selectQuestion"
+            ></QuestionList>
 
-        <!-- 右侧：题目详情和答题区 -->
-        <QuestionDetail
-            :selectedSubmittedQuestion="selectedSubmittedQuestion"
-        ></QuestionDetail>
+            <!-- 右侧：题目详情和答题区 -->
+            <QuestionDetail
+                class="basis-4/5"
+                :selectedSubmittedQuestion="selectedSubmittedQuestion"
+            ></QuestionDetail>
+        </div>
     </div>
 </template>
 
@@ -29,7 +33,7 @@ import type {
     SubmittedPapers,
     SubmittedPaperChapters,
     SubmittedQuestions,
-} from "~/types/directus_types";
+} from "~~/types/directus_types";
 
 // const { refreshTokens } = useDirectusToken();
 

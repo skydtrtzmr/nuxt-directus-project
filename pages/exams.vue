@@ -2,7 +2,7 @@
 <template>
     <!-- <div>{{ submitted_exams }}</div> -->
     <div>
-        <h1>考试列表</h1>
+        <h2>考试列表</h2>
         <div class="exam-card-container">
             <div
                 class="exam-card"
@@ -10,9 +10,9 @@
                 :key="submitted_exam.id"
             >
                 <div v-if="typeof submitted_exam.exam === 'object'">
-                    <h2 class="exam-name">
+                    <h3 class="exam-name">
                         {{ submitted_exam.exam.title }}
-                    </h2>
+                    </h3>
                     <p>
                         <strong>开始时间:</strong>
                         {{
@@ -36,6 +36,7 @@
                         参加考试
                     </button>
                 </div>
+                <br/>
             </div>
         </div>
     </div>
@@ -43,12 +44,12 @@
 
 <script setup lang="ts">
 import dayjs from "dayjs";
-import { useAuth } from "@/stores/auth";
+import { useAuth } from "~~/stores/auth";
 import type {
     SubmittedExams,
     SubmittedPapers,
     Exams,
-} from "~/types/directus_types";
+} from "~~/types/directus_types";
 const auth = useAuth();
 const current_user = auth.user; // 获取当前用户
 console.log('current_user:\n', current_user);

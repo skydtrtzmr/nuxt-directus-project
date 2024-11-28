@@ -18,7 +18,7 @@
 <script setup lang="ts">
 // TODO 现存Bug就是，state存储的登录状态和实际登录状态不一致，token失效后，页面会显示已登录，但实际上并未登录。
 import { storeToRefs } from 'pinia'
-import { useAuth } from '@/stores/auth';
+import { useAuth } from '~~/stores/auth';
 
 const auth = useAuth();
 const { isLoggedIn, user } = storeToRefs(auth)

@@ -6,7 +6,7 @@
                 typeof submittedPaper.source_paper_prototype === 'object'
             "
         >
-            <h2>试卷标题: {{ submittedPaper.source_paper_prototype.title }}</h2>
+            <h3>{{ submittedPaper.source_paper_prototype.title }}</h3>
             <p>
                 试卷总分:
                 {{ submittedPaper.source_paper_prototype.total_point_value }}
@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import type { SubmittedPapers } from "~/types/directus_types";
+import type { SubmittedPapers } from "~~/types/directus_types";
 
 const props = defineProps<{
     submittedPaper: SubmittedPapers | null;

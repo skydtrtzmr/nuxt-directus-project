@@ -4,6 +4,8 @@ export default defineNuxtConfig({
 
     modules: [
         "nuxt-directus",
+        "@nuxtjs/tailwindcss",
+        "@primevue/nuxt-module",
         "@pinia/nuxt",
         [
             "@pinia/nuxt",
@@ -16,7 +18,7 @@ export default defineNuxtConfig({
                 ],
             },
         ],
-        'pinia-plugin-persistedstate/nuxt',
+        "pinia-plugin-persistedstate/nuxt",
     ],
 
     runtimeConfig: {
@@ -31,6 +33,16 @@ export default defineNuxtConfig({
         devtools: true,
     },
 
-    srcDir: "src/",
+    // srcDir: "src/",
     compatibilityDate: "2024-11-17",
+    primevue: {
+        options: {
+            theme: "none",
+        },
+    },
+    css: [
+        "@/assets/layout/layout.scss",
+        "primeicons/primeicons.css",
+        "@/assets/demo/demo.scss",
+    ],
 });

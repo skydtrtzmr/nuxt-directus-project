@@ -1,4 +1,4 @@
-import { useAuth } from "~/stores/auth";
+import { useAuth } from "~~/stores/auth";
 export default defineNuxtRouteMiddleware(async (to, _from) => {
     console.log('auth middleware');
     
