@@ -5,7 +5,7 @@
         <!-- 根据题型渲染不同的答题组件 -->
         <div
             v-if="
-                selectedSubmittedQuestion.question.type === 'q_mc_single' &&
+                selectedSubmittedQuestion.question_type === 'q_mc_single' &&
                 selectedSubmittedQuestion.question.q_mc_single
             "
         >
@@ -14,7 +14,7 @@
             <div class="flex flex-col gap-4">
                 <div class="flex items-center gap-2">
                     <RadioButton
-                        v-model="ingredient"
+                        v-model="selectedSubmittedQuestion.submitted_ans_q_mc_single"
                         inputId="option_a"
                         name="pizza"
                         value="A"
@@ -29,7 +29,7 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <RadioButton
-                        v-model="ingredient"
+                        v-model="selectedSubmittedQuestion.submitted_ans_q_mc_single"
                         inputId="option_b"
                         name="pizza"
                         value="Mushroom"
@@ -44,7 +44,7 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <RadioButton
-                        v-model="ingredient"
+                        v-model="selectedSubmittedQuestion.submitted_ans_q_mc_single"
                         inputId="option_c"
                         name="pizza"
                         value="Pepper"
@@ -59,7 +59,7 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <RadioButton
-                        v-model="ingredient"
+                        v-model="selectedSubmittedQuestion.submitted_ans_q_mc_single"
                         inputId="option_d"
                         name="pizza"
                         value="Onion"
@@ -82,12 +82,11 @@ const props = defineProps({
     selectedSubmittedQuestion: Object,
 });
 
-const question = ref(props.selectedSubmittedQuestion.question);
 
 const question_shared_stem =
     props.selectedSubmittedQuestion.question.shared_stem;
 
-const selectedOption = ref("");
+const selectedOption = ref(props.selectedSubmittedQuestion.selected_option);
 const selectedOptions = ref([]);
 const ingredient = ref("");
 </script>
