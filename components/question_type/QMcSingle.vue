@@ -4,7 +4,7 @@
             <p>{{ q_mc_single.stem }}</p>
             <div class="flex items-center gap-2">
                 <RadioButton
-                    v-model="ingredient"
+                    v-model="selectedOption"
                     inputId="option_a"
                     name="pizza"
                     value="A"
@@ -13,7 +13,7 @@
             </div>
             <div class="flex items-center gap-2">
                 <RadioButton
-                    v-model="ingredient"
+                    v-model="selectedOption"
                     inputId="option_b"
                     name="pizza"
                     value="Mushroom"
@@ -22,7 +22,7 @@
             </div>
             <div class="flex items-center gap-2">
                 <RadioButton
-                    v-model="ingredient"
+                    v-model="selectedOption"
                     inputId="option_c"
                     name="pizza"
                     value="Pepper"
@@ -31,7 +31,7 @@
             </div>
             <div class="flex items-center gap-2">
                 <RadioButton
-                    v-model="ingredient"
+                    v-model="selectedOption"
                     inputId="option_d"
                     name="pizza"
                     value="Onion"
@@ -46,7 +46,7 @@
 const props = defineProps({
     q_mc_single: Object,
 });
-const ingredient = ref("");
+const selectedOption = ref("");
 </script>
 
 <style scoped></style>

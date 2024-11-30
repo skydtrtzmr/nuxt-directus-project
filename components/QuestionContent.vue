@@ -16,8 +16,9 @@
                     <RadioButton
                         v-model="selectedSubmittedQuestion.submitted_ans_q_mc_single"
                         inputId="option_a"
-                        name="pizza"
+                        name="A"
                         value="A"
+                        @change="updateAnswer"
                     />
                     <label for="option_a"
                         >A.
@@ -31,8 +32,9 @@
                     <RadioButton
                         v-model="selectedSubmittedQuestion.submitted_ans_q_mc_single"
                         inputId="option_b"
-                        name="pizza"
-                        value="Mushroom"
+                        name="B"
+                        value="B"
+                        @change="updateAnswer"
                     />
                     <label for="option_b"
                         >B.
@@ -46,8 +48,9 @@
                     <RadioButton
                         v-model="selectedSubmittedQuestion.submitted_ans_q_mc_single"
                         inputId="option_c"
-                        name="pizza"
-                        value="Pepper"
+                        name="C"
+                        value="C"
+                        @change="updateAnswer"
                     />
                     <label for="option_c"
                         >C.
@@ -61,8 +64,9 @@
                     <RadioButton
                         v-model="selectedSubmittedQuestion.submitted_ans_q_mc_single"
                         inputId="option_d"
-                        name="pizza"
-                        value="Onion"
+                        name="D"
+                        value="D"
+                        @change="updateAnswer"
                     />
                     <label for="option_d"
                         >D.
@@ -88,5 +92,20 @@ const question_shared_stem =
 
 const selectedOption = ref(props.selectedSubmittedQuestion.selected_option);
 const selectedOptions = ref([]);
-const ingredient = ref("");
+
+const { updateItem } = useDirectusItems();
+
+// const updateAnswer = async () => {
+//     try {
+//         const submitted_option = 
+//         const response = await axios.post('/api/update-answer', {
+//             questionId: props.selectedSubmittedQuestion.question.id,
+//             selectedOption: selectedOption.value,
+//         });
+//         console.log('Answer updated successfully:', response.data);
+//     } catch (error) {
+//         console.error('Error updating answer:', error);
+//     }
+// };
+
 </script>

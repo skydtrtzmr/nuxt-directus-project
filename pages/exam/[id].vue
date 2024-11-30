@@ -53,6 +53,7 @@ import type {
 // 如果当前用户未登录或者token失效，则跳转到登录页面
 definePageMeta({
     middleware: ["auth"],
+    layout: "empty" // 考试时全屏显示，不需要侧边栏和顶部导航栏
 });
 
 const { getItemById, getItems } = useDirectusItems();
