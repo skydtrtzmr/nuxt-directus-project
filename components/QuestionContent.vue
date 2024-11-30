@@ -5,8 +5,10 @@
         <!-- 根据题型渲染不同的答题组件 -->
         <div
             v-if="
+                typeof selectedSubmittedQuestion.question === 'object' &&
                 selectedSubmittedQuestion.question_type === 'q_mc_single' &&
-                selectedSubmittedQuestion.question.q_mc_single
+                selectedSubmittedQuestion.question.q_mc_single &&
+                typeof selectedSubmittedQuestion.question.q_mc_single === 'object'
             "
         >
             <!-- 单选题或判断题 -->
@@ -14,7 +16,9 @@
             <div class="flex flex-col gap-4">
                 <div class="flex items-center gap-2">
                     <RadioButton
-                        v-model="selectedSubmittedQuestion.submitted_ans_q_mc_single"
+                        v-model="
+                            selectedSubmittedQuestion.submitted_ans_q_mc_single
+                        "
                         inputId="option_a"
                         name="A"
                         value="A"
@@ -30,7 +34,9 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <RadioButton
-                        v-model="selectedSubmittedQuestion.submitted_ans_q_mc_single"
+                        v-model="
+                            selectedSubmittedQuestion.submitted_ans_q_mc_single
+                        "
                         inputId="option_b"
                         name="B"
                         value="B"
@@ -46,7 +52,9 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <RadioButton
-                        v-model="selectedSubmittedQuestion.submitted_ans_q_mc_single"
+                        v-model="
+                            selectedSubmittedQuestion.submitted_ans_q_mc_single
+                        "
                         inputId="option_c"
                         name="C"
                         value="C"
@@ -62,7 +70,9 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <RadioButton
-                        v-model="selectedSubmittedQuestion.submitted_ans_q_mc_single"
+                        v-model="
+                            selectedSubmittedQuestion.submitted_ans_q_mc_single
+                        "
                         inputId="option_d"
                         name="D"
                         value="D"
@@ -81,31 +91,34 @@
     </div>
 </template>
 
-<script setup>
-const props = defineProps({
-    selectedSubmittedQuestion: Object,
-});
+<script setup lang="ts">
+import type { SubmittedQuestions } from "~/types/directus_types";
 
+const props = defineProps<{
+    selectedSubmittedQuestion:SubmittedQuestions}>();
+// 传进来的这个本来就是一个Ref类型，所以不需要用ref包裹
 
-const question_shared_stem =
-    props.selectedSubmittedQuestion.question.shared_stem;
-
-const selectedOption = ref(props.selectedSubmittedQuestion.selected_option);
+// const selectedOption = ref(props.selectedSubmittedQuestion.selected_option);
 const selectedOptions = ref([]);
 
 const { updateItem } = useDirectusItems();
 
-// const updateAnswer = async () => {
-//     try {
-//         const submitted_option = 
-//         const response = await axios.post('/api/update-answer', {
-//             questionId: props.selectedSubmittedQuestion.question.id,
-//             selectedOption: selectedOption.value,
-//         });
-//         console.log('Answer updated successfully:', response.data);
-//     } catch (error) {
-//         console.error('Error updating answer:', error);
-//     }
-// };
-
+const updateAnswer = async () => {
+    try {
+        const submitted_question = {
+            submitted_ans_q_mc_single:
+                props.selectedSubmittedQuestion.submitted_ans_q_mc_single,
+        };
+        const response =
+            await updateItem<SubmittedQuestions>
+            ({
+                collection: "submitted_questions",
+                id: props.selectedSubmittedQuestion.id,
+                item: submitted_question,
+            });
+        console.log("Answer updated successfully:", response);
+    } catch (error) {
+        console.error("Error updating answer:", error);
+    }
+};
 </script>

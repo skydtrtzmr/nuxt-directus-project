@@ -983,7 +983,7 @@ export type SubmittedQuestions = {
   incomplete_point_value?: number | null;
   option_number?: number | null;
   point_value?: number | null;
-  question?: string | Questions | null;
+  question: string | Questions;
   question_type?: string | null;
   score?: number | null;
   sort?: number | null;
