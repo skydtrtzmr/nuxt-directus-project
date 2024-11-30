@@ -40,9 +40,21 @@ export default defineNuxtConfig({
             theme: "none",
         },
     },
+    // 这里css有以下几个文件是必须引用的：
+    // - tailwind.css，这个文件是tailwindcss的样式文件
+    // - base.css或者app.css，也就是https://tailwind.primevue.org/nuxt/#css-variables里的
     css: [
-        "@/assets/layout/layout.scss",
+        "@/assets/styles/tailwind.css",
+        "@/assets/styles/layout/layout.scss",
         "primeicons/primeicons.css",
         "@/assets/demo/demo.scss",
+        // "@/assets/styles/base.css",
     ],
+    postcss: {
+        plugins: {
+            'postcss-import': {},
+            tailwindcss: {},
+            autoprefixer: {}
+        }
+    },
 });

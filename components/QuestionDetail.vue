@@ -47,9 +47,6 @@ import QuestionContent from "~/components/QuestionContent.vue";
 const props = defineProps({
     selectedSubmittedQuestion: Object | null,
 });
-
-const selectedAnswer = ref("");
-const isDesktop = computed(() => window.innerWidth > 1024); // 根据屏幕大小判断是否为电脑端
 </script>
 
 <style scoped>

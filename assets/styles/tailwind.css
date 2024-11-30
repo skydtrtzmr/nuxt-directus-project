@@ -1,0 +1,12 @@
+/* Use @import */
+/* 备注：这里的填写参见：*/
+/* https://tailwindcss.com/docs/using-with-preprocessors#build-time-imports */
+
+/* 这里的 tailwindcss/base、tailwindcss/components、tailwindcss/utilities */
+/* 均来自node_modules中tailwindcss文件夹。 */ 
+/* 如果报错"Unable to resolve @import "tailwindcss/base""等，请检查是否安装了tailwindcss。 */
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "./primevue/tailwind.css";
+@import "tailwindcss/utilities";

@@ -10,6 +10,8 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 
 使用[primevue](https://primevue.org/)。
 
+注意要把release下载下来放到项目里。参见[primevue-tailwindcss/nuxt/styles](https://tailwind.primevue.org/nuxt/#styles)。
+
 ## Setup
 
 Make sure to install dependencies:

@@ -1,20 +1,20 @@
-<!-- components/QMcSingle.vue -->
+<!-- components/QMcMulti.vue -->
 <!-- 这里是题目内容组件 -->
 <template>
     <div
         v-if="
             typeof selectedSubmittedQuestion.question === 'object' &&
-            selectedSubmittedQuestion.question.q_mc_single &&
-            typeof selectedSubmittedQuestion.question.q_mc_single === 'object'
+            selectedSubmittedQuestion.question.q_mc_multi &&
+            typeof selectedSubmittedQuestion.question.q_mc_multi === 'object'
         "
     >
         <!-- 单选题或判断题 -->
-        <p>{{ selectedSubmittedQuestion.question.q_mc_single.stem }}</p>
+        <p>{{ selectedSubmittedQuestion.question.q_mc_multi.stem }}</p>
         <div class="flex flex-col gap-4">
             <div class="flex items-center gap-2">
-                <RadioButton
+                <Checkbox
                     v-model="
-                        selectedSubmittedQuestion.submitted_ans_q_mc_single
+                        selectedSubmittedQuestion.submitted_ans_q_mc_multi
                     "
                     inputId="option_a"
                     name="A"
@@ -24,14 +24,14 @@
                 <label for="option_a"
                     >A.
                     {{
-                        selectedSubmittedQuestion.question.q_mc_single.option_a
+                        selectedSubmittedQuestion.question.q_mc_multi.option_a
                     }}</label
                 >
             </div>
             <div class="flex items-center gap-2">
-                <RadioButton
+                <Checkbox
                     v-model="
-                        selectedSubmittedQuestion.submitted_ans_q_mc_single
+                        selectedSubmittedQuestion.submitted_ans_q_mc_multi
                     "
                     inputId="option_b"
                     name="B"
@@ -41,14 +41,14 @@
                 <label for="option_b"
                     >B.
                     {{
-                        selectedSubmittedQuestion.question.q_mc_single.option_b
+                        selectedSubmittedQuestion.question.q_mc_multi.option_b
                     }}</label
                 >
             </div>
             <div class="flex items-center gap-2">
-                <RadioButton
+                <Checkbox
                     v-model="
-                        selectedSubmittedQuestion.submitted_ans_q_mc_single
+                        selectedSubmittedQuestion.submitted_ans_q_mc_multi
                     "
                     inputId="option_c"
                     name="C"
@@ -58,14 +58,14 @@
                 <label for="option_c"
                     >C.
                     {{
-                        selectedSubmittedQuestion.question.q_mc_single.option_c
+                        selectedSubmittedQuestion.question.q_mc_multi.option_c
                     }}</label
                 >
             </div>
             <div class="flex items-center gap-2">
-                <RadioButton
+                <Checkbox
                     v-model="
-                        selectedSubmittedQuestion.submitted_ans_q_mc_single
+                        selectedSubmittedQuestion.submitted_ans_q_mc_multi
                     "
                     inputId="option_d"
                     name="D"
@@ -75,7 +75,7 @@
                 <label for="option_d"
                     >D.
                     {{
-                        selectedSubmittedQuestion.question.q_mc_single.option_d
+                        selectedSubmittedQuestion.question.q_mc_multi.option_d
                     }}</label
                 >
             </div>
@@ -91,16 +91,13 @@ const props = defineProps<{
 }>();
 // 传进来的这个本来就是一个Ref类型，所以不需要用ref包裹
 
-// const selectedOption = ref(props.selectedSubmittedQuestion.selected_option);
-const selectedOptions = ref([]);
-
 const { updateItem } = useDirectusItems();
 
 const updateAnswer = async () => {
     try {
         const submitted_question = {
-            submitted_ans_q_mc_single:
-                props.selectedSubmittedQuestion.submitted_ans_q_mc_single,
+            submitted_ans_q_mc_multi:
+                props.selectedSubmittedQuestion.submitted_ans_q_mc_multi,
         };
         const response = await updateItem<SubmittedQuestions>({
             collection: "submitted_questions",
