@@ -47,8 +47,7 @@ export default defineNuxtConfig({
         "@/assets/styles/tailwind.css",
         "@/assets/styles/layout/layout.scss",
         "primeicons/primeicons.css",
-        "@/assets/demo/demo.scss",
-        // "@/assets/styles/base.css",
+        "@/assets/styles/demo/demo.scss",
     ],
     postcss: {
         plugins: {
