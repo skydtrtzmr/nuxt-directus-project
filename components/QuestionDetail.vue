@@ -42,8 +42,8 @@
 
 <script setup>
 import { computed } from "vue";
-import CommonQuestionContent from "./CommonQuestionContent.vue";
-import QuestionContent from "./QuestionContent.vue";
+import CommonQuestionContent from "~/components/CommonQuestionContent.vue";
+import QuestionContent from "~/components/QuestionContent.vue";
 const props = defineProps({
     selectedSubmittedQuestion: Object | null,
 });
