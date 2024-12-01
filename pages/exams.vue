@@ -11,7 +11,7 @@
                 :style="{ width: '25rem' }"
             >
                 <span class="text-surface-500 dark:text-surface-400 block mb-8"
-                    >考试未开始！</span
+                    >未到考试开始时间！</span
                 >
                 <div class="flex justify-end gap-2">
                     <Button
@@ -28,7 +28,7 @@
                 :style="{ width: '25rem' }"
             >
                 <span class="text-surface-500 dark:text-surface-400 block mb-8"
-                    >考试已结束！</span
+                    >已过考试结束时间！</span
                 >
                 <div class="flex justify-end gap-2">
                     <Button
@@ -255,13 +255,13 @@ const getSubmitStatusName = (submitted_exam: SubmittedExams) => {
 const getSubmitStatusAction = (submitted_exam: SubmittedExams) => {
     switch (submitted_exam.submit_status) {
         case "done":
-            return "已交卷";
+            return "答题完成";
 
         case "doing":
             return "继续答题";
 
         case "todo":
-            return "开始考试";
+            return "开始答题";
 
         default:
             return null;
