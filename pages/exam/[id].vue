@@ -71,7 +71,7 @@ import type {
 
 dayjs.extend(utc);
 
-const ended_dialog_visible = ref(true);
+const ended_dialog_visible = ref(false);
 
 // const { refreshTokens } = useDirectusToken();
 
