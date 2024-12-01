@@ -29,6 +29,7 @@
                         <Button
                             v-for="question in chapter.submitted_questions"
                             :key="question.id"
+                            severity="getQuestionSeverity(question)"
                             class="question-card"
                             :class="{
                                 selected:
@@ -60,20 +61,36 @@ const props = defineProps<{
     selectQuestion: (question: SubmittedQuestions) => void;
 }>();
 
+const selectedSubmittedQuestion = ref<SubmittedQuestions | null>(
+    // props.submittedPaperChapters[0].submitted_questions[0]
+    null
+);
+
 // 当前选中题目
-const selectedSubmittedQuestion = ref<SubmittedQuestions | null>(null);
+// console.log(
+//     "props.submittedPaperChapters[0].submitted_questions[0]",
+//     props.submittedPaperChapters[0].submitted_questions[0]
+// );
 
 const handleQuestionClick = (question: SubmittedQuestions) => {
     console.log("handleQuestionClick", question);
     selectedSubmittedQuestion.value = question; // 更新选中题目
     props.selectQuestion(question); // 调用父组件传递的选择方法
 };
+
+const getQuestionSeverity = (question: SubmittedQuestions) => {
+    if (question.id === selectedSubmittedQuestion.value?.id) {
+        return "success";
+    } else {
+        return "warning";
+    }
+};
 </script>
 
 <style scoped>
 ul {
     list-style: none;
-    padding-inline-start: 10px; 
+    padding-inline-start: 10px;
     /* 不要缩进太多！ */
 }
 
@@ -86,7 +103,7 @@ ul {
     padding-left: 0%;
 }
 
-.question-card {
+/* .question-card {
     background-color: #007bff;
     color: #fff;
     border: none;
@@ -96,11 +113,7 @@ ul {
     cursor: pointer;
     font-size: 1rem;
     transition: background-color 0.2s;
-}
-
-.question-card:hover {
-    background-color: #0056b3;
-}
+} */
 
 .question-card.selected {
     background-color: #28a745; /* 选中后的背景色 */
