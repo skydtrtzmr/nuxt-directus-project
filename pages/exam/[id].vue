@@ -16,7 +16,7 @@
                         结束时间:
                         {{ dayjs(examEndTime).format("YYYY-MM-DD HH:mm:ss") }}
                     </p>
-                    <p>剩余时长: {{ countdown }}</p>
+                    <p>剩余时长: {{ formattedCountDown }}</p>
                 </div>
                 <Button
                     icon="pi pi-save"
@@ -26,6 +26,19 @@
                 />
             </div>
         </div>
+        <Dialog
+            v-model:visible="ended_dialog_visible"
+            modal
+            header="提示"
+            :style="{ width: '25rem' }"
+        >
+            <span class="text-surface-500 dark:text-surface-400 block mb-8"
+                >考试结束时间到，已自动提交试卷！</span
+            >
+            <div class="flex justify-end gap-2">
+                <Button type="button" label="确定" @click="exitExam()"></Button>
+            </div>
+        </Dialog>
         <div class="flex">
             <!-- 左侧：题目列表 -->
             <QuestionList
@@ -56,6 +69,8 @@ import type {
 } from "~~/types/directus_types";
 
 dayjs.extend(utc);
+
+const ended_dialog_visible = ref(false);
 
 // const { refreshTokens } = useDirectusToken();
 
@@ -98,7 +113,9 @@ const selectedSubmittedQuestion = ref<SubmittedQuestions | null>(null); // 当�
 
 // 倒计时相关
 const examEndTime = ref<dayjs.Dayjs | null>(null); // 考试结束时间（对于学生本人）
-const countdown = ref("00:00:00"); // 倒计时
+const countdown = ref(0); // 剩余时间
+const formattedCountDown = ref("00:00:00"); // 倒计时
+const countdownInterval = ref<any>(null); // 倒计时定时器
 
 // 获取提交的考试信息。先获取试卷，再获取试卷的章节。
 const fetchSubmittedExam = async () => {
@@ -254,27 +271,66 @@ const submitExam = async (examId: string) => {
 
 // 倒计时更新函数
 const startCountdown = (endTime: dayjs.Dayjs) => {
-    const update = () => {
+    const updateInterval = () => {
         const now = dayjs.utc(new Date());
-        countdown.value = dayjs
-            .utc(endTime.diff(now, "seconds", true) * 1000)
-            // 注意，我的数据库里面记录的是带时区的时间戳，在这里也得加上utc不然时间会多8个小时。
-            .format("HH:mm:ss");
-    };
+        const remainingTime = endTime.diff(now);
+        if (remainingTime <= 0) {
+            // clearInterval(interval); 不要直接写在里面。
+            stopCountdown();
+            countdown.value = 0;
+            formattedCountDown.value = "00:00:00";
+            // 执行倒计时结束后的操作，比如提交考试
+            handleTimeOut();
+        } else {
+            countdown.value = remainingTime;
+            formattedCountDown.value = dayjs
+                .utc(remainingTime)
+                // 注意，我的数据库里面记录的是带时区的时间戳，在这里也得加上utc不然时间会多8个小时。
+                .format("HH:mm:ss");
+        }
+    }
+    updateInterval(); // 立即执行一次
+    const interval = setInterval(updateInterval, 1000);
 
-    update(); // 立即执行一次，避免等到 interval 开始才看到结果
-    const countdownInterval = setInterval(update, 1000);
+    countdownInterval.value = interval; // 保存定时器引用，方便清除
 
     // 在组件销毁时清除定时器
     onUnmounted(() => {
-        clearInterval(countdownInterval);
+        clearInterval(interval);
     });
+};
+
+const stopCountdown = () => {
+    if (countdownInterval.value) {
+        clearInterval(countdownInterval.value); // 清除倒计时定时器
+        countdownInterval.value = null; // 重置定时器引用
+    }
+};
+
+const handleTimeOut = () => {
+    // 在这里可以添加倒计时结束后的操作，例如自动提交试卷
+    console.log("时间结束！自动提交考试试卷。");
+    ended_dialog_visible.value = true;
+    submitExam(submitted_exam_id); // 调用提交试卷的函数
+};
+
+const exitExam = () => {
+    ended_dialog_visible.value = false;
+    submitExam(submitted_exam_id);
 };
 
 // 页面加载时调用
 onMounted(() => {
     fetchSubmittedExam();
 });
+
+// 组件卸载时清除定时器
+onUnmounted(() => {
+    if (countdownInterval.value) {
+        clearInterval(countdownInterval.value);
+    }
+});
+// TODO 这段可能重复了
 </script>
 
 <style scoped>
