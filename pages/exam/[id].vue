@@ -5,14 +5,19 @@
         <p>考试ID: {{ submitted_exam_id }}</p>
         <!-- 显示考试的其他信息 -->
 
-        <!-- 显示倒计时 -->
-        <div v-if="countdown > 0" class="countdown">
-            <p>剩余时间: {{ formattedCountdown }}</p>
-        </div>
         <!-- 显示试卷详情 -->
         <div>
             <PaperInfo :submittedPaper="submittedPaper"></PaperInfo>
             <div class="absolute top-0 right-0">
+                <!-- 显示倒计时 -->
+                <div class="countdown">
+                    <p>当前时间: {{ dayjs().format("YYYY-MM-DD HH:mm:ss") }}</p>
+                    <p>
+                        结束时间:
+                        {{ dayjs(examEndTime).format("YYYY-MM-DD HH:mm:ss") }}
+                    </p>
+                    <p>剩余时长: {{ countdown }}</p>
+                </div>
                 <Button
                     icon="pi pi-save"
                     aria-label="Submit"
@@ -42,12 +47,15 @@
 import dayjs from "dayjs";
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
+import utc from "dayjs/plugin/utc";
 import type {
     SubmittedExams,
     SubmittedPapers,
     SubmittedPaperChapters,
     SubmittedQuestions,
 } from "~~/types/directus_types";
+
+dayjs.extend(utc);
 
 // const { refreshTokens } = useDirectusToken();
 
@@ -89,8 +97,8 @@ const selectedSubmittedQuestion = ref<SubmittedQuestions | null>(null); // 当�
 // const selectedAnswer = ref(""); // 当前题目的答案
 
 // 倒计时相关
-const countdown = ref(0); // 倒计时秒数
-const formattedCountdown = ref("00:00:00"); // 格式化后的倒计时
+const examEndTime = ref<dayjs.Dayjs | null>(null); // 考试结束时间（对于学生本人）
+const countdown = ref("00:00:00"); // 倒计时
 
 // 获取提交的考试信息。先获取试卷，再获取试卷的章节。
 const fetchSubmittedExam = async () => {
@@ -98,7 +106,7 @@ const fetchSubmittedExam = async () => {
         collection: "submitted_exams",
         id: submitted_exam_id,
         params: {
-            fields: ["submitted_papers"], // 获取考试的状态和关联的试卷
+            fields: ["expected_end_time", "submitted_papers"], // 获取考试的状态和关联的试卷
         },
     });
     if (submittedExamResponse) {
@@ -115,10 +123,10 @@ const fetchSubmittedExam = async () => {
             fetchSubmittedPaper(paperId);
         }
         // 设置倒计时的结束时间
-        const examEndTime = new Date(
-            submittedExamResponse.actual_end_time as string
-        ).getTime();
-        startCountdown(examEndTime);
+        examEndTime.value = dayjs(
+            submittedExamResponse.expected_end_time as string
+        );
+        startCountdown(examEndTime.value);
     }
 };
 
@@ -245,41 +253,23 @@ const submitExam = async (examId: string) => {
 };
 
 // 倒计时更新函数
-const startCountdown = (endTime: number) => {
+const startCountdown = (endTime: dayjs.Dayjs) => {
     const update = () => {
-        const now = new Date().getTime();
-        const timeLeft = endTime - now;
-
-        if (timeLeft <= 0) {
-            clearInterval(countdownInterval);
-            countdown.value = 0;
-            formattedCountdown.value = '00:00:00';
-        } else {
-            countdown.value = Math.floor(timeLeft / 1000); // 转为秒数
-            formattedCountdown.value = formatTime(countdown.value);
-        }
+        const now = dayjs.utc(new Date());
+        countdown.value = dayjs
+            .utc(endTime.diff(now, "seconds", true) * 1000)
+            // 注意，我的数据库里面记录的是带时区的时间戳，在这里也得加上utc不然时间会多8个小时。
+            .format("HH:mm:ss");
     };
 
     update(); // 立即执行一次，避免等到 interval 开始才看到结果
     const countdownInterval = setInterval(update, 1000);
-    
+
     // 在组件销毁时清除定时器
     onUnmounted(() => {
         clearInterval(countdownInterval);
     });
 };
-
-// 格式化倒计时为 HH:MM:SS
-const formatTime = (seconds: number) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-
-    return `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
-};
-
-// 补零函数
-const pad = (num: number) => num.toString().padStart(2, '0');
 
 // 页面加载时调用
 onMounted(() => {
@@ -289,7 +279,7 @@ onMounted(() => {
 
 <style scoped>
 .countdown {
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: bold;
     color: red;
 }
