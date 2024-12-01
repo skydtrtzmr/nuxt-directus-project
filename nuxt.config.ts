@@ -5,6 +5,27 @@ import Material from "@primevue/themes/material";
 import Lara from "@primevue/themes/lara";
 import Nora from "@primevue/themes/Nora";
 
+import { definePreset } from '@primevue/themes';
+
+const MyPreset = definePreset(Aura, {
+    semantic: {
+        // 在这里切换主题色
+        primary: {
+            50: '{blue.50}',
+            100: '{blue.100}',
+            200: '{blue.200}',
+            300: '{blue.300}',
+            400: '{blue.400}',
+            500: '{blue.500}',
+            600: '{blue.600}',
+            700: '{blue.700}',
+            800: '{blue.800}',
+            900: '{blue.900}',
+            950: '{blue.950}'
+        }
+    }
+});
+
 export default defineNuxtConfig({
     devtools: { enabled: true },
 
@@ -48,7 +69,8 @@ export default defineNuxtConfig({
             // 如果你没有配置theme switcher，就必须设置theme，否则会导致没有样式以至于显示不出来
             // 注意，主题和颜色没有关系
             theme: {
-                preset: Aura, // 记得要先在文件开头import
+                // preset: Aura, // 记得要先在文件开头import
+                preset: MyPreset, // 自定义主题
             },
         },
     },
