@@ -7,7 +7,7 @@
             <Dialog
                 v-model:visible="not_started_dialog_visible"
                 modal
-                header="Edit Profile"
+                header="提示"
                 :style="{ width: '25rem' }"
             >
                 <span class="text-surface-500 dark:text-surface-400 block mb-8"
@@ -24,7 +24,7 @@
             <Dialog
                 v-model:visible="have_ended_dialog_visible"
                 modal
-                header="Edit Profile"
+                header="提示"
                 :style="{ width: '25rem' }"
             >
                 <span class="text-surface-500 dark:text-surface-400 block mb-8"

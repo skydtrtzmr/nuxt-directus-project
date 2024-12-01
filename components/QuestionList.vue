@@ -81,9 +81,12 @@ const handleQuestionClick = (question: SubmittedQuestions) => {
 const getQuestionSeverity = (question: SubmittedQuestions) => {
     if (
         question.submitted_ans_q_mc_single ||
-        (question.submitted_ans_q_mc_multi && question.submitted_ans_q_mc_multi.length > 0) ||
+        (question.submitted_ans_q_mc_multi &&
+            (question.submitted_ans_q_mc_multi as any[]).length > 0) ||
+            // 自动生成的directus type中，这里是unknown，所以需要用类型断言`as any[]`。
         question.submitted_ans_q_mc_binary ||
-        (question.submitted_ans_q_mc_flexible && question.submitted_ans_q_mc_flexible.length > 0)
+        (question.submitted_ans_q_mc_flexible &&
+            (question.submitted_ans_q_mc_flexible as any[]).length > 0)
         // 多选题、不定项选择题必须选了选项（数组长度大于0）才算做已提交；
         // 因为这种题做完之后对应的submitted_ans就会从null变成[]或[null]，所以要加上这个判断
     ) {
