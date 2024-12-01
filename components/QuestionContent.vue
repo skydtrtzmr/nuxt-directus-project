@@ -20,7 +20,7 @@ import type { SubmittedQuestions } from "~/types/directus_types.js";
 import QMcSingle from "~/components/question_type/QMcSingle.vue";
 import QMcMulti from "./question_type/QMcMulti.vue";
 import QMcBinary from "./question_type/QMcBinary.vue";
-// import QMcFlexible from "./question_type/QMcFlexible.vue";
+import QMcFlexible from "./question_type/QMcFlexible.vue";
 const props = defineProps<{
     selectedSubmittedQuestion: SubmittedQuestions;
 }>();
