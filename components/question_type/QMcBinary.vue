@@ -8,7 +8,7 @@
             typeof selectedSubmittedQuestion.question.q_mc_binary === 'object'
         "
     >
-        <!-- 单选题或判断题 -->
+        <!-- 判断题 -->
         <p>{{ selectedSubmittedQuestion.question.q_mc_binary.stem }}</p>
         <div class="flex flex-col gap-4">
             <div class="flex items-center gap-2">

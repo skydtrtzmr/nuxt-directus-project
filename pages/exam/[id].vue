@@ -155,6 +155,7 @@ const fetchSubmittedChapterList = async (
                 "submitted_questions.question.q_mc_multi.*",
                 "submitted_questions.question.q_mc_binary.*",
                 "submitted_questions.question.q_mc_flexible.*",
+                "submitted_questions.question.question_group.*",
                 "submitted_questions.submitted_paper_chapter.source_paper_prototype_chapter",
                 "submitted_questions.submitted_paper_chapter.source_paper_prototype_chapter.id",
                 "submitted_questions.submitted_paper_chapter.source_paper_prototype_chapter.title",

@@ -26,7 +26,7 @@
                         </li> -->
                     <!-- 2 章节下的题目列表，卡片式 -->
                     <div class="question-card-container">
-                        <button
+                        <Button
                             v-for="question in chapter.submitted_questions"
                             :key="question.id"
                             class="question-card"
@@ -39,7 +39,7 @@
                             @click="handleQuestionClick(question)"
                         >
                             {{ question.sort_in_chapter }}
-                        </button>
+                        </Button>
                     </div>
                 </ul>
                 <br />

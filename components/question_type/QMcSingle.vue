@@ -8,7 +8,7 @@
             typeof selectedSubmittedQuestion.question.q_mc_single === 'object'
         "
     >
-        <!-- 单选题或判断题 -->
+        <!-- 单选题 -->
         <p>{{ selectedSubmittedQuestion.question.q_mc_single.stem }}</p>
         <div class="flex flex-col gap-4">
             <div class="flex items-center gap-2">
