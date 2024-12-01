@@ -29,7 +29,7 @@
                         <Button
                             v-for="question in chapter.submitted_questions"
                             :key="question.id"
-                            severity="getQuestionSeverity(question)"
+                            :severity="getQuestionSeverity(question)"
                             class="question-card"
                             :class="{
                                 selected:
