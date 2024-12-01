@@ -70,8 +70,8 @@
                     <!-- 这里需要定义type，现在有报错 -->
                     <div
                         v-if="
-                            getSubmitStatusAction(submitted_exam) !==
-                            '考试已结束'
+                            getSubmitStatusName(submitted_exam) !==
+                            '已交卷'
                         "
                     >
                         <Button
@@ -237,7 +237,7 @@ const getSubmitStatusName = (submitted_exam: SubmittedExams) => {
 const getSubmitStatusAction = (submitted_exam: SubmittedExams) => {
     switch (submitted_exam.submit_status) {
         case "done":
-            return "考试已结束";
+            return "已交卷";
 
         case "doing":
             return "继续答题";
