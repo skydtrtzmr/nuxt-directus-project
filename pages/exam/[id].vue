@@ -1,13 +1,21 @@
 <!-- pages/exam/[id].vue -->
 <template>
-    <div>
+    <div class="relative">
         <!-- <h2>考试详情</h2> -->
         <p>考试ID: {{ submitted_exam_id }}</p>
         <!-- 显示考试的其他信息 -->
 
         <!-- 显示试卷详情 -->
-        <PaperInfo :submittedPaper="submittedPaper"></PaperInfo>
-
+        <div>
+            <PaperInfo :submittedPaper="submittedPaper"></PaperInfo>
+            <div class="absolute top-0 right-0">
+                <Button
+                    icon="pi pi-save"
+                    aria-label="Submit"
+                    label="提交试卷"
+                />
+            </div>
+        </div>
         <div class="flex">
             <!-- 左侧：题目列表 -->
             <QuestionList
@@ -53,7 +61,7 @@ import type {
 // 如果当前用户未登录或者token失效，则跳转到登录页面
 definePageMeta({
     middleware: ["auth"],
-    layout: "empty" // 考试时全屏显示，不需要侧边栏和顶部导航栏
+    layout: "empty", // 考试时全屏显示，不需要侧边栏和顶部导航栏
 });
 
 const { getItemById, getItems } = useDirectusItems();

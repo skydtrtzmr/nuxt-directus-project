@@ -59,6 +59,7 @@ export default defineNuxtConfig({
         "@/assets/styles/tailwind.css",
         "@/assets/styles/layout/layout.scss",
         "primeicons/primeicons.css",
+        // 可用的icon参见：https://primevue.org/icons/#list
         "@/assets/styles/demo/demo.scss",
     ],
     postcss: {
