@@ -5,6 +5,10 @@
         <p>考试ID: {{ submitted_exam_id }}</p>
         <!-- 显示考试的其他信息 -->
 
+        <!-- 显示倒计时 -->
+        <div v-if="countdown > 0" class="countdown">
+            <p>剩余时间: {{ formattedCountdown }}</p>
+        </div>
         <!-- 显示试卷详情 -->
         <div>
             <PaperInfo :submittedPaper="submittedPaper"></PaperInfo>
@@ -83,6 +87,10 @@ const submittedPaperChapters = ref<SubmittedPaperChapters[]>([]);
 const selectedSubmittedQuestion = ref<SubmittedQuestions | null>(null); // 当前选中的题目
 // const selectedAnswer = ref(""); // 当前题目的答案
 
+// 倒计时相关
+const countdown = ref(0); // 倒计时秒数
+const formattedCountdown = ref("00:00:00"); // 格式化后的倒计时
+
 // 获取提交的考试信息。先获取试卷，再获取试卷的章节。
 const fetchSubmittedExam = async () => {
     const submittedExamResponse = await getItemById<SubmittedExams>({
@@ -105,6 +113,11 @@ const fetchSubmittedExam = async () => {
             console.log("paperId", paperId);
             fetchSubmittedPaper(paperId);
         }
+        // 设置倒计时的结束时间
+        const examEndTime = new Date(
+            submittedExamResponse.actual_end_time as string
+        ).getTime();
+        startCountdown(examEndTime);
     }
 };
 
@@ -216,6 +229,43 @@ const submitExam = async (examId: string) => {
     router.push(`/exams`);
 };
 
+// 倒计时更新函数
+const startCountdown = (endTime: number) => {
+    const update = () => {
+        const now = new Date().getTime();
+        const timeLeft = endTime - now;
+
+        if (timeLeft <= 0) {
+            clearInterval(countdownInterval);
+            countdown.value = 0;
+            formattedCountdown.value = '00:00:00';
+        } else {
+            countdown.value = Math.floor(timeLeft / 1000); // 转为秒数
+            formattedCountdown.value = formatTime(countdown.value);
+        }
+    };
+
+    update(); // 立即执行一次，避免等到 interval 开始才看到结果
+    const countdownInterval = setInterval(update, 1000);
+    
+    // 在组件销毁时清除定时器
+    onUnmounted(() => {
+        clearInterval(countdownInterval);
+    });
+};
+
+// 格式化倒计时为 HH:MM:SS
+const formatTime = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+
+    return `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
+};
+
+// 补零函数
+const pad = (num: number) => num.toString().padStart(2, '0');
+
 // 页面加载时调用
 onMounted(() => {
     fetchSubmittedExam();
@@ -223,6 +273,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.countdown {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: red;
+}
+
 .sidebar {
     width: 260px;
     /* 固定宽度 */

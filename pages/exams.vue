@@ -58,7 +58,7 @@
                     <p>
                         <strong>结束时间:</strong>
                         {{
-                            dayjs(submitted_exam.exam.start_time).format(
+                            dayjs(submitted_exam.exam.end_time).format(
                                 "YYYY-MM-DD HH:mm:ss"
                             )
                         }}
@@ -69,10 +69,7 @@
                     ></Tag>
                     <!-- 这里需要定义type，现在有报错 -->
                     <div
-                        v-if="
-                            getSubmitStatusName(submitted_exam) !==
-                            '已交卷'
-                        "
+                        v-if="getSubmitStatusName(submitted_exam) !== '已交卷'"
                     >
                         <Button
                             @click="joinExam(submitted_exam.id)"
@@ -165,6 +162,18 @@ const submitted_exams = await getItems<SubmittedExams>({
     },
 });
 
+const submitActualStartTime = async (submitted_exam: SubmittedExams) => {
+    try {
+        let nowData = dayjs();
+        const newItem = { actual_start_time: nowData };
+        await updateItem<SubmittedExams>({
+            collection: "submitted_exams",
+            id: submitted_exam.id,
+            item: newItem,
+        });
+    } catch (e) {}
+};
+
 const joinExam = (examId: string) => {
     // 首先判断考试时间
     console.log("当前时间：");
@@ -190,10 +199,19 @@ const joinExam = (examId: string) => {
         have_ended_dialog_visible.value = true;
         return;
     }
-    
+
     console.log(`参加考试：${examId}`);
     // 参加考试之后，需要修改submit_status为doing。
     updateSubmitStatus(submitted_exams.find((item) => item.id === examId)!);
+
+    // 只有第一次才记录实际开始时间，以后就不再记录了。
+
+    if (exam_info.actual_start_time === null) {
+        submitActualStartTime(
+            submitted_exams.find((item) => item.id === examId)!
+        );
+    }
+
     // 你可以根据examId跳转到具体的考试页面
     // 这里的 router.push 必须是 this.$router.push 或者使用 composable useRouter()
     // 如果使用 useRouter，需要引入并使用
