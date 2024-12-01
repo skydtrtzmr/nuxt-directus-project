@@ -4,6 +4,40 @@
     <div>
         <h2>考试列表</h2>
         <div class="exam-card-container">
+            <Dialog
+                v-model:visible="not_started_dialog_visible"
+                modal
+                header="Edit Profile"
+                :style="{ width: '25rem' }"
+            >
+                <span class="text-surface-500 dark:text-surface-400 block mb-8"
+                    >考试未开始！</span
+                >
+                <div class="flex justify-end gap-2">
+                    <Button
+                        type="button"
+                        label="确定"
+                        @click="not_started_dialog_visible = false"
+                    ></Button>
+                </div>
+            </Dialog>
+            <Dialog
+                v-model:visible="have_ended_dialog_visible"
+                modal
+                header="Edit Profile"
+                :style="{ width: '25rem' }"
+            >
+                <span class="text-surface-500 dark:text-surface-400 block mb-8"
+                    >考试已结束！</span
+                >
+                <div class="flex justify-end gap-2">
+                    <Button
+                        type="button"
+                        label="确定"
+                        @click="have_ended_dialog_visible = false"
+                    ></Button>
+                </div>
+            </Dialog>
             <div
                 class="exam-card"
                 v-for="submitted_exam in submitted_exams"
@@ -34,12 +68,28 @@
                         :severity="getSubmitStatus(submitted_exam)"
                     ></Tag>
                     <!-- 这里需要定义type，现在有报错 -->
-                    <Button
-                        @click="joinExam(submitted_exam.id)"
-                        class="join-button"
+                    <div
+                        v-if="
+                            getSubmitStatusAction(submitted_exam) !==
+                            '考试已结束'
+                        "
                     >
-                        {{ getSubmitStatusAction(submitted_exam) }}
-                    </Button>
+                        <Button
+                            @click="joinExam(submitted_exam.id)"
+                            class="join-button"
+                        >
+                            {{ getSubmitStatusAction(submitted_exam) }}
+                        </Button>
+                    </div>
+                    <div v-else>
+                        <Button
+                            @click="joinExam(submitted_exam.id)"
+                            class="join-button"
+                            disabled
+                        >
+                            {{ getSubmitStatusAction(submitted_exam) }}
+                        </Button>
+                    </div>
                 </div>
                 <br />
             </div>
@@ -58,6 +108,10 @@ import type {
 const auth = useAuth();
 const current_user = auth.user; // 获取当前用户
 console.log("current_user:\n", current_user);
+
+// 这两个控制能否参加考试的弹窗
+const not_started_dialog_visible = ref(false);
+const have_ended_dialog_visible = ref(false);
 
 const { getItems, updateItem } = useDirectusItems();
 // 如果当前用户未登录，或者token失效，则跳转到登录页面
@@ -86,18 +140,6 @@ const updateSubmitStatus = async (submitted_exam: SubmittedExams) => {
     } catch (e) {}
 };
 
-const joinExam = (examId: string) => {
-    console.log(`参加考试：${examId}`);
-    // 参加考试之后，需要修改submit_status为doing，并将实际开始时间设置为当前时间。
-    updateSubmitStatus(submitted_exams.find((item) => item.id === examId)!);
-    // 你可以根据examId跳转到具体的考试页面
-    // 这里的 router.push 必须是 this.$router.push 或者使用 composable useRouter()
-    // 如果使用 useRouter，需要引入并使用
-    const router = useRouter();
-    router.push(`/exam/${examId}`);
-    // 跳转到具体的考试页面，页面path的最后一项就是submitted_exams的id。
-};
-
 // const filters = { content: "testcontent", title: "Test1" };
 
 const submitted_exams = await getItems<SubmittedExams>({
@@ -122,6 +164,43 @@ const submitted_exams = await getItems<SubmittedExams>({
         // 注意！别弄混了，directus中student.id和directus_user.id不一样。
     },
 });
+
+const joinExam = (examId: string) => {
+    // 首先判断考试时间
+    console.log("当前时间：");
+    console.log(dayjs(Date.now()));
+    const now_time = dayjs(Date.now());
+
+    const exam_info = submitted_exams.find((item) => item.id === examId)!;
+
+    console.log("考试开始时间：");
+    const exam_start_time = dayjs(exam_info.exam.start_time);
+    console.log(dayjs(exam_info.exam.start_time));
+
+    console.log("考试结束时间：");
+    const exam_end_time = dayjs(exam_info.exam.end_time);
+    console.log(dayjs(exam_info.exam.end_time));
+
+    if (now_time.isBefore(exam_start_time)) {
+        not_started_dialog_visible.value = true;
+        return;
+    }
+
+    if (now_time.isAfter(exam_end_time)) {
+        have_ended_dialog_visible.value = true;
+        return;
+    }
+    
+    console.log(`参加考试：${examId}`);
+    // 参加考试之后，需要修改submit_status为doing。
+    updateSubmitStatus(submitted_exams.find((item) => item.id === examId)!);
+    // 你可以根据examId跳转到具体的考试页面
+    // 这里的 router.push 必须是 this.$router.push 或者使用 composable useRouter()
+    // 如果使用 useRouter，需要引入并使用
+    const router = useRouter();
+    router.push(`/exam/${examId}`);
+    // 跳转到具体的考试页面，页面path的最后一项就是submitted_exams的id。
+};
 
 const getSubmitStatus = (submitted_exam: SubmittedExams) => {
     switch (submitted_exam.submit_status) {

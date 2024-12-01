@@ -13,7 +13,7 @@
                     icon="pi pi-save"
                     aria-label="Submit"
                     label="提交试卷"
-                    @click="submitPaper(submittedPaper)"
+                    @click="submitExam(submitted_exam_id)"
                 />
             </div>
         </div>
@@ -197,21 +197,22 @@ const selectQuestion = (question: SubmittedQuestions) => {
     // selectedAnswer.value = ""; // 清空答案
 };
 
-const updateSubmitStatus = async (submitted_exam: SubmittedExams) => {
+// 这个和考试列表里面不太一样，直接传个id就行
+const updateSubmitStatus = async (submitted_exam_id: string) => {
     try {
-        const newItem = { submit_status: "doing" };
+        const newItem = { submit_status: "done" };
         await updateItem<SubmittedExams>({
             collection: "submitted_exams",
-            id: submitted_exam.id,
+            id: submitted_exam_id,
             item: newItem,
         });
     } catch (e) {}
 };
 
-const submitPaper = async (paper: SubmittedPapers) => {
-    updateSubmitStatus(submitted_exams.find((item) => item.id === examId)!);
+const submitExam = async (examId: string) => {
+    updateSubmitStatus(examId);
     const router = useRouter();
-    router.push(`/exam/${examId}`);
+    router.push(`/exams`);
 };
 
 // 页面加载时调用
