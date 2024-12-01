@@ -39,6 +39,7 @@
 </template>
 
 <script setup lang="ts">
+import dayjs from "dayjs";
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import type {
@@ -211,6 +212,19 @@ const selectQuestion = (question: SubmittedQuestions) => {
     // selectedAnswer.value = ""; // 清空答案
 };
 
+// 直接传id
+const submitActualEndTime = async (examId: string) => {
+    try {
+        let nowData = dayjs();
+        const newItem = { actual_end_time: nowData };
+        await updateItem<SubmittedExams>({
+            collection: "submitted_exams",
+            id: examId,
+            item: newItem,
+        });
+    } catch (e) {}
+};
+
 // 这个和考试列表里面不太一样，直接传个id就行
 const updateSubmitStatus = async (submitted_exam_id: string) => {
     try {
@@ -224,6 +238,7 @@ const updateSubmitStatus = async (submitted_exam_id: string) => {
 };
 
 const submitExam = async (examId: string) => {
+    submitActualEndTime(examId);
     updateSubmitStatus(examId);
     const router = useRouter();
     router.push(`/exams`);
