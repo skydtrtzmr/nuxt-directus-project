@@ -88,18 +88,18 @@
                                 </div>
                                 <div class="flex flex-col md:items-end gap-8">
                                     <span class="text-xl font-semibold"
-                                        >${{ item.price }}</span
+                                        >考试时长{{ item.price }}</span
                                     >
                                     <div
                                         class="flex flex-row-reverse md:flex-row gap-2"
                                     >
                                         <Button
-                                            icon="pi pi-heart"
+                                            icon="pi pi-info-circle"
                                             outlined
                                         ></Button>
                                         <Button
-                                            icon="pi pi-shopping-cart"
-                                            label="Buy Now"
+                                            icon="pi pi-pencil"
+                                            label="参加考试"
                                             :disabled="
                                                 item.submit_status ===
                                                 'todo'
@@ -128,12 +128,12 @@
                                 class="bg-surface-50 flex justify-center rounded p-4"
                             >
                                 <div class="relative mx-auto">
-                                    <img
+                                    <!-- <img
                                         class="rounded w-full"
                                         :src="`https://primefaces.org/cdn/primevue/images/product/${item.image}`"
                                         :alt="item.exam.title"
                                         style="max-width: 300px"
-                                    />
+                                    /> -->
                                     <div
                                         class="absolute bg-black/70 rounded-border"
                                         style="left: 4px; top: 4px"
@@ -184,12 +184,12 @@
                                 </div>
                                 <div class="flex flex-col gap-6 mt-6">
                                     <span class="text-2xl font-semibold"
-                                        >${{ item.price }}</span
+                                        >考试时长{{ item.price }}</span
                                     >
                                     <div class="flex gap-2">
                                         <Button
-                                            icon="pi pi-shopping-cart"
-                                            label="Buy Now"
+                                            icon="pi pi-pencil"
+                                            label="参加考试"
                                             :disabled="
                                                 item.submit_status ===
                                                 'todo'
@@ -197,7 +197,7 @@
                                             class="flex-auto whitespace-nowrap"
                                         ></Button>
                                         <Button
-                                            icon="pi pi-heart"
+                                            icon="pi pi-info-circle"
                                             outlined
                                         ></Button>
                                     </div>

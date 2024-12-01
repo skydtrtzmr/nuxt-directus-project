@@ -13,6 +13,7 @@
                     icon="pi pi-save"
                     aria-label="Submit"
                     label="提交试卷"
+                    @click="submitPaper(submittedPaper)"
                 />
             </div>
         </div>
@@ -64,7 +65,7 @@ definePageMeta({
     layout: "empty", // 考试时全屏显示，不需要侧边栏和顶部导航栏
 });
 
-const { getItemById, getItems } = useDirectusItems();
+const { getItemById, getItems, updateItem } = useDirectusItems();
 
 // 路由参数：submitted_exam 的 ID
 const route = useRoute();
@@ -194,6 +195,23 @@ const fetchSubmittedChapterList = async (
 const selectQuestion = (question: SubmittedQuestions) => {
     selectedSubmittedQuestion.value = question;
     // selectedAnswer.value = ""; // 清空答案
+};
+
+const updateSubmitStatus = async (submitted_exam: SubmittedExams) => {
+    try {
+        const newItem = { submit_status: "doing" };
+        await updateItem<SubmittedExams>({
+            collection: "submitted_exams",
+            id: submitted_exam.id,
+            item: newItem,
+        });
+    } catch (e) {}
+};
+
+const submitPaper = async (paper: SubmittedPapers) => {
+    updateSubmitStatus(submitted_exams.find((item) => item.id === examId)!);
+    const router = useRouter();
+    router.push(`/exam/${examId}`);
 };
 
 // 页面加载时调用
