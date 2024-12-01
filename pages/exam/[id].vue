@@ -30,6 +30,7 @@
             v-model:visible="ended_dialog_visible"
             modal
             header="提示"
+            @hide="exitExam()"
             :style="{ width: '25rem' }"
         >
             <span class="text-surface-500 dark:text-surface-400 block mb-8"
@@ -70,7 +71,7 @@ import type {
 
 dayjs.extend(utc);
 
-const ended_dialog_visible = ref(false);
+const ended_dialog_visible = ref(true);
 
 // const { refreshTokens } = useDirectusToken();
 
@@ -94,6 +95,8 @@ definePageMeta({
 });
 
 const { getItemById, getItems, updateItem } = useDirectusItems();
+
+const router = useRouter();
 
 // 路由参数：submitted_exam 的 ID
 const route = useRoute();
@@ -265,8 +268,8 @@ const updateSubmitStatus = async (submitted_exam_id: string) => {
 const submitExam = async (examId: string) => {
     submitActualEndTime(examId);
     updateSubmitStatus(examId);
-    const router = useRouter();
-    router.push(`/exams`);
+    // const router = useRouter();
+    // router.push(`/exams`);
 };
 
 // 倒计时更新函数
@@ -316,7 +319,7 @@ const handleTimeOut = () => {
 
 const exitExam = () => {
     ended_dialog_visible.value = false;
-    submitExam(submitted_exam_id);
+    router.push(`/exams`);
 };
 
 // 页面加载时调用
