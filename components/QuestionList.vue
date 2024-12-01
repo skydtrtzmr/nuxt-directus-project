@@ -79,7 +79,14 @@ const handleQuestionClick = (question: SubmittedQuestions) => {
 };
 
 const getQuestionSeverity = (question: SubmittedQuestions) => {
-    if (question.id === selectedSubmittedQuestion.value?.id) {
+    if (
+        question.submitted_ans_q_mc_single ||
+        (question.submitted_ans_q_mc_multi && question.submitted_ans_q_mc_multi.length > 0) ||
+        question.submitted_ans_q_mc_binary ||
+        (question.submitted_ans_q_mc_flexible && question.submitted_ans_q_mc_flexible.length > 0)
+        // 多选题、不定项选择题必须选了选项（数组长度大于0）才算做已提交；
+        // 因为这种题做完之后对应的submitted_ans就会从null变成[]或[null]，所以要加上这个判断
+    ) {
         return "success";
     } else {
         return "warning";
@@ -116,8 +123,8 @@ ul {
 } */
 
 .question-card.selected {
-    background-color: #28a745; /* 选中后的背景色 */
-    box-shadow: inset 0 0 0 2px #1e7e34; /* 内边框效果 */
+    /* background-color: #28a745; 选中后的背景色 */
+    box-shadow: inset 0 0 0 2px #202040; /* 内边框效果 */
     /* border: 2px solid #1e7e34; 添加边框 */
     font-weight: bold; /* 字体加粗 */
 }
