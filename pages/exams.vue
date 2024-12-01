@@ -29,14 +29,19 @@
                             )
                         }}
                     </p>
-                    <button
+                    <Tag
+                        :value="getSubmitStatusName(submitted_exam)"
+                        :severity="getSubmitStatus(submitted_exam)"
+                    ></Tag>
+                    <!-- 这里需要定义type，现在有报错 -->
+                    <Button
                         @click="joinExam(submitted_exam.id)"
                         class="join-button"
                     >
-                        参加考试
-                    </button>
+                        {{ getSubmitStatusAction(submitted_exam) }}
+                    </Button>
                 </div>
-                <br/>
+                <br />
             </div>
         </div>
     </div>
@@ -52,8 +57,9 @@ import type {
 } from "~~/types/directus_types";
 const auth = useAuth();
 const current_user = auth.user; // 获取当前用户
-console.log('current_user:\n', current_user);
+console.log("current_user:\n", current_user);
 
+const { getItems, updateItem } = useDirectusItems();
 // 如果当前用户未登录，或者token失效，则跳转到登录页面
 definePageMeta({
     middleware: ["auth"],
@@ -69,10 +75,21 @@ if (!current_user) {
 // 设置了refreshTokens之后，只要还继续访问这个页面，就会自动刷新token，
 // 保证一直在用的用户的token是最新的，不会突然失效。
 
-const { getItems } = useDirectusItems();
+const updateSubmitStatus = async (submitted_exam: SubmittedExams) => {
+    try {
+        const newItem = { submit_status: "doing" };
+        await updateItem<SubmittedExams>({
+            collection: "submitted_exams",
+            id: submitted_exam.id,
+            item: newItem,
+        });
+    } catch (e) {}
+};
 
 const joinExam = (examId: string) => {
     console.log(`参加考试：${examId}`);
+    // 参加考试之后，需要修改submit_status为doing，并将实际开始时间设置为当前时间。
+    updateSubmitStatus(submitted_exams.find((item) => item.id === examId)!);
     // 你可以根据examId跳转到具体的考试页面
     // 这里的 router.push 必须是 this.$router.push 或者使用 composable useRouter()
     // 如果使用 useRouter，需要引入并使用
@@ -82,6 +99,7 @@ const joinExam = (examId: string) => {
 };
 
 // const filters = { content: "testcontent", title: "Test1" };
+
 const submitted_exams = await getItems<SubmittedExams>({
     collection: "submitted_exams",
     params: {
@@ -104,6 +122,54 @@ const submitted_exams = await getItems<SubmittedExams>({
         // 注意！别弄混了，directus中student.id和directus_user.id不一样。
     },
 });
+
+const getSubmitStatus = (submitted_exam: SubmittedExams) => {
+    switch (submitted_exam.submit_status) {
+        case "done":
+            return "success";
+
+        case "doing":
+            return "warn";
+
+        case "todo":
+            return "danger";
+
+        default:
+            return null;
+    }
+};
+
+const getSubmitStatusName = (submitted_exam: SubmittedExams) => {
+    switch (submitted_exam.submit_status) {
+        case "done":
+            return "已交卷";
+
+        case "doing":
+            return "答题中";
+
+        case "todo":
+            return "未开始";
+
+        default:
+            return null;
+    }
+};
+
+const getSubmitStatusAction = (submitted_exam: SubmittedExams) => {
+    switch (submitted_exam.submit_status) {
+        case "done":
+            return "考试已结束";
+
+        case "doing":
+            return "继续答题";
+
+        case "todo":
+            return "开始考试";
+
+        default:
+            return null;
+    }
+};
 
 // console.log(submitted_exams);
 </script>

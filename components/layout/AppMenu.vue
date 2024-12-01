@@ -13,7 +13,7 @@ const model = ref([
         items: [
             // { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' },
             { label: '考试', icon: 'pi pi-fw pi-id-card', to: '/exams' },
-            { label: '考试列表dataview', icon: 'pi pi-fw pi-check-square', to: '/exam_dataview' },
+            { label: '考试列表dataview', icon: 'pi pi-fw pi-check-square', to: '/examdataview' },
             { label: '登录', icon: 'pi pi-fw pi-id-card', to: '/login' },
             // { label: 'Input', icon: 'pi pi-fw pi-check-square', to: '/uikit/input' },
             // { label: 'Button', icon: 'pi pi-fw pi-mobile', to: '/uikit/button', class: 'rotated-icon' },
