@@ -22,7 +22,7 @@
                     icon="pi pi-save"
                     aria-label="Submit"
                     label="提交试卷"
-                    @click="submitExam(submitted_exam_id)"
+                    @click="manualSubmit()"
                 />
             </div>
         </div>
@@ -38,6 +38,19 @@
             >
             <div class="flex justify-end gap-2">
                 <Button type="button" label="确定" @click="exitExam()"></Button>
+            </div>
+        </Dialog>
+        <Dialog
+            v-model:visible="confirm_submit_dialog_visible"
+            modal
+            header="警告"
+            :style="{ width: '25rem' }"
+        >
+            <span class="text-surface-500 dark:text-surface-400 block mb-8"
+                >确认提交试卷吗？</span
+            >
+            <div class="flex justify-end gap-2">
+                <Button type="button" label="确定" @click="confirmSubmit()"></Button>
             </div>
         </Dialog>
         <div class="flex">
@@ -72,6 +85,7 @@ import type {
 dayjs.extend(utc);
 
 const ended_dialog_visible = ref(false);
+const confirm_submit_dialog_visible = ref(false);
 
 // const { refreshTokens } = useDirectusToken();
 
@@ -265,11 +279,16 @@ const updateSubmitStatus = async (submitted_exam_id: string) => {
     } catch (e) {}
 };
 
+// 注意这个函数只表示给后台发送对应数据，并不涉及弹出框等交互。
 const submitExam = async (examId: string) => {
     submitActualEndTime(examId);
     updateSubmitStatus(examId);
     // const router = useRouter();
     // router.push(`/exams`);
+};
+
+const manualSubmit = () => {
+    confirm_submit_dialog_visible.value = true;
 };
 
 // 倒计时更新函数
@@ -320,6 +339,12 @@ const handleTimeOut = () => {
 const exitExam = () => {
     ended_dialog_visible.value = false;
     router.push(`/exams`);
+};
+
+// 这个仅用于手动提交时，确认提交。
+const confirmSubmit = () => {
+    submitExam(submitted_exam_id); // 调用提交试卷的函数
+    exitExam();
 };
 
 // 页面加载时调用
