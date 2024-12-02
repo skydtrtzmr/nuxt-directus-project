@@ -33,7 +33,7 @@
             ></QuestionList>
 
             <!-- 右侧：题目详情和答题区 -->
-            <BlockUI :blocked="blocked" class="basis-4/5">
+            <BlockUI :blocked="blocked" class="basis-4/5" pt:mask:false>
                 <QuestionDetail
                     :selectedSubmittedQuestion="selectedSubmittedQuestion"
                 ></QuestionDetail>
@@ -53,7 +53,6 @@ import type {
     SubmittedPaperChapters,
     SubmittedQuestions,
 } from "~~/types/directus_types";
-
 
 dayjs.extend(utc);
 
@@ -337,7 +336,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-
 .p-blockui-mask.p-overlay-mask {
     display: none !important;
 }

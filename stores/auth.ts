@@ -48,6 +48,8 @@ export const useAuth = defineStore("auth", {
     actions: {
         // 刷新 token 的逻辑
         async refreshToken() {
+            console.log("auth store refreshToken");
+            
             try {
                 const { refreshTokens } = useDirectusToken();
                 const newToken = await refreshTokens();
@@ -106,7 +108,8 @@ export const useAuth = defineStore("auth", {
         }) {
             const { login } = useDirectusAuth();
             const router = useRouter();
-
+            console.log("auth store login");
+            
             try {
                 // Try to login
                 const loginResponse: AuthResponse = await login({
@@ -146,7 +149,8 @@ export const useAuth = defineStore("auth", {
         async logout() {
             const router = useRouter();
             const { logout } = useDirectusAuth();
-
+            console.log("auth store logout");
+            
             try {
                 // Try to logout
                 await logout();

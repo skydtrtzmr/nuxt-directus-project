@@ -9,6 +9,8 @@
 
 <script setup lang="ts">
 const { register } = useDirectusAuth();
+console.log('register');
+
 
 const email = ref("");
 const password = ref("");
