@@ -51,6 +51,7 @@ export const useAuth = defineStore("auth", {
             console.log("auth store refreshToken");
             
             try {
+                const { logout  } = useDirectusAuth();
                 const { refreshTokens } = useDirectusToken();
                 const newToken = await refreshTokens();
 
@@ -61,6 +62,7 @@ export const useAuth = defineStore("auth", {
                 }
             } catch (error) {
                 console.error("刷新 token 失败", error);
+                await logout();
                 // this.$reset(); // 如果刷新失败，清空状态
             }
         },
@@ -170,6 +172,8 @@ export const useAuth = defineStore("auth", {
             }
         },
         async getUser() {
+            console.log("auth store getUser");
+            
             try {
                 // Try to fetch the user data
                 const directusUser = useDirectusUser();

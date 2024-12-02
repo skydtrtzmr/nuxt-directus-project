@@ -13,6 +13,9 @@
         <pre>{{ user }}</pre> 
         
     </div>
+    <div v-if="isLoggedIn">
+        <Button @click="auth.logout()">退出登录</Button>
+    </div>
 </template>
 
 <script setup lang="ts">
