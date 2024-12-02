@@ -1,5 +1,5 @@
 <!-- pages/exam/preview/[id].vue -->
-<!-- 这个页面基本上和正常考试一样的，只是去掉了用户验证、添加上blockUI，是给老师看用的。 -->
+<!-- 这个页面基本上和正常考试一样的，只是去掉了用户验证、增加了disable，是给老师看用的。 -->
 <template>
     <div class="relative">
         <!-- <h2>考试详情</h2> -->
@@ -33,10 +33,25 @@
             ></QuestionList>
 
             <!-- 右侧：题目详情和答题区 -->
-            <BlockUI :blocked="blocked" class="basis-4/5" pt:mask:false>
+            <BlockUI
+                :blocked="blocked"
+                class="basis-4/5"
+                :pt="{ // 通过透传pt参数，控制BlockUI的样式
+                    mask: {
+                        style: {
+                            background: 'transparent',
+                            animation: 'none',
+                        },
+                        class: [],
+                    },
+                }"
+            >
                 <QuestionDetail
                     :selectedSubmittedQuestion="selectedSubmittedQuestion"
+                    :disableAnswer="true"
                 ></QuestionDetail>
+                <!-- 后续可以改成不用BlockUI、而是给答题组建传入一个disable属性，控制答题按钮的状态。 -->
+                <!-- 但是那样太麻烦了，要改好多组件。 -->
             </BlockUI>
         </div>
     </div>
@@ -336,14 +351,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.p-blockui-mask.p-overlay-mask {
-    display: none !important;
-}
-
-.p-blockui-mask-document.p-overlay-mask {
-    display: none !important;
-}
-
 .countdown {
     font-size: 1rem;
     font-weight: bold;

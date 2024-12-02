@@ -34,6 +34,7 @@
                 <QuestionContent
                     class="basis-3/5 h-full"
                     :selectedSubmittedQuestion="selectedSubmittedQuestion"
+                    :disableAnswer="disableAnswer"
                 />
             </div>
         </div>
@@ -46,6 +47,7 @@ import CommonQuestionContent from "~/components/CommonQuestionContent.vue";
 import QuestionContent from "~/components/QuestionContent.vue";
 const props = defineProps({
     selectedSubmittedQuestion: Object | null,
+    disableAnswer: Boolean,
 });
 </script>
 
