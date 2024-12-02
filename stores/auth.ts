@@ -49,9 +49,9 @@ export const useAuth = defineStore("auth", {
         // 刷新 token 的逻辑
         async refreshToken() {
             console.log("auth store refreshToken");
-            
+            const { logout } = useDirectusAuth();
+
             try {
-                const { logout  } = useDirectusAuth();
                 const { refreshTokens } = useDirectusToken();
                 const newToken = await refreshTokens();
 
@@ -68,6 +68,7 @@ export const useAuth = defineStore("auth", {
         },
 
         async validateSession() {
+            const { logout } = useDirectusAuth();
             try {
                 console.log("验证会话");
 
@@ -96,6 +97,8 @@ export const useAuth = defineStore("auth", {
             } catch (e) {
                 console.error("验证会话失败", e);
                 this.$reset(); // 无法验证时，重置状态
+                await logout(); // 无效的token，退出登录
+                return false; // 用户未登录或 token 已过期
             }
         },
 
@@ -111,7 +114,7 @@ export const useAuth = defineStore("auth", {
             const { login } = useDirectusAuth();
             const router = useRouter();
             console.log("auth store login");
-            
+
             try {
                 // Try to login
                 const loginResponse: AuthResponse = await login({
@@ -152,7 +155,7 @@ export const useAuth = defineStore("auth", {
             const router = useRouter();
             const { logout } = useDirectusAuth();
             console.log("auth store logout");
-            
+
             try {
                 // Try to logout
                 await logout();
@@ -173,7 +176,7 @@ export const useAuth = defineStore("auth", {
         },
         async getUser() {
             console.log("auth store getUser");
-            
+
             try {
                 // Try to fetch the user data
                 const directusUser = useDirectusUser();
@@ -191,6 +194,12 @@ export const useAuth = defineStore("auth", {
         },
         async resetState() {
             this.$reset();
+        },
+        // 定时检查 token 是否过期
+        startTokenExpirationCheck() {
+            setInterval(async () => {
+                await this.validateSession();
+            }, 5 * 60 * 1000); // 每隔 5 分钟检查一次
         },
     },
     persist: true, // 持久化存储，这样刷新页面不会丢失登录状态
