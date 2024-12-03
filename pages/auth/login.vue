@@ -22,8 +22,6 @@ const { isLoggedIn, user } = storeToRefs(auth);
 
 let error_message = "";
 
-
-
 const toast = useToast();
 const initialValues = ref({
     password: "",
@@ -33,15 +31,15 @@ const resolver = ref(
         z.object({
             email: z
                 .string()
-                // .min(1, { message: "请输入账号对应邮箱。" })
+                .min(3, { message: "请输入账号对应邮箱。" })
                 .email({ message: "请输入有效的邮箱。" }),
             password: z
                 .string()
                 .min(3, { message: "密码至少需要 3 个字符。" })
                 .max(20, { message: "密码不能超过 20 个字符。" })
-                // .refine((value: string) => /[a-z]/.test(value), {
-                //     message: "密码必须包含小写字母。",
-                // })
+                .refine((value: string) => /[a-z]/.test(value), {
+                    message: "密码必须包含小写字母。",
+                })
                 // .refine((value: string) => /[A-Z]/.test(value), {
                 //     message: "密码必须包含大写字母。",
                 // })
@@ -83,8 +81,8 @@ const loginSubmit = async () => {
         <div class="flex flex-col items-center justify-center">
             <div
                 style="
-                    border-radius: 56px; 
-                    padding: 0.3rem; 
+                    border-radius: 56px;
+                    padding: 0.3rem;
                     background: linear-gradient(
                         180deg,
                         var(--primary-color) 10%,
@@ -116,13 +114,13 @@ const loginSubmit = async () => {
                         :initialValues="initialValues"
                         @submit="onFormSubmit"
                     >
-                        <div>
-                            <label
-                                for="email1"
-                                class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2"
-                                >邮箱</label
-                            >
-                            <InputGroup class="w-full md:w-[30rem] mb-8">
+                        <label
+                            for="email1"
+                            class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2"
+                            >邮箱</label
+                        >
+                        <div class="w-full md:w-[30rem] mb-8">
+                            <InputGroup class="mb-2">
                                 <InputGroupAddon
                                     ><i
                                         class="pi pi-envelope"
@@ -132,23 +130,29 @@ const loginSubmit = async () => {
                                     name="email"
                                     v-model="email"
                                     type="text"
-                                    placeholder="请输入账号对应邮箱"
-                            /></InputGroup>
-                            <template v-if="$form.email?.invalid"
-                                ><Message
-                                    v-if="$form.email?.invalid"
-                                    severity="error"
-                                    size="small"
-                                    variant="simple"
-                                    >{{ $form.email.error?.message }}</Message
-                                ></template
+                                    placeholder="请输入账号对应邮箱" /></InputGroup
+                            ><template v-if="$form.email?.invalid"
+                                ><div class="relative left-0 mt-1">
+                                    <Message
+                                        v-if="$form.email?.invalid"
+                                        severity="error"
+                                        size="small"
+                                        variant="simple"
+                                        >{{
+                                            $form.email.error?.message
+                                        }}</Message
+                                    >
+                                </div></template
                             >
-                            <label
-                                for="password1"
-                                class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2"
-                                >密码</label
-                            >
-                            <InputGroup class="mb-4"
+                        </div>
+
+                        <label
+                            for="password1"
+                            class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2"
+                            >密码</label
+                        >
+                        <div class="w-full md:w-[30rem] mb-8">
+                            <InputGroup class="mb-2"
                                 ><InputGroupAddon
                                     ><i
                                         class="pi pi-credit-card"
@@ -164,41 +168,41 @@ const loginSubmit = async () => {
                             /></InputGroup>
                             <template v-if="$form.password?.invalid">
                                 <Message
-                                    v-for="(error, index) of $form.password
-                                        .errors"
-                                    :key="index"
+                                    v-if="$form.password?.invalid"
                                     severity="error"
                                     size="small"
                                     variant="simple"
-                                    >{{ error.message }}</Message
+                                    >{{
+                                        $form.password.error?.message
+                                    }}</Message
                                 >
                             </template>
-                            <div
-                                class="flex items-center justify-between mt-2 mb-8 gap-8"
-                            >
-                                <div class="flex items-center">
-                                    <Checkbox
-                                        v-model="checked"
-                                        id="rememberme1"
-                                        binary
-                                        class="mr-2"
-                                    ></Checkbox>
-                                    <label for="rememberme1">记住我</label>
-                                </div>
-                                <span
-                                    class="font-medium no-underline ml-2 text-right cursor-pointer text-primary"
-                                    >忘记密码？</span
-                                >
-                            </div>
-                            <Button
-                                type="submit"
-                                severity="secondary"
-                                label="登录"
-                                class="w-full"
-                                as="router-link"
-                                to="/"
-                            />
                         </div>
+                        <div
+                            class="flex items-center justify-between mt-2 mb-8 gap-8"
+                        >
+                            <div class="flex items-center">
+                                <Checkbox
+                                    v-model="checked"
+                                    id="rememberme1"
+                                    binary
+                                    class="mr-2"
+                                ></Checkbox>
+                                <label for="rememberme1">记住我</label>
+                            </div>
+                            <span
+                                class="font-medium no-underline ml-2 text-right cursor-pointer text-primary"
+                                >忘记密码？</span
+                            >
+                        </div>
+                        <Button
+                            type="submit"
+                            severity="secondary"
+                            label="登录"
+                            class="w-full"
+                            as="router-link"
+                            to="/"
+                        />
                     </Form>
                 </div>
             </div>
