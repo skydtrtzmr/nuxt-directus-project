@@ -4,8 +4,12 @@ import { storeToRefs } from "pinia";
 import { useAuth } from "~~/stores/auth";
 import { ref } from "vue";
 import PracticeAgain from "~/assets/icons/practice-again.svg";
+import { zodResolver } from "@primevue/forms/resolvers/zod";
+import { useToast } from "primevue/usetoast";
+import { z } from "zod";
+
 definePageMeta({
-    middleware: ["auth"],
+    // middleware: ["auth"],
     layout: "empty", // 登录时全屏显示，不需要侧边栏和顶部导航栏
 });
 
@@ -18,9 +22,7 @@ const { isLoggedIn, user } = storeToRefs(auth);
 
 let error_message = "";
 
-import { zodResolver } from "@primevue/forms/resolvers/zod";
-import { useToast } from "primevue/usetoast";
-import { z } from "zod";
+
 
 const toast = useToast();
 const initialValues = ref({
@@ -81,8 +83,8 @@ const loginSubmit = async () => {
         <div class="flex flex-col items-center justify-center">
             <div
                 style="
-                    border-radius: 56px;
-                    padding: 0.3rem;
+                    border-radius: 56px; 
+                    padding: 0.3rem; 
                     background: linear-gradient(
                         180deg,
                         var(--primary-color) 10%,
