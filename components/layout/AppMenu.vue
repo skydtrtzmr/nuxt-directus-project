@@ -1,21 +1,32 @@
 <script setup>
-import { ref } from 'vue';
+import { ref } from "vue";
 
-import AppMenuItem from './AppMenuItem.vue';
+import AppMenuItem from "./AppMenuItem.vue";
+
+import { storeToRefs } from "pinia";
+import { useAuth } from "~~/stores/auth";
+import { Divider } from "primevue";
+
+const auth = useAuth();
+const { user } = storeToRefs(auth);
 
 const model = ref([
     {
-        label: '首页',
-        items: [{ label: '首页', icon: 'pi pi-fw pi-home', to: '/' }]
+        label: "首页",
+        items: [{ label: "首页", icon: "pi pi-fw pi-home", to: "/" }],
     },
     {
-        label: '功能组件',
+        label: "功能组件",
         items: [
             // { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' },
-            { label: '考试', icon: 'pi pi-fw pi-id-card', to: '/exams' },
-            { label: '考试列表dataview', icon: 'pi pi-fw pi-check-square', to: '/examdataview' },
-            { label: '登录', icon: 'pi pi-fw pi-id-card', to: '/login' },
-            { label: 'test', icon: 'pi pi-fw pi-id-card', to: '/test' },
+            { label: "考试", icon: "pi pi-fw pi-id-card", to: "/exams" },
+            {
+                label: "考试列表dataview",
+                icon: "pi pi-fw pi-check-square",
+                to: "/examdataview",
+            },
+            { label: "登录", icon: "pi pi-fw pi-id-card", to: "/login" },
+            { label: "test", icon: "pi pi-fw pi-id-card", to: "/test" },
             // { label: 'Input', icon: 'pi pi-fw pi-check-square', to: '/uikit/input' },
             // { label: 'Button', icon: 'pi pi-fw pi-mobile', to: '/uikit/button', class: 'rotated-icon' },
             // { label: 'Table', icon: 'pi pi-fw pi-table', to: '/uikit/table' },
@@ -30,7 +41,7 @@ const model = ref([
             // { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', to: '/uikit/charts' },
             // { label: 'Timeline', icon: 'pi pi-fw pi-calendar', to: '/uikit/timeline' },
             // { label: 'Misc', icon: 'pi pi-fw pi-circle', to: '/uikit/misc' }
-        ]
+        ],
     },
     // {
     //     label: 'Pages',
@@ -145,8 +156,29 @@ const model = ref([
 
 <template>
     <ul class="layout-menu">
+        <!-- 当前用户信息区域 -->
+        <li class="user-info m-4">
+            <!-- <div class="user-avatar">
+                <img :src="user.avatar" alt="User Avatar" />
+            </div> -->
+            <div class="user-details w-full">
+                <p class="user-name">欢迎回来，</p>
+                <p class="user-role text-xl">
+                    {{ user.last_name }}{{ user.first_name }}
+                </p>
+                <div class="items-center">
+                    <i class="pi pi-envelope mr-2 pt-1 text-sm"></i
+                    ><span class="text-sm">{{ user.email }}</span>
+                </div>
+            </div>
+        </li>
+        <Divider />
         <template v-for="(item, i) in model" :key="item">
-            <app-menu-item v-if="!item.separator" :item="item" :index="i"></app-menu-item>
+            <app-menu-item
+                v-if="!item.separator"
+                :item="item"
+                :index="i"
+            ></app-menu-item>
             <li v-if="item.separator" class="menu-separator"></li>
         </template>
     </ul>
