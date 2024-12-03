@@ -20,10 +20,13 @@ const checked = ref(false);
 const auth = useAuth();
 const { isLoggedIn, user } = storeToRefs(auth);
 
+const router = useRouter();
+
 let error_message = "";
 
 const toast = useToast();
 const initialValues = ref({
+    email: "",
     password: "",
 });
 const resolver = ref(
@@ -31,15 +34,15 @@ const resolver = ref(
         z.object({
             email: z
                 .string()
-                .min(3, { message: "请输入账号对应邮箱。" })
+                .min(6, { message: "邮箱不可以少于 6 个字符。" })
                 .email({ message: "请输入有效的邮箱。" }),
             password: z
                 .string()
-                .min(3, { message: "密码至少需要 3 个字符。" })
+                .min(3, { message: "密码至少需要 4 个字符。" })
                 .max(20, { message: "密码不能超过 20 个字符。" })
-                .refine((value: string) => /[a-z]/.test(value), {
-                    message: "密码必须包含小写字母。",
-                })
+                // .refine((value: string) => /[a-z]/.test(value), {
+                //     message: "密码必须包含小写字母。",
+                // })
                 // .refine((value: string) => /[A-Z]/.test(value), {
                 //     message: "密码必须包含大写字母。",
                 // })
@@ -67,6 +70,8 @@ const loginSubmit = async () => {
     try {
         await auth.login({ email: email.value, password: password.value });
         alert("登录成功！");
+
+        router.push("/");
     } catch (e) {
         error_message = "登录信息错误！";
         alert(error_message);
@@ -130,20 +135,25 @@ const loginSubmit = async () => {
                                     name="email"
                                     v-model="email"
                                     type="text"
-                                    placeholder="请输入账号对应邮箱" /></InputGroup
-                            ><template v-if="$form.email?.invalid"
-                                ><div class="relative left-0 mt-1">
-                                    <Message
-                                        v-if="$form.email?.invalid"
-                                        severity="error"
-                                        size="small"
-                                        variant="simple"
-                                        >{{
-                                            $form.email.error?.message
-                                        }}</Message
-                                    >
-                                </div></template
+                                    placeholder="请输入账号对应邮箱"
+                            /></InputGroup>
+                            <Message
+                                v-if="$form.email?.invalid"
+                                severity="error"
+                                size="small"
+                                variant="simple"
+                                >{{ $form.email.error?.message }}</Message
                             >
+                            <!-- 如果没有错误，显示一个占位的空Message -->
+                            <Message
+                                v-else
+                                severity="error"
+                                size="small"
+                                variant="simple"
+                                class="opacity-0"
+                            >
+                                空的占位符，透明的！
+                            </Message>
                         </div>
 
                         <label
@@ -166,17 +176,22 @@ const loginSubmit = async () => {
                                     :toggleMask="true"
                                     fluid
                             /></InputGroup>
-                            <template v-if="$form.password?.invalid">
-                                <Message
-                                    v-if="$form.password?.invalid"
-                                    severity="error"
-                                    size="small"
-                                    variant="simple"
-                                    >{{
-                                        $form.password.error?.message
-                                    }}</Message
-                                >
-                            </template>
+                            <Message
+                                v-if="$form.password?.invalid"
+                                severity="error"
+                                size="small"
+                                variant="simple"
+                                >{{ $form.password.error?.message }}</Message
+                            >
+                            <Message
+                                v-else
+                                severity="error"
+                                size="small"
+                                variant="simple"
+                                class="opacity-0"
+                            >
+                                空的占位符，透明的！
+                            </Message>
                         </div>
                         <div
                             class="flex items-center justify-between mt-2 mb-8 gap-8"
@@ -200,8 +215,6 @@ const loginSubmit = async () => {
                             severity="secondary"
                             label="登录"
                             class="w-full"
-                            as="router-link"
-                            to="/"
                         />
                     </Form>
                 </div>
