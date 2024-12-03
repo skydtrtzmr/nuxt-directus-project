@@ -1,4 +1,7 @@
-<script setup>
+<script setup lang="ts">
+// TODO 现存Bug就是，state存储的登录状态和实际登录状态不一致，token失效后，页面会显示已登录，但实际上并未登录。
+import { storeToRefs } from "pinia";
+import { useAuth } from "~~/stores/auth";
 import { ref } from "vue";
 import PracticeAgain from "~/assets/icons/practice-again.svg";
 definePageMeta({
@@ -9,6 +12,66 @@ definePageMeta({
 const email = ref("");
 const password = ref("");
 const checked = ref(false);
+
+const auth = useAuth();
+const { isLoggedIn, user } = storeToRefs(auth);
+
+let error_message = "";
+
+import { zodResolver } from "@primevue/forms/resolvers/zod";
+import { useToast } from "primevue/usetoast";
+import { z } from "zod";
+
+const toast = useToast();
+const initialValues = ref({
+    password: "",
+});
+const resolver = ref(
+    zodResolver(
+        z.object({
+            email: z
+                .string()
+                // .min(1, { message: "请输入账号对应邮箱。" })
+                .email({ message: "请输入有效的邮箱。" }),
+            password: z
+                .string()
+                .min(3, { message: "密码至少需要 3 个字符。" })
+                .max(20, { message: "密码不能超过 20 个字符。" })
+                // .refine((value: string) => /[a-z]/.test(value), {
+                //     message: "密码必须包含小写字母。",
+                // })
+                // .refine((value: string) => /[A-Z]/.test(value), {
+                //     message: "密码必须包含大写字母。",
+                // })
+                .refine((value: string) => /\d/.test(value), {
+                    // 注意d前面有反斜杠，表示转义
+                    message: "密码必须包含数字。",
+                }),
+        })
+    )
+);
+
+// TODO 这里暂时写成any了，以后再优化
+const onFormSubmit = ({ valid }: any) => {
+    if (valid) {
+        toast.add({
+            severity: "success",
+            summary: "Form is submitted.",
+            life: 3000,
+        });
+        loginSubmit();
+    }
+};
+
+const loginSubmit = async () => {
+    try {
+        await auth.login({ email: email.value, password: password.value });
+        alert("登录成功！");
+    } catch (e) {
+        error_message = "登录信息错误！";
+        alert(error_message);
+    }
+};
 </script>
 
 <template>
@@ -32,70 +95,109 @@ const checked = ref(false);
                     style="border-radius: 53px"
                 >
                     <div class="text-center mb-8">
-                        <PracticeAgain class="w-200 h-200 mb-8 w-16 shrink-0 mx-auto" :fontControlled="false"/>
+                        <PracticeAgain
+                            class="w-200 h-200 mb-8 w-16 shrink-0 mx-auto"
+                            :fontControlled="false"
+                        />
                         <div
                             class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4"
                         >
-                            Welcome to PrimeLand!
+                            欢迎使用学练考系统！
                         </div>
                         <span class="text-muted-color font-medium"
-                            >Sign in to continue</span
+                            >登录以继续学习</span
                         >
                     </div>
-
-                    <div>
-                        <label
-                            for="email1"
-                            class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2"
-                            >Email</label
-                        >
-                        <InputText
-                            id="email1"
-                            type="text"
-                            placeholder="Email address"
-                            class="w-full md:w-[30rem] mb-8"
-                            v-model="email"
-                        />
-
-                        <label
-                            for="password1"
-                            class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2"
-                            >Password</label
-                        >
-                        <Password
-                            id="password1"
-                            v-model="password"
-                            placeholder="Password"
-                            :toggleMask="true"
-                            class="mb-4"
-                            fluid
-                            :feedback="false"
-                        ></Password>
-
-                        <div
-                            class="flex items-center justify-between mt-2 mb-8 gap-8"
-                        >
-                            <div class="flex items-center">
-                                <Checkbox
-                                    v-model="checked"
-                                    id="rememberme1"
-                                    binary
-                                    class="mr-2"
-                                ></Checkbox>
-                                <label for="rememberme1">Remember me</label>
-                            </div>
-                            <span
-                                class="font-medium no-underline ml-2 text-right cursor-pointer text-primary"
-                                >Forgot password?</span
+                    <Form
+                        v-slot="$form"
+                        :resolver="resolver"
+                        :initialValues="initialValues"
+                        @submit="onFormSubmit"
+                    >
+                        <div>
+                            <label
+                                for="email1"
+                                class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2"
+                                >邮箱</label
                             >
+                            <InputGroup class="w-full md:w-[30rem] mb-8">
+                                <InputGroupAddon
+                                    ><i
+                                        class="pi pi-envelope"
+                                    ></i></InputGroupAddon
+                                ><InputText
+                                    id="email1"
+                                    name="email"
+                                    v-model="email"
+                                    type="text"
+                                    placeholder="请输入账号对应邮箱"
+                            /></InputGroup>
+                            <template v-if="$form.email?.invalid"
+                                ><Message
+                                    v-if="$form.email?.invalid"
+                                    severity="error"
+                                    size="small"
+                                    variant="simple"
+                                    >{{ $form.email.error?.message }}</Message
+                                ></template
+                            >
+                            <label
+                                for="password1"
+                                class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2"
+                                >密码</label
+                            >
+                            <InputGroup class="mb-4"
+                                ><InputGroupAddon
+                                    ><i
+                                        class="pi pi-credit-card"
+                                    ></i></InputGroupAddon
+                                ><Password
+                                    id="password1"
+                                    name="password"
+                                    placeholder="请输入账号密码"
+                                    v-model="password"
+                                    :feedback="false"
+                                    :toggleMask="true"
+                                    fluid
+                            /></InputGroup>
+                            <template v-if="$form.password?.invalid">
+                                <Message
+                                    v-for="(error, index) of $form.password
+                                        .errors"
+                                    :key="index"
+                                    severity="error"
+                                    size="small"
+                                    variant="simple"
+                                    >{{ error.message }}</Message
+                                >
+                            </template>
+                            <div
+                                class="flex items-center justify-between mt-2 mb-8 gap-8"
+                            >
+                                <div class="flex items-center">
+                                    <Checkbox
+                                        v-model="checked"
+                                        id="rememberme1"
+                                        binary
+                                        class="mr-2"
+                                    ></Checkbox>
+                                    <label for="rememberme1">记住我</label>
+                                </div>
+                                <span
+                                    class="font-medium no-underline ml-2 text-right cursor-pointer text-primary"
+                                    >忘记密码？</span
+                                >
+                            </div>
+                            <Button
+                                type="submit"
+                                severity="secondary"
+                                label="登录"
+                                class="w-full"
+                                as="router-link"
+                                to="/"
+                            />
                         </div>
-                        <Button
-                            label="Sign In"
-                            class="w-full"
-                            as="router-link"
-                            to="/"
-                        ></Button>
-                    </div>
+                    </Form>
                 </div>
             </div>
         </div>
