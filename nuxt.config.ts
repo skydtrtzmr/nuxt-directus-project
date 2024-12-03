@@ -59,6 +59,8 @@ export default defineNuxtConfig({
 
     directus: {
         devtools: true,
+        autoFetch: true, // 是否自动获取用户信息。如果开着这个的话，项目启动时如果token失效会报错。
+        autoRefresh: true, // 是否自动刷新token
     },
 
     // srcDir: "src/",

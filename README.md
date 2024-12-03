@@ -12,74 +12,46 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 
 注意要把release下载下来放到项目里。参见[primevue-tailwindcss/nuxt/styles](https://tailwind.primevue.org/nuxt/#styles)。
 
-## Setup
+## 关于nuxt-directus
+
+有空好好看看这个项目的源码。
+他这个如果你配置项开了auto-fetch，就会启动时自动尝试fetchUser，fetch不到就会报错。
+有些自动的功能它里面已经写好了，我自己再写就重复了。
+
+## 运行
+
+### Setup
 
 Make sure to install dependencies:
 
 ```bash
-# npm
-npm install
-
 # pnpm
 pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
+### Development Server
 
 Start the development server on `http://localhost:3000`:
 
 ```bash
-# npm
-npm run dev
-
 # pnpm
 pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+### Production
 
 Build the application for production:
 
 ```bash
-# npm
-npm run build
-
 # pnpm
 pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
 ```
 
 Locally preview production build:
 
 ```bash
-# npm
-npm run preview
-
 # pnpm
 pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
