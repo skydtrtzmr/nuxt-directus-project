@@ -90,9 +90,9 @@ const getQuestionSeverity = (question: SubmittedQuestions) => {
         // 多选题、不定项选择题必须选了选项（数组长度大于0）才算做已提交；
         // 因为这种题做完之后对应的submitted_ans就会从null变成[]或[null]，所以要加上这个判断
     ) {
-        return "success";
+        return "primary";
     } else {
-        return "warning";
+        return "secondary";
     }
 };
 </script>
@@ -127,8 +127,7 @@ ul {
 
 .question-card.selected {
     /* background-color: #28a745; 选中后的背景色 */
-    box-shadow: inset 0 0 0 2px #202040; /* 内边框效果 */
-    /* border: 2px solid #1e7e34; 添加边框 */
+    box-shadow: inset 0 0 2px 3px #747474; /* 内边框效果 */
     font-weight: bold; /* 字体加粗 */
 }
 

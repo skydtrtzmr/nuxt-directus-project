@@ -56,7 +56,7 @@
         <div class="flex">
             <!-- 左侧：题目列表 -->
             <QuestionList
-                class="basis-1/5"
+                class="basis-1/5 card"
                 :submittedPaperChapters="submittedPaperChapters"
                 :selectQuestion="selectQuestion"
             ></QuestionList>
