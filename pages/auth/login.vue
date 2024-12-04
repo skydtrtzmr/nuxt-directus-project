@@ -88,11 +88,7 @@ const loginSubmit = async () => {
                 style="
                     border-radius: 56px;
                     padding: 0.3rem;
-                    background: linear-gradient(
-                        180deg,
-                        var(--primary-color) 10%,
-                        rgba(33, 150, 243, 0) 30%
-                    );
+                    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
                 "
             >
                 <div
@@ -215,6 +211,7 @@ const loginSubmit = async () => {
                             severity="secondary"
                             label="登录"
                             class="w-full"
+                            size="large"
                         />
                     </Form>
                 </div>

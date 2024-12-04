@@ -17,6 +17,6 @@ export default defineNuxtRouteMiddleware(async (to, _from) => {
     }
     // 如果尝试之后仍然没有用户，则跳转到登录页面
     if (!user.value) {
-        return navigateTo("/login");
+        return navigateTo("/auth/login");
     }
 });

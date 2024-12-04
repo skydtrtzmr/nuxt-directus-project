@@ -158,19 +158,21 @@ const model = ref([
     <ul class="layout-menu">
         <!-- 当前用户信息区域 -->
         <li class="user-info m-4">
-            <!-- <div class="user-avatar">
+            <template v-if="user">
+                <!-- <div class="user-avatar">
                 <img :src="user.avatar" alt="User Avatar" />
             </div> -->
-            <div class="user-details w-full">
-                <p class="user-name">欢迎回来，</p>
-                <p class="user-role text-xl">
-                    {{ user.last_name }}{{ user.first_name }}
-                </p>
-                <div class="items-center">
-                    <i class="pi pi-envelope mr-2 pt-1 text-sm"></i
-                    ><span class="text-sm">{{ user.email }}</span>
+                <div class="user-details w-full">
+                    <p class="user-name">欢迎回来，</p>
+                    <p class="user-role text-xl">
+                        {{ user.last_name }}{{ user.first_name }}
+                    </p>
+                    <div class="items-center">
+                        <i class="pi pi-envelope mr-2 pt-1 text-sm"></i
+                        ><span class="text-sm">{{ user.email }}</span>
+                    </div>
                 </div>
-            </div>
+            </template>
         </li>
         <Divider />
         <template v-for="(item, i) in model" :key="item">

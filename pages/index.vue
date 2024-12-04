@@ -32,6 +32,10 @@
 export default {
     name: "Index",
 };
+
+definePageMeta({
+    middleware: ["auth"],
+});
 </script>
 
 <style scoped>
