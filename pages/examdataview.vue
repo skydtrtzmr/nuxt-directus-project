@@ -97,13 +97,15 @@
                                             outlined
                                         ></Button>
                                         <Button
-                                            icon="pi pi-pencil"
-                                            label="参加考试"
+                                            @click="joinExam(item.id)"
+                                            class="join-button flex-auto md:flex-initial whitespace-nowrap"
                                             :disabled="
-                                                item.submit_status === 'todo'
+                                                getSubmitStatusName(item) ==
+                                                '已交卷'
                                             "
-                                            class="flex-auto md:flex-initial whitespace-nowrap"
-                                        ></Button>
+                                        >
+                                            {{ getSubmitStatusAction(item) }}
+                                        </Button>
                                     </div>
                                 </div>
                             </div>
@@ -177,7 +179,7 @@
                                     <div class="flex gap-2">
                                         <Button
                                             @click="joinExam(item.id)"
-                                            class="join-button"
+                                            class="join-button flex-auto whitespace-nowrap"
                                             :disabled="
                                                 getSubmitStatusName(item) ==
                                                 '已交卷'
