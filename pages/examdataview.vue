@@ -1,6 +1,10 @@
 <template>
     <div class="card">
-        <DataView :value="submitted_exams" :layout="layout" dataKey="submitted_exams.id">
+        <DataView
+            :value="submitted_exams"
+            :layout="layout"
+            dataKey="submitted_exams.id"
+        >
             <template #header>
                 <div class="flex justify-end">
                     <SelectButton
@@ -43,7 +47,7 @@
                                 >
                                     <Tag
                                         :value="item.submit_status"
-                                        :severity="getSeverity(item)"
+                                        :severity="getSubmitStatus(item)"
                                     ></Tag>
                                 </div>
                             </div>
@@ -101,8 +105,7 @@
                                             icon="pi pi-pencil"
                                             label="参加考试"
                                             :disabled="
-                                                item.submit_status ===
-                                                'todo'
+                                                item.submit_status === 'todo'
                                             "
                                             class="flex-auto md:flex-initial whitespace-nowrap"
                                         ></Button>
@@ -141,7 +144,7 @@
                                     >
                                         <Tag
                                             :value="item.submit_status"
-                                            :severity="getSeverity(item)"
+                                            :severity="getSubmitStatus(item)"
                                         ></Tag>
                                     </div>
                                 </div>
@@ -189,14 +192,20 @@
                                     >
                                     <div class="flex gap-2">
                                         <Button
-                                            icon="pi pi-pencil"
-                                            label="参加考试"
+                                            @click="joinExam(item.id)"
+                                            class="join-button"
                                             :disabled="
-                                                item.submit_status ===
-                                                'todo'
+                                                getSubmitStatusName(
+                                                    item
+                                                ) == '已交卷'
                                             "
-                                            class="flex-auto whitespace-nowrap"
-                                        ></Button>
+                                        >
+                                            {{
+                                                getSubmitStatusAction(
+                                                    item
+                                                )
+                                            }}
+                                        </Button>
                                         <Button
                                             icon="pi pi-info-circle"
                                             outlined
@@ -213,8 +222,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { ProductService } from '@/service/ProductService';
 import dayjs from "dayjs";
 import { useAuth } from "~~/stores/auth";
 import type {
@@ -222,19 +229,24 @@ import type {
     SubmittedPapers,
     Exams,
 } from "~~/types/directus_types";
+const auth = useAuth();
+const current_user = auth.user; // 获取当前用户
+console.log("current_user:\n", current_user);
+
+if (!current_user) {
+    const router = useRouter();
+    router.push("/login");
+}
+
+// 这两个控制能否参加考试的弹窗
+const not_started_dialog_visible = ref(false);
+const have_ended_dialog_visible = ref(false);
+
+const { getItems, updateItem } = useDirectusItems();
+// 如果当前用户未登录，或者token失效，则跳转到登录页面
 definePageMeta({
     middleware: ["auth"],
 });
-
-
-const auth = useAuth();
-const current_user = auth.user; // 获取当前用户
-
-onMounted(() => {
-    ProductService.getProducts().then((data) => (products.value = data.slice(0, 12)));
-});
-
-const { getItems } = useDirectusItems();
 
 const submitted_exams = await getItems<SubmittedExams>({
     collection: "submitted_exams",
@@ -260,23 +272,124 @@ const submitted_exams = await getItems<SubmittedExams>({
 });
 
 const products = ref();
-const layout = ref<"grid" | "list" | undefined>('grid');
-const options = ref(['list', 'grid']);
+const layout = ref<"grid" | "list" | undefined>("grid");
+const options = ref(["list", "grid"]);
 
-// 根据库存状态获取颜色
-const getSeverity = (product) => {
-    switch (product.submit_status) {
-        case 'done':
-            return 'success';
+const updateSubmitStatus = async (submitted_exam: SubmittedExams) => {
+    try {
+        const newItem = { submit_status: "doing" };
+        await updateItem<SubmittedExams>({
+            collection: "submitted_exams",
+            id: submitted_exam.id,
+            item: newItem,
+        });
+    } catch (e) {}
+};
 
-        case 'doing':
-            return 'warn';
 
-        case 'todo':
-            return 'danger';
+const submitActualStartTime = async (submitted_exam: SubmittedExams) => {
+    try {
+        let nowData = dayjs();
+        const newItem = { actual_start_time: nowData };
+        await updateItem<SubmittedExams>({
+            collection: "submitted_exams",
+            id: submitted_exam.id,
+            item: newItem,
+        });
+    } catch (e) {}
+};
+
+const joinExam = (examId: string) => {
+    // 首先判断考试时间
+    console.log("当前时间：");
+    console.log(dayjs(Date.now()));
+    const now_time = dayjs(Date.now());
+
+    const exam_info = submitted_exams.find((item) => item.id === examId)!;
+
+    console.log("考试开始时间：");
+    const exam_start_time = dayjs(exam_info.exam.start_time);
+    console.log(dayjs(exam_info.exam.start_time));
+
+    console.log("考试结束时间：");
+    const exam_end_time = dayjs(exam_info.exam.end_time);
+    console.log(dayjs(exam_info.exam.end_time));
+
+    if (now_time.isBefore(exam_start_time)) {
+        not_started_dialog_visible.value = true;
+        return;
+    }
+
+    if (now_time.isAfter(exam_end_time)) {
+        have_ended_dialog_visible.value = true;
+        return;
+    }
+
+    console.log(`参加考试：${examId}`);
+    // 参加考试之后，需要修改submit_status为doing。
+    updateSubmitStatus(submitted_exams.find((item) => item.id === examId)!);
+
+    // 只有第一次才记录实际开始时间，以后就不再记录了。
+
+    if (exam_info.actual_start_time === null) {
+        submitActualStartTime(
+            submitted_exams.find((item) => item.id === examId)!
+        );
+    }
+
+    // 你可以根据examId跳转到具体的考试页面
+    // 这里的 router.push 必须是 this.$router.push 或者使用 composable useRouter()
+    // 如果使用 useRouter，需要引入并使用
+    const router = useRouter();
+    router.push(`/exam/${examId}`);
+    // 跳转到具体的考试页面，页面path的最后一项就是submitted_exams的id。
+};
+
+const getSubmitStatus = (submitted_exam: SubmittedExams) => {
+    switch (submitted_exam.submit_status) {
+        case "done":
+            return "success";
+
+        case "doing":
+            return "warn";
+
+        case "todo":
+            return "danger";
 
         default:
             return null;
     }
-}
+};
+
+const getSubmitStatusName = (submitted_exam: SubmittedExams) => {
+    switch (submitted_exam.submit_status) {
+        case "done":
+            return "已交卷";
+
+        case "doing":
+            return "答题中";
+
+        case "todo":
+            return "未开始";
+
+        default:
+            return null;
+    }
+};
+
+const getSubmitStatusAction = (submitted_exam: SubmittedExams) => {
+    switch (submitted_exam.submit_status) {
+        case "done":
+            return "答题完成";
+
+        case "doing":
+            return "继续答题";
+
+        case "todo":
+            return "开始答题";
+
+        default:
+            return null;
+    }
+};
 </script>

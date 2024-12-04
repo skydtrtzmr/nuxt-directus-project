@@ -96,6 +96,11 @@ const auth = useAuth();
 const current_user = auth.user; // 获取当前用户
 console.log("current_user:\n", current_user);
 
+if (!current_user) {
+    const router = useRouter();
+    router.push("/login");
+}
+
 // 这两个控制能否参加考试的弹窗
 const not_started_dialog_visible = ref(false);
 const have_ended_dialog_visible = ref(false);
@@ -105,16 +110,6 @@ const { getItems, updateItem } = useDirectusItems();
 definePageMeta({
     middleware: ["auth"],
 });
-
-if (!current_user) {
-    const router = useRouter();
-    router.push("/login");
-}
-
-// const { refreshTokens } = useDirectusToken();
-// refreshTokens();
-// 设置了refreshTokens之后，只要还继续访问这个页面，就会自动刷新token，
-// 保证一直在用的用户的token是最新的，不会突然失效。
 
 const updateSubmitStatus = async (submitted_exam: SubmittedExams) => {
     try {
