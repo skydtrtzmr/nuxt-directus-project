@@ -116,10 +116,11 @@
 
             <template #grid="slotProps">
                 <div class="grid grid-cols-12 gap-4">
+                    <!-- 总共分为12列 -->
                     <div
                         v-for="(item, index) in slotProps.items"
                         :key="index"
-                        class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-6 p-2"
+                        class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3 p-2"
                     >
                         <div
                             class="p-6 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded flex flex-col"
