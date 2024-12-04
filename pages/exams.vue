@@ -68,25 +68,15 @@
                         :severity="getSubmitStatus(submitted_exam)"
                     ></Tag>
                     <!-- 这里需要定义type，现在有报错 -->
-                    <div
-                        v-if="getSubmitStatusName(submitted_exam) !== '已交卷'"
+                    <Button
+                        @click="joinExam(submitted_exam.id)"
+                        class="join-button"
+                        :disabled="
+                            getSubmitStatusName(submitted_exam) == '已交卷'
+                        "
                     >
-                        <Button
-                            @click="joinExam(submitted_exam.id)"
-                            class="join-button"
-                        >
-                            {{ getSubmitStatusAction(submitted_exam) }}
-                        </Button>
-                    </div>
-                    <div v-else>
-                        <Button
-                            @click="joinExam(submitted_exam.id)"
-                            class="join-button"
-                            disabled
-                        >
-                            {{ getSubmitStatusAction(submitted_exam) }}
-                        </Button>
-                    </div>
+                        {{ getSubmitStatusAction(submitted_exam) }}
+                    </Button>
                 </div>
                 <br />
             </div>

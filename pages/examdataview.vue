@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <DataView :value="submitted_exams" :layout="layout">
+        <DataView :value="submitted_exams" :layout="layout" dataKey="submitted_exams.id">
             <template #header>
                 <div class="flex justify-end">
                     <SelectButton
@@ -222,6 +222,11 @@ import type {
     SubmittedPapers,
     Exams,
 } from "~~/types/directus_types";
+definePageMeta({
+    middleware: ["auth"],
+});
+
+
 const auth = useAuth();
 const current_user = auth.user; // 获取当前用户
 
@@ -247,7 +252,7 @@ const submitted_exams = await getItems<SubmittedExams>({
         // 笔记：注意看，嵌套的字段（例如student.directus_user）要做筛选的话像下面这样。
         filter: {
             student: {
-                directus_user: current_user.id,
+                directus_user: current_user!.id,
             },
         },
         // 注意！别弄混了，directus中student.id和directus_user.id不一样。
@@ -255,7 +260,7 @@ const submitted_exams = await getItems<SubmittedExams>({
 });
 
 const products = ref();
-const layout = ref('grid');
+const layout = ref<"grid" | "list" | undefined>('grid');
 const options = ref(['list', 'grid']);
 
 // 根据库存状态获取颜色
