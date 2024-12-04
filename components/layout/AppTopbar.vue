@@ -22,7 +22,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
         </div>
 
         <div class="layout-topbar-actions">
-            <div class="layout-config-menu">
+            <!-- <div class="layout-config-menu">
                 <button
                     type="button"
                     class="layout-topbar-action"
@@ -50,10 +50,9 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                     >
                         <i class="pi pi-palette"></i>
                     </button>
-                    <!-- <AppConfigurator /> -->
-                    <!-- 这个现在有问题，暂时注释掉。 -->
+                    <AppConfigurator />
                 </div>
-            </div>
+            </div> -->
 
             <button
                 class="layout-topbar-menu-button layout-topbar-action"

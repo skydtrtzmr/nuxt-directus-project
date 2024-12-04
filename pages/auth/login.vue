@@ -59,7 +59,7 @@ const onFormSubmit = ({ valid }: any) => {
     if (valid) {
         toast.add({
             severity: "success",
-            summary: "Form is submitted.",
+            summary: "登录成功！",
             life: 3000,
         });
         loginSubmit();
@@ -69,7 +69,7 @@ const onFormSubmit = ({ valid }: any) => {
 const loginSubmit = async () => {
     try {
         await auth.login({ email: email.value, password: password.value });
-        alert("登录成功！");
+        // alert("登录成功！");
 
         router.push("/");
     } catch (e) {
@@ -218,6 +218,7 @@ const loginSubmit = async () => {
             </div>
         </div>
     </div>
+    <Toast />
 </template>
 
 <style scoped>
