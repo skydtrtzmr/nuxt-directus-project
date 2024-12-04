@@ -1,5 +1,39 @@
 <template>
     <div class="card">
+        <Dialog
+            v-model:visible="not_started_dialog_visible"
+            modal
+            header="提示"
+            :style="{ width: '25rem' }"
+        >
+            <span class="text-surface-500 dark:text-surface-400 block mb-8"
+                >未到考试开始时间！</span
+            >
+            <div class="flex justify-end gap-2">
+                <Button
+                    type="button"
+                    label="确定"
+                    @click="not_started_dialog_visible = false"
+                ></Button>
+            </div>
+        </Dialog>
+        <Dialog
+            v-model:visible="have_ended_dialog_visible"
+            modal
+            header="提示"
+            :style="{ width: '25rem' }"
+        >
+            <span class="text-surface-500 dark:text-surface-400 block mb-8"
+                >已过考试结束时间！</span
+            >
+            <div class="flex justify-end gap-2">
+                <Button
+                    type="button"
+                    label="确定"
+                    @click="have_ended_dialog_visible = false"
+                ></Button>
+            </div>
+        </Dialog>
         <DataView
             :value="submitted_exams"
             :layout="layout"
@@ -24,7 +58,6 @@
                     </SelectButton>
                 </div>
             </template>
-
             <template #list="slotProps">
                 <div class="flex flex-col">
                     <div v-for="(item, index) in slotProps.items" :key="index">
@@ -299,11 +332,15 @@ const joinExam = (examId: string) => {
 
     if (now_time.isBefore(exam_start_time)) {
         not_started_dialog_visible.value = true;
+        console.log("未到考试开始时间！");
+
         return;
     }
 
     if (now_time.isAfter(exam_end_time)) {
         have_ended_dialog_visible.value = true;
+        console.log("已过考试结束时间！");
+
         return;
     }
 
