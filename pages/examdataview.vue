@@ -161,8 +161,10 @@
                     <div
                         v-for="(item, index) in slotProps.items"
                         :key="index"
-                        class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3 p-2"
+                        class="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3 p-2"
                     >
+                        <!-- 根据屏幕尺寸，决定每行显示的数量 -->
+                        <!-- 尺寸从大到小分别是：sm/md/lg/xl/2xl -->
                         <div
                             class="p-6 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded flex flex-col"
                         >
@@ -181,42 +183,32 @@
                                     class="flex flex-row justify-between items-start gap-2"
                                 >
                                     <div>
-                                        <span
-                                            class="font-medium text-surface-500 dark:text-surface-400 text-sm"
-                                            >{{ item.category }}</span
-                                        >
                                         <div class="text-xl font-medium mt-1">
                                             {{ item.exam.title }}
                                         </div>
                                     </div>
-                                    <div
-                                        class="bg-surface-100 p-1"
-                                        style="border-radius: 30px"
-                                    >
-                                        <div
-                                            class="bg-surface-0 flex items-center gap-2 justify-center py-1 px-2"
-                                            style="
-                                                border-radius: 30px;
-                                                box-shadow: 0px 1px 2px 0px
-                                                        rgba(0, 0, 0, 0.04),
-                                                    0px 1px 2px 0px
-                                                        rgba(0, 0, 0, 0.06);
-                                            "
-                                        >
-                                            <span
-                                                class="text-surface-900 font-medium text-sm"
-                                                >{{ item.rating }}</span
-                                            >
-                                            <i
-                                                class="pi pi-star-fill text-yellow-500"
-                                            ></i>
+                                </div>
+                                <div class="flex flex-col gap-2 mt-6">
+                                    <div>
+                                        <strong>开始时间:</strong>
+                                        <div>
+                                            {{
+                                                dayjs(
+                                                    item.exam.start_time
+                                                ).format("YYYY-MM-DD HH:mm:ss")
+                                            }}
                                         </div>
                                     </div>
-                                </div>
-                                <div class="flex flex-col gap-6 mt-6">
-                                    <span class="text-2xl font-semibold"
-                                        >考试时长{{ item.price }}</span
-                                    >
+                                    <div>
+                                        <strong>结束时间:</strong>
+                                        <div>
+                                            {{
+                                                dayjs(
+                                                    item.exam.end_time
+                                                ).format("YYYY-MM-DD HH:mm:ss")
+                                            }}
+                                        </div>
+                                    </div>
                                     <div class="flex gap-2">
                                         <Button
                                             @click="joinExam(item.id)"
@@ -295,7 +287,7 @@ const submitted_exams = await getItems<SubmittedExams>({
     },
 });
 
-const layout = ref<"grid" | "list" | undefined>("grid");
+const layout = ref<"grid" | "list" | undefined>("grid"); // 默认显示为网格
 const options = ref(["list", "grid"]);
 
 const updateSubmitStatus = async (submitted_exam: SubmittedExams) => {
