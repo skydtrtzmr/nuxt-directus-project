@@ -69,15 +69,10 @@
                             }"
                         >
                             <div class="md:w-40 relative">
-                                <div
-                                    class="absolute bg-black/70 rounded-border"
-                                    style="left: 4px; top: 4px"
-                                >
-                                    <Tag
-                                        :value="getSubmitStatusName(item)"
-                                        :severity="getSubmitStatus(item)"
-                                    ></Tag>
-                                </div>
+                                <Tag
+                                    :value="getSubmitStatusName(item)"
+                                    :severity="getSubmitStatus(item)"
+                                ></Tag>
                             </div>
                             <div
                                 class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6"
@@ -96,25 +91,38 @@
                                     </div>
                                     <div
                                         class="bg-surface-100 p-1"
-                                        style="border-radius: 30px"
+                                        style="border-radius: 10px"
                                     >
                                         <div
                                             class="bg-surface-0 flex items-center gap-2 justify-center py-1 px-2"
                                             style="
-                                                border-radius: 30px;
+                                                border-radius: 10px;
                                                 box-shadow: 0px 1px 2px 0px
                                                         rgba(0, 0, 0, 0.04),
                                                     0px 1px 2px 0px
                                                         rgba(0, 0, 0, 0.06);
                                             "
                                         >
-                                            <span
-                                                class="text-surface-900 font-medium text-sm"
-                                                >{{ item.rating }}</span
-                                            >
-                                            <i
-                                                class="pi pi-star-fill text-yellow-500"
-                                            ></i>
+                                            <span>
+                                                <strong>开始时间:</strong>
+                                                {{
+                                                    dayjs(
+                                                        item.exam.start_time
+                                                    ).format(
+                                                        "YYYY-MM-DD HH:mm:ss"
+                                                    )
+                                                }}
+                                            </span>
+                                            <span>
+                                                <strong>结束时间:</strong>
+                                                {{
+                                                    dayjs(
+                                                        item.exam.end_time
+                                                    ).format(
+                                                        "YYYY-MM-DD HH:mm:ss"
+                                                    )
+                                                }}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
