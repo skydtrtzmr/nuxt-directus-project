@@ -36,17 +36,12 @@
                             }"
                         >
                             <div class="md:w-40 relative">
-                                <!-- <img
-                                    class="block xl:block mx-auto rounded w-full"
-                                    :src="`https://primefaces.org/cdn/primevue/images/product/${item.image}`"
-                                    :alt="item.exam.title"
-                                /> -->
                                 <div
                                     class="absolute bg-black/70 rounded-border"
                                     style="left: 4px; top: 4px"
                                 >
                                     <Tag
-                                        :value="item.submit_status"
+                                        :value="getSubmitStatusName(item)"
                                         :severity="getSubmitStatus(item)"
                                     ></Tag>
                                 </div>
@@ -62,7 +57,7 @@
                                             class="font-medium text-surface-500 dark:text-surface-400 text-sm"
                                             >{{ item.category }}</span
                                         > -->
-                                        <div class="text-lg font-medium mt-2">
+                                        <div class="text-xl font-medium mt-2">
                                             {{ item.exam.title }}
                                         </div>
                                     </div>
@@ -132,21 +127,10 @@
                                 class="bg-surface-50 flex justify-center rounded p-4"
                             >
                                 <div class="relative mx-auto">
-                                    <!-- <img
-                                        class="rounded w-full"
-                                        :src="`https://primefaces.org/cdn/primevue/images/product/${item.image}`"
-                                        :alt="item.exam.title"
-                                        style="max-width: 300px"
-                                    /> -->
-                                    <div
-                                        class="absolute bg-black/70 rounded-border"
-                                        style="left: 4px; top: 4px"
-                                    >
-                                        <Tag
-                                            :value="item.submit_status"
-                                            :severity="getSubmitStatus(item)"
-                                        ></Tag>
-                                    </div>
+                                    <Tag
+                                        :value="getSubmitStatusName(item)"
+                                        :severity="getSubmitStatus(item)"
+                                    ></Tag>
                                 </div>
                             </div>
                             <div class="pt-6">
@@ -158,7 +142,7 @@
                                             class="font-medium text-surface-500 dark:text-surface-400 text-sm"
                                             >{{ item.category }}</span
                                         >
-                                        <div class="text-lg font-medium mt-1">
+                                        <div class="text-xl font-medium mt-1">
                                             {{ item.exam.title }}
                                         </div>
                                     </div>
@@ -195,16 +179,11 @@
                                             @click="joinExam(item.id)"
                                             class="join-button"
                                             :disabled="
-                                                getSubmitStatusName(
-                                                    item
-                                                ) == '已交卷'
+                                                getSubmitStatusName(item) ==
+                                                '已交卷'
                                             "
                                         >
-                                            {{
-                                                getSubmitStatusAction(
-                                                    item
-                                                )
-                                            }}
+                                            {{ getSubmitStatusAction(item) }}
                                         </Button>
                                         <Button
                                             icon="pi pi-info-circle"
@@ -229,6 +208,8 @@ import type {
     SubmittedPapers,
     Exams,
 } from "~~/types/directus_types";
+import type { HintedString } from "@primevue/core";
+
 const auth = useAuth();
 const current_user = auth.user; // 获取当前用户
 console.log("current_user:\n", current_user);
@@ -271,7 +252,6 @@ const submitted_exams = await getItems<SubmittedExams>({
     },
 });
 
-const products = ref();
 const layout = ref<"grid" | "list" | undefined>("grid");
 const options = ref(["list", "grid"]);
 
@@ -285,7 +265,6 @@ const updateSubmitStatus = async (submitted_exam: SubmittedExams) => {
         });
     } catch (e) {}
 };
-
 
 const submitActualStartTime = async (submitted_exam: SubmittedExams) => {
     try {
@@ -307,13 +286,14 @@ const joinExam = (examId: string) => {
 
     const exam_info = submitted_exams.find((item) => item.id === examId)!;
 
+    // 注意因为exam可能是字符串或对象，要用“as”来断言类型
     console.log("考试开始时间：");
-    const exam_start_time = dayjs(exam_info.exam.start_time);
-    console.log(dayjs(exam_info.exam.start_time));
+    const exam_start_time = dayjs((exam_info.exam as Exams).start_time);
+    console.log(dayjs((exam_info.exam as Exams).start_time));
 
     console.log("考试结束时间：");
-    const exam_end_time = dayjs(exam_info.exam.end_time);
-    console.log(dayjs(exam_info.exam.end_time));
+    const exam_end_time = dayjs((exam_info.exam as Exams).end_time);
+    console.log(dayjs((exam_info.exam as Exams).end_time));
 
     if (now_time.isBefore(exam_start_time)) {
         not_started_dialog_visible.value = true;
@@ -345,7 +325,13 @@ const joinExam = (examId: string) => {
     // 跳转到具体的考试页面，页面path的最后一项就是submitted_exams的id。
 };
 
-const getSubmitStatus = (submitted_exam: SubmittedExams) => {
+const getSubmitStatus = (
+    submitted_exam: SubmittedExams
+):
+    | HintedString<
+          "secondary" | "success" | "info" | "warn" | "danger" | "contrast"
+      >
+    | undefined => {
     switch (submitted_exam.submit_status) {
         case "done":
             return "success";
@@ -357,7 +343,7 @@ const getSubmitStatus = (submitted_exam: SubmittedExams) => {
             return "danger";
 
         default:
-            return null;
+            return "info";
     }
 };
 

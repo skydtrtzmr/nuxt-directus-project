@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.7.0",
+    "@primevue/core": "^4.2.4",
     "@primevue/forms": "^4.2.4",
     "@primevue/themes": "^4.2.3",
     "chart.js": "3.3.2",
