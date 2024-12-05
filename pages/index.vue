@@ -5,7 +5,7 @@
             <nav>
                 <ul>
                     <li><router-link to="/">首页</router-link></li>
-                    <li><router-link to="/login">登录</router-link></li>
+                    <li><router-link to="/auth/login">登录</router-link></li>
                     <li><router-link to="/exams">考试</router-link></li>
                 </ul>
             </nav>
@@ -32,13 +32,32 @@
 
 <script setup lang="ts">
 
+
 definePageMeta({
     middleware: ["auth"],
     name: 'Index',
 });
 
+const router = useRouter();
+
 const { data } = await useFetch('/api/hello')
 const Messages = await useFetch('/api/dynamic-script')
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+onMounted(async () => {
+
+    // 以下是用于测试的自动操作脚本
+    // Only for testing
+    await nextTick();
+    console.log("测试自动操作脚本开始。");
+    
+    await delay(2000);
+    console.log("跳转到exams页面。");
+    
+    router.push("/exams");
+    await delay(1000);
+    
+});
 
 </script>
 

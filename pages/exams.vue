@@ -245,7 +245,7 @@ console.log("current_user:\n", current_user);
 
 if (!current_user) {
     const router = useRouter();
-    router.push("/login");
+    router.push("/auth/login");
 }
 
 // 这两个控制能否参加考试的弹窗

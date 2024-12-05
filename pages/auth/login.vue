@@ -78,7 +78,7 @@ const loginSubmit = async () => {
     }
 };
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 
 // onMounted(async () => {
 //     await nextTick(); // 通过nextTick来确保页面渲染完成，然后自动填充表单
@@ -113,6 +113,8 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 // Vue 可能会在下次重新渲染时覆盖该值，导致你通过脚本设置的值丢失。
 // 所以上面那样写是没用的……
 
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 onMounted(async () => {
     // 这里仅供测试用!
 
