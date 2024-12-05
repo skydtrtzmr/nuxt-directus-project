@@ -22,7 +22,6 @@
             </section>
         </main>
         <pre>{{ data }}</pre>
-        <pre>{{ Messages }}</pre>
 
         <footer>
             <p>&copy; 版权所有。</p>
@@ -41,7 +40,6 @@ definePageMeta({
 const router = useRouter();
 
 const { data } = await useFetch('/api/hello')
-const Messages = await useFetch('/api/dynamic-script')
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 onMounted(async () => {

@@ -441,6 +441,7 @@ onMounted(async () => {
         
         return (item.exam as Exams).title === targetItemTitle;
     })||null;
+    await delay(2000);
 
     console.log("targetGirdDiv1");
 
