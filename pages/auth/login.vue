@@ -120,6 +120,8 @@ onMounted(async () => {
 
     await nextTick(); // 通过nextTick来确保页面渲染完成，然后自动填充表单
     // 在这里通过 Vue 响应式数据来设置输入框的值
+    
+    await delay(2000);
     email.value = "20240109@stu.com";
 
     await delay(1000);

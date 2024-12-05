@@ -423,6 +423,7 @@ const getSubmitStatusAction = (submitted_exam: SubmittedExams) => {
     }
 };
 
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 onMounted(async () => {
     await fetchSubmittedExams(); // 注意要await！确保submittedExams.value已经被赋值
     await nextTick(); // 确保 DOM 渲染完成
@@ -431,7 +432,7 @@ onMounted(async () => {
     const targetItemTitle = "自动化测试专用考试"; // 需要筛选的标题
     console.log("submittedExams.value");
     console.log(submittedExams.value);
-    
+    await delay(2000);
     // 注意，下面获得的并不直接是Button，而是其父级div。
     const targetGirdDiv: HTMLElement|null = gridItems.value.find((button, index) => {
         const item = submittedExams.value[index]; // 获取对应的项
