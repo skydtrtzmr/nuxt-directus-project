@@ -21,6 +21,8 @@
                 <p>我们提供多种服务以满足客户的需求。</p>
             </section>
         </main>
+        <pre>{{ data }}</pre>
+        <pre>{{ Messages }}</pre>
 
         <footer>
             <p>&copy; 版权所有。</p>
@@ -28,14 +30,16 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "Index",
-};
+<script setup lang="ts">
 
 definePageMeta({
     middleware: ["auth"],
+    name: 'Index',
 });
+
+const { data } = await useFetch('/api/hello')
+const Messages = await useFetch('/api/dynamic-script')
+
 </script>
 
 <style scoped>

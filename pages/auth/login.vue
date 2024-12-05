@@ -77,6 +77,28 @@ const loginSubmit = async () => {
         alert(error_message);
     }
 };
+
+onMounted(() => {
+    nextTick(() => {
+        const username = "testUser";
+        const password = "testPassword";
+        const emailInput = document.querySelector(
+            "#email1"
+        )! as HTMLInputElement;
+        const passwordInput = document.querySelector(
+            "#password1 input"
+        )! as HTMLInputElement;
+
+        if (emailInput && passwordInput) {
+            console.log("自动填充表单");
+
+            emailInput.value = username;
+            passwordInput.value = password;
+            // 你可以在这里调用表单提交操作
+            // document.querySelector("#login-form")!.submit();
+        }
+    });
+});
 </script>
 
 <template>
@@ -132,7 +154,8 @@ const loginSubmit = async () => {
                                     v-model="email"
                                     type="text"
                                     placeholder="请输入账号对应邮箱"
-                            /></InputGroup>
+                                />
+                            </InputGroup>
                             <Message
                                 v-if="$form.email?.invalid"
                                 severity="error"
@@ -160,10 +183,10 @@ const loginSubmit = async () => {
                         <div class="w-full md:w-[30rem] mb-8">
                             <InputGroup class="mb-2"
                                 ><InputGroupAddon
-                                    ><i
-                                        class="pi pi-credit-card"
-                                    ></i></InputGroupAddon
-                                ><Password
+                                    ><i class="pi pi-credit-card"></i
+                                ></InputGroupAddon>
+                                <!-- 注意，这里Password组件中的id不是对应input的id，而是inpu的父组件的id -->
+                                <Password
                                     id="password1"
                                     name="password"
                                     placeholder="请输入账号密码"
@@ -208,7 +231,7 @@ const loginSubmit = async () => {
                         </div>
                         <Button
                             type="submit"
-                            severity="secondary"
+                            severity="primary"
                             label="登录"
                             class="w-full"
                             size="large"
