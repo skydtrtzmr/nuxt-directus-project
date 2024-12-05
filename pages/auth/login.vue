@@ -7,6 +7,7 @@ import PracticeAgain from "~/assets/icons/practice-again.svg";
 import { zodResolver } from "@primevue/forms/resolvers/zod";
 import { useToast } from "primevue/usetoast";
 import { z } from "zod";
+import type { DirectusUsers } from "~~/types/directus_types";
 
 definePageMeta({
     // middleware: ["auth"],
@@ -114,9 +115,29 @@ const loginSubmit = async () => {
 // 所以上面那样写是没用的……
 
 
+
+
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 onMounted(async () => {
     // 这里仅供测试用!
+    const dynamicIndex = await useFetch('/api/dynamic-script'); // 返回一个序号
+    const { getUsers } = useDirectusUsers();
+    const users = await getUsers({
+        params: {
+            fields: [
+                "id",
+                "email",
+                "last_name", // 这个测试中作为密码用
+            ],
+        }
+    }) as DirectusUsers[];
+
+    let currentUser = users[0];
+    if (typeof dynamicIndex === 'number') {
+        currentUser = users[dynamicIndex];
+    } else {
+        console.log("哪里搞错了吧怎么可能这东西不是数字？");
+    }
 
     await nextTick(); // 通过nextTick来确保页面渲染完成，然后自动填充表单
     // 在这里通过 Vue 响应式数据来设置输入框的值
