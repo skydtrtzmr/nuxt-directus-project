@@ -6,6 +6,11 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 
 终于完成了连接directus的基础配置。
 
+### TODO
+
+- [ ] `preview/[id]`页面，显示答案。
+- [ ] 添加做题操作自动脚本。
+
 ## 关于UI
 
 使用[primevue](https://primevue.org/)。
