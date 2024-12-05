@@ -35,9 +35,9 @@
             </div>
         </Dialog>
         <DataView
-            :value="submitted_exams"
+            :value="submittedExams"
             :layout="layout"
-            dataKey="submitted_exams.id"
+            dataKey="submittedExams.id"
         >
             <template #header>
                 <div class="flex justify-end">
@@ -162,6 +162,7 @@
                         v-for="(item, index) in slotProps.items"
                         :key="index"
                         class="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3 p-2"
+                        ref="gridItems"
                     >
                         <!-- 根据屏幕尺寸，决定每行显示的数量 -->
                         <!-- 尺寸从大到小分别是：sm/md/lg/xl/2xl -->
@@ -205,6 +206,7 @@
                                     </div>
                                     <div class="flex gap-2">
                                         <Button
+                                            :key="item.id"
                                             @click="joinExam(item.id)"
                                             class="join-button flex-auto whitespace-nowrap"
                                             :disabled="
@@ -239,6 +241,10 @@ import type {
 } from "~~/types/directus_types";
 import type { HintedString } from "@primevue/core";
 
+const gridItems = ref([]);
+console.log("gridItems.value");
+console.log(gridItems.value);
+const submittedExams = ref<SubmittedExams[]>([]);
 const auth = useAuth();
 const current_user = auth.user; // 获取当前用户
 console.log("current_user:\n", current_user);
@@ -258,31 +264,34 @@ definePageMeta({
     middleware: ["auth"],
 });
 
-const submitted_exams = await getItems<SubmittedExams>({
-    collection: "submitted_exams",
-    params: {
-        fields: [
-            "id",
-            "exam.*",
-            "extra_time",
-            "actual_end_time",
-            "actual_start_time",
-            "participation_status",
-            "submit_status",
-            "student.*", // 要获得学生的详细信息，因为directus_user在student中。
-        ],
-        // 笔记：注意看，嵌套的字段（例如student.directus_user）要做筛选的话像下面这样。
-        filter: {
-            student: {
-                directus_user: current_user!.id,
-            },
-        },
-        // 注意！别弄混了，directus中student.id和directus_user.id不一样。
-    },
-});
-
 const layout = ref<"grid" | "list" | undefined>("grid"); // 默认显示为网格
 const options = ref(["list", "grid"]);
+
+const fetchSubmittedExams = async () => {
+    const submitted_exams = await getItems<SubmittedExams>({
+        collection: "submitted_exams",
+        params: {
+            fields: [
+                "id",
+                "exam.*",
+                "extra_time",
+                "actual_end_time",
+                "actual_start_time",
+                "participation_status",
+                "submit_status",
+                "student.*", // 要获得学生的详细信息，因为directus_user在student中。
+            ],
+            // 笔记：注意看，嵌套的字段（例如student.directus_user）要做筛选的话像下面这样。
+            filter: {
+                student: {
+                    directus_user: current_user!.id,
+                },
+            },
+            // 注意！别弄混了，directus中student.id和directus_user.id不一样。
+        },
+    });
+    submittedExams.value = submitted_exams;
+};
 
 const updateSubmitStatus = async (submitted_exam: SubmittedExams) => {
     try {
@@ -313,7 +322,7 @@ const joinExam = (examId: string) => {
     console.log(dayjs(Date.now()));
     const now_time = dayjs(Date.now());
 
-    const exam_info = submitted_exams.find((item) => item.id === examId)!;
+    const exam_info = submittedExams.value.find((item) => item.id === examId)!;
 
     // 注意因为exam可能是字符串或对象，要用“as”来断言类型
     console.log("考试开始时间：");
@@ -340,13 +349,15 @@ const joinExam = (examId: string) => {
 
     console.log(`参加考试：${examId}`);
     // 参加考试之后，需要修改submit_status为doing。
-    updateSubmitStatus(submitted_exams.find((item) => item.id === examId)!);
+    updateSubmitStatus(
+        submittedExams.value.find((item) => item.id === examId)!
+    );
 
     // 只有第一次才记录实际开始时间，以后就不再记录了。
 
     if (exam_info.actual_start_time === null) {
         submitActualStartTime(
-            submitted_exams.find((item) => item.id === examId)!
+            submittedExams.value.find((item) => item.id === examId)!
         );
     }
 
@@ -411,4 +422,38 @@ const getSubmitStatusAction = (submitted_exam: SubmittedExams) => {
             return null;
     }
 };
+
+onMounted(async () => {
+    await fetchSubmittedExams(); // 注意要await！确保submittedExams.value已经被赋值
+    await nextTick(); // 确保 DOM 渲染完成
+
+    // 筛选出标题为特定内容的循环项
+    const targetItemTitle = "自动化测试专用考试"; // 需要筛选的标题
+    console.log("submittedExams.value");
+    console.log(submittedExams.value);
+    
+    // 注意，下面获得的并不直接是Button，而是其父级div。
+    const targetGirdDiv: HTMLElement|null = gridItems.value.find((button, index) => {
+        const item = submittedExams.value[index]; // 获取对应的项
+        console.log("item.??");
+        console.log(item);
+        
+        return (item.exam as Exams).title === targetItemTitle;
+    })||null;
+
+    console.log("targetGirdDiv1");
+
+    // 模拟点击目标按钮
+    if (targetGirdDiv && typeof targetGirdDiv == "object") {
+        console.log("targetGirdDiv");
+        console.log(targetGirdDiv);
+        const firstButton = (targetGirdDiv as HTMLElement).querySelector('button');
+        console.log("firstButton");
+        console.log(firstButton);
+        firstButton!.click();
+
+    } else {
+        console.log("没有找到目标按钮");
+    }
+});
 </script>
