@@ -47,6 +47,7 @@ const props = defineProps<{
     selectedSubmittedQuestion: SubmittedQuestions;
 }>();
 
+const { updateItem } = useDirectusItems();
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const selectedQuestionElement = ref<any>();
@@ -65,10 +66,71 @@ onMounted(async () => {
             await delay(1000);
             console.log("selectedSubmittedQuestion changed");
             console.log(props.selectedSubmittedQuestion);
-            console.log("selectedQuestionElement.value");
-            console.log(selectedQuestionElement.value);
+            if (
+                props.selectedSubmittedQuestion.question_type === "q_mc_single"
+            ) {
+                props.selectedSubmittedQuestion.submitted_ans_q_mc_single = "A";
+                const submitted_question = {
+                    submitted_ans_q_mc_single:
+                        props.selectedSubmittedQuestion
+                            .submitted_ans_q_mc_single,
+                };
+                const response = await updateItem<SubmittedQuestions>({
+                    collection: "submitted_questions",
+                    id: props.selectedSubmittedQuestion.id,
+                    item: submitted_question,
+                });
+            } else if (
+                props.selectedSubmittedQuestion.question_type === "q_mc_multi"
+            ) {
+                props.selectedSubmittedQuestion.submitted_ans_q_mc_multi = [
+                    "A",
+                    "B",
+                ];
+                const submitted_question = {
+                    submitted_ans_q_mc_multi:
+                        props.selectedSubmittedQuestion
+                            .submitted_ans_q_mc_multi,
+                };
+                const response = await updateItem<SubmittedQuestions>({
+                    collection: "submitted_questions",
+                    id: props.selectedSubmittedQuestion.id,
+                    item: submitted_question,
+                });
+            } else if (
+                props.selectedSubmittedQuestion.question_type === "q_mc_binary"
+            ) {
+                props.selectedSubmittedQuestion.submitted_ans_q_mc_binary = "A";
+                const submitted_question = {
+                    submitted_ans_q_mc_binary:
+                        props.selectedSubmittedQuestion
+                            .submitted_ans_q_mc_binary,
+                };
+                const response = await updateItem<SubmittedQuestions>({
+                    collection: "submitted_questions",
+                    id: props.selectedSubmittedQuestion.id,
+                    item: submitted_question,
+                });
+            } else if (
+                props.selectedSubmittedQuestion.question_type ===
+                "q_mc_flexible"
+            ) {
+                props.selectedSubmittedQuestion.submitted_ans_q_mc_flexible = [
+                    "A",
+                    "B",
+                ];
+                const submitted_question = {
+                    submitted_ans_q_mc_flexible:
+                        props.selectedSubmittedQuestion
+                            .submitted_ans_q_mc_flexible,
+                };
+                const response = await updateItem<SubmittedQuestions>({
+                    collection: "submitted_questions",
+                    id: props.selectedSubmittedQuestion.id,
+                    item: submitted_question,
+                });
+            }
         }
-        
     );
 });
 </script>
