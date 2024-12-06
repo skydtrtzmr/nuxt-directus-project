@@ -33,7 +33,9 @@
             <div class="absolute top-0 right-0">
                 <!-- 显示倒计时 -->
                 <div class="countdown">
-                    <p>当前时间: {{ dayjs().format("YYYY-MM-DD HH:mm:ss") }}</p>
+                    <!-- <p>当前时间: {{ dayjs().format("YYYY-MM-DD HH:mm:ss") }}</p> -->
+                    <!-- 不要直接在这里写时间，会导致客户端和服务器时间不一致。 -->
+                     <p v-if="isClient">当前时间: {{ dayjs().format("YYYY-MM-DD HH:mm:ss") }}</p>
                     <p>
                         结束时间:
                         {{ dayjs(examEndTime).format("YYYY-MM-DD HH:mm:ss") }}
@@ -378,15 +380,28 @@ const confirmSubmit = () => {
     exitExam();
 };
 
+let pollingInterval: NodeJS.Timeout | undefined = undefined; // 轮询考试状态
+
+const isClient = ref(false); // 记录当前是否是客户端渲染（用来确保时间显示正确）
+
 // 页面加载时调用
 onMounted(() => {
+    isClient.value = true; // 标记当前是客户端渲染（组件已经挂载）
     fetchSubmittedExam();
+    // 定时请求数据，每隔 30 秒请求一次
+    pollingInterval = setInterval(() => {
+        fetchSubmittedExam();
+        console.log("polling...");
+    }, 30000); // 30秒，您可以根据需要调整这个时间间隔
 });
 
 // 组件卸载时清除定时器
 onUnmounted(() => {
     if (countdownInterval.value) {
         clearInterval(countdownInterval.value);
+    }
+    if (pollingInterval) {
+        clearInterval(pollingInterval);
     }
 });
 // TODO 这段可能重复了

@@ -2,16 +2,28 @@
 <!-- 在这里进行题型的判断，根据题型渲染不同的组件 -->
 <template>
     <div v-if="selectedSubmittedQuestion.question_type === 'q_mc_single'">
-        <QMcSingle :selectedSubmittedQuestion="selectedSubmittedQuestion" />
+        <QMcSingle
+            :selectedSubmittedQuestion="selectedSubmittedQuestion"
+            :showResult="false"
+        />
     </div>
     <div v-if="selectedSubmittedQuestion.question_type === 'q_mc_multi'">
-        <QMcMulti :selectedSubmittedQuestion="selectedSubmittedQuestion" />
+        <QMcMulti
+            :selectedSubmittedQuestion="selectedSubmittedQuestion"
+            :showResult="false"
+        />
     </div>
     <div v-if="selectedSubmittedQuestion.question_type === 'q_mc_binary'">
-        <QMcBinary :selectedSubmittedQuestion="selectedSubmittedQuestion" />
+        <QMcBinary
+            :selectedSubmittedQuestion="selectedSubmittedQuestion"
+            :showResult="false"
+        />
     </div>
     <div v-if="selectedSubmittedQuestion.question_type === 'q_mc_flexible'">
-        <QMcFlexible :selectedSubmittedQuestion="selectedSubmittedQuestion" />
+        <QMcFlexible
+            :selectedSubmittedQuestion="selectedSubmittedQuestion"
+            :showResult="false"
+        />
     </div>
 </template>
 
