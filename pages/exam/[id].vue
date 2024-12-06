@@ -1,31 +1,10 @@
 <!-- pages/exam/[id].vue -->
 <template>
     <div class="relative">
-        <!-- <h2>考试详情</h2> -->
+        
 
-        <p>考试ID: {{ submitted_exam_id }}</p>
-        <p
-            v-if="
-                submittedExam &&
-                submittedExam.exam &&
-                typeof submittedExam.exam == 'object'
-            "
-        >
-            考试名称：{{ submittedExam?.exam.title }}
-        </p>
-        <p
-            v-if="
-                submittedExam &&
-                submittedExam.student &&
-                typeof submittedExam.student == 'object'
-            "
-        >
-            <!-- NOTE：注意这里必须直接从submittedExam.student获取，而不能获取登录的用户信息。
-            因为考试详情页面并非只有考生本人才能查看，教师也可以查看。 -->
-            当前考生：{{ submittedExam?.student.name }}
-        </p>
-
-        <!-- 显示考试的其他信息 -->
+        <!-- 显示考试信息 -->
+        <ExamInfo :submittedExam="submittedExam" :submitted_exam_id="submitted_exam_id"></ExamInfo>
 
         <!-- 显示试卷详情 -->
         <div>
@@ -149,7 +128,7 @@ const submitted_exam_id = Array.isArray(route.params.id)
     : route.params.id;
 
 // 数据绑定
-const submittedExam = ref<SubmittedExams | null>(null);
+const submittedExam = ref<SubmittedExams>({} as SubmittedExams);
 const submittedPaper = ref<SubmittedPapers | null>(null);
 const submittedPaperChapters = ref<SubmittedPaperChapters[]>([]);
 // const submittedQuestions = ref<SubmittedQuestions[]>([]);
