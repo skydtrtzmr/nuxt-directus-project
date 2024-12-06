@@ -26,11 +26,11 @@
         </div>
         <div class="flex">
             <!-- 左侧：题目列表 -->
-            <QuestionList
+            <ResultQuestionList
                 class="basis-1/5 card"
                 :submittedPaperChapters="submittedPaperChapters"
                 :selectQuestion="selectQuestion"
-            ></QuestionList>
+            ></ResultQuestionList>
 
             <!-- 右侧：题目详情和答题区 -->
             <BlockUI
@@ -47,10 +47,10 @@
                     },
                 }"
             >
-                <QuestionDetail
+                <ResultQuestionDetail
                     :selectedSubmittedQuestion="selectedSubmittedQuestion"
                     :disableAnswer="true"
-                ></QuestionDetail>
+                ></ResultQuestionDetail>
                 <!-- 后续可以改成不用BlockUI、而是给答题组建传入一个disable属性，控制答题按钮的状态。 -->
                 <!-- 但是那样太麻烦了，要改好多组件。 -->
             </BlockUI>
@@ -164,6 +164,8 @@ const fetchSubmittedPaper = async (paperId: string) => {
                 "source_paper_prototype.title",
                 "source_paper_prototype.total_point_value",
                 "submitted_paper_chapters",
+                "point_value", // 分值
+                "score", // 得分
             ],
         },
     });
@@ -188,6 +190,8 @@ const fetchSubmittedChapterList = async (
                 "id",
                 "sort_in_paper",
                 "title",
+                "point_value",
+                "score",
                 "source_paper_prototype_chapter.title",
                 "submitted_questions.id",
                 "submitted_questions.sort_in_chapter",
@@ -197,6 +201,8 @@ const fetchSubmittedChapterList = async (
                 "submitted_questions.submitted_ans_q_mc_multi",
                 "submitted_questions.submitted_ans_q_mc_binary",
                 "submitted_questions.submitted_ans_q_mc_flexible",
+                "submitted_questions.point_value", // 分值
+                "submitted_questions.score", // 得分
                 "submitted_questions.question.q_mc_single.*",
                 "submitted_questions.question.q_mc_multi.*",
                 "submitted_questions.question.q_mc_binary.*",
@@ -220,7 +226,7 @@ const fetchSubmittedChapterList = async (
 
 // 获取题目数据
 // 注意，需要按照题目在章节中的顺序排序
-// const fetchSubmittedQuestionList = async (chapters: SubmittedPaperChapters[]) => {
+// const fetchSubmittedResultQuestionList = async (chapters: SubmittedPaperChapters[]) => {
 //     const questionIds = chapters.flatMap(
 //         (chapter) => chapter.submitted_questions
 //     );

@@ -31,11 +31,12 @@
                 />
 
                 <!-- 题目内容 -->
-                <QuestionContent
+                <ResultQuestionContent
                     class="basis-3/5 h-full"
                     :selectedSubmittedQuestion="selectedSubmittedQuestion"
                     :disableAnswer="disableAnswer"
                 />
+
             </div>
         </div>
     </div>
@@ -44,11 +45,13 @@
 <script setup>
 import { computed } from "vue";
 import CommonQuestionContent from "~/components/CommonQuestionContent.vue";
-import QuestionContent from "~/components/QuestionContent.vue";
+import ResultQuestionContent from "~/components/ResultQuestionContent.vue";
 const props = defineProps({
     selectedSubmittedQuestion: Object | null,
     disableAnswer: Boolean,
 });
+
+
 </script>
 
 <style scoped>
