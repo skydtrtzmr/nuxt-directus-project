@@ -11,7 +11,7 @@
         <!-- 单选题或判断题 -->
         <p>{{ selectedSubmittedQuestion.question.q_mc_multi.stem }}</p>
         <div class="flex flex-col gap-4">
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2" id="div_option_a">
                 <Checkbox
                     v-model="
                         selectedSubmittedQuestion.submitted_ans_q_mc_multi
@@ -28,7 +28,7 @@
                     }}</label
                 >
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2" id="div_option_b">
                 <Checkbox
                     v-model="
                         selectedSubmittedQuestion.submitted_ans_q_mc_multi
@@ -45,7 +45,7 @@
                     }}</label
                 >
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2" id="div_option_c">
                 <Checkbox
                     v-model="
                         selectedSubmittedQuestion.submitted_ans_q_mc_multi
@@ -62,7 +62,7 @@
                     }}</label
                 >
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2" id="div_option_d">
                 <Checkbox
                     v-model="
                         selectedSubmittedQuestion.submitted_ans_q_mc_multi

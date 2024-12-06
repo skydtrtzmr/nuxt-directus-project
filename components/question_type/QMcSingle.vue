@@ -11,7 +11,7 @@
         <!-- 单选题 -->
         <p>{{ selectedSubmittedQuestion.question.q_mc_single.stem }}</p>
         <div class="flex flex-col gap-4">
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2" id="div_option_a">
                 <RadioButton
                     v-model="
                         selectedSubmittedQuestion.submitted_ans_q_mc_single
@@ -28,7 +28,7 @@
                     }}</label
                 >
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2" id="div_option_b">
                 <RadioButton
                     v-model="
                         selectedSubmittedQuestion.submitted_ans_q_mc_single
@@ -45,7 +45,7 @@
                     }}</label
                 >
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2" id="div_option_c">
                 <RadioButton
                     v-model="
                         selectedSubmittedQuestion.submitted_ans_q_mc_single
@@ -62,7 +62,7 @@
                     }}</label
                 >
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2" id="div_option_d">
                 <RadioButton
                     v-model="
                         selectedSubmittedQuestion.submitted_ans_q_mc_single
