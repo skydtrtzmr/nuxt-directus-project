@@ -1,77 +1,77 @@
-<!-- pages/exam/preview/[id].vue -->
-<!-- 这个页面基本上和正常考试一样的，只是去掉了用户验证、增加了disable，是给老师看用的。 -->
+<!-- pages/exam/[id].vue -->
 <template>
     <div class="relative">
-        <!-- <h2>考试详情</h2> -->
-        <p>考试ID: {{ submitted_exam_id }}</p>
-        <p
-            v-if="
-                submittedExam &&
-                submittedExam.exam &&
-                typeof submittedExam.exam == 'object'
-            "
-        >
-            考试名称：{{ submittedExam?.exam.title }}
-        </p>
-        <p
-            v-if="
-                submittedExam &&
-                submittedExam.student &&
-                typeof submittedExam.student == 'object'
-            "
-        >
-            当前考生：{{ submittedExam?.student.name }}
-        </p>
-        <!-- 显示考试的其他信息 -->
+        <!-- 显示考试信息 -->
+        <ExamInfo :submittedExam="submittedExam"></ExamInfo>
 
         <!-- 显示试卷详情 -->
         <div>
             <PaperInfo :submittedPaper="submittedPaper"></PaperInfo>
             <div class="absolute top-0 right-0">
                 <!-- 显示倒计时 -->
-                <div class="countdown">
-                    <p>
-                        当前时间:
-                        {{ dayjs().format("YYYY-MM-DD HH:mm:ss") }}
-                    </p>
-                    <p>
-                        结束时间:
-                        {{ dayjs(examEndTime).format("YYYY-MM-DD HH:mm:ss") }}
-                    </p>
-                    <p>剩余时长: {{ formattedCountDown }}</p>
-                </div>
+                <ExamCountdown
+                    :isClient="isClient"
+                    :examEndTime="examEndTime"
+                    :formattedCountDown="formattedCountDown"
+                ></ExamCountdown>
+                <Button
+                    icon="pi pi-save"
+                    aria-label="Submit"
+                    label="提交试卷"
+                    @click="manualSubmit()"
+                />
             </div>
         </div>
+        <template v-if="mode !== 'review'">
+            <Dialog
+                v-model:visible="ended_dialog_visible"
+                modal
+                header="提示"
+                @hide="exitExam()"
+                :style="{ width: '25rem' }"
+            >
+                <span class="text-surface-500 dark:text-surface-400 block mb-8"
+                    >考试结束时间到，已自动提交试卷！</span
+                >
+                <div class="flex justify-end gap-2">
+                    <Button
+                        type="button"
+                        label="确定"
+                        @click="exitExam()"
+                    ></Button>
+                </div>
+            </Dialog>
+            <Dialog
+                v-model:visible="confirm_submit_dialog_visible"
+                modal
+                header="警告"
+                :style="{ width: '25rem' }"
+            >
+                <span class="text-surface-500 dark:text-surface-400 block mb-8"
+                    >确认提交试卷吗？</span
+                >
+                <div class="flex justify-end gap-2">
+                    <Button
+                        type="button"
+                        label="确定"
+                        @click="confirmSubmit()"
+                    ></Button>
+                </div>
+            </Dialog>
+        </template>
         <div class="flex">
             <!-- 左侧：题目列表 -->
-            <ResultQuestionList
+            <QuestionList
                 class="basis-1/5 card"
                 :submittedPaperChapters="submittedPaperChapters"
                 :selectQuestion="selectQuestion"
-            ></ResultQuestionList>
+            ></QuestionList>
 
             <!-- 右侧：题目详情和答题区 -->
-            <BlockUI
-                :blocked="blocked"
+            <QuestionDetail
                 class="basis-4/5"
-                :pt="{
-                    // 通过透传pt参数，控制BlockUI的样式
-                    mask: {
-                        style: {
-                            background: 'transparent',
-                            animation: 'none',
-                        },
-                        class: [],
-                    },
-                }"
-            >
-                <ResultQuestionDetail
-                    :selectedSubmittedQuestion="selectedSubmittedQuestion"
-                    :disableAnswer="true"
-                ></ResultQuestionDetail>
-                <!-- 后续可以改成不用BlockUI、而是给答题组建传入一个disable属性，控制答题按钮的状态。 -->
-                <!-- 但是那样太麻烦了，要改好多组件。 -->
-            </BlockUI>
+                :selectedSubmittedQuestion="selectedSubmittedQuestion"
+            ></QuestionDetail>
         </div>
     </div>
 </template>
@@ -90,10 +90,14 @@ import type {
 
 dayjs.extend(utc);
 
-const blocked = ref(true); // preview专用，把整个页面都锁住，防止用户操作
-
 const ended_dialog_visible = ref(false);
 const confirm_submit_dialog_visible = ref(false);
+
+const props = defineProps<{
+    // submitted_exam_id: string;
+    // 暂时不用拿参数，直接用vue-router自己获取。
+    mode: string; // 考试模式，practice、exam、review
+}>();
 
 // const { refreshTokens } = useDirectusToken();
 
@@ -110,18 +114,12 @@ const confirm_submit_dialog_visible = ref(false);
 
 // console.log("newToken:", newToken);
 
-// 如果当前用户未登录或者token失效，则跳转到登录页面
-definePageMeta({
-    // middleware: ["auth"], // 注意，和正常学生端唯一的区别就在这里，把授权中间件去掉了。
-    layout: "empty", // 考试时全屏显示，不需要侧边栏和顶部导航栏
-});
-
 const { getItemById, getItems, updateItem } = useDirectusItems();
 
 const router = useRouter();
 
 // 路由参数：submitted_exam 的 ID
-const route = useRoute();
+const route = useRoute(); // 这里的useRoute是vue-router的useRoute方法，而非Nuxt的useRoute方法。
 // const submitted_exam_id = route.params.id;
 // 加入预处理参数：在路由守卫或组件加载时，无论是单个值还是数组，都统一解析为单个值。
 const submitted_exam_id = Array.isArray(route.params.id)
@@ -129,7 +127,7 @@ const submitted_exam_id = Array.isArray(route.params.id)
     : route.params.id;
 
 // 数据绑定
-const submittedExam = ref<SubmittedExams | null>(null);
+const submittedExam = ref<SubmittedExams>({} as SubmittedExams);
 const submittedPaper = ref<SubmittedPapers | null>(null);
 const submittedPaperChapters = ref<SubmittedPaperChapters[]>([]);
 // const submittedQuestions = ref<SubmittedQuestions[]>([]);
@@ -137,7 +135,7 @@ const selectedSubmittedQuestion = ref<SubmittedQuestions | null>(null); // 当�
 // const selectedAnswer = ref(""); // 当前题目的答案
 
 // 倒计时相关
-const examEndTime = ref<dayjs.Dayjs | null>(null); // 考试结束时间（对于学生本人）
+const examEndTime = ref<dayjs.Dayjs>({} as dayjs.Dayjs); // 考试结束时间（对于学生本人）
 const countdown = ref(0); // 剩余时间
 const formattedCountDown = ref("00:00:00"); // 倒计时
 const countdownInterval = ref<any>(null); // 倒计时定时器
@@ -148,7 +146,13 @@ const fetchSubmittedExam = async () => {
         collection: "submitted_exams",
         id: submitted_exam_id,
         params: {
-            fields: ["expected_end_time", "submitted_papers"], // 获取考试的状态和关联的试卷
+            fields: [
+                "id",
+                "expected_end_time",
+                "submitted_papers",
+                "exam.title",
+                "student.name",
+            ], // 获取考试的状态和关联的试卷
         },
     });
     if (submittedExamResponse) {
@@ -182,8 +186,6 @@ const fetchSubmittedPaper = async (paperId: string) => {
                 "source_paper_prototype.title",
                 "source_paper_prototype.total_point_value",
                 "submitted_paper_chapters",
-                "point_value", // 分值
-                "score", // 得分
             ],
         },
     });
@@ -208,8 +210,6 @@ const fetchSubmittedChapterList = async (
                 "id",
                 "sort_in_paper",
                 "title",
-                "point_value",
-                "score",
                 "source_paper_prototype_chapter.title",
                 "submitted_questions.id",
                 "submitted_questions.sort_in_chapter",
@@ -219,8 +219,6 @@ const fetchSubmittedChapterList = async (
                 "submitted_questions.submitted_ans_q_mc_multi",
                 "submitted_questions.submitted_ans_q_mc_binary",
                 "submitted_questions.submitted_ans_q_mc_flexible",
-                "submitted_questions.point_value", // 分值
-                "submitted_questions.score", // 得分
                 "submitted_questions.question.q_mc_single.*",
                 "submitted_questions.question.q_mc_multi.*",
                 "submitted_questions.question.q_mc_binary.*",
@@ -244,7 +242,7 @@ const fetchSubmittedChapterList = async (
 
 // 获取题目数据
 // 注意，需要按照题目在章节中的顺序排序
-// const fetchSubmittedResultQuestionList = async (chapters: SubmittedPaperChapters[]) => {
+// const fetchSubmittedQuestionList = async (chapters: SubmittedPaperChapters[]) => {
 //     const questionIds = chapters.flatMap(
 //         (chapter) => chapter.submitted_questions
 //     );
@@ -361,10 +359,20 @@ const confirmSubmit = () => {
     exitExam();
 };
 
+// let pollingInterval: NodeJS.Timeout | undefined = undefined; // 轮询考试状态
+// TODO 暂时不用轮询，好像有点问题
+
+const isClient = ref(false); // 记录当前是否是客户端渲染（用来确保时间显示正确）
+
 // 页面加载时调用
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-onMounted(async () => {
+onMounted(() => {
+    isClient.value = true; // 标记当前是客户端渲染（组件已经挂载）
     fetchSubmittedExam();
+    // 定时请求数据，每隔 30 秒请求一次
+    // pollingInterval = setInterval(() => {
+    //     fetchSubmittedExam();
+    //     console.log("polling...");
+    // }, 30000); // 30秒，您可以根据需要调整这个时间间隔
 });
 
 // 组件卸载时清除定时器
@@ -372,6 +380,9 @@ onUnmounted(() => {
     if (countdownInterval.value) {
         clearInterval(countdownInterval.value);
     }
+    // if (pollingInterval) {
+    //     clearInterval(pollingInterval);
+    // }
 });
 // TODO 这段可能重复了
 </script>

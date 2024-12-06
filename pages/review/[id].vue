@@ -10,7 +10,7 @@ definePageMeta({
     layout: "empty", // 考试时全屏显示，不需要侧边栏和顶部导航栏
 });
 
-const exam_page_mode = ref("practice"); // 考试模式，practice表示练习模式，exam表示考试模式
+const exam_page_mode = ref("review"); // 考试模式，practice表示练习模式，exam表示考试模式
 
 // 虽然可以在这里获取路由参数传给ExamPage，但是暂时直接让ExamPage自己获取也能用，先不改了。
 
