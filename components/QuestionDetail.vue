@@ -34,7 +34,7 @@
                 <QuestionContent
                     class="basis-3/5 h-full"
                     :selectedSubmittedQuestion="selectedSubmittedQuestion"
-                    :disableAnswer="disableAnswer"
+                    :exam_page_mode="exam_page_mode"
                 />
             </div>
         </div>
@@ -47,7 +47,7 @@ import CommonQuestionContent from "~/components/CommonQuestionContent.vue";
 import QuestionContent from "~/components/QuestionContent.vue";
 const props = defineProps({
     selectedSubmittedQuestion: Object | null,
-    disableAnswer: Boolean,
+    exam_page_mode: string,
 });
 </script>
 

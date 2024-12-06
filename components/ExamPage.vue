@@ -22,7 +22,7 @@
                 />
             </div>
         </div>
-        <template v-if="mode !== 'review'">
+        <template v-if="exam_page_mode !== 'review'">
             <Dialog
                 v-model:visible="ended_dialog_visible"
                 modal
@@ -69,6 +69,7 @@
 
             <!-- 右侧：题目详情和答题区 -->
             <QuestionDetail
+                :exam_page_mode="exam_page_mode"
                 class="basis-4/5"
                 :selectedSubmittedQuestion="selectedSubmittedQuestion"
             ></QuestionDetail>
@@ -96,7 +97,7 @@ const confirm_submit_dialog_visible = ref(false);
 const props = defineProps<{
     // submitted_exam_id: string;
     // 暂时不用拿参数，直接用vue-router自己获取。
-    mode: string; // 考试模式，practice、exam、review
+    exam_page_mode: string; // 考试模式，practice、exam、review
 }>();
 
 // const { refreshTokens } = useDirectusToken();
