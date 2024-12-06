@@ -218,6 +218,7 @@
                                         </Button>
                                         <Button
                                             icon="pi pi-info-circle"
+                                            @click="previewExam(item.id)"
                                             outlined
                                         ></Button>
                                     </div>
@@ -365,8 +366,13 @@ const joinExam = (examId: string) => {
     // 这里的 router.push 必须是 this.$router.push 或者使用 composable useRouter()
     // 如果使用 useRouter，需要引入并使用
     const router = useRouter();
-    router.push(`/exam/${examId}`);
+    router.push(`/exams/${examId}`);
     // 跳转到具体的考试页面，页面path的最后一项就是submitted_exams的id。
+};
+
+const previewExam = (examId: string) => {
+    const router = useRouter();
+    router.push(`/preview/${examId}`);
 };
 
 const getSubmitStatus = (
