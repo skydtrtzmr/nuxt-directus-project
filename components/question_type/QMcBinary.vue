@@ -10,42 +10,59 @@
     >
         <!-- 判断题 -->
         <p>{{ selectedSubmittedQuestion.question.q_mc_binary.stem }}</p>
-        <div class="flex flex-col gap-4">
-            <div class="flex items-center gap-2" id="div_option_a">
-                <RadioButton
-                    v-model="
-                        selectedSubmittedQuestion.submitted_ans_q_mc_binary
-                    "
-                    inputId="option_a"
-                    name="A"
-                    value="A"
-                    @change="updateAnswer"
-                />
-                <label for="option_a"
-                    >A.
-                    {{
-                        selectedSubmittedQuestion.question.q_mc_binary.option_a
-                    }}</label
-                >
+        <BlockUI
+            :blocked="blockQuestion"
+            class="basis-4/5"
+            :pt="{
+                // 通过透传pt参数，控制BlockUI的样式
+                mask: {
+                    style: {
+                        background: 'transparent',
+                        animation: 'none',
+                    },
+                    class: [],
+                },
+            }"
+        >
+            <div class="flex flex-col gap-4">
+                <div class="flex items-center gap-2" id="div_option_a">
+                    <RadioButton
+                        v-model="
+                            selectedSubmittedQuestion.submitted_ans_q_mc_binary
+                        "
+                        inputId="option_a"
+                        name="A"
+                        value="A"
+                        @change="updateAnswer"
+                    />
+                    <label for="option_a"
+                        >A.
+                        {{
+                            selectedSubmittedQuestion.question.q_mc_binary
+                                .option_a
+                        }}</label
+                    >
+                </div>
+                <div class="flex items-center gap-2" id="div_option_b">
+                    <RadioButton
+                        v-model="
+                            selectedSubmittedQuestion.submitted_ans_q_mc_binary
+                        "
+                        inputId="option_b"
+                        name="B"
+                        value="B"
+                        @change="updateAnswer"
+                    />
+                    <label for="option_b"
+                        >B.
+                        {{
+                            selectedSubmittedQuestion.question.q_mc_binary
+                                .option_b
+                        }}</label
+                    >
+                </div>
             </div>
-            <div class="flex items-center gap-2" id="div_option_b">
-                <RadioButton
-                    v-model="
-                        selectedSubmittedQuestion.submitted_ans_q_mc_binary
-                    "
-                    inputId="option_b"
-                    name="B"
-                    value="B"
-                    @change="updateAnswer"
-                />
-                <label for="option_b"
-                    >B.
-                    {{
-                        selectedSubmittedQuestion.question.q_mc_binary.option_b
-                    }}</label
-                >
-            </div>
-        </div>
+        </BlockUI>
     </div>
     <template v-if="showResult">
         <Divider />
@@ -97,6 +114,15 @@ const props = defineProps<{
 // 传进来的这个本来就是一个Ref类型，所以不需要用ref包裹
 
 const showResult = computed(() => {
+    if (props.exam_page_mode === "review") {
+        return true;
+    } else {
+        return false;
+    }
+});
+
+// 是否锁定题目禁止作答
+const blockQuestion = computed(() => {
     if (props.exam_page_mode === "review") {
         return true;
     } else {
