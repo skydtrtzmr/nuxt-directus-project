@@ -4,7 +4,7 @@
         
 
         <!-- 显示考试信息 -->
-        <ExamInfo :submittedExam="submittedExam" :submitted_exam_id="submitted_exam_id"></ExamInfo>
+        <ExamInfo :submittedExam="submittedExam"></ExamInfo>
 
         <!-- 显示试卷详情 -->
         <div>

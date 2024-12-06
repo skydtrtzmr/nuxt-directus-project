@@ -1,7 +1,7 @@
 <template>
     <!-- <h2>考试详情</h2> -->
 
-    <p>考试ID: {{ submitted_exam_id }}</p>
+    <p>考试ID: {{ submittedExam?.id }}</p>
     <p
         v-if="
             submittedExam &&
@@ -28,7 +28,6 @@
 import type { SubmittedExams } from "~~/types/directus_types";
 defineProps<{
     submittedExam: SubmittedExams;
-    submitted_exam_id: string;
 }>();
 </script>
 
