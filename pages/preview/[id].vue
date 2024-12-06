@@ -27,7 +27,7 @@
         <div class="flex">
             <!-- 左侧：题目列表 -->
             <QuestionList
-                class="basis-1/5"
+                class="basis-1/5 card"
                 :submittedPaperChapters="submittedPaperChapters"
                 :selectQuestion="selectQuestion"
             ></QuestionList>
@@ -36,7 +36,8 @@
             <BlockUI
                 :blocked="blocked"
                 class="basis-4/5"
-                :pt="{ // 通过透传pt参数，控制BlockUI的样式
+                :pt="{
+                    // 通过透传pt参数，控制BlockUI的样式
                     mask: {
                         style: {
                             background: 'transparent',
