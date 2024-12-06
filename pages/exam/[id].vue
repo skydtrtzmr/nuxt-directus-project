@@ -1,8 +1,6 @@
 <!-- pages/exam/[id].vue -->
 <template>
     <div class="relative">
-        
-
         <!-- 显示考试信息 -->
         <ExamInfo :submittedExam="submittedExam"></ExamInfo>
 
@@ -11,16 +9,11 @@
             <PaperInfo :submittedPaper="submittedPaper"></PaperInfo>
             <div class="absolute top-0 right-0">
                 <!-- 显示倒计时 -->
-                <div class="countdown">
-                    <!-- <p>当前时间: {{ dayjs().format("YYYY-MM-DD HH:mm:ss") }}</p> -->
-                    <!-- 不要直接在这里写时间，会导致客户端和服务器时间不一致。 -->
-                     <p v-if="isClient">当前时间: {{ dayjs().format("YYYY-MM-DD HH:mm:ss") }}</p>
-                    <p>
-                        结束时间:
-                        {{ dayjs(examEndTime).format("YYYY-MM-DD HH:mm:ss") }}
-                    </p>
-                    <p>剩余时长: {{ formattedCountDown }}</p>
-                </div>
+                <ExamCountdown
+                    :isClient="isClient"
+                    :examEndTime="examEndTime"
+                    :formattedCountDown="formattedCountDown"
+                ></ExamCountdown>
                 <Button
                     icon="pi pi-save"
                     aria-label="Submit"
@@ -136,7 +129,7 @@ const selectedSubmittedQuestion = ref<SubmittedQuestions | null>(null); // 当�
 // const selectedAnswer = ref(""); // 当前题目的答案
 
 // 倒计时相关
-const examEndTime = ref<dayjs.Dayjs | null>(null); // 考试结束时间（对于学生本人）
+const examEndTime = ref<dayjs.Dayjs>({} as dayjs.Dayjs); // 考试结束时间（对于学生本人）
 const countdown = ref(0); // 剩余时间
 const formattedCountDown = ref("00:00:00"); // 倒计时
 const countdownInterval = ref<any>(null); // 倒计时定时器
@@ -148,6 +141,7 @@ const fetchSubmittedExam = async () => {
         id: submitted_exam_id,
         params: {
             fields: [
+                "id",
                 "expected_end_time",
                 "submitted_papers",
                 "exam.title",
