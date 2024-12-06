@@ -69,6 +69,7 @@
 
             <!-- 右侧：题目详情和答题区 -->
             <QuestionDetail
+                :exam_page_mode="exam_page_mode"
                 class="basis-4/5"
                 :selectedSubmittedQuestion="selectedSubmittedQuestion"
             ></QuestionDetail>

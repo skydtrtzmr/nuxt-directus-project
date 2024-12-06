@@ -41,14 +41,16 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
 import CommonQuestionContent from "~/components/CommonQuestionContent.vue";
 import QuestionContent from "~/components/QuestionContent.vue";
-const props = defineProps({
-    selectedSubmittedQuestion: Object | null,
-    disableAnswer: Boolean,
-});
+
+const props = defineProps<{
+    selectedSubmittedQuestion: object | null;
+    exam_page_mode: string;
+}>();
+
 </script>
 
 <style scoped>
