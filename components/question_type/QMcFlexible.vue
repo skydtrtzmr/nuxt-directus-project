@@ -8,7 +8,7 @@
             typeof selectedSubmittedQuestion.question.q_mc_flexible === 'object'
         "
     >
-        <!-- 单选题或判断题 -->
+        <!-- 不定项选择题 -->
         <p>{{ selectedSubmittedQuestion.question.q_mc_flexible.stem }}</p>
         <div class="flex flex-col gap-4">
             <div class="flex items-center gap-2" id="div_option_a">
@@ -126,9 +126,17 @@ import type { SubmittedQuestions } from "~/types/directus_types";
 
 const props = defineProps<{
     selectedSubmittedQuestion: SubmittedQuestions;
-    showResult: boolean;
+    exam_page_mode: string;
 }>();
 // 传进来的这个本来就是一个Ref类型，所以不需要用ref包裹
+
+const showResult = computed(() => {
+    if (props.exam_page_mode === "review") {
+        return true;
+    } else {
+        return false;
+    }
+});
 
 const { updateItem } = useDirectusItems();
 

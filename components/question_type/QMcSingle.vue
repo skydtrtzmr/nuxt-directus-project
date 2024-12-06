@@ -126,9 +126,17 @@ import type { SubmittedQuestions } from "~/types/directus_types";
 
 const props = defineProps<{
     selectedSubmittedQuestion: SubmittedQuestions;
-    showResult: boolean;
+    exam_page_mode: string;
 }>();
 // 传进来的这个本来就是一个Ref类型，所以不需要用ref包裹
+
+const showResult = computed(() => {
+    if (props.exam_page_mode === "review") {
+        return true;
+    } else {
+        return false;
+    }
+});
 
 // const selectedOption = ref(props.selectedSubmittedQuestion.selected_option);
 const selectedOptions = ref([]);

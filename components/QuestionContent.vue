@@ -7,7 +7,7 @@
         >
             <QMcSingle
                 :selectedSubmittedQuestion="selectedSubmittedQuestion"
-                :showResult="false"
+                :exam_page_mode="exam_page_mode"
             />
         </template>
         <template
@@ -15,7 +15,7 @@
         >
             <QMcMulti
                 :selectedSubmittedQuestion="selectedSubmittedQuestion"
-                :showResult="false"
+                :exam_page_mode="exam_page_mode"
             />
         </template>
         <template
@@ -23,7 +23,7 @@
         >
             <QMcBinary
                 :selectedSubmittedQuestion="selectedSubmittedQuestion"
-                :showResult="false"
+                :exam_page_mode="exam_page_mode"
             />
         </template>
         <template
@@ -31,7 +31,7 @@
         >
             <QMcFlexible
                 :selectedSubmittedQuestion="selectedSubmittedQuestion"
-                :showResult="false"
+                :exam_page_mode="exam_page_mode"
             />
         </template>
     </div>
