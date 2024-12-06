@@ -62,7 +62,7 @@ async function autoAnswer() {
     console.log("selectedSubmittedQuestion changed");
     console.log(props.selectedSubmittedQuestion);
     if (props.selectedSubmittedQuestion.question_type === "q_mc_single") {
-        props.selectedSubmittedQuestion.submitted_ans_q_mc_single = "A";
+        props.selectedSubmittedQuestion.submitted_ans_q_mc_single = "C";
         const submitted_question = {
             submitted_ans_q_mc_single:
                 props.selectedSubmittedQuestion.submitted_ans_q_mc_single,
@@ -73,7 +73,7 @@ async function autoAnswer() {
             item: submitted_question,
         });
     } else if (props.selectedSubmittedQuestion.question_type === "q_mc_multi") {
-        props.selectedSubmittedQuestion.submitted_ans_q_mc_multi = ["A", "B"];
+        props.selectedSubmittedQuestion.submitted_ans_q_mc_multi = ["A","C"];
         const submitted_question = {
             submitted_ans_q_mc_multi:
                 props.selectedSubmittedQuestion.submitted_ans_q_mc_multi,
@@ -86,7 +86,7 @@ async function autoAnswer() {
     } else if (
         props.selectedSubmittedQuestion.question_type === "q_mc_binary"
     ) {
-        props.selectedSubmittedQuestion.submitted_ans_q_mc_binary = "A";
+        props.selectedSubmittedQuestion.submitted_ans_q_mc_binary = "B";
         const submitted_question = {
             submitted_ans_q_mc_binary:
                 props.selectedSubmittedQuestion.submitted_ans_q_mc_binary,
@@ -99,10 +99,7 @@ async function autoAnswer() {
     } else if (
         props.selectedSubmittedQuestion.question_type === "q_mc_flexible"
     ) {
-        props.selectedSubmittedQuestion.submitted_ans_q_mc_flexible = [
-            "A",
-            "B",
-        ];
+        props.selectedSubmittedQuestion.submitted_ans_q_mc_flexible = ["B", "D"];
         const submitted_question = {
             submitted_ans_q_mc_flexible:
                 props.selectedSubmittedQuestion.submitted_ans_q_mc_flexible,
