@@ -423,42 +423,51 @@ const getSubmitStatusAction = (submitted_exam: SubmittedExams) => {
     }
 };
 
+// 获取环境变量，确定是否运行测试
+const {
+    public: { isTest },
+} = useRuntimeConfig();
+
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 onMounted(async () => {
     await fetchSubmittedExams(); // 注意要await！确保submittedExams.value已经被赋值
-    await nextTick(); // 确保 DOM 渲染完成
+    if (isTest) {
+        await nextTick(); // 确保 DOM 渲染完成
 
-    // 筛选出标题为特定内容的循环项
-    const targetItemTitle = "自动化测试专用考试"; // 需要筛选的标题
-    console.log("submittedExams.value");
-    console.log(submittedExams.value);
-    console.log("gridItems.value in onMounted");
-    console.log(gridItems.value);
-    await delay(2000);
-    // 注意，下面获得的并不直接是Button，而是其父级div。
-    const targetGirdDiv: HTMLElement|null = gridItems.value.find((button, index) => {
-        const item = submittedExams.value[index]; // 获取对应的项
-        console.log("item.??");
-        console.log(item); // 这里的item是对象数据，不是Button
-        
-        return (item.exam as Exams).title === targetItemTitle;
-    })||null;
-    await delay(2000);
+        // 筛选出标题为特定内容的循环项
+        const targetItemTitle = "自动化测试专用考试"; // 需要筛选的标题
+        console.log("submittedExams.value");
+        console.log(submittedExams.value);
+        console.log("gridItems.value in onMounted");
+        console.log(gridItems.value);
+        await delay(2000);
+        // 注意，下面获得的并不直接是Button，而是其父级div。
+        const targetGirdDiv: HTMLElement | null =
+            gridItems.value.find((button, index) => {
+                const item = submittedExams.value[index]; // 获取对应的项
+                console.log("item.??");
+                console.log(item); // 这里的item是对象数据，不是Button
 
-    console.log("targetGirdDiv1");
-    console.log(targetGirdDiv);
+                return (item.exam as Exams).title === targetItemTitle;
+            }) || null;
+        await delay(2000);
 
-    // 模拟点击目标按钮
-    if (targetGirdDiv && typeof targetGirdDiv == "object") {
-        console.log("targetGirdDiv");
+        console.log("targetGirdDiv1");
         console.log(targetGirdDiv);
-        const firstButton = (targetGirdDiv as HTMLElement).querySelector('button');
-        console.log("firstButton");
-        console.log(firstButton);
-        firstButton!.click();
 
-    } else {
-        console.log("没有找到目标按钮");
+        // 模拟点击目标按钮
+        if (targetGirdDiv && typeof targetGirdDiv == "object") {
+            console.log("targetGirdDiv");
+            console.log(targetGirdDiv);
+            const firstButton = (targetGirdDiv as HTMLElement).querySelector(
+                "button"
+            );
+            console.log("firstButton");
+            console.log(firstButton);
+            firstButton!.click();
+        } else {
+            console.log("没有找到目标按钮");
+        }
     }
 });
 </script>

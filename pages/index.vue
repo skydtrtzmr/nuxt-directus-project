@@ -30,33 +30,35 @@
 </template>
 
 <script setup lang="ts">
-
-
 definePageMeta({
     middleware: ["auth"],
-    name: 'Index',
+    name: "Index",
 });
 
 const router = useRouter();
 
-const { data } = await useFetch('/api/hello')
+const { data } = await useFetch("/api/hello");
+
+// 获取环境变量，确定是否运行测试
+const {
+    public: { isTest },
+} = useRuntimeConfig();
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 onMounted(async () => {
+    if (isTest) {
+        // 以下是用于测试的自动操作脚本
+        // Only for testing
+        await nextTick();
+        console.log("测试自动操作脚本开始。");
 
-    // 以下是用于测试的自动操作脚本
-    // Only for testing
-    await nextTick();
-    console.log("测试自动操作脚本开始。");
-    
-    await delay(2000);
-    console.log("跳转到exams页面。");
-    
-    router.push("/exams");
-    await delay(1000);
-    
+        await delay(2000);
+        console.log("跳转到exams页面。");
+
+        router.push("/exams");
+        await delay(1000);
+    }
 });
-
 </script>
 
 <style scoped>

@@ -79,6 +79,11 @@ const loginSubmit = async () => {
     }
 };
 
+// 获取环境变量，确定是否运行测试
+const {
+    public: { isTest },
+} = useRuntimeConfig();
+
 // 注意！Vue使用 虚拟 DOM 和 响应式数据绑定 来管理表单控件的值，
 // 所以如果仅仅用js脚本直接修改输入框的值，而该输入框的值又是由 Vue 控制的，
 // Vue 可能会在下次重新渲染时覆盖该值，导致你通过脚本设置的值丢失。
@@ -86,40 +91,45 @@ const loginSubmit = async () => {
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 onMounted(async () => {
-    await nextTick(); // 通过nextTick来确保页面渲染完成，然后自动填充表单
+    console.log("isTest?");
+    console.log(isTest);
     // 这里仅供测试用!
-    const dynamicIndex = await useFetch('/api/dynamic-script'); // 返回一个序号
-    const { getUsers } = useDirectusUsers();
-    const users = await getUsers({
-        params: {
-            fields: [
-                "id",
-                "email",
-                "first_name", // 这个测试中作为密码用
-                "last_name",
-            ],
-            sort: "email",
-            filter: {
-                "role": "0fcfa6da-9e38-4d73-acf5-c5585c0770f8"
+    if (isTest) {
+        console.log("isTest?");
+        console.log(isTest);
+        await nextTick(); // 通过nextTick来确保页面渲染完成，然后自动填充表单
+        const dynamicIndex = await useFetch("/api/dynamic-script"); // 返回一个序号
+        const { getUsers } = useDirectusUsers();
+        const users = (await getUsers({
+            params: {
+                fields: [
+                    "id",
+                    "email",
+                    "first_name", // 这个测试中作为密码用
+                    "last_name",
+                ],
+                sort: "email",
+                filter: {
+                    role: "0fcfa6da-9e38-4d73-acf5-c5585c0770f8",
+                },
             },
-        }
-    }) as DirectusUsers[];
+        })) as DirectusUsers[];
 
-    let currentUser  = users[dynamicIndex.data.value as number - 1];
-    console.log("当前用户", currentUser);
+        let currentUser = users[(dynamicIndex.data.value as number) - 1];
+        console.log("当前用户", currentUser);
 
-    await nextTick(); // 通过nextTick来确保页面渲染完成，然后自动填充表单
-    // 在这里通过 Vue 响应式数据来设置输入框的值
-    
-    await delay(2000);
-    email.value = currentUser.email!;
+        await nextTick(); // 通过nextTick来确保页面渲染完成，然后自动填充表单
+        // 在这里通过 Vue 响应式数据来设置输入框的值
 
-    await delay(2000);
-    password.value = currentUser.first_name!;
-    await delay(2000);
-    // 不要表单验证了,直接提交
-    loginSubmit();
-    
+        await delay(2000);
+        email.value = currentUser.email!;
+
+        await delay(2000);
+        password.value = currentUser.first_name!;
+        await delay(2000);
+        // 不要表单验证了,直接提交
+        loginSubmit();
+    }
 });
 </script>
 

@@ -114,23 +114,29 @@ async function autoAnswer() {
     }
 }
 
+// 获取环境变量，确定是否运行测试
+const {
+    public: { isTest },
+} = useRuntimeConfig();
+
 onMounted(async () => {
     // 以下是用于测试的自动操作脚本
     // Only for testing
-    await nextTick();
-
-    // 先等一会儿，等数据加载完毕，等QuestionList组件选中题目。
-    await delay(2000);
-    if (props.selectedSubmittedQuestion) {
-        await autoAnswer();
-    }
-    watch(
-        () => props.selectedSubmittedQuestion,
-        async () => {
+    if (isTest) {
+        await nextTick();
+        // 先等一会儿，等数据加载完毕，等QuestionList组件选中题目。
+        await delay(2000);
+        if (props.selectedSubmittedQuestion) {
             await autoAnswer();
         }
-        // 下面是检测到题目变化时，进行的操作
-    );
+        watch(
+            () => props.selectedSubmittedQuestion,
+            async () => {
+                await autoAnswer();
+            }
+            // 下面是检测到题目变化时，进行的操作
+        );
+    }
 });
 </script>
 

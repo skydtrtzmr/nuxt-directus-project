@@ -2,7 +2,29 @@
 <template>
     <div class="relative">
         <!-- <h2>考试详情</h2> -->
+
         <p>考试ID: {{ submitted_exam_id }}</p>
+        <p
+            v-if="
+                submittedExam &&
+                submittedExam.exam &&
+                typeof submittedExam.exam == 'object'
+            "
+        >
+            考试名称：{{ submittedExam?.exam.title }}
+        </p>
+        <p
+            v-if="
+                submittedExam &&
+                submittedExam.student &&
+                typeof submittedExam.student == 'object'
+            "
+        >
+            <!-- NOTE：注意这里必须直接从submittedExam.student获取，而不能获取登录的用户信息。
+            因为考试详情页面并非只有考生本人才能查看，教师也可以查看。 -->
+            当前考生：{{ submittedExam?.student.name }}
+        </p>
+
         <!-- 显示考试的其他信息 -->
 
         <!-- 显示试卷详情 -->
@@ -11,7 +33,9 @@
             <div class="absolute top-0 right-0">
                 <!-- 显示倒计时 -->
                 <div class="countdown">
-                    <p>当前时间: {{ dayjs().format("YYYY-MM-DD HH:mm:ss") }}</p>
+                    <!-- <p>当前时间: {{ dayjs().format("YYYY-MM-DD HH:mm:ss") }}</p> -->
+                    <!-- 不要直接在这里写时间，会导致客户端和服务器时间不一致。 -->
+                     <p v-if="isClient">当前时间: {{ dayjs().format("YYYY-MM-DD HH:mm:ss") }}</p>
                     <p>
                         结束时间:
                         {{ dayjs(examEndTime).format("YYYY-MM-DD HH:mm:ss") }}
@@ -50,7 +74,11 @@
                 >确认提交试卷吗？</span
             >
             <div class="flex justify-end gap-2">
-                <Button type="button" label="确定" @click="confirmSubmit()"></Button>
+                <Button
+                    type="button"
+                    label="确定"
+                    @click="confirmSubmit()"
+                ></Button>
             </div>
         </Dialog>
         <div class="flex">
@@ -140,7 +168,12 @@ const fetchSubmittedExam = async () => {
         collection: "submitted_exams",
         id: submitted_exam_id,
         params: {
-            fields: ["expected_end_time", "submitted_papers"], // 获取考试的状态和关联的试卷
+            fields: [
+                "expected_end_time",
+                "submitted_papers",
+                "exam.title",
+                "student.name",
+            ], // 获取考试的状态和关联的试卷
         },
     });
     if (submittedExamResponse) {
@@ -310,7 +343,7 @@ const startCountdown = (endTime: dayjs.Dayjs) => {
                 // 注意，我的数据库里面记录的是带时区的时间戳，在这里也得加上utc不然时间会多8个小时。
                 .format("HH:mm:ss");
         }
-    }
+    };
     updateInterval(); // 立即执行一次
     const interval = setInterval(updateInterval, 1000);
 
@@ -347,22 +380,20 @@ const confirmSubmit = () => {
     exitExam();
 };
 
-// 页面加载时调用
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-onMounted(async () => {
-    fetchSubmittedExam();
+// let pollingInterval: NodeJS.Timeout | undefined = undefined; // 轮询考试状态
+// TODO 暂时不用轮询，好像有点问题
 
-    // 以下是用于测试的自动操作脚本
-    // Only for testing
-    await nextTick();
-    console.log("测试自动操作脚本开始。");
-    
-    await delay(1000);
-    console.log("跳转到exams页面。");
-    
-    // router.push("/exams");
-    await delay(1000);
-    
+const isClient = ref(false); // 记录当前是否是客户端渲染（用来确保时间显示正确）
+
+// 页面加载时调用
+onMounted(() => {
+    isClient.value = true; // 标记当前是客户端渲染（组件已经挂载）
+    fetchSubmittedExam();
+    // 定时请求数据，每隔 30 秒请求一次
+    // pollingInterval = setInterval(() => {
+    //     fetchSubmittedExam();
+    //     console.log("polling...");
+    // }, 30000); // 30秒，您可以根据需要调整这个时间间隔
 });
 
 // 组件卸载时清除定时器
@@ -370,6 +401,9 @@ onUnmounted(() => {
     if (countdownInterval.value) {
         clearInterval(countdownInterval.value);
     }
+    // if (pollingInterval) {
+    //     clearInterval(pollingInterval);
+    // }
 });
 // TODO 这段可能重复了
 </script>

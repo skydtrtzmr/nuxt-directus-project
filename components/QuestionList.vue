@@ -98,33 +98,36 @@ const getQuestionSeverity = (question: SubmittedQuestions) => {
         return "secondary";
     }
 };
-
+// 获取环境变量，确定是否运行测试
+const {
+    public: { isTest },
+} = useRuntimeConfig();
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 onMounted(async () => {
     // 以下是用于测试的自动操作脚本
     // Only for testing
-    await nextTick();
-    console.log("测试自动操作脚本开始。");
+    if (isTest) {
+        await nextTick();
+        console.log("测试自动操作脚本开始。");
 
-    await delay(2000);
-    // 没必要非要点击按钮（双层v-for循环下的ref太复杂了……），直接修改按钮触发的函数即可
-    for (let i = 0; i < props.submittedPaperChapters.length; i++){
-        const chapter = props.submittedPaperChapters[i];
-        await delay(1000);
-        for (let j = 0; j < chapter.submitted_questions.length; j++){
-            await delay(2000);
-            const question = chapter.submitted_questions[j];
-            handleQuestionClick(question);
-            await delay(2000);
-            // 根据题型开始作答
+        await delay(2000);
+        // 没必要非要点击按钮（双层v-for循环下的ref太复杂了……），直接修改按钮触发的函数即可
+        for (let i = 0; i < props.submittedPaperChapters.length; i++) {
+            const chapter = props.submittedPaperChapters[i];
+            await delay(1000);
+            for (let j = 0; j < chapter.submitted_questions.length; j++) {
+                await delay(2000);
+                const question = chapter.submitted_questions[j];
+                handleQuestionClick(question);
+                await delay(2000);
+                // 根据题型开始作答
+            }
         }
+
+        await delay(1000);
+        // 做题完成后点击提交试卷。
     }
-
-    await delay(1000);
-    // 做题完成后点击提交试卷。
 });
-
-
 </script>
 
 <style scoped>

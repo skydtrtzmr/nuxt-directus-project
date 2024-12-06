@@ -54,10 +54,10 @@ importers:
         specifier: ^0.3.4
         version: 0.3.4(tailwindcss@3.4.15)
       vue:
-        specifier: latest
+        specifier: 3.5.13
         version: 3.5.13(typescript@5.6.3)
       vue-router:
-        specifier: latest
+        specifier: 4.4.5
         version: 4.4.5(vue@3.5.13(typescript@5.6.3))
       zod:
         specifier: ^3.23.8
@@ -69,6 +69,9 @@ importers:
       '@primevue/nuxt-module':
         specifier: ^4.2.3
         version: 4.2.3(@babel/parser@7.26.2)(magicast@0.3.5)(rollup@4.27.2)(vue@3.5.13(typescript@5.6.3))
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
       postcss-import:
         specifier: ^16.1.0
         version: 16.1.0(postcss@8.4.49)
@@ -1442,6 +1445,11 @@ packages:
 
   cronstrue@2.51.0:
     resolution: {integrity: sha512-7EG9VaZZ5SRbZ7m25dmP6xaS0qe9ay6wywMskFOU/lMDKa+3gZr2oeT5OUfXwRP/Bcj8wxdYJ65AHU70CI3tsw==}
+    hasBin: true
+
+  cross-env@7.0.3:
+    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
+    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
     hasBin: true
 
   cross-spawn@7.0.5:
@@ -5259,6 +5267,10 @@ snapshots:
   croner@9.0.0: {}
 
   cronstrue@2.51.0: {}
+
+  cross-env@7.0.3:
+    dependencies:
+      cross-spawn: 7.0.5
 
   cross-spawn@7.0.5:
     dependencies:
