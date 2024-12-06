@@ -217,6 +217,7 @@
                                             {{ getSubmitStatusAction(item) }}
                                         </Button>
                                         <Button
+                                            @click="reviewExam(item.id)"
                                             icon="pi pi-info-circle"
                                             outlined
                                         ></Button>
@@ -369,7 +370,9 @@ const joinExam = (examId: string) => {
     router.push(`/exam/${examId}`);
     // 跳转到具体的考试页面，页面path的最后一项就是submitted_exams的id。
 };
-
+const reviewExam = (examId: string) => {
+    router.push(`/review/${examId}`);
+};
 const getSubmitStatus = (
     submitted_exam: SubmittedExams
 ):
