@@ -8,7 +8,7 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 
 ### TODO
 
-- [ ] `preview/[id]`页面，显示答案。
+- [x] `preview/[id]`页面，显示答案。
 - [ ] 添加做题操作自动脚本。
 
 ## 关于UI

@@ -4,6 +4,24 @@
     <div class="relative">
         <!-- <h2>考试详情</h2> -->
         <p>考试ID: {{ submitted_exam_id }}</p>
+        <p
+            v-if="
+                submittedExam &&
+                submittedExam.exam &&
+                typeof submittedExam.exam == 'object'
+            "
+        >
+            考试名称：{{ submittedExam?.exam.title }}
+        </p>
+        <p
+            v-if="
+                submittedExam &&
+                submittedExam.student &&
+                typeof submittedExam.student == 'object'
+            "
+        >
+            当前考生：{{ submittedExam?.student.name }}
+        </p>
         <!-- 显示考试的其他信息 -->
 
         <!-- 显示试卷详情 -->

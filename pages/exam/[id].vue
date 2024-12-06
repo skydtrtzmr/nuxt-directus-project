@@ -2,7 +2,29 @@
 <template>
     <div class="relative">
         <!-- <h2>考试详情</h2> -->
+
         <p>考试ID: {{ submitted_exam_id }}</p>
+        <p
+            v-if="
+                submittedExam &&
+                submittedExam.exam &&
+                typeof submittedExam.exam == 'object'
+            "
+        >
+            考试名称：{{ submittedExam?.exam.title }}
+        </p>
+        <p
+            v-if="
+                submittedExam &&
+                submittedExam.student &&
+                typeof submittedExam.student == 'object'
+            "
+        >
+            <!-- NOTE：注意这里必须直接从submittedExam.student获取，而不能获取登录的用户信息。
+            因为考试详情页面并非只有考生本人才能查看，教师也可以查看。 -->
+            当前考生：{{ submittedExam?.student.name }}
+        </p>
+
         <!-- 显示考试的其他信息 -->
 
         <!-- 显示试卷详情 -->
@@ -50,7 +72,11 @@
                 >确认提交试卷吗？</span
             >
             <div class="flex justify-end gap-2">
-                <Button type="button" label="确定" @click="confirmSubmit()"></Button>
+                <Button
+                    type="button"
+                    label="确定"
+                    @click="confirmSubmit()"
+                ></Button>
             </div>
         </Dialog>
         <div class="flex">
@@ -140,7 +166,12 @@ const fetchSubmittedExam = async () => {
         collection: "submitted_exams",
         id: submitted_exam_id,
         params: {
-            fields: ["expected_end_time", "submitted_papers"], // 获取考试的状态和关联的试卷
+            fields: [
+                "expected_end_time",
+                "submitted_papers",
+                "exam.title",
+                "student.name",
+            ], // 获取考试的状态和关联的试卷
         },
     });
     if (submittedExamResponse) {
@@ -310,7 +341,7 @@ const startCountdown = (endTime: dayjs.Dayjs) => {
                 // 注意，我的数据库里面记录的是带时区的时间戳，在这里也得加上utc不然时间会多8个小时。
                 .format("HH:mm:ss");
         }
-    }
+    };
     updateInterval(); // 立即执行一次
     const interval = setInterval(updateInterval, 1000);
 
