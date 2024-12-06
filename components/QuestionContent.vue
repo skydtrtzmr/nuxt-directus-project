@@ -36,6 +36,18 @@ import QMcFlexible from "./question_type/QMcFlexible.vue";
 const props = defineProps<{
     selectedSubmittedQuestion: SubmittedQuestions;
 }>();
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// Only for testing
+// 以下仅供测试用，每次切换题目时，做题。
+watch(() => props.selectedSubmittedQuestion, async () => {
+    await delay(1000);
+    console.log("selectedSubmittedQuestion changed");
+    console.log(props.selectedSubmittedQuestion);
+    
+    
+})
 </script>
 
 <style scoped></style>

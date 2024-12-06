@@ -110,11 +110,14 @@ onMounted(async () => {
     // 没必要非要点击按钮（双层v-for循环下的ref太复杂了……），直接修改按钮触发的函数即可
     for (let i = 0; i < props.submittedPaperChapters.length; i++){
         const chapter = props.submittedPaperChapters[i];
-        await delay(2000);
+        await delay(1000);
         for (let j = 0; j < chapter.submitted_questions.length; j++){
             await delay(2000);
             const question = chapter.submitted_questions[j];
             handleQuestionClick(question);
+            await delay(2000);
+            // 根据题型开始作答
+
         }
     }
 
