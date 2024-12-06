@@ -117,12 +117,14 @@ onMounted(async () => {
             handleQuestionClick(question);
             await delay(2000);
             // 根据题型开始作答
-
         }
     }
 
     await delay(1000);
+    // 做题完成后点击提交试卷。
 });
+
+
 </script>
 
 <style scoped>

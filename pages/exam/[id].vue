@@ -380,7 +380,8 @@ const confirmSubmit = () => {
     exitExam();
 };
 
-let pollingInterval: NodeJS.Timeout | undefined = undefined; // 轮询考试状态
+// let pollingInterval: NodeJS.Timeout | undefined = undefined; // 轮询考试状态
+// TODO 暂时不用轮询，好像有点问题
 
 const isClient = ref(false); // 记录当前是否是客户端渲染（用来确保时间显示正确）
 
@@ -389,10 +390,10 @@ onMounted(() => {
     isClient.value = true; // 标记当前是客户端渲染（组件已经挂载）
     fetchSubmittedExam();
     // 定时请求数据，每隔 30 秒请求一次
-    pollingInterval = setInterval(() => {
-        fetchSubmittedExam();
-        console.log("polling...");
-    }, 30000); // 30秒，您可以根据需要调整这个时间间隔
+    // pollingInterval = setInterval(() => {
+    //     fetchSubmittedExam();
+    //     console.log("polling...");
+    // }, 30000); // 30秒，您可以根据需要调整这个时间间隔
 });
 
 // 组件卸载时清除定时器
@@ -400,9 +401,9 @@ onUnmounted(() => {
     if (countdownInterval.value) {
         clearInterval(countdownInterval.value);
     }
-    if (pollingInterval) {
-        clearInterval(pollingInterval);
-    }
+    // if (pollingInterval) {
+    //     clearInterval(pollingInterval);
+    // }
 });
 // TODO 这段可能重复了
 </script>

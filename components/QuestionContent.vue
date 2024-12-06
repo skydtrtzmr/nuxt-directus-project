@@ -55,82 +55,81 @@ const selectedQuestionElement = ref<any>();
 // Only for testing
 // 以下仅供测试用，每次切换题目时，做题。
 
+// 自动做题
+async function autoAnswer() {
+    await delay(1000);
+    console.log("selectedSubmittedQuestion changed");
+    console.log(props.selectedSubmittedQuestion);
+    if (props.selectedSubmittedQuestion.question_type === "q_mc_single") {
+        props.selectedSubmittedQuestion.submitted_ans_q_mc_single = "A";
+        const submitted_question = {
+            submitted_ans_q_mc_single:
+                props.selectedSubmittedQuestion.submitted_ans_q_mc_single,
+        };
+        const response = await updateItem<SubmittedQuestions>({
+            collection: "submitted_questions",
+            id: props.selectedSubmittedQuestion.id,
+            item: submitted_question,
+        });
+    } else if (props.selectedSubmittedQuestion.question_type === "q_mc_multi") {
+        props.selectedSubmittedQuestion.submitted_ans_q_mc_multi = ["A", "B"];
+        const submitted_question = {
+            submitted_ans_q_mc_multi:
+                props.selectedSubmittedQuestion.submitted_ans_q_mc_multi,
+        };
+        const response = await updateItem<SubmittedQuestions>({
+            collection: "submitted_questions",
+            id: props.selectedSubmittedQuestion.id,
+            item: submitted_question,
+        });
+    } else if (
+        props.selectedSubmittedQuestion.question_type === "q_mc_binary"
+    ) {
+        props.selectedSubmittedQuestion.submitted_ans_q_mc_binary = "A";
+        const submitted_question = {
+            submitted_ans_q_mc_binary:
+                props.selectedSubmittedQuestion.submitted_ans_q_mc_binary,
+        };
+        const response = await updateItem<SubmittedQuestions>({
+            collection: "submitted_questions",
+            id: props.selectedSubmittedQuestion.id,
+            item: submitted_question,
+        });
+    } else if (
+        props.selectedSubmittedQuestion.question_type === "q_mc_flexible"
+    ) {
+        props.selectedSubmittedQuestion.submitted_ans_q_mc_flexible = [
+            "A",
+            "B",
+        ];
+        const submitted_question = {
+            submitted_ans_q_mc_flexible:
+                props.selectedSubmittedQuestion.submitted_ans_q_mc_flexible,
+        };
+        const response = await updateItem<SubmittedQuestions>({
+            collection: "submitted_questions",
+            id: props.selectedSubmittedQuestion.id,
+            item: submitted_question,
+        });
+    }
+}
+
 onMounted(async () => {
     // 以下是用于测试的自动操作脚本
     // Only for testing
     await nextTick();
+
+    // 先等一会儿，等数据加载完毕，等QuestionList组件选中题目。
+    await delay(2000);
+    if (props.selectedSubmittedQuestion) {
+        await autoAnswer();
+    }
     watch(
         () => props.selectedSubmittedQuestion,
-        // 下面是检测到题目变化时，进行的操作
         async () => {
-            await delay(1000);
-            console.log("selectedSubmittedQuestion changed");
-            console.log(props.selectedSubmittedQuestion);
-            if (
-                props.selectedSubmittedQuestion.question_type === "q_mc_single"
-            ) {
-                props.selectedSubmittedQuestion.submitted_ans_q_mc_single = "A";
-                const submitted_question = {
-                    submitted_ans_q_mc_single:
-                        props.selectedSubmittedQuestion
-                            .submitted_ans_q_mc_single,
-                };
-                const response = await updateItem<SubmittedQuestions>({
-                    collection: "submitted_questions",
-                    id: props.selectedSubmittedQuestion.id,
-                    item: submitted_question,
-                });
-            } else if (
-                props.selectedSubmittedQuestion.question_type === "q_mc_multi"
-            ) {
-                props.selectedSubmittedQuestion.submitted_ans_q_mc_multi = [
-                    "A",
-                    "B",
-                ];
-                const submitted_question = {
-                    submitted_ans_q_mc_multi:
-                        props.selectedSubmittedQuestion
-                            .submitted_ans_q_mc_multi,
-                };
-                const response = await updateItem<SubmittedQuestions>({
-                    collection: "submitted_questions",
-                    id: props.selectedSubmittedQuestion.id,
-                    item: submitted_question,
-                });
-            } else if (
-                props.selectedSubmittedQuestion.question_type === "q_mc_binary"
-            ) {
-                props.selectedSubmittedQuestion.submitted_ans_q_mc_binary = "A";
-                const submitted_question = {
-                    submitted_ans_q_mc_binary:
-                        props.selectedSubmittedQuestion
-                            .submitted_ans_q_mc_binary,
-                };
-                const response = await updateItem<SubmittedQuestions>({
-                    collection: "submitted_questions",
-                    id: props.selectedSubmittedQuestion.id,
-                    item: submitted_question,
-                });
-            } else if (
-                props.selectedSubmittedQuestion.question_type ===
-                "q_mc_flexible"
-            ) {
-                props.selectedSubmittedQuestion.submitted_ans_q_mc_flexible = [
-                    "A",
-                    "B",
-                ];
-                const submitted_question = {
-                    submitted_ans_q_mc_flexible:
-                        props.selectedSubmittedQuestion
-                            .submitted_ans_q_mc_flexible,
-                };
-                const response = await updateItem<SubmittedQuestions>({
-                    collection: "submitted_questions",
-                    id: props.selectedSubmittedQuestion.id,
-                    item: submitted_question,
-                });
-            }
+            await autoAnswer();
         }
+        // 下面是检测到题目变化时，进行的操作
     );
 });
 </script>
