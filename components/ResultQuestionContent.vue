@@ -8,6 +8,7 @@
             >
                 <QMcSingle
                     :selectedSubmittedQuestion="selectedSubmittedQuestion"
+                    :showResult="true"
                 />
             </div>
             <div
@@ -15,6 +16,7 @@
             >
                 <QMcMulti
                     :selectedSubmittedQuestion="selectedSubmittedQuestion"
+                    :showResult="true"
                 />
             </div>
             <div
@@ -22,6 +24,7 @@
             >
                 <QMcBinary
                     :selectedSubmittedQuestion="selectedSubmittedQuestion"
+                    :showResult="true"
                 />
             </div>
             <div
@@ -31,26 +34,8 @@
             >
                 <QMcFlexible
                     :selectedSubmittedQuestion="selectedSubmittedQuestion"
+                    :showResult="true"
                 />
-            </div>
-        </div>
-        <Divider />
-        <!-- 以下是答题结果区域 -->
-        <div class="p-4 bg-white shadow rounded-md">
-            <div :class="answerClass" class="font-semibold text-xl mb-2">
-                {{ isCorrectAnswer ? "正确" : "错误" }}
-            </div>
-            <div class="text-gray-700">
-                <span class="font-medium">本题总分: </span>
-                <span class="text-lg">{{
-                    selectedSubmittedQuestion.point_value
-                }}</span>
-            </div>
-            <div class="text-gray-700 mt-2">
-                <span class="font-medium">得分: </span>
-                <span class="text-lg">{{
-                    selectedSubmittedQuestion.score
-                }}</span>
             </div>
         </div>
     </div>
@@ -79,8 +64,8 @@ const isCorrectAnswer = computed(() => {
 
 // 动态绑定正确/错误颜色
 const answerClass = computed(() => {
-  return isCorrectAnswer.value ? 'text-green-600' : 'text-red-600'
-})
+    return isCorrectAnswer.value ? "text-green-600" : "text-red-600";
+});
 </script>
 
 <style scoped></style>

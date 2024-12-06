@@ -81,6 +81,44 @@
             </div>
         </div>
     </div>
+    <template v-if="showResult">
+        <Divider />
+        <!-- 以下是答题结果区域 -->
+        <div class="p-4 bg-white shadow rounded-md">
+            <div :class="answerClass" class="font-semibold text-xl mb-2">
+                {{ isCorrectAnswer ? "正确" : "错误" }}
+            </div>
+            <div>
+                <span class="font-medium">正确答案: </span
+                ><span
+                    class="text-lg"
+                    v-if="
+                        typeof selectedSubmittedQuestion.question ===
+                            'object' &&
+                        selectedSubmittedQuestion.question.q_mc_flexible &&
+                        typeof selectedSubmittedQuestion.question
+                            .q_mc_flexible === 'object'
+                    "
+                    >{{
+                        selectedSubmittedQuestion.question.q_mc_flexible
+                            .correct_options
+                    }}</span
+                >
+            </div>
+            <div class="text-gray-700">
+                <span class="font-medium">本题总分: </span>
+                <span class="text-lg">{{
+                    selectedSubmittedQuestion.point_value
+                }}</span>
+            </div>
+            <div class="text-gray-700 mt-2">
+                <span class="font-medium">得分: </span>
+                <span class="text-lg">{{
+                    selectedSubmittedQuestion.score
+                }}</span>
+            </div>
+        </div></template
+    >
 </template>
 
 <script setup lang="ts">
@@ -88,6 +126,7 @@ import type { SubmittedQuestions } from "~/types/directus_types";
 
 const props = defineProps<{
     selectedSubmittedQuestion: SubmittedQuestions;
+    showResult: boolean;
 }>();
 // 传进来的这个本来就是一个Ref类型，所以不需要用ref包裹
 
@@ -109,4 +148,21 @@ const updateAnswer = async () => {
         console.error("Error updating answer:", error);
     }
 };
+
+
+const isCorrectAnswer = computed(() => {
+    if (
+        props.selectedSubmittedQuestion.point_value ===
+        props.selectedSubmittedQuestion.score
+    ) {
+        return true;
+    } else {
+        return false;
+    }
+});
+
+// 动态绑定正确/错误颜色
+const answerClass = computed(() => {
+    return isCorrectAnswer.value ? "text-green-600" : "text-red-600";
+});
 </script>
