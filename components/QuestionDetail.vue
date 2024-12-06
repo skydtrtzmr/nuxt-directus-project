@@ -2,7 +2,18 @@
 <!-- 题目详情页。这里是包含整个题目详情的页面，包括题目所属的章节、公共题干、题目内容、答题区、 -->
 <template>
     <div class="main-content">
-        <div v-if="selectedSubmittedQuestion" class="h-full">
+        <div
+            v-if="
+                selectedSubmittedQuestion &&
+                typeof selectedSubmittedQuestion.submitted_paper_chapter ===
+                    'object' &&
+                selectedSubmittedQuestion.submitted_paper_chapter
+                    .source_paper_prototype_chapter &&
+                typeof selectedSubmittedQuestion.submitted_paper_chapter
+                    .source_paper_prototype_chapter === 'object'
+            "
+            class="h-full"
+        >
             <h3 class="m-4 red-text">
                 {{
                     selectedSubmittedQuestion.submitted_paper_chapter
@@ -21,20 +32,28 @@
                 <!-- 公共题干 -->
                 <CommonQuestionContent
                     class="basis-2/5 h-full"
-                    v-if="selectedSubmittedQuestion.question.question_group"
+                    v-if="
+                        typeof selectedSubmittedQuestion.question ===
+                            'object' &&
+                        selectedSubmittedQuestion.question.question_group
+                    "
                     :selectedSubmittedQuestion="selectedSubmittedQuestion"
                 />
 
                 <Divider
                     layout="vertical"
-                    v-if="selectedSubmittedQuestion.question.question_group"
+                    v-if="
+                        typeof selectedSubmittedQuestion.question ===
+                            'object' &&
+                        selectedSubmittedQuestion.question.question_group
+                    "
                 />
 
                 <!-- 题目内容 -->
                 <QuestionContent
                     class="basis-3/5 h-full"
                     :selectedSubmittedQuestion="selectedSubmittedQuestion"
-                    :disableAnswer="disableAnswer"
+                    :exam_page_mode="exam_page_mode"
                 />
             </div>
         </div>
@@ -45,12 +64,12 @@
 import { computed } from "vue";
 import CommonQuestionContent from "~/components/CommonQuestionContent.vue";
 import QuestionContent from "~/components/QuestionContent.vue";
+import type { SubmittedQuestions } from "~/types/directus_types.js";
 
 const props = defineProps<{
-    selectedSubmittedQuestion: object | null;
+    selectedSubmittedQuestion: SubmittedQuestions;
     exam_page_mode: string;
 }>();
-
 </script>
 
 <style scoped>

@@ -45,6 +45,7 @@ import QMcBinary from "./question_type/QMcBinary.vue";
 import QMcFlexible from "./question_type/QMcFlexible.vue";
 const props = defineProps<{
     selectedSubmittedQuestion: SubmittedQuestions;
+    exam_page_mode: string;
 }>();
 
 const { updateItem } = useDirectusItems();

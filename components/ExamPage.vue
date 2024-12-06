@@ -129,10 +129,10 @@ const submitted_exam_id = Array.isArray(route.params.id)
 
 // 数据绑定
 const submittedExam = ref<SubmittedExams>({} as SubmittedExams);
-const submittedPaper = ref<SubmittedPapers | null>(null);
+const submittedPaper = ref<SubmittedPapers>({} as SubmittedPapers);
 const submittedPaperChapters = ref<SubmittedPaperChapters[]>([]);
 // const submittedQuestions = ref<SubmittedQuestions[]>([]);
-const selectedSubmittedQuestion = ref<SubmittedQuestions | null>(null); // 当前选中的题目
+const selectedSubmittedQuestion = ref<SubmittedQuestions>({} as SubmittedQuestions); // 当前选中的题目
 // const selectedAnswer = ref(""); // 当前题目的答案
 
 // 倒计时相关
