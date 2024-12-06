@@ -38,6 +38,7 @@
                                         question.id,
                             }"
                             @click="handleQuestionClick(question)"
+                            ref="refItems"
                         >
                             {{ question.sort_in_chapter }}
                         </Button>
@@ -61,6 +62,8 @@ const props = defineProps<{
     selectQuestion: (question: SubmittedQuestions) => void;
 }>();
 
+const refItems = ref<HTMLButtonElement[]>([]);
+
 const selectedSubmittedQuestion = ref<SubmittedQuestions | null>(
     // props.submittedPaperChapters[0].submitted_questions[0]
     null
@@ -83,7 +86,7 @@ const getQuestionSeverity = (question: SubmittedQuestions) => {
         question.submitted_ans_q_mc_single ||
         (question.submitted_ans_q_mc_multi &&
             (question.submitted_ans_q_mc_multi as any[]).length > 0) ||
-            // 自动生成的directus type中，这里是unknown，所以需要用类型断言`as any[]`。
+        // 自动生成的directus type中，这里是unknown，所以需要用类型断言`as any[]`。
         question.submitted_ans_q_mc_binary ||
         (question.submitted_ans_q_mc_flexible &&
             (question.submitted_ans_q_mc_flexible as any[]).length > 0)
@@ -95,6 +98,28 @@ const getQuestionSeverity = (question: SubmittedQuestions) => {
         return "secondary";
     }
 };
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+onMounted(async () => {
+    // 以下是用于测试的自动操作脚本
+    // Only for testing
+    await nextTick();
+    console.log("测试自动操作脚本开始。");
+
+    await delay(2000);
+    // 没必要非要点击按钮（双层v-for循环下的ref太复杂了……），直接修改按钮触发的函数即可
+    for (let i = 0; i < props.submittedPaperChapters.length; i++){
+        const chapter = props.submittedPaperChapters[i];
+        await delay(2000);
+        for (let j = 0; j < chapter.submitted_questions.length; j++){
+            await delay(2000);
+            const question = chapter.submitted_questions[j];
+            handleQuestionClick(question);
+        }
+    }
+
+    await delay(1000);
+});
 </script>
 
 <style scoped>

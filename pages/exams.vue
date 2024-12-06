@@ -243,7 +243,7 @@ import type { HintedString } from "@primevue/core";
 
 const gridItems = ref([]);
 console.log("gridItems.value");
-console.log(gridItems.value);
+console.log(gridItems.value); // 在这里的时候gridItems还是空数组
 const submittedExams = ref<SubmittedExams[]>([]);
 const auth = useAuth();
 const current_user = auth.user; // 获取当前用户
@@ -432,18 +432,21 @@ onMounted(async () => {
     const targetItemTitle = "自动化测试专用考试"; // 需要筛选的标题
     console.log("submittedExams.value");
     console.log(submittedExams.value);
+    console.log("gridItems.value in onMounted");
+    console.log(gridItems.value);
     await delay(2000);
     // 注意，下面获得的并不直接是Button，而是其父级div。
     const targetGirdDiv: HTMLElement|null = gridItems.value.find((button, index) => {
         const item = submittedExams.value[index]; // 获取对应的项
         console.log("item.??");
-        console.log(item);
+        console.log(item); // 这里的item是对象数据，不是Button
         
         return (item.exam as Exams).title === targetItemTitle;
     })||null;
     await delay(2000);
 
     console.log("targetGirdDiv1");
+    console.log(targetGirdDiv);
 
     // 模拟点击目标按钮
     if (targetGirdDiv && typeof targetGirdDiv == "object") {
