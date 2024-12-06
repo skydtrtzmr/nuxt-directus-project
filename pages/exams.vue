@@ -218,7 +218,6 @@
                                         </Button>
                                         <Button
                                             icon="pi pi-info-circle"
-                                            @click="reviewExam(item.id)"
                                             outlined
                                         ></Button>
                                     </div>
@@ -241,9 +240,6 @@ import type {
     Exams,
 } from "~~/types/directus_types";
 import type { HintedString } from "@primevue/core";
-
-// 如果使用 useRouter，需要引入并使用
-const router = useRouter();
 
 const gridItems = ref([]);
 console.log("gridItems.value");
@@ -367,13 +363,10 @@ const joinExam = (examId: string) => {
 
     // 你可以根据examId跳转到具体的考试页面
     // 这里的 router.push 必须是 this.$router.push 或者使用 composable useRouter()
-
+    // 如果使用 useRouter，需要引入并使用
+    const router = useRouter();
     router.push(`/exam/${examId}`);
     // 跳转到具体的考试页面，页面path的最后一项就是submitted_exams的id。
-};
-
-const reviewExam = (examId: string) => {
-    router.push(`/review/${examId}`);
 };
 
 const getSubmitStatus = (

@@ -1,6 +1,6 @@
 <!-- pages/exam/[id].vue -->
 <template>
-    <ExamPage :exam_page_mode="exam_page_mode"/>
+    <ExamPage :mode="exam_page_mode"/>
 </template>
 
 <script setup lang="ts">

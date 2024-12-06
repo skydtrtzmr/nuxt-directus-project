@@ -7,7 +7,7 @@
         >
             <QMcSingle
                 :selectedSubmittedQuestion="selectedSubmittedQuestion"
-                :showResult="showResult"
+                :showResult="false"
             />
         </template>
         <template
@@ -15,7 +15,7 @@
         >
             <QMcMulti
                 :selectedSubmittedQuestion="selectedSubmittedQuestion"
-                :showResult="showResult"
+                :showResult="false"
             />
         </template>
         <template
@@ -23,7 +23,7 @@
         >
             <QMcBinary
                 :selectedSubmittedQuestion="selectedSubmittedQuestion"
-                :showResult="showResult"
+                :showResult="false"
             />
         </template>
         <template
@@ -31,7 +31,7 @@
         >
             <QMcFlexible
                 :selectedSubmittedQuestion="selectedSubmittedQuestion"
-                :showResult="showResult"
+                :showResult="false"
             />
         </template>
     </div>
@@ -45,10 +45,8 @@ import QMcBinary from "./question_type/QMcBinary.vue";
 import QMcFlexible from "./question_type/QMcFlexible.vue";
 const props = defineProps<{
     selectedSubmittedQuestion: SubmittedQuestions;
-    exam_page_mode: string;
 }>();
 
-const showResult = ref(false);
 const { updateItem } = useDirectusItems();
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -122,10 +120,6 @@ const {
 } = useRuntimeConfig();
 
 onMounted(async () => {
-    if (props.exam_page_mode === "review" ){
-        showResult.value = true;
-    }
-
     // 以下是用于测试的自动操作脚本
     // Only for testing
     if (isTest) {
