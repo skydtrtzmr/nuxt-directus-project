@@ -56,11 +56,14 @@ import type {
     SubmittedPaperChapters,
     SubmittedQuestions,
 } from "~~/types/directus_types";
+import { useGlobalStore } from '~~/stores/examDone'; // 引入 Pinia store
 
 const props = defineProps<{
     submittedPaperChapters: SubmittedPaperChapters[];
     selectQuestion: (question: SubmittedQuestions) => void;
 }>();
+
+const globalStore = useGlobalStore(); // 创建 Pinia store 实例
 
 const refItems = ref<HTMLButtonElement[]>([]);
 
@@ -110,6 +113,7 @@ onMounted(async () => {
         await nextTick();
         console.log("测试自动操作脚本开始。");
 
+        // 注意！这里delay时间不要随意设置，太短可能导致测试失败。
         await delay(2000);
         // 没必要非要点击按钮（双层v-for循环下的ref太复杂了……），直接修改按钮触发的函数即可
         for (let i = 0; i < props.submittedPaperChapters.length; i++) {
@@ -119,12 +123,14 @@ onMounted(async () => {
                 await delay(2000);
                 const question = chapter.submitted_questions[j];
                 handleQuestionClick(question);
-                await delay(2000);
+                await delay(2000); // 点击完成之后，要留一点时间等待答题操作
                 // 根据题型开始作答
             }
+            await delay(1000);
         }
 
         await delay(1000);
+        globalStore.setAllDone(true); // 全部做完后，设置全局状态为已完成
         // 做题完成后点击提交试卷。
     }
 });

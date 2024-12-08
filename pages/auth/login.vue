@@ -105,8 +105,9 @@ onMounted(async () => {
                 fields: [
                     "id",
                     "email",
-                    "first_name", // 这个测试中作为密码用
+                    "first_name",
                     "last_name",
+                    "password"
                 ],
                 sort: "email",
                 filter: {
@@ -124,8 +125,9 @@ onMounted(async () => {
         await delay(2000);
         email.value = currentUser.email!;
 
+        const passwordInput = currentUser.email!.split("@")[0]; // 获取密码，这里假设密码是邮箱的前缀
         await delay(2000);
-        password.value = currentUser.first_name!;
+        password.value = passwordInput;
         await delay(2000);
         // 不要表单验证了,直接提交
         loginSubmit();

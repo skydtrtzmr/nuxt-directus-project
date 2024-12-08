@@ -89,6 +89,10 @@ import type {
     SubmittedQuestions,
 } from "~~/types/directus_types";
 
+import { useGlobalStore } from "@/stores/examDone"; // 引入 Pinia store
+
+const globalStore = useGlobalStore(); // 创建 Pinia store 实例
+
 dayjs.extend(utc);
 
 const ended_dialog_visible = ref(false);
@@ -132,7 +136,9 @@ const submittedExam = ref<SubmittedExams>({} as SubmittedExams);
 const submittedPaper = ref<SubmittedPapers>({} as SubmittedPapers);
 const submittedPaperChapters = ref<SubmittedPaperChapters[]>([]);
 // const submittedQuestions = ref<SubmittedQuestions[]>([]);
-const selectedSubmittedQuestion = ref<SubmittedQuestions>({} as SubmittedQuestions); // 当前选中的题目
+const selectedSubmittedQuestion = ref<SubmittedQuestions>(
+    {} as SubmittedQuestions
+); // 当前选中的题目
 // const selectedAnswer = ref(""); // 当前题目的答案
 
 // 倒计时相关
@@ -140,6 +146,11 @@ const examEndTime = ref<dayjs.Dayjs>({} as dayjs.Dayjs); // 考试结束时间�
 const countdown = ref(0); // 剩余时间
 const formattedCountDown = ref("00:00:00"); // 倒计时
 const countdownInterval = ref<any>(null); // 倒计时定时器
+
+// 获取环境变量，确定是否运行测试
+const {
+    public: { isTest },
+} = useRuntimeConfig();
 
 // 获取提交的考试信息。先获取试卷，再获取试卷的章节。
 const fetchSubmittedExam = async () => {
@@ -365,8 +376,10 @@ const confirmSubmit = () => {
 
 const isClient = ref(false); // 记录当前是否是客户端渲染（用来确保时间显示正确）
 
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 // 页面加载时调用
-onMounted(() => {
+onMounted(async () => {
     isClient.value = true; // 标记当前是客户端渲染（组件已经挂载）
     fetchSubmittedExam();
     // 定时请求数据，每隔 30 秒请求一次
@@ -374,6 +387,25 @@ onMounted(() => {
     //     fetchSubmittedExam();
     //     console.log("polling...");
     // }, 30000); // 30秒，您可以根据需要调整这个时间间隔
+
+    if (isTest) {
+        await nextTick();
+        // 监测到全局 store 的 isAllDone 状态变为 true 时，自动提交试卷。
+        watch(
+            () => globalStore.isAllDone,
+            async (newVal) => {
+                if (newVal) {
+                    console.log("所有题目已做完，准备提交...");
+                    await delay(1000); // 添加延迟，模拟等待一段时间
+                    manualSubmit();
+                    await delay(1000);
+                    confirm_submit_dialog_visible.value = false; // 关闭确认提交对话框
+                    await delay(1000);
+                    confirmSubmit();
+                }
+            }
+        );
+    }
 });
 
 // 组件卸载时清除定时器

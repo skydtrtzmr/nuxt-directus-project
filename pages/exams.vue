@@ -474,4 +474,12 @@ onMounted(async () => {
         }
     }
 });
+
+onBeforeRouteUpdate(async (to, from) => {
+    // 每次切换页面时，都要重新获取数据
+    await fetchSubmittedExams();
+    console.log("切换页面时，重新获取数据");
+    
+});
+
 </script>
