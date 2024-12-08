@@ -5,23 +5,25 @@
         <ExamInfo :submittedExam="submittedExam"></ExamInfo>
 
         <!-- 显示试卷详情 -->
-        <div>
-            <PaperInfo :submittedPaper="submittedPaper"></PaperInfo>
-            <div class="absolute top-0 right-0">
-                <!-- 显示倒计时 -->
-                <ExamCountdown
-                    :isClient="isClient"
-                    :examEndTime="examEndTime"
-                    :formattedCountDown="formattedCountDown"
-                ></ExamCountdown>
-                <Button
-                    icon="pi pi-save"
-                    aria-label="Submit"
-                    label="提交试卷"
-                    @click="manualSubmit()"
-                />
+        <template v-if="exam_page_mode !== 'review'">
+            <div>
+                <PaperInfo :submittedPaper="submittedPaper"></PaperInfo>
+                <div class="absolute top-0 right-0">
+                    <!-- 显示倒计时 -->
+                    <ExamCountdown
+                        :isClient="isClient"
+                        :examEndTime="examEndTime"
+                        :formattedCountDown="formattedCountDown"
+                    ></ExamCountdown>
+                    <Button
+                        icon="pi pi-save"
+                        aria-label="Submit"
+                        label="提交试卷"
+                        @click="manualSubmit()"
+                    />
+                </div>
             </div>
-        </div>
+        </template>
         <template v-if="exam_page_mode !== 'review'">
             <Dialog
                 v-model:visible="ended_dialog_visible"
@@ -238,6 +240,9 @@ const fetchSubmittedChapterList = async (
                 "submitted_questions.sort_in_chapter",
                 "submitted_questions.option_number",
                 "submitted_questions.question_type",
+                // 注意要添加下面两个字段，否则教师查看时无法看到答题结果对错和得分。
+                "submitted_questions.point_value", // 分值
+                "submitted_questions.score", // 得分
                 "submitted_questions.submitted_ans_q_mc_single",
                 "submitted_questions.submitted_ans_q_mc_multi",
                 "submitted_questions.submitted_ans_q_mc_binary",
@@ -398,14 +403,14 @@ onMounted(async () => {
     if (submittedExam.value.expected_end_time === undefined) {
         await delay(1000);
         console.log("重新请求数据...");
-        
+
         fetchSubmittedExam();
-    };
+    }
 
     if (submittedExam.value.expected_end_time === undefined) {
         await delay(1000);
         fetchSubmittedExam();
-    };
+    }
 
     console.log("submittedExam.value：");
     console.log(submittedExam.value);
@@ -420,7 +425,7 @@ onMounted(async () => {
     //     console.log("polling...");
     // }, 30000); // 30秒，您可以根据需要调整这个时间间隔
 
-    if (isTest && (props.exam_page_mode === "exam")) {
+    if (isTest && props.exam_page_mode === "exam") {
         await nextTick();
         // 监测到全局 store 的 isAllDone 状态变为 true 时，自动提交试卷。
         watch(
