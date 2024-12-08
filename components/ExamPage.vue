@@ -394,7 +394,7 @@ onMounted(async () => {
         watch(
             () => globalStore.isAllDone,
             async (newVal) => {
-                if (newVal) {
+                if (newVal === true) {
                     console.log("所有题目已做完，准备提交...");
                     await delay(1000); // 添加延迟，模拟等待一段时间
                     manualSubmit();
@@ -402,6 +402,7 @@ onMounted(async () => {
                     confirm_submit_dialog_visible.value = false; // 关闭确认提交对话框
                     await delay(1000);
                     confirmSubmit();
+                    globalStore.setAllDone(false); // 重置全局 store 的 isAllDone 状态
                 }
             }
         );
