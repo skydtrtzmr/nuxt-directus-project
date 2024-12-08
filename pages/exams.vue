@@ -366,8 +366,7 @@ const joinExam = (examId: string) => {
     // CAUTION: 注意
     // 在更新考试的“实际开始时间”后，要等后台directus根据它和“考试时长”计算出考试的“实际结束时间”，
     // 并更新到数据库中，此时考试页面去获取考试信息才能确保后续examEndTime不是null。
-    // 解决方法：可以在这里等待，也可以在directus中设置这个实际结束时间的计算是filter（阻塞）而非action（非阻塞），
-    // 从而确保在获取考试信息时，实际结束时间已经计算出来了。
+    // 解决方法：要在加载ExamPage时确保expected_end_time字段不为空。
 
     // 你可以根据examId跳转到具体的考试页面
     // 这里的 router.push 必须是 this.$router.push 或者使用 composable useRouter()

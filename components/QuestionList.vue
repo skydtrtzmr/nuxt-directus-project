@@ -61,16 +61,12 @@ import { useGlobalStore } from '~~/stores/examDone'; // 引入 Pinia store
 const props = defineProps<{
     submittedPaperChapters: SubmittedPaperChapters[];
     selectQuestion: (question: SubmittedQuestions) => void;
+    selectedSubmittedQuestion: SubmittedQuestions | null;
 }>();
 
 const globalStore = useGlobalStore(); // 创建 Pinia store 实例
 
 const refItems = ref<HTMLButtonElement[]>([]);
-
-const selectedSubmittedQuestion = ref<SubmittedQuestions | null>(
-    // props.submittedPaperChapters[0].submitted_questions[0]
-    null
-);
 
 // 当前选中题目
 // console.log(
@@ -80,7 +76,6 @@ const selectedSubmittedQuestion = ref<SubmittedQuestions | null>(
 
 const handleQuestionClick = (question: SubmittedQuestions) => {
     console.log("handleQuestionClick", question);
-    selectedSubmittedQuestion.value = question; // 更新选中题目
     props.selectQuestion(question); // 调用父组件传递的选择方法
 };
 
@@ -123,7 +118,7 @@ onMounted(async () => {
                 await delay(2000);
                 const question = chapter.submitted_questions[j];
                 handleQuestionClick(question);
-                await delay(2000); // 点击完成之后，要留一点时间等待答题操作
+                await delay(1000); // 点击完成之后，要留一点时间等待答题操作
                 // 根据题型开始作答
             }
             await delay(1000);

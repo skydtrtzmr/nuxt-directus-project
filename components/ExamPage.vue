@@ -64,6 +64,7 @@
             <QuestionList
                 class="basis-1/5 card"
                 :submittedPaperChapters="submittedPaperChapters"
+                :selectedSubmittedQuestion="selectedSubmittedQuestion"
                 :selectQuestion="selectQuestion"
             ></QuestionList>
 
@@ -169,26 +170,32 @@ const fetchSubmittedExam = async () => {
     });
     if (submittedExamResponse) {
         submittedExam.value = submittedExamResponse;
-        if (
-            submittedExamResponse.submitted_papers &&
-            submittedExamResponse.submitted_papers.length > 0
-        ) {
-            // 获取第一个试卷的详情。
-            // TODO 以后可能要支持多个试卷，这里只取第一个试卷。
-            const paperId = submittedExamResponse.submitted_papers[0];
-            // 注意，如果要定义paperId的话，看好本次请求是深入到哪一层嵌套了。
-            console.log("paperId", paperId);
-            fetchSubmittedPaper(paperId);
-        }
-        // 设置倒计时的结束时间
-        examEndTime.value = dayjs(
-            submittedExamResponse.expected_end_time as string
-        );
-        console.log("examEndTime:");
-        console.log(examEndTime.value);
-        
-        startCountdown(examEndTime.value);
     }
+};
+
+const afterFetchSubmittedExam = () => {
+    if (
+        submittedExam.value.submitted_papers &&
+        submittedExam.value.submitted_papers.length > 0
+    ) {
+        // 获取第一个试卷的详情。
+        // TODO 以后可能要支持多个试卷，这里只取第一个试卷。
+        const paperId = submittedExam.value.submitted_papers[0];
+        // 注意，如果要定义paperId的话，看好本次请求是深入到哪一层嵌套了。
+        console.log("paperId", paperId);
+        fetchSubmittedPaper(paperId);
+    }
+    // 设置倒计时的结束时间
+    console.log("submittedExam.value.expected_end_time");
+    console.log(submittedExam.value.expected_end_time);
+
+    examEndTime.value = dayjs(submittedExam.value.expected_end_time as string);
+    // CAUTION: 这里dayjs里面的值如果是空的（例如undefined），就会返回当前时间。
+
+    console.log("examEndTime:");
+    console.log(examEndTime.value);
+
+    startCountdown(examEndTime.value);
 };
 
 // 获取提交的试卷
@@ -383,8 +390,27 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // 页面加载时调用
 onMounted(async () => {
+    await nextTick(); // 等待组件渲染完成
     isClient.value = true; // 标记当前是客户端渲染（组件已经挂载）
     fetchSubmittedExam();
+
+    if (submittedExam.value.expected_end_time === undefined) {
+        await delay(1000);
+        fetchSubmittedExam();
+    };
+
+    if (submittedExam.value.expected_end_time === undefined) {
+        await delay(1000);
+        fetchSubmittedExam();
+    };
+    
+    console.log("submittedExam.value：");
+    console.log(submittedExam.value);
+
+    afterFetchSubmittedExam();
+
+    // 目前加上poll会有问题，暂时不用。
+
     // 定时请求数据，每隔 30 秒请求一次
     // pollingInterval = setInterval(() => {
     //     fetchSubmittedExam();

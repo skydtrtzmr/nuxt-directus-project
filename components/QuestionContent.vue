@@ -73,7 +73,7 @@ async function autoAnswer() {
             item: submitted_question,
         });
     } else if (props.selectedSubmittedQuestion.question_type === "q_mc_multi") {
-        props.selectedSubmittedQuestion.submitted_ans_q_mc_multi = ["A","C"];
+        props.selectedSubmittedQuestion.submitted_ans_q_mc_multi = ["A", "C"];
         const submitted_question = {
             submitted_ans_q_mc_multi:
                 props.selectedSubmittedQuestion.submitted_ans_q_mc_multi,
@@ -99,7 +99,10 @@ async function autoAnswer() {
     } else if (
         props.selectedSubmittedQuestion.question_type === "q_mc_flexible"
     ) {
-        props.selectedSubmittedQuestion.submitted_ans_q_mc_flexible = ["B", "D"];
+        props.selectedSubmittedQuestion.submitted_ans_q_mc_flexible = [
+            "B",
+            "D",
+        ];
         const submitted_question = {
             submitted_ans_q_mc_flexible:
                 props.selectedSubmittedQuestion.submitted_ans_q_mc_flexible,
@@ -124,13 +127,19 @@ onMounted(async () => {
         await nextTick();
         // 先等一会儿，等数据加载完毕，等QuestionList组件选中题目。
         await delay(2000);
-        if (props.selectedSubmittedQuestion) {
-            await autoAnswer();
-        }
+
+        // 先把第一题做了。第一题的时候没有发生变化所以不会触发watch。
+        if (Object.keys(props.selectedSubmittedQuestion).length !== 0 ) {
+                    await autoAnswer();
+                }
+
         watch(
             () => props.selectedSubmittedQuestion,
             async () => {
-                await autoAnswer();
+                // 判断对象是否为空。注意不要直接用!== null，没用的，{}也不是null。
+                if (Object.keys(props.selectedSubmittedQuestion).length !== 0 ) {
+                    await autoAnswer();
+                }
             }
             // 下面是检测到题目变化时，进行的操作
         );
