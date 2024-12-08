@@ -105,7 +105,7 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 onMounted(async () => {
     // 以下是用于测试的自动操作脚本
     // Only for testing
-    if (isTest && (props.exam_page_mode === "exam")) {
+    if (isTest && (props.exam_page_mode !== "review")) {
         await nextTick();
         console.log("测试自动操作脚本开始。");
 

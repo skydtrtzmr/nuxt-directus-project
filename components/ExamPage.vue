@@ -24,6 +24,12 @@
                 </div>
             </div>
         </template>
+        <template v-else>
+            <div class="absolute top-10 right-10">
+                <div>试卷总分值：{{ submittedPaper.point_value }}</div>
+                <div>当前总得分：{{ submittedPaper.score }}</div>
+            </div>
+        </template>
         <template v-if="exam_page_mode !== 'review'">
             <Dialog
                 v-model:visible="ended_dialog_visible"
@@ -167,6 +173,7 @@ const fetchSubmittedExam = async () => {
                 "expected_end_time",
                 "submitted_papers",
                 "exam.title",
+                "exam.duration", // 获取考试时长，直接在客户端进行计算。服务端自己计算自己的，跟客户端分开，避免客户端计算错误。
                 "student.name",
             ], // 获取考试的状态和关联的试卷
         },
@@ -211,6 +218,8 @@ const fetchSubmittedPaper = async (paperId: string) => {
                 "source_paper_prototype.title",
                 "source_paper_prototype.total_point_value",
                 "submitted_paper_chapters",
+                "point_value",
+                "score",
             ],
         },
     });
@@ -412,8 +421,8 @@ onMounted(async () => {
         fetchSubmittedExam();
     }
 
-    console.log("submittedExam.value：");
-    console.log(submittedExam.value);
+    console.log("submittedExam.value.expected_end_time：");
+    console.log(submittedExam.value.expected_end_time);
 
     afterFetchSubmittedExam();
 
@@ -425,7 +434,7 @@ onMounted(async () => {
     //     console.log("polling...");
     // }, 30000); // 30秒，您可以根据需要调整这个时间间隔
 
-    if (isTest && props.exam_page_mode === "exam") {
+    if (isTest && props.exam_page_mode !== "review") {
         await nextTick();
         // 监测到全局 store 的 isAllDone 状态变为 true 时，自动提交试卷。
         watch(
@@ -436,10 +445,9 @@ onMounted(async () => {
                     await delay(1000); // 添加延迟，模拟等待一段时间
                     manualSubmit();
                     await delay(1000);
-                    confirm_submit_dialog_visible.value = false; // 关闭确认提交对话框
-                    await delay(1000);
-                    confirmSubmit();
                     globalStore.setAllDone(false); // 重置全局 store 的 isAllDone 状态
+                    confirm_submit_dialog_visible.value = false; // 关闭确认提交对话框
+                    confirmSubmit();
                 }
             }
         );

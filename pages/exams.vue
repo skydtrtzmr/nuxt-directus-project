@@ -319,7 +319,9 @@ const submitActualStartTime = async (submitted_exam: SubmittedExams) => {
     } catch (e) {}
 };
 
-const joinExam = (examId: string) => {
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const joinExam = async(examId: string) => {
     // 首先判断考试时间
     console.log("当前时间：");
     console.log(dayjs(Date.now()));
@@ -436,7 +438,6 @@ const {
     public: { isTest },
 } = useRuntimeConfig();
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 onMounted(async () => {
     await fetchSubmittedExams(); // 注意要await！确保submittedExams.value已经被赋值
     if (isTest) {

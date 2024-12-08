@@ -73,6 +73,7 @@ async function autoAnswer() {
             item: submitted_question,
         });
     } else if (props.selectedSubmittedQuestion.question_type === "q_mc_multi") {
+        props.selectedSubmittedQuestion.submitted_ans_q_mc_multi = ["A"];
         props.selectedSubmittedQuestion.submitted_ans_q_mc_multi = ["A", "C"];
         const submitted_question = {
             submitted_ans_q_mc_multi:
@@ -99,6 +100,7 @@ async function autoAnswer() {
     } else if (
         props.selectedSubmittedQuestion.question_type === "q_mc_flexible"
     ) {
+        props.selectedSubmittedQuestion.submitted_ans_q_mc_flexible = ["B"];
         props.selectedSubmittedQuestion.submitted_ans_q_mc_flexible = [
             "B",
             "D",
@@ -123,21 +125,21 @@ const {
 onMounted(async () => {
     // 以下是用于测试的自动操作脚本
     // Only for testing
-    if (isTest && (props.exam_page_mode === "exam")) {
+    if (isTest && props.exam_page_mode !== "review") {
         await nextTick();
         // 先等一会儿，等数据加载完毕，等QuestionList组件选中题目。
         await delay(2000);
 
         // 先把第一题做了。第一题的时候没有发生变化所以不会触发watch。
-        if (Object.keys(props.selectedSubmittedQuestion).length !== 0 ) {
-                    await autoAnswer();
-                }
+        if (Object.keys(props.selectedSubmittedQuestion).length !== 0) {
+            await autoAnswer();
+        }
 
         watch(
             () => props.selectedSubmittedQuestion,
             async () => {
                 // 判断对象是否为空。注意不要直接用!== null，没用的，{}也不是null。
-                if (Object.keys(props.selectedSubmittedQuestion).length !== 0 ) {
+                if (Object.keys(props.selectedSubmittedQuestion).length !== 0) {
                     await autoAnswer();
                 }
             }
