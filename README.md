@@ -11,6 +11,10 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 - [x] `review/[id]`页面，显示答案。
 - [ ] 添加做题操作自动脚本。
 
+Bug：
+- [ ] 有时候进入考试后，实时的“应当结束时间”还没计算出来，倒计时组件就开始渲染了，导致渲染出错。
+
+
 ## 关于UI
 
 使用[primevue](https://primevue.org/)。

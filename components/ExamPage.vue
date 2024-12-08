@@ -184,6 +184,9 @@ const fetchSubmittedExam = async () => {
         examEndTime.value = dayjs(
             submittedExamResponse.expected_end_time as string
         );
+        console.log("examEndTime:");
+        console.log(examEndTime.value);
+        
         startCountdown(examEndTime.value);
     }
 };
