@@ -123,7 +123,7 @@ const {
 onMounted(async () => {
     // 以下是用于测试的自动操作脚本
     // Only for testing
-    if (isTest) {
+    if (isTest && (props.exam_page_mode === "exam")) {
         await nextTick();
         // 先等一会儿，等数据加载完毕，等QuestionList组件选中题目。
         await delay(2000);

@@ -63,6 +63,7 @@
             <!-- 左侧：题目列表 -->
             <QuestionList
                 class="basis-1/5 card"
+                :exam_page_mode="exam_page_mode"
                 :submittedPaperChapters="submittedPaperChapters"
                 :selectedSubmittedQuestion="selectedSubmittedQuestion"
                 :selectQuestion="selectQuestion"
@@ -390,12 +391,14 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // 页面加载时调用
 onMounted(async () => {
+    await fetchSubmittedExam(); // 注意一定要加await，否则会导致后面的代码先执行。
     await nextTick(); // 等待组件渲染完成
     isClient.value = true; // 标记当前是客户端渲染（组件已经挂载）
-    fetchSubmittedExam();
 
     if (submittedExam.value.expected_end_time === undefined) {
         await delay(1000);
+        console.log("重新请求数据...");
+        
         fetchSubmittedExam();
     };
 
@@ -403,7 +406,7 @@ onMounted(async () => {
         await delay(1000);
         fetchSubmittedExam();
     };
-    
+
     console.log("submittedExam.value：");
     console.log(submittedExam.value);
 
@@ -417,7 +420,7 @@ onMounted(async () => {
     //     console.log("polling...");
     // }, 30000); // 30秒，您可以根据需要调整这个时间间隔
 
-    if (isTest) {
+    if (isTest && (props.exam_page_mode === "exam")) {
         await nextTick();
         // 监测到全局 store 的 isAllDone 状态变为 true 时，自动提交试卷。
         watch(

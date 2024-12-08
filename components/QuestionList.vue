@@ -62,6 +62,7 @@ const props = defineProps<{
     submittedPaperChapters: SubmittedPaperChapters[];
     selectQuestion: (question: SubmittedQuestions) => void;
     selectedSubmittedQuestion: SubmittedQuestions | null;
+    exam_page_mode: string;
 }>();
 
 const globalStore = useGlobalStore(); // 创建 Pinia store 实例
@@ -104,7 +105,7 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 onMounted(async () => {
     // 以下是用于测试的自动操作脚本
     // Only for testing
-    if (isTest) {
+    if (isTest && (props.exam_page_mode === "exam")) {
         await nextTick();
         console.log("测试自动操作脚本开始。");
 
