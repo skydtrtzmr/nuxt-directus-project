@@ -56,18 +56,18 @@ import type {
     SubmittedPaperChapters,
     SubmittedQuestions,
 } from "~~/types/directus_types";
+import { useGlobalStore } from '~~/stores/examDone'; // 引入 Pinia store
 
 const props = defineProps<{
     submittedPaperChapters: SubmittedPaperChapters[];
     selectQuestion: (question: SubmittedQuestions) => void;
+    selectedSubmittedQuestion: SubmittedQuestions | null;
+    exam_page_mode: string;
 }>();
 
-const refItems = ref<HTMLButtonElement[]>([]);
+const globalStore = useGlobalStore(); // 创建 Pinia store 实例
 
-const selectedSubmittedQuestion = ref<SubmittedQuestions | null>(
-    // props.submittedPaperChapters[0].submitted_questions[0]
-    null
-);
+const refItems = ref<HTMLButtonElement[]>([]);
 
 // 当前选中题目
 // console.log(
@@ -77,7 +77,6 @@ const selectedSubmittedQuestion = ref<SubmittedQuestions | null>(
 
 const handleQuestionClick = (question: SubmittedQuestions) => {
     console.log("handleQuestionClick", question);
-    selectedSubmittedQuestion.value = question; // 更新选中题目
     props.selectQuestion(question); // 调用父组件传递的选择方法
 };
 
@@ -98,33 +97,39 @@ const getQuestionSeverity = (question: SubmittedQuestions) => {
         return "secondary";
     }
 };
-
+// 获取环境变量，确定是否运行测试
+const {
+    public: { isTest },
+} = useRuntimeConfig();
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 onMounted(async () => {
     // 以下是用于测试的自动操作脚本
     // Only for testing
-    await nextTick();
-    console.log("测试自动操作脚本开始。");
+    if (isTest && (props.exam_page_mode !== "review")) {
+        await nextTick();
+        console.log("测试自动操作脚本开始。");
 
-    await delay(2000);
-    // 没必要非要点击按钮（双层v-for循环下的ref太复杂了……），直接修改按钮触发的函数即可
-    for (let i = 0; i < props.submittedPaperChapters.length; i++){
-        const chapter = props.submittedPaperChapters[i];
-        await delay(1000);
-        for (let j = 0; j < chapter.submitted_questions.length; j++){
-            await delay(2000);
-            const question = chapter.submitted_questions[j];
-            handleQuestionClick(question);
-            await delay(2000);
-            // 根据题型开始作答
+        // 注意！这里delay时间不要随意设置，太短可能导致测试失败。
+        await delay(2000);
+        // 没必要非要点击按钮（双层v-for循环下的ref太复杂了……），直接修改按钮触发的函数即可
+        for (let i = 0; i < props.submittedPaperChapters.length; i++) {
+            const chapter = props.submittedPaperChapters[i];
+            await delay(1000);
+            for (let j = 0; j < chapter.submitted_questions.length; j++) {
+                await delay(2000);
+                const question = chapter.submitted_questions[j];
+                handleQuestionClick(question);
+                await delay(1000); // 点击完成之后，要留一点时间等待答题操作
+                // 根据题型开始作答
+            }
+            await delay(1000);
         }
+
+        await delay(1000);
+        globalStore.setAllDone(true); // 全部做完后，设置全局状态为已完成
+        // 做题完成后点击提交试卷。
     }
-
-    await delay(1000);
-    // 做题完成后点击提交试卷。
 });
-
-
 </script>
 
 <style scoped>

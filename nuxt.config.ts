@@ -54,6 +54,7 @@ export default defineNuxtConfig({
             directus: {
                 url: "http://127.0.0.1:8055",
             },
+            isTest: process.env.NUXT_TEST === 'true', // 默认为false，如果是测试环境，则设置为true
         },
     },
 

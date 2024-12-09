@@ -8,8 +8,13 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 
 ### TODO
 
-- [x] `preview/[id]`页面，显示答案。
+- [x] `review/[id]`页面，显示答案。
 - [ ] 添加做题操作自动脚本。
+
+Bug：
+- [ ] 有时候进入考试后，实时的“应当结束时间”还没计算出来，倒计时组件就开始渲染了，导致渲染出错。所以要修改倒计时计算逻辑，比如可以服务端和客户端各自计算倒计时，然后客户端渲染倒计时。
+    我发现是第一次进去都会invalid，第二次进去就好了。
+
 
 ## 关于UI
 
@@ -24,6 +29,9 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 有些自动的功能它里面已经写好了，我自己再写就重复了。
 
 ## 运行
+
+### 特殊注意
+
 
 ### Setup
 

@@ -217,6 +217,7 @@
                                             {{ getSubmitStatusAction(item) }}
                                         </Button>
                                         <Button
+                                            @click="reviewExam(item.id)"
                                             icon="pi pi-info-circle"
                                             outlined
                                         ></Button>
@@ -241,6 +242,9 @@ import type {
 } from "~~/types/directus_types";
 import type { HintedString } from "@primevue/core";
 
+// 如果使用 useRouter，需要引入并使用
+const router = useRouter();
+
 const gridItems = ref([]);
 console.log("gridItems.value");
 console.log(gridItems.value); // 在这里的时候gridItems还是空数组
@@ -250,7 +254,6 @@ const current_user = auth.user; // 获取当前用户
 console.log("current_user:\n", current_user);
 
 if (!current_user) {
-    const router = useRouter();
     router.push("/auth/login");
 }
 
@@ -316,7 +319,9 @@ const submitActualStartTime = async (submitted_exam: SubmittedExams) => {
     } catch (e) {}
 };
 
-const joinExam = (examId: string) => {
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const joinExam = async(examId: string) => {
     // 首先判断考试时间
     console.log("当前时间：");
     console.log(dayjs(Date.now()));
@@ -360,15 +365,20 @@ const joinExam = (examId: string) => {
             submittedExams.value.find((item) => item.id === examId)!
         );
     }
+    // CAUTION: 注意
+    // 在更新考试的“实际开始时间”后，要等后台directus根据它和“考试时长”计算出考试的“实际结束时间”，
+    // 并更新到数据库中，此时考试页面去获取考试信息才能确保后续examEndTime不是null。
+    // 解决方法：要在加载ExamPage时确保expected_end_time字段不为空。
 
     // 你可以根据examId跳转到具体的考试页面
     // 这里的 router.push 必须是 this.$router.push 或者使用 composable useRouter()
-    // 如果使用 useRouter，需要引入并使用
-    const router = useRouter();
+
     router.push(`/exam/${examId}`);
     // 跳转到具体的考试页面，页面path的最后一项就是submitted_exams的id。
 };
-
+const reviewExam = (examId: string) => {
+    router.push(`/review/${examId}`);
+};
 const getSubmitStatus = (
     submitted_exam: SubmittedExams
 ):
@@ -423,42 +433,59 @@ const getSubmitStatusAction = (submitted_exam: SubmittedExams) => {
     }
 };
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+// 获取环境变量，确定是否运行测试
+const {
+    public: { isTest },
+} = useRuntimeConfig();
+
 onMounted(async () => {
     await fetchSubmittedExams(); // 注意要await！确保submittedExams.value已经被赋值
-    await nextTick(); // 确保 DOM 渲染完成
+    if (isTest) {
+        await nextTick(); // 确保 DOM 渲染完成
 
-    // 筛选出标题为特定内容的循环项
-    const targetItemTitle = "自动化测试专用考试"; // 需要筛选的标题
-    console.log("submittedExams.value");
-    console.log(submittedExams.value);
-    console.log("gridItems.value in onMounted");
-    console.log(gridItems.value);
-    await delay(2000);
-    // 注意，下面获得的并不直接是Button，而是其父级div。
-    const targetGirdDiv: HTMLElement|null = gridItems.value.find((button, index) => {
-        const item = submittedExams.value[index]; // 获取对应的项
-        console.log("item.??");
-        console.log(item); // 这里的item是对象数据，不是Button
-        
-        return (item.exam as Exams).title === targetItemTitle;
-    })||null;
-    await delay(2000);
+        // 筛选出标题为特定内容的循环项
+        const targetItemTitle = "自动化测试专用考试"; // 需要筛选的标题
+        console.log("submittedExams.value");
+        console.log(submittedExams.value);
+        console.log("gridItems.value in onMounted");
+        console.log(gridItems.value);
+        await delay(2000);
+        // 注意，下面获得的并不直接是Button，而是其父级div。
+        const targetGirdDiv: HTMLElement | null =
+            gridItems.value.find((button, index) => {
+                const item = submittedExams.value[index]; // 获取对应的项
+                console.log("item.??");
+                console.log(item); // 这里的item是对象数据，不是Button
 
-    console.log("targetGirdDiv1");
-    console.log(targetGirdDiv);
+                return (item.exam as Exams).title === targetItemTitle;
+            }) || null;
+        await delay(2000);
 
-    // 模拟点击目标按钮
-    if (targetGirdDiv && typeof targetGirdDiv == "object") {
-        console.log("targetGirdDiv");
+        console.log("targetGirdDiv1");
         console.log(targetGirdDiv);
-        const firstButton = (targetGirdDiv as HTMLElement).querySelector('button');
-        console.log("firstButton");
-        console.log(firstButton);
-        firstButton!.click();
 
-    } else {
-        console.log("没有找到目标按钮");
+        // 模拟点击目标按钮
+        if (targetGirdDiv && typeof targetGirdDiv == "object") {
+            console.log("targetGirdDiv");
+            console.log(targetGirdDiv);
+            const firstButton = (targetGirdDiv as HTMLElement).querySelector(
+                "button"
+            );
+            console.log("firstButton");
+            console.log(firstButton);
+            firstButton!.click();
+        } else {
+            console.log("没有找到目标按钮");
+        }
     }
 });
+
+// 不需要下面这样写，因为切换页面时，会自动重新获取数据。
+// onBeforeRouteUpdate(async (to, from) => {
+//     // 每次切换页面时，都要重新获取数据
+//     await fetchSubmittedExams();
+//     console.log("切换页面时，重新获取数据");
+    
+// });
+
 </script>

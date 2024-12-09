@@ -1,0 +1,34 @@
+<template>
+    <!-- <h2>考试详情</h2> -->
+
+    <p>考试ID: {{ submittedExam?.id }}</p>
+    <p
+        v-if="
+            submittedExam &&
+            submittedExam.exam &&
+            typeof submittedExam.exam == 'object'
+        "
+    >
+        考试名称：{{ submittedExam?.exam.title }}
+    </p>
+    <p
+        v-if="
+            submittedExam &&
+            submittedExam.student &&
+            typeof submittedExam.student == 'object'
+        "
+    >
+        <!-- NOTE：注意这里必须直接从submittedExam.student获取，而不能获取登录的用户信息。
+            因为考试详情页面并非只有考生本人才能查看，教师也可以查看。 -->
+        当前考生：{{ submittedExam?.student.name }}
+    </p>
+</template>
+
+<script setup lang="ts">
+import type { SubmittedExams } from "~~/types/directus_types";
+defineProps<{
+    submittedExam: SubmittedExams;
+}>();
+</script>
+
+<style scoped></style>
