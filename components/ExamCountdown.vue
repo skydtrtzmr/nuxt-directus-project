@@ -5,11 +5,11 @@
         <p v-if="isClient">
             当前时间: {{ dayjs().format("YYYY-MM-DD HH:mm:ss") }}
         </p>
-        <p>
+        <p v-if="isClient">
             结束时间:
             {{ dayjs(examEndTime).format("YYYY-MM-DD HH:mm:ss") }}
         </p>
-        <p>剩余时长: {{ formattedCountDown }}</p>
+        <p v-if="isClient">剩余时长: {{ formattedCountDown }}</p>
     </div>
 </template>
 
