@@ -183,6 +183,22 @@ const fetchSubmittedExam = async () => {
     }
 };
 
+const fetchExamData = async () => {
+    await fetchSubmittedExam(); // 先获取考试信息
+
+    // 检查获取到的 exam end time 是否有效
+    console.log('submittedExam.value.expected_end_time in fetchExamData()');
+    
+    if (!submittedExam.value.expected_end_time) {
+        console.log("考试结束时间无效，重新获取...");
+        await delay(1000); // 等待一秒钟再重试
+        await fetchExamData(); // 递归调用
+    } else {
+        // 如果有效，调用方法进行后续处理
+        afterFetchSubmittedExam();
+    }
+};
+
 const afterFetchSubmittedExam = () => {
     if (
         submittedExam.value.submitted_papers &&
@@ -405,26 +421,13 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // 页面加载时调用
 onMounted(async () => {
-    await fetchSubmittedExam(); // 注意一定要加await，否则会导致后面的代码先执行。
+    await fetchExamData(); // 注意一定要加await，否则会导致后面的代码先执行。
     await nextTick(); // 等待组件渲染完成
     isClient.value = true; // 标记当前是客户端渲染（组件已经挂载）
 
-    if (submittedExam.value.expected_end_time === undefined) {
-        await delay(1000);
-        console.log("重新请求数据...");
-
-        fetchSubmittedExam();
-    }
-
-    if (submittedExam.value.expected_end_time === undefined) {
-        await delay(1000);
-        fetchSubmittedExam();
-    }
 
     console.log("submittedExam.value.expected_end_time：");
     console.log(submittedExam.value.expected_end_time);
-
-    afterFetchSubmittedExam();
 
     // 目前加上poll会有问题，暂时不用。
 
@@ -435,7 +438,6 @@ onMounted(async () => {
     // }, 30000); // 30秒，您可以根据需要调整这个时间间隔
 
     if (isTest && props.exam_page_mode !== "review") {
-        await nextTick();
         // 监测到全局 store 的 isAllDone 状态变为 true 时，自动提交试卷。
         watch(
             () => globalStore.isAllDone,
