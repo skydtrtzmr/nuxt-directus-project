@@ -25,8 +25,7 @@
                     typeof selectedSubmittedQuestion_question_type === 'object'
                 "
                 >{{
-                    question_type === ("q_mc_single" || "q_mc_binary")
-                    // 别忘了加括号！
+                    question_type === ("q_mc_single" || "q_mc_binary") // 别忘了加括号！
                         ? (
                               selectedSubmittedQuestion_question_type as
                                   | QMcSingle
