@@ -14,6 +14,10 @@
             }}</span>
         </div>
         <div>
+            <span class="font-medium">考生答案: </span
+            ><span class="text-lg">{{ submitted_ans_question_type }}</span>
+        </div>
+        <div>
             <span class="font-medium">正确答案: </span
             ><span
                 class="text-lg"
@@ -39,6 +43,7 @@
                 }}</span
             >
         </div>
+        <br/>
         <div>
             <p class="font-medium">题目解析:</p>
             <span
@@ -93,6 +98,18 @@ const selectedSubmittedQuestion_question_type = computed(() => {
             .q_mc_flexible;
     } else {
         return null;
+    }
+});
+
+const submitted_ans_question_type = computed(() => {
+    if (props.question_type === "q_mc_single") {
+        return props.selectedSubmittedQuestion.submitted_ans_q_mc_single;
+    } else if (props.question_type === "q_mc_multi") {
+        return props.selectedSubmittedQuestion.submitted_ans_q_mc_multi;
+    } else if (props.question_type === "q_mc_binary") {
+        return props.selectedSubmittedQuestion.submitted_ans_q_mc_binary;
+    } else if (props.question_type === "q_mc_flexible") {
+        return props.selectedSubmittedQuestion.submitted_ans_q_mc_flexible;
     }
 });
 
