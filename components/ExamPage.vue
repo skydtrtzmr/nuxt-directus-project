@@ -13,6 +13,7 @@
                     <ExamCountdown
                         :isClient="isClient"
                         :examEndTime="examEndTime"
+                        :submittedExamTime="submittedExamTime"
                         :formattedCountDown="formattedCountDown"
                     ></ExamCountdown>
                     <Button
@@ -97,6 +98,7 @@ import type {
     SubmittedPapers,
     SubmittedPaperChapters,
     SubmittedQuestions,
+    Exams,
 } from "~~/types/directus_types";
 
 import { useGlobalStore } from "@/stores/examDone"; // 引入 Pinia store
@@ -155,10 +157,16 @@ const submittedExamTime = ref<SubmittedExams>({} as SubmittedExams); // 考试�
 // const selectedAnswer = ref(""); // 当前题目的答案
 
 // 倒计时相关
+// TODO 其实这里用的响应式有点多了，有些其实是应该用计算属性来优化的。
 const examEndTime = ref<dayjs.Dayjs>({} as dayjs.Dayjs); // 考试结束时间（对于学生本人）
 const countdown = ref(0); // 剩余时间
 const formattedCountDown = ref("00:00:00"); // 倒计时
 const countdownInterval = ref<any>(null); // 倒计时定时器
+const actual_start_time = ref(""); // 从后端导出的时间是字符串类型。
+const duration = ref(0); // 考试时长
+const extra_time = ref(0); // 考试时长补偿
+const expected_end_time = ref<Date>(); // 应交卷时间
+const expected_end_time_str = ref(""); // 应交卷时间的字符串形式
 
 // 获取环境变量，确定是否运行测试
 const {
@@ -187,39 +195,39 @@ const fetchExamTimeData = async () => {
         params: {
             fields: [
                 "id",
+                "actual_start_time", // 获取考试开始时间，客户端根据此时间计算倒计时。
                 "expected_end_time",
+                "extra_time", // 考试时长补偿，客户端根据此时间计算倒计时。
                 "exam.duration", // 获取考试时长，直接在客户端进行计算。服务端自己计算自己的，跟客户端分开，避免客户端计算错误。
             ], // 获取考试的状态和关联的试卷
         },
     });
 
+    // TODO 以后可以考虑不用这个submittedExamTime了。
     if (submittedExamTimeResponse) {
         submittedExamTime.value = submittedExamTimeResponse;
     }
 
-    console.log(
-        "submittedExamTime.value.expected_end_time in fetchExamTimeData:"
-    );
-    console.log(submittedExamTime.value.expected_end_time);
+    // 下面是初始版本，从服务器获取时间数据。
 
-    if (
-        !submittedExamTime.value.expected_end_time ||
-        submittedExamTime.value.expected_end_time === "1970-01-01T01:00:00.000Z"
-        // 当你获得的时间为 1970-01-01T01:00:00.000Z 时，
-        // 这通常表示你的时间值是 undefined 或 null，
-        // 在 JavaScript 中被转换为一个“默认”的时间戳。
-    ) {
-        console.log("考试结束时间无效，重新获取...");
-        await delay(1000); // 等待一秒钟再重试
-        await fetchExamTimeData(); // 递归调用
-    } else {
-        console.log("考试结束时间有效，开始倒计时...");
-        console.log("submittedExamTime.value.expected_end_time:");
-        console.log(submittedExamTime.value.expected_end_time);
+    // if (
+    //     !submittedExamTime.value.expected_end_time ||
+    //     submittedExamTime.value.expected_end_time === "1970-01-01T01:00:00.000Z"
+    //     // 当你获得的时间为 1970-01-01T01:00:00.000Z 时，
+    //     // 这通常表示你的时间值是 undefined 或 null，
+    //     // 在 JavaScript 中被转换为一个“默认”的时间戳。
+    // ) {
+    //     console.log("考试结束时间无效，重新获取...");
+    //     await delay(1000); // 等待一秒钟再重试
+    //     await fetchExamTimeData(); // 递归调用
+    // } else {
+    //     console.log("考试结束时间有效，开始倒计时...");
+    //     console.log("submittedExamTime.value.expected_end_time:");
+    //     console.log(submittedExamTime.value.expected_end_time);
 
-        // 如果有效，调用方法进行后续处理
-        // afterFetchSubmittedExamTime();
-    }
+    //     // 如果有效，调用方法进行后续处理
+    //     // afterFetchSubmittedExamTime();
+    // }
 };
 
 const afterFetchSubmittedExam = () => {
@@ -238,15 +246,21 @@ const afterFetchSubmittedExam = () => {
 
 // 把获取时间数据后的操作也跟获取考试其他数据后的操作分开。
 const afterFetchSubmittedExamTime = () => {
-    // 设置倒计时的结束时间
-    console.log(
-        "submittedExamTime.value.expected_end_time in afterFetchSubmittedExamTime:"
-    );
-    console.log(submittedExamTime.value.expected_end_time);
+    actual_start_time.value = submittedExamTime.value.actual_start_time!;
+    duration.value = (submittedExamTime.value.exam as Exams).duration!;
+    extra_time.value = submittedExamTime.value.extra_time!;
 
-    examEndTime.value = dayjs(
-        submittedExamTime.value.expected_end_time as string
+    // 先根据实际开始作答时间和考试时长，计算应交卷时间
+    expected_end_time.value = new Date(actual_start_time.value);
+    expected_end_time.value.setMinutes(
+        expected_end_time.value.getMinutes() + duration.value + extra_time.value
     );
+
+    // 注意：Date对象在directus中能正常运算，但不能打印。
+    expected_end_time_str.value = expected_end_time.value.toISOString();
+
+    // 设置倒计时的结束时间
+    examEndTime.value = dayjs(expected_end_time_str.value);
     // CAUTION: 这里dayjs里面的值如果是空的（例如undefined），就会返回当前时间。
 
     console.log("examEndTime:");
@@ -458,7 +472,7 @@ onMounted(async () => {
     isClient.value = true; // 标记当前是客户端渲染（组件已经挂载）
 
     // 如果有效，调用方法进行后续处理
-    afterFetchSubmittedExamTime(); 
+    afterFetchSubmittedExamTime();
     // 这个就暂时不放在fetchExamTimeData里了，因为它需要在组件渲染完成后开始计算，这样才能确保实际开始时间是渲染完成的时间。
 
     console.log("submittedExamTime.value.expected_end_time：");
