@@ -131,7 +131,7 @@
                 }}</span>
             </div>
             <div class="text-gray-700 mt-2">
-                <span class="font-medium">得分: </span>
+                <span class="font-medium">考生得分: </span>
                 <span class="text-lg">{{
                     selectedSubmittedQuestion.score
                 }}</span>
