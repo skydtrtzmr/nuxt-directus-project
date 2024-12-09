@@ -25,11 +25,12 @@
                     typeof selectedSubmittedQuestion_question_type === 'object'
                 "
                 >{{
-                    question_type === "q_mc_single" || "q_mc_binary"
+                    question_type === ("q_mc_single" || "q_mc_binary")
+                    // 别忘了加括号！
                         ? (
                               selectedSubmittedQuestion_question_type as
-                                  | QMcBinary
                                   | QMcSingle
+                                  | QMcBinary
                           )?.correct_option
                         : (
                               selectedSubmittedQuestion_question_type as
@@ -95,11 +96,6 @@ const selectedSubmittedQuestion_question_type = computed(() => {
         return null;
     }
 });
-
-const correctAnswer =
-    props.question_type === "q_mc_single" || "q_mc_binary"
-        ? "correct_option"
-        : "correct_options";
 
 const isCorrectAnswer = computed(() => {
     if (
