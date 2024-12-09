@@ -5,11 +5,16 @@
         <p v-if="isClient">
             当前时间: {{ dayjs().format("YYYY-MM-DD HH:mm:ss") }}
         </p>
+        <p v-if="!isClient">
+            当前时间: {{ dayjs().format("YYYY-MM-DD HH:mm:ss") }}
+        </p>
         <p v-if="isClient">
             结束时间:
             {{ dayjs(examEndTime).format("YYYY-MM-DD HH:mm:ss") }}
         </p>
+        <p v-if="!isClient">结束时间: 计算中……</p>
         <p v-if="isClient">剩余时长: {{ formattedCountDown }}</p>
+        <p v-if="!isClient">剩余时长: 计算中……</p>
     </div>
 </template>
 
@@ -24,8 +29,6 @@ const props = defineProps<{
 
 console.log("examEndTime in ExamCountdown.vue:");
 console.log(dayjs(props.examEndTime).format("YYYY-MM-DD HH:mm:ss"));
-
-
 </script>
 
 <style scoped></style>

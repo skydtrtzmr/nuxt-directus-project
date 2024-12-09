@@ -218,7 +218,7 @@ const fetchExamTimeData = async () => {
         console.log(submittedExamTime.value.expected_end_time);
 
         // 如果有效，调用方法进行后续处理
-        afterFetchSubmittedExamTime();
+        // afterFetchSubmittedExamTime();
     }
 };
 
@@ -456,6 +456,10 @@ onMounted(async () => {
     await fetchExamTimeData(); //
     await nextTick(); // 等待组件渲染完成
     isClient.value = true; // 标记当前是客户端渲染（组件已经挂载）
+
+    // 如果有效，调用方法进行后续处理
+    afterFetchSubmittedExamTime(); 
+    // 这个就暂时不放在fetchExamTimeData里了，因为它需要在组件渲染完成后开始计算，这样才能确保实际开始时间是渲染完成的时间。
 
     console.log("submittedExamTime.value.expected_end_time：");
     console.log(submittedExamTime.value.expected_end_time);
