@@ -149,6 +149,9 @@ const submittedPaperChapters = ref<SubmittedPaperChapters[]>([]);
 const selectedSubmittedQuestion = ref<SubmittedQuestions>(
     {} as SubmittedQuestions
 ); // 当前选中的题目
+
+// 把考试时间相关数据和考试的其他数据分开，避免混淆。
+const submittedExamTime = ref<SubmittedExams>({} as SubmittedExams); // 考试时间
 // const selectedAnswer = ref(""); // 当前题目的答案
 
 // 倒计时相关
@@ -168,34 +171,54 @@ const fetchSubmittedExam = async () => {
         collection: "submitted_exams",
         id: submitted_exam_id,
         params: {
-            fields: [
-                "id",
-                "expected_end_time",
-                "submitted_papers",
-                "exam.title",
-                "exam.duration", // 获取考试时长，直接在客户端进行计算。服务端自己计算自己的，跟客户端分开，避免客户端计算错误。
-                "student.name",
-            ], // 获取考试的状态和关联的试卷
+            fields: ["id", "submitted_papers", "exam.title", "student.name"], // 获取考试的状态和关联的试卷
         },
     });
     if (submittedExamResponse) {
         submittedExam.value = submittedExamResponse;
+        afterFetchSubmittedExam();
     }
 };
 
-const fetchExamData = async () => {
-    await fetchSubmittedExam(); // 先获取考试信息
+const fetchExamTimeData = async () => {
+    const submittedExamTimeResponse = await getItemById<SubmittedExams>({
+        collection: "submitted_exams",
+        id: submitted_exam_id,
+        params: {
+            fields: [
+                "id",
+                "expected_end_time",
+                "exam.duration", // 获取考试时长，直接在客户端进行计算。服务端自己计算自己的，跟客户端分开，避免客户端计算错误。
+            ], // 获取考试的状态和关联的试卷
+        },
+    });
 
-    // 检查获取到的 exam end time 是否有效
-    console.log('submittedExam.value.expected_end_time in fetchExamData()');
-    
-    if (!submittedExam.value.expected_end_time) {
+    if (submittedExamTimeResponse) {
+        submittedExamTime.value = submittedExamTimeResponse;
+    }
+
+    console.log(
+        "submittedExamTime.value.expected_end_time in fetchExamTimeData:"
+    );
+    console.log(submittedExamTime.value.expected_end_time);
+
+    if (
+        !submittedExamTime.value.expected_end_time ||
+        submittedExamTime.value.expected_end_time === "1970-01-01T01:00:00.000Z"
+        // 当你获得的时间为 1970-01-01T01:00:00.000Z 时，
+        // 这通常表示你的时间值是 undefined 或 null，
+        // 在 JavaScript 中被转换为一个“默认”的时间戳。
+    ) {
         console.log("考试结束时间无效，重新获取...");
         await delay(1000); // 等待一秒钟再重试
-        await fetchExamData(); // 递归调用
+        await fetchExamTimeData(); // 递归调用
     } else {
+        console.log("考试结束时间有效，开始倒计时...");
+        console.log("submittedExamTime.value.expected_end_time:");
+        console.log(submittedExamTime.value.expected_end_time);
+
         // 如果有效，调用方法进行后续处理
-        afterFetchSubmittedExam();
+        afterFetchSubmittedExamTime();
     }
 };
 
@@ -211,11 +234,19 @@ const afterFetchSubmittedExam = () => {
         console.log("paperId", paperId);
         fetchSubmittedPaper(paperId);
     }
-    // 设置倒计时的结束时间
-    console.log("submittedExam.value.expected_end_time");
-    console.log(submittedExam.value.expected_end_time);
+};
 
-    examEndTime.value = dayjs(submittedExam.value.expected_end_time as string);
+// 把获取时间数据后的操作也跟获取考试其他数据后的操作分开。
+const afterFetchSubmittedExamTime = () => {
+    // 设置倒计时的结束时间
+    console.log(
+        "submittedExamTime.value.expected_end_time in afterFetchSubmittedExamTime:"
+    );
+    console.log(submittedExamTime.value.expected_end_time);
+
+    examEndTime.value = dayjs(
+        submittedExamTime.value.expected_end_time as string
+    );
     // CAUTION: 这里dayjs里面的值如果是空的（例如undefined），就会返回当前时间。
 
     console.log("examEndTime:");
@@ -421,13 +452,13 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // 页面加载时调用
 onMounted(async () => {
-    await fetchExamData(); // 注意一定要加await，否则会导致后面的代码先执行。
+    await fetchSubmittedExam(); // 注意一定要加await，否则会导致后面的代码先执行。
+    await fetchExamTimeData(); //
     await nextTick(); // 等待组件渲染完成
     isClient.value = true; // 标记当前是客户端渲染（组件已经挂载）
 
-
-    console.log("submittedExam.value.expected_end_time：");
-    console.log(submittedExam.value.expected_end_time);
+    console.log("submittedExamTime.value.expected_end_time：");
+    console.log(submittedExamTime.value.expected_end_time);
 
     // 目前加上poll会有问题，暂时不用。
 
