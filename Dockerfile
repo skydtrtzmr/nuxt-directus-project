@@ -30,7 +30,7 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install
 
 # 安装完之后再把其他文件复制过去，可以加快构建速度
-COPY . ./
+COPY . ${APP_ROOT}
 # 注意此时docker中的路径已经在Workdir中，所以不需要指定路径
 RUN pnpm run build
 
