@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+// NOTE: 修改此文件后，需要重新执行pnpm build命令才会生效。
 
 import Aura from "@primevue/themes/aura";
 import Material from "@primevue/themes/material";
@@ -52,7 +53,7 @@ export default defineNuxtConfig({
     runtimeConfig: {
         public: {
             directus: {
-                url: "http://127.0.0.1:8055",
+                url: "http://127.0.0.1:8056",
             },
             isTest: process.env.NUXT_TEST === 'true', // 默认为false，如果是测试环境，则设置为true
         },
