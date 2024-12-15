@@ -17,11 +17,15 @@ ENV APP_ROOT ./nuxt-app
 RUN mkdir -p ${APP_ROOT}
 # COPY . ${APP_ROOT}
 WORKDIR ${APP_ROOT}
-EXPOSE 3031
+EXPOSE 3000
 
 COPY .output .output
 COPY package.json  package.json
 COPY pnpm-lock.yaml  pnpm-lock.yaml
 # 注意此时docker中的路径已经在Workdir中，所以不要指定路径
 
-CMD ["node", ".\.output\server\index.mjs"]
+# CMD ["node", ".\.output\server\index.mjs"]
+# 注意！上面这样写是不对的。
+# Docker 容器基于 Linux 或 Alpine Linux 等操作系统，在这些系统中路径分隔符应该使用 正斜杠（/）。
+
+CMD ["node", ".output/server/index.mjs"]

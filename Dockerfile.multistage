@@ -1,3 +1,5 @@
+# TODO 修改中，现在有bug。
+
 # 配置完成后，运行以下命令进行构建镜像：
 # docker build -t my-directus-client ./
 
