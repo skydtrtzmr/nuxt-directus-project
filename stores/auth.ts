@@ -49,12 +49,15 @@ export const useAuth = defineStore("auth", {
         // 刷新 token 的逻辑
         async refreshToken() {
             console.log("auth store refreshToken");
-            const { logout } = useDirectusAuth();
-
             try {
                 const { refreshTokens } = useDirectusToken();
                 const newToken = await refreshTokens();
-
+                // console.log(
+                //     "newToken:",
+                //     newToken?.access_token,
+                //     newToken?.refresh_token,
+                //     newToken?.expires
+                // );
                 if (newToken) {
                     // 更新 token
                     this.access_token = newToken.access_token; // 假设你能从 response 中获取新的 access_token
@@ -62,43 +65,47 @@ export const useAuth = defineStore("auth", {
                 }
             } catch (error) {
                 console.error("刷新 token 失败", error);
-                await logout();
-                // this.$reset(); // 如果刷新失败，清空状态
+                this.logout();
             }
         },
 
         async validateSession() {
-            const { logout } = useDirectusAuth();
-            try {
-                console.log("验证会话");
+            // 仅在客户端执行
+            if (import.meta.client) {
+                try {
+                    console.log("验证会话");
+                    console.log("当前时间：", new Date().toLocaleString());
 
-                // 检查用户是否仍然认证
-                const directusUser = useDirectusUser();
-                // 如果directusUser.value不存在，说明token无效
-                if (!directusUser.value) {
-                    this.$reset(); // 无效的token，重置状态
-                    console.log("token 无效，重置状态");
+                    // 检查用户是否仍然认证
+                    const directusUser = useDirectusUser();
+                    // console.log("directusUser:", directusUser);
+                    // console.log("directusUser.value:", directusUser.value);
+                    const { token, expires } = useDirectusToken();
 
+                    // console.log("token1:", token, expires);
+
+                    // 如果directusUser.value不存在，说明token无效
+                    if (!directusUser.value) {
+                        //  this.$reset(); // 无效的token，重置状态
+                        console.log("token 无效");
+                        return false; // 用户未登录或 token 已过期
+                    } else {
+                        console.log("token 有效，验证用户信息");
+                        // 如果 token 即将过期，尝试刷新 token
+                        // console.log("token2:", this.access_token, this.refresh_token);
+
+                        if (this.access_token && this.refresh_token) {
+                            // TODO 这里应该判断 token 是否即将过期，如果即将过期，则刷新 token
+                            console.log("token 即将过期，尝试刷新 token");
+                            await this.refreshToken();
+                        }
+                        return true; // 会话有效
+                    }
+                } catch (e) {
+                    console.error("验证会话失败", e);
+                    this.logout();
                     return false; // 用户未登录或 token 已过期
-                } // 如果用户信息存在，检查 token 是否有效
-                console.log("token 有效，验证用户信息");
-                // 如果 token 即将过期，尝试刷新 token
-                console.log("token:", this.access_token, this.refresh_token);
-
-                if (this.access_token && this.refresh_token) {
-                    // TODO 这里应该判断 token 是否即将过期，如果即将过期，则刷新 token
-                    console.log("token 即将过期，尝试刷新 token");
-                    await this.refreshToken();
                 }
-
-                // 如果用户验证成功，确保用户数据同步
-                await this.getUser();
-                return true; // 会话有效
-            } catch (e) {
-                console.error("验证会话失败", e);
-                this.$reset(); // 无法验证时，重置状态
-                await logout(); // 无效的token，退出登录
-                return false; // 用户未登录或 token 已过期
             }
         },
 
@@ -131,18 +138,22 @@ export const useAuth = defineStore("auth", {
                     const { id, email, first_name, last_name } =
                         directusUser.value;
                     this.user = { id, email, first_name, last_name };
-                }
-                // Update the auth store with the user data
-                this.loggedIn = true;
 
-                // 获取和保存 token 和 refreshToken
-                const { access_token, refresh_token } = loginResponse;
-                this.access_token = access_token; // 保存新的 access token
-                this.refresh_token = refresh_token; // 保存新的 refresh token
+                    // Update the auth store with the user data
+                    this.loggedIn = true;
 
-                // If there's a redirect, send the user there
-                if (redirect) {
-                    router.push(redirect);
+                    // 获取和保存 token 和 refreshToken
+                    const { access_token, refresh_token } = loginResponse;
+                    this.access_token = access_token; // 保存新的 access token
+                    this.refresh_token = refresh_token; // 保存新的 refresh token
+                    // If there's a redirect, send the user there
+                    if (redirect) {
+                        router.push(redirect);
+                    }
+                    console.log("auth store login success");
+                } else {
+                    console.error("auth store login failed");
+                    this.logout();
                 }
             } catch (e) {
                 console.error("登录失败", e);
@@ -152,9 +163,9 @@ export const useAuth = defineStore("auth", {
             }
         },
         async logout() {
+            console.log("auth store logout");
             const router = useRouter();
             const { logout } = useDirectusAuth();
-            console.log("auth store logout");
 
             try {
                 // Try to logout
@@ -168,20 +179,19 @@ export const useAuth = defineStore("auth", {
                 // If logout was successful, reset the auth store
                 this.$reset();
                 // Send the user back to the home page
-                router.push("/");
+                router.push("/auth/login");
             } catch (e) {
                 console.error("登出失败", e);
+                router.push("/auth/login");
                 throw new Error("Issue logging out! 登出失败！");
             }
         },
-        async getUser() {
-            console.log("auth store getUser");
+        async updateUser() {
+            console.log("auth store updateUser");
 
             try {
                 // Try to fetch the user data
                 const directusUser = useDirectusUser();
-                // Update the auth store with the user data
-                this.loggedIn = true;
                 if (directusUser.value) {
                     // 使用解构赋值提取所需的字段
                     const { id, email, first_name, last_name } =

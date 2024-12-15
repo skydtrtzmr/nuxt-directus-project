@@ -253,10 +253,6 @@ const auth = useAuth();
 const current_user = auth.user; // 获取当前用户
 console.log("current_user:\n", current_user);
 
-if (!current_user) {
-    router.push("/auth/login");
-}
-
 // 这两个控制能否参加考试的弹窗
 const not_started_dialog_visible = ref(false);
 const have_ended_dialog_visible = ref(false);

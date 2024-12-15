@@ -147,6 +147,12 @@ const model = ref([
     //     ]
     // }
 ]);
+
+
+const logout = () => {
+    auth.logout();
+};
+
 </script>
 
 <template>
@@ -179,6 +185,8 @@ const model = ref([
             <li v-if="item.separator" class="menu-separator"></li>
         </template>
     </ul>
+    
+    <Button @click="logout">登出</Button>
 </template>
 
 <style lang="scss" scoped></style>
