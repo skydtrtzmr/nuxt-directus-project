@@ -9,7 +9,8 @@
     "preview": "nuxt preview",
     "dev:test": "cross-env NUXT_TEST=true nuxt dev",
     "build:test": "cross-env NUXT_TEST=true nuxt build",
-    "preview:test": "cross-env NUXT_TEST=true nuxt preview"
+    "preview:test": "cross-env NUXT_TEST=true nuxt preview",
+    "start": "nuxt start"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.7.0",
