@@ -21,11 +21,18 @@ EXPOSE 3000
 
 COPY .output .output
 COPY package.json  package.json
-COPY pnpm-lock.yaml  pnpm-lock.yaml
+COPY ecosystem.config.cjs  ecosystem.config.cjs
 # 注意此时docker中的路径已经在Workdir中，所以不要指定路径
+
+RUN npm install pm2 -g
 
 # CMD ["node", ".\.output\server\index.mjs"]
 # 注意！上面这样写是不对的。
 # Docker 容器基于 Linux 或 Alpine Linux 等操作系统，在这些系统中路径分隔符应该使用 正斜杠（/）。
 
-CMD ["node", ".output/server/index.mjs"]
+# CMD ["node", ".output/server/index.mjs"]
+
+# 改成pm2启动服务
+# 注意：在使用pm2启动服务时，需要在Dockerfile中指定环境变量 HOST，否则会报错。
+
+CMD ["pm2-runtime", "start", "ecosystem.config.cjs"]
