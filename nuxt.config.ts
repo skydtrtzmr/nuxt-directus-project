@@ -53,9 +53,16 @@ export default defineNuxtConfig({
     runtimeConfig: {
         public: {
             directus: {
-                url: "http://127.0.0.1:8056",
+                // url: "http://127.0.0.1:8056",
+                url: process.env.DIRECTUS_URL,
+                // 注意，这里的url在build的时候就已经读取到了。
+                // 打包docker的时候，已经没有这个nuxt.config.ts文件了。
+                // 参考：https://nuxtjs.org.cn/docs/guide/directory-structure/env
+                // 所以，不要尝试直接用.env文件配置*生产环境*下的directus的url。
+                // 必须通过执行命令时给命令行传参的方式来配置。
             },
             isTest: process.env.NUXT_TEST === 'true', // 默认为false，如果是测试环境，则设置为true
+            // 这个NUXT_TEST我是直接在build时通过命令行传给环境变量的，所以可以通过process.env.NUXT_TEST来获取。
         },
     },
 

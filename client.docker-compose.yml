@@ -1,0 +1,10 @@
+# 这个是正式的directus-client的docker-compose.yml文件的备份。
+
+services:
+
+  directus-client:
+    image: skydtrtzmr/my-directus-client:latest
+    ports:
+      - 3001:3000
+    env_file:
+      - .env

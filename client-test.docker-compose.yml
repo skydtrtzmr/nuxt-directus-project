@@ -1,0 +1,10 @@
+# 这个是跑测试用的
+
+services:
+
+  directus-client:
+    image: skydtrtzmr/my-directus-client-test:latest
+    ports:
+      - 3003:3000
+    env_file:
+      - .env
