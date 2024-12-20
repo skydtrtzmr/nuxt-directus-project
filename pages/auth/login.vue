@@ -98,6 +98,7 @@ onMounted(async () => {
         console.log("isTest?");
         console.log(isTest);
         await nextTick(); // 通过nextTick来确保页面渲染完成，然后自动填充表单
+        await delay(2000);
         const dynamicIndex = await useFetch("/api/dynamic-script"); // 返回一个序号
         const { getUsers } = useDirectusUsers();
         const users = (await getUsers({

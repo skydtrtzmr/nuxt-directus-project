@@ -498,6 +498,7 @@ onMounted(async () => {
                     await delay(1000);
                     globalStore.setAllDone(false); // 重置全局 store 的 isAllDone 状态
                     confirm_submit_dialog_visible.value = false; // 关闭确认提交对话框
+                    await delay(1000);
                     confirmSubmit();
                 }
             }

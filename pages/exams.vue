@@ -438,6 +438,7 @@ onMounted(async () => {
     await fetchSubmittedExams(); // 注意要await！确保submittedExams.value已经被赋值
     if (isTest) {
         await nextTick(); // 确保 DOM 渲染完成
+        await delay(1000);
 
         // 筛选出标题为特定内容的循环项
         const targetItemTitle = "自动化测试专用考试"; // 需要筛选的标题

@@ -19,6 +19,7 @@
     "@primevue/themes": "^4.2.3",
     "chart.js": "3.3.2",
     "dayjs": "^1.11.13",
+    "ioredis": "^5.4.1",
     "nuxt": "^3.14.159",
     "nuxt-directus": "^5.6.1",
     "nuxt-svgo": "4.0.9",
