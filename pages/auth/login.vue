@@ -8,6 +8,7 @@ import { zodResolver } from "@primevue/forms/resolvers/zod";
 import { useToast } from "primevue/usetoast";
 import { z } from "zod";
 import type { DirectusUsers } from "~~/types/directus_types";
+import md5 from "md5"; // 用md5把邮箱转化成hash，用来设置延迟登录随机数
 
 definePageMeta({
     // middleware: ["auth"],
@@ -68,15 +69,40 @@ const onFormSubmit = ({ valid }: any) => {
 };
 
 const loginSubmit = async () => {
-    try {
-        await auth.login({ email: email.value, password: password.value });
-        // alert("登录成功！");
+    // 在这边加入分批登录延迟，避免短时间内大量请求导致服务器压力过大
+    // 根据email
 
-        router.push("/");
-    } catch (e) {
-        error_message = "登录信息错误！";
-        alert(error_message);
+    // 基于email生成延迟时间
+    function generateDelayFromEmail(email: string) {
+        // 使用md5算法生成email的哈希值
+        const hash = md5(email);
+
+        // 将哈希值转换为整数
+        const numericValue = parseInt(hash.substring(0, 8), 16); // 取哈希的前8位并转为16进制数字
+
+        // 控制延迟范围，可以在500ms - 2000ms之间
+        const minDelay = 500; // 最小延迟500ms
+        const maxDelay = 4000; // 最大延迟2000ms
+
+        // 将哈希值映射到延迟范围
+        const delay = minDelay + (numericValue % (maxDelay - minDelay));
+        return delay;
     }
+
+    const delayTime = generateDelayFromEmail(email.value); // 根据学生ID计算延迟时间
+    console.log(`延迟 ${email}: ${delayTime}ms`);
+
+    setTimeout(async () => {
+        try {
+            await auth.login({ email: email.value, password: password.value });
+            // alert("登录成功！");
+
+            router.push("/");
+        } catch (e) {
+            error_message = "登录信息错误！";
+            alert(error_message);
+        }
+    }, delayTime);
 };
 
 // 获取环境变量，确定是否运行测试
@@ -103,13 +129,7 @@ onMounted(async () => {
         const { getUsers } = useDirectusUsers();
         const users = (await getUsers({
             params: {
-                fields: [
-                    "id",
-                    "email",
-                    "first_name",
-                    "last_name",
-                    "password"
-                ],
+                fields: ["id", "email", "first_name", "last_name", "password"],
                 sort: "email",
                 filter: {
                     role: "0fcfa6da-9e38-4d73-acf5-c5585c0770f8",
