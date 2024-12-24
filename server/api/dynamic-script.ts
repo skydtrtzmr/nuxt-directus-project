@@ -1,6 +1,7 @@
 import Redis from 'ioredis';
 const redis = new Redis({
-    host: 'redis-container',  // 使用容器的名称
+    // host: 'redis-container',  // 在Docker中使用的话，这里使用容器的名称
+    host: '127.0.0.1',
     // 容器内部不能直接访问 127.0.0.1，因为 127.0.0.1 是指容器内部的本地网络地址
     port: 6379,
 });

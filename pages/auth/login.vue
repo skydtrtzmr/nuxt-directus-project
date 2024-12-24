@@ -82,7 +82,7 @@ const loginSubmit = async () => {
 
         // 控制延迟范围，可以在500ms - 2000ms之间
         const minDelay = 500; // 最小延迟500ms
-        const maxDelay = 4000; // 最大延迟2000ms
+        const maxDelay = 4000; // 最大延迟4000ms
 
         // 将哈希值映射到延迟范围
         const delay = minDelay + (numericValue % (maxDelay - minDelay));
@@ -90,7 +90,7 @@ const loginSubmit = async () => {
     }
 
     const delayTime = generateDelayFromEmail(email.value); // 根据学生ID计算延迟时间
-    console.log(`延迟 ${email}: ${delayTime}ms`);
+    console.log(`延迟 ${email.value}: ${delayTime}ms`);
 
     setTimeout(async () => {
         try {
@@ -249,7 +249,8 @@ onMounted(async () => {
                                     :feedback="false"
                                     :toggleMask="true"
                                     fluid
-                            /></InputGroup>
+                                ></Password>
+                            </InputGroup>
                             <Message
                                 v-if="$form.password?.invalid"
                                 severity="error"
