@@ -50,3 +50,4 @@ RUN npm install pm2 -g
 CMD ["pm2-runtime", "start", "ecosystem.config.cjs"]
 
 # 本次打包完client和client-test两个镜像后，就不再需要Dockerfile了，直接使用docker-compose来修改配置即可。
+# TODO 后续改为一个镜像，通过环境变量来区分运行模式。

@@ -6,25 +6,25 @@ import Material from "@primevue/themes/material";
 import Lara from "@primevue/themes/lara";
 import Nora from "@primevue/themes/Nora";
 
-import { definePreset } from '@primevue/themes';
+import { definePreset } from "@primevue/themes";
 
 const MyPreset = definePreset(Aura, {
     semantic: {
         // 在这里切换主题色
         primary: {
-            50: '{blue.50}',
-            100: '{blue.100}',
-            200: '{blue.200}',
-            300: '{blue.300}',
-            400: '{blue.400}',
-            500: '{blue.500}',
-            600: '{blue.600}',
-            700: '{blue.700}',
-            800: '{blue.800}',
-            900: '{blue.900}',
-            950: '{blue.950}'
-        }
-    }
+            50: "{blue.50}",
+            100: "{blue.100}",
+            200: "{blue.200}",
+            300: "{blue.300}",
+            400: "{blue.400}",
+            500: "{blue.500}",
+            600: "{blue.600}",
+            700: "{blue.700}",
+            800: "{blue.800}",
+            900: "{blue.900}",
+            950: "{blue.950}",
+        },
+    },
 });
 
 export default defineNuxtConfig({
@@ -59,11 +59,19 @@ export default defineNuxtConfig({
                 // 打包docker的时候，已经没有这个nuxt.config.ts文件了。
                 // 参考：https://nuxtjs.org.cn/docs/guide/directory-structure/env
                 // 所以，不要尝试直接用.env文件配置*生产环境*下的directus的url。
-                // 必须通过执行命令时给命令行传参的方式来配置。
+                // 必须通过执行命令时给命令行传参(NUXT_PUBLIC_DIRECTUS_URL="http://127.0.0.1:8056/")的方式来配置。
             },
-            isTest: process.env.NUXT_TEST === 'true', // 默认为false，如果是测试环境，则设置为true
+            // isTest: process.env.NUXT_TEST === 'true', // 默认为false，如果是测试环境，则设置为true
+            isTest: false, // 默认为false，如果是测试环境，则设置为true
             // 这个NUXT_TEST我是直接在build时通过命令行传给环境变量的，所以可以通过process.env.NUXT_TEST来获取。
+            // 但是最好不要在nuxt.config.ts文件中直接使用process.env.NUXT_TEST，因为这样会导致build后无法获取到环境变量。
+            // 最好通过命令行传参的方式来配置。
         },
+        private: {
+            // private意味着这些配置只能在服务器端代码中访问，不能在客户端代码中访问。
+            redisHost: '127.0.0.1',
+            redisPort: 6379,
+          },
     },
 
     directus: {
