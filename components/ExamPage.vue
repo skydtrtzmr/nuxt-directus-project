@@ -292,136 +292,139 @@ const fetchSubmittedPaper = async (paperId: string) => {
 
 // 获取提交的试卷的章节
 // 一次性获取所有章节及其关联的题目信息
-const fetchSubmittedChapterList = async (
-    chapters: SubmittedPaperChapters[]
-) => {
-    const chaptersResponse = await getItems<SubmittedPaperChapters>({
-        collection: "submitted_paper_chapters",
-        params: {
-            filter: {
-                id: { _in: chapters },
-            },
-            fields: [
-                "id",
-                "sort_in_paper",
-                "title",
-                "source_paper_prototype_chapter.title",
-                "submitted_questions.id",
-                "submitted_questions.sort_in_chapter",
-                "submitted_questions.option_number",
-                "submitted_questions.question_type",
-                // 注意要添加下面两个字段，否则教师查看时无法看到答题结果对错和得分。
-                "submitted_questions.point_value", // 分值
-                "submitted_questions.score", // 得分
-                "submitted_questions.submitted_ans_q_mc_single",
-                "submitted_questions.submitted_ans_q_mc_multi",
-                "submitted_questions.submitted_ans_q_mc_binary",
-                "submitted_questions.submitted_ans_q_mc_flexible",
-                "submitted_questions.question.q_mc_single.*",
-                "submitted_questions.question.q_mc_multi.*",
-                "submitted_questions.question.q_mc_binary.*",
-                "submitted_questions.question.q_mc_flexible.*",
-                "submitted_questions.question.question_group.*",
-                "submitted_questions.submitted_paper_chapter.source_paper_prototype_chapter",
-                "submitted_questions.submitted_paper_chapter.source_paper_prototype_chapter.id",
-                "submitted_questions.submitted_paper_chapter.source_paper_prototype_chapter.title",
-                "submitted_questions.submitted_paper_chapter.source_paper_prototype_chapter.description",
-            ],
-            sort: "sort_in_paper",
-        },
-    });
-    if (chaptersResponse) {
-        submittedPaperChapters.value = chaptersResponse;
-        console.log(
-            "submittedPaperChapters.value:",
-            submittedPaperChapters.value
-        );
-        // 默认选择第一个题目
-        selectedSubmittedQuestion.value =
-            chaptersResponse[0].submitted_questions[0];
-    }
-};
-
-// 把上面一次性获取所有章节及其关联的题目信息改成分批获取，避免一次性请求太多数据。
 // const fetchSubmittedChapterList = async (
 //     chapters: SubmittedPaperChapters[]
 // ) => {
-//     // 1. 首先获取章节的基本信息
 //     const chaptersResponse = await getItems<SubmittedPaperChapters>({
 //         collection: "submitted_paper_chapters",
 //         params: {
 //             filter: {
-//                 id: { _in: chapters }, // 获取章节ID列表
+//                 id: { _in: chapters },
 //             },
 //             fields: [
 //                 "id",
 //                 "sort_in_paper",
 //                 "title",
 //                 "source_paper_prototype_chapter.title",
-//                 // 你还可以根据需要添加更多字段
+//                 "submitted_questions.id",
+//                 "submitted_questions.sort_in_chapter",
+//                 "submitted_questions.option_number",
+//                 "submitted_questions.question_type",
+//                 // 注意要添加下面两个字段，否则教师查看时无法看到答题结果对错和得分。
+//                 "submitted_questions.point_value", // 分值
+//                 "submitted_questions.score", // 得分
+//                 "submitted_questions.submitted_ans_q_mc_single",
+//                 "submitted_questions.submitted_ans_q_mc_multi",
+//                 "submitted_questions.submitted_ans_q_mc_binary",
+//                 "submitted_questions.submitted_ans_q_mc_flexible",
+//                 "submitted_questions.question.q_mc_single.*",
+//                 "submitted_questions.question.q_mc_multi.*",
+//                 "submitted_questions.question.q_mc_binary.*",
+//                 "submitted_questions.question.q_mc_flexible.*",
+//                 "submitted_questions.question.question_group.*",
+//                 "submitted_questions.submitted_paper_chapter.source_paper_prototype_chapter",
+//                 "submitted_questions.submitted_paper_chapter.source_paper_prototype_chapter.id",
+//                 "submitted_questions.submitted_paper_chapter.source_paper_prototype_chapter.title",
+//                 "submitted_questions.submitted_paper_chapter.source_paper_prototype_chapter.description",
 //             ],
-//             sort: "sort_in_paper", // 排序方式
+//             sort: "sort_in_paper",
 //         },
 //     });
-
-//     // 2. 获取章节数据
-//     const chapterList = chaptersResponse;
-
-//     // 3. 根据章节ID分批加载题目数据
-//     const questionsPromises = chapterList.map((chapter) => {
-//         return getItems<SubmittedQuestions>({
-//             collection: "submitted_questions",
-//             params: {
-//                 filter: { submitted_paper_chapter: chapter.id },
-//                 fields: [
-//                     "id",
-//                     "sort_in_chapter",
-//                     "option_number",
-//                     "question_type",
-//                     "point_value",
-//                     "score",
-//                     "submitted_ans_q_mc_single",
-//                     "submitted_ans_q_mc_multi",
-//                     "submitted_ans_q_mc_binary",
-//                     "submitted_ans_q_mc_flexible",
-//                     "question.q_mc_single.*",
-//                     "question.q_mc_multi.*",
-//                     "question.q_mc_binary.*",
-//                     "question.q_mc_flexible.*",
-//                     "question.question_group.*",
-//                 ],
-//                 sort: "sort_in_chapter",
-//             },
-//         });
-//     });
-
-//     // 4. 等待所有请求完成
-//     const questionsResponses = await Promise.all(questionsPromises);
-
-//     console.log("questionsResponses:", questionsResponses);
-
-//     // 5. 合并题目数据到章节数据中
-//     chapterList.forEach((chapter, index) => {
-//         chapter.submitted_questions = questionsResponses[index]; // 将题目数据嵌入章节对象
-//     });
-
-//     console.log("chapterList:", chapterList);
-
-//     // 6. 返回合并后的章节列表
 //     if (chaptersResponse) {
-//         submittedPaperChapters.value = chapterList;
+//         submittedPaperChapters.value = chaptersResponse;
 //         console.log(
 //             "submittedPaperChapters.value:",
 //             submittedPaperChapters.value
 //         );
 //         // 默认选择第一个题目
-//         selectedSubmittedQuestion.value = chapterList[0].submitted_questions[0];
-//         console.log(
-//             "selectedSubmittedQuestion.value:",
-//             selectedSubmittedQuestion.value
-//         );
+//         selectedSubmittedQuestion.value =
+//             chaptersResponse[0].submitted_questions[0];
 //     }
 // };
+
+// 把上面一次性获取所有章节及其关联的题目信息改成分批获取，避免一次性请求太多数据。
+const fetchSubmittedChapterList = async (
+    chapters: SubmittedPaperChapters[]
+) => {
+    // 1. 首先获取章节的基本信息
+    const chaptersResponse = await getItems<SubmittedPaperChapters>({
+        collection: "submitted_paper_chapters",
+        params: {
+            filter: {
+                id: { _in: chapters }, // 获取章节ID列表
+            },
+            fields: [
+                "id",
+                "sort_in_paper",
+                "title",
+                "source_paper_prototype_chapter.title",
+                // 你还可以根据需要添加更多字段
+            ],
+            sort: "sort_in_paper", // 排序方式
+        },
+    });
+
+    // 2. 获取章节数据
+    const chapterList = chaptersResponse;
+
+    // 3. 根据章节ID分批加载题目数据
+    const questionsPromises = chapterList.map((chapter) => {
+        return getItems<SubmittedQuestions>({
+            collection: "submitted_questions",
+            params: {
+                filter: { submitted_paper_chapter: chapter.id },
+                fields: [
+                    "id",
+                    "sort_in_chapter",
+                    "option_number",
+                    "question_type",
+                    "point_value",
+                    "score",
+                    "submitted_ans_q_mc_single",
+                    "submitted_ans_q_mc_multi",
+                    "submitted_ans_q_mc_binary",
+                    "submitted_ans_q_mc_flexible",
+                    "question.q_mc_single.*",
+                    "question.q_mc_multi.*",
+                    "question.q_mc_binary.*",
+                    "question.q_mc_flexible.*",
+                    "question.question_group.*",
+                    "submitted_paper_chapter.source_paper_prototype_chapter.id",
+                    "submitted_paper_chapter.source_paper_prototype_chapter.title",
+                    "submitted_paper_chapter.source_paper_prototype_chapter.description",
+                ],
+                sort: "sort_in_chapter",
+            },
+        });
+    });
+
+    // 4. 等待所有请求完成
+    const questionsResponses = await Promise.all(questionsPromises);
+
+    console.log("questionsResponses:", questionsResponses);
+
+    // 5. 合并题目数据到章节数据中
+    chapterList.forEach((chapter, index) => {
+        chapter.submitted_questions = questionsResponses[index]; // 将题目数据嵌入章节对象
+    });
+
+    console.log("chapterList:", chapterList);
+
+    // 6. 返回合并后的章节列表
+    if (chaptersResponse) {
+        submittedPaperChapters.value = chapterList;
+        console.log(
+            "submittedPaperChapters.value:",
+            submittedPaperChapters.value
+        );
+        // 默认选择第一个题目
+        selectedSubmittedQuestion.value = chapterList[0].submitted_questions[0];
+        console.log(
+            "selectedSubmittedQuestion.value:",
+            selectedSubmittedQuestion.value
+        );
+    }
+};
 
 // 获取题目数据
 // 注意，需要按照题目在章节中的顺序排序
