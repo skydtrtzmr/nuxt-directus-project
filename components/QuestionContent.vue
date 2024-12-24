@@ -48,8 +48,6 @@ const props = defineProps<{
     exam_page_mode: string;
 }>();
 
-console.log("props.selectedSubmittedQuestion in QuestionContent.vue", props.selectedSubmittedQuestion);
-
 const { updateItem } = useDirectusItems();
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 

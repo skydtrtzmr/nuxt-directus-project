@@ -579,7 +579,7 @@ onMounted(async () => {
     }
 
     const delayTime = generateDelayFromEmail(email.value); // 根据学生ID计算延迟时间
-    console.log(`延迟 ${email.value}: ${delayTime}ms`);
+    console.log(`延迟加载考试数据 ${email.value}: ${delayTime}ms`);
 
     await fetchSubmittedExam(); // 注意一定要加await，否则会导致后面的代码先执行。
     await fetchExamTimeData(); //
