@@ -70,6 +70,10 @@ const props = defineProps<{
     selectedSubmittedQuestion: SubmittedQuestions;
     exam_page_mode: string;
 }>();
+
+console.log("props.selectedSubmittedQuestion:", props.selectedSubmittedQuestion);
+
+
 </script>
 
 <style scoped>
