@@ -5,9 +5,7 @@
         <p v-if="isClient">
             当前时间: {{ dayjs().format("YYYY-MM-DD HH:mm:ss") }}
         </p>
-        <p v-if="!isClient">
-            当前时间: {{ dayjs().format("YYYY-MM-DD HH:mm:ss") }}
-        </p>
+        <p v-if="!isClient">当前时间: 结束时间: 计算中……</p>
         <p v-if="isClient">
             结束时间:
             {{ dayjs(examEndTime).format("YYYY-MM-DD HH:mm:ss") }}

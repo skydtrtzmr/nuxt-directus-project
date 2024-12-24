@@ -100,8 +100,15 @@ import type {
     SubmittedQuestions,
     Exams,
 } from "~~/types/directus_types";
+import md5 from "md5";
+import { useAuth } from "~~/stores/auth";
 
 import { useGlobalStore } from "@/stores/examDone"; // 引入 Pinia store
+
+
+const auth = useAuth();
+const { user } = storeToRefs(auth); // 获取store里的user数据，用于根据邮箱设置延迟。
+const email = ref(user.value?.email || "");
 
 const globalStore = useGlobalStore(); // 创建 Pinia store 实例
 
@@ -554,6 +561,26 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // 页面加载时调用
 onMounted(async () => {
+        // 基于email生成延迟时间
+        function generateDelayFromEmail(email: string) {
+        // 使用md5算法生成email的哈希值
+        const hash = md5(email);
+
+        // 将哈希值转换为整数
+        const numericValue = parseInt(hash.substring(0, 8), 16); // 取哈希的前8位并转为16进制数字
+
+        // 控制延迟范围，可以在500ms - 2000ms之间
+        const minDelay = 500; // 最小延迟500ms
+        const maxDelay = 3000; // 最大延迟3000ms
+
+        // 将哈希值映射到延迟范围
+        const delay = minDelay + (numericValue % (maxDelay - minDelay));
+        return delay;
+    }
+
+    const delayTime = generateDelayFromEmail(email.value); // 根据学生ID计算延迟时间
+    console.log(`延迟 ${email.value}: ${delayTime}ms`);
+
     await fetchSubmittedExam(); // 注意一定要加await，否则会导致后面的代码先执行。
     await fetchExamTimeData(); //
     await nextTick(); // 等待组件渲染完成

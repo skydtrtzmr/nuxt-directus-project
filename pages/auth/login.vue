@@ -61,7 +61,7 @@ const onFormSubmit = ({ valid }: any) => {
     if (valid) {
         toast.add({
             severity: "success",
-            summary: "登录成功！",
+            summary: "登录成功！正在跳转...",
             life: 3000,
         });
         loginSubmit();
@@ -70,7 +70,6 @@ const onFormSubmit = ({ valid }: any) => {
 
 const loginSubmit = async () => {
     // 在这边加入分批登录延迟，避免短时间内大量请求导致服务器压力过大
-    // 根据email
 
     // 基于email生成延迟时间
     function generateDelayFromEmail(email: string) {
@@ -82,7 +81,7 @@ const loginSubmit = async () => {
 
         // 控制延迟范围，可以在500ms - 2000ms之间
         const minDelay = 500; // 最小延迟500ms
-        const maxDelay = 4000; // 最大延迟4000ms
+        const maxDelay = 3000; // 最大延迟3000ms
 
         // 将哈希值映射到延迟范围
         const delay = minDelay + (numericValue % (maxDelay - minDelay));
