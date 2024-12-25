@@ -5,7 +5,6 @@ import Aura from "@primevue/themes/aura";
 import Material from "@primevue/themes/material";
 import Lara from "@primevue/themes/lara";
 import Nora from "@primevue/themes/Nora";
-
 import { definePreset } from "@primevue/themes";
 
 const MyPreset = definePreset(Aura, {
@@ -50,6 +49,14 @@ export default defineNuxtConfig({
         "pinia-plugin-persistedstate/nuxt",
     ],
 
+    hooks: {
+        // Nuxt Hooks (build time)写在nuxt.config.ts中或nuxt modules中
+        // 仅在构建时执行，所以不存在服务器启动时执行的情况。
+        ready: () => {
+            console.log("ready");
+        },
+    },
+
     runtimeConfig: {
         public: {
             directus: {
@@ -69,9 +76,9 @@ export default defineNuxtConfig({
         },
         private: {
             // private意味着这些配置只能在服务器端代码中访问，不能在客户端代码中访问。
-            redisHost: '127.0.0.1',
+            redisHost: "127.0.0.1",
             redisPort: 6379,
-          },
+        },
     },
 
     directus: {

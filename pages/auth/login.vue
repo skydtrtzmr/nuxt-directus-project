@@ -123,6 +123,8 @@ onMounted(async () => {
         await nextTick(); // 通过nextTick来确保页面渲染完成，然后自动填充表单
         await delay(2000);
         const fetchCurrentUser = await useFetch("/api/dynamic-script"); // 返回一个序号
+        console.log("fetchCurrentUser: ", fetchCurrentUser);
+        
         
         const currentUser = fetchCurrentUser.data.value;
         if (! currentUser) {

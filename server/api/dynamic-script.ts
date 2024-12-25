@@ -1,7 +1,7 @@
-import Redis from "ioredis";
-// import axios from "axios";
-import type { DirectusUsers } from "~~/types/directus_types";
 import { createDirectus, rest, readUsers } from "@directus/sdk";
+import type { DirectusUsers } from "~~/types/directus_types";
+import Redis from "ioredis";
+import { set } from "zod";
 
 const {
     public: {
@@ -10,52 +10,7 @@ const {
     private: { redisHost, redisPort },
 } = useRuntimeConfig();
 
-// Client with REST support
-const directus_client = createDirectus(url).with(rest());
-
-let users: DirectusUsers[] = [];
-
-async function fetchUsers() {
-    const result = (await directus_client.request(
-        readUsers({
-            fields: ["id,email"],
-            sort: "email",
-            filter: { role: { _eq: "0fcfa6da-9e38-4d73-acf5-c5585c0770f8" } },
-        })
-    )) as DirectusUsers[];
-    console.log("users: ", result);
-    users = result;
-}
-
-fetchUsers();
-
-// Axios用了会报错，暂时不用
-// const axios_instance = axios.create({
-//     baseURL: url,
-// });
-
-// console.log("baseURL: ", url);
-
-// async function fetchUsers() {
-//     const response = await axios_instance.get(
-//         // `/users?fields=id,email&sort=email&filter[role][_eq]=0fcfa6da-9e38-4d73-acf5-c5585c0770f8`
-//         `/users`,
-//         {
-//             params: {
-//                 fields: "id,email",
-//                 sort: "email",
-//                 filter: {
-//                     role: {
-//                         _eq: "0fcfa6da-9e38-4d73-acf5-c5585c0770f8",
-//                     },
-//                 },
-//             },
-//         }
-//     );
-//     users = response.data.data;
-// }
-
-// fetchUsers();
+console.log("测试环境，自动脚本获取用户数据并存储到 Redis");
 
 const redis = new Redis({
     // host: 'redis-container',  // 在Docker中使用的话，这里使用容器的名称
@@ -67,16 +22,60 @@ const redis = new Redis({
 
 console.log("连接 Redis 成功");
 
+let usersArray: DirectusUsers[] = [];
 
 // 在 Redis 中设置一个计数器并通过 Redis 的 INCR 命令来确保每次请求都会自动递增：
 export default defineEventHandler(async (event) => {
     // 从 Redis 获取并递增 userIndex
     let userIndex = await redis.incr("user_index");
+
+    // 如果是第一次请求，则获取用户数据并将用户数据存储到 Redis。之后的请求都直接从 Redis 中获取用户数据。
+    async function setUsers() {
+        let users: DirectusUsers[] = [];
+
+        const directus_url = url || "http://127.0.0.1:8056";
+        const directus_client = createDirectus(directus_url).with(rest());
+        console.log("directus_url: ", directus_url);
+        
+        // TODO 这边要分页获取然后合并列表，因为一次请求只能获取 200 条数据
+        const result = (await directus_client.request(
+            readUsers({
+                fields: ["id,email"],
+                sort: "email",
+                filter: {
+                    role: {
+                        _eq: "0fcfa6da-9e38-4d73-acf5-c5585c0770f8",
+                    },
+                },
+            })
+        )) as DirectusUsers[];
+        console.log("users: ", result);
+        users = result;
+
+        // 将用户数据存储到 Redis（使用 JSON.stringify 进行序列化）
+        redis.set("users", JSON.stringify(users));
+    }
+
+    const users = await redis.get("users");
+
+    console.log("获取 users:", users);
+    // 把redis中的数据转换成数组
+    if (users && users.length > 0) {
+        console.log("users is not null");
+        
+        usersArray = JSON.parse(users);
+    } else {
+        console.log("users is null, set users");
+        
+        await setUsers();
+        const users = await redis.get("users");
+        usersArray = JSON.parse(users!);
+    }
+
     console.log("userIndex: ", userIndex);
-    let currentUser = users[userIndex - 1] as DirectusUsers;
+    let currentUser = usersArray[userIndex - 1] as DirectusUsers;
     return currentUser;
 });
-// redis的incr命令会在key不存在时，自动创建key并设置值为1，然后递增key的值，返回递增后的值。
 
 // let userIndex = 0; // 计数器
 
