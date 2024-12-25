@@ -10,11 +10,13 @@
     "start": "nuxt start"
   },
   "dependencies": {
+    "@directus/sdk": "^18.0.3",
     "@pinia/nuxt": "^0.7.0",
     "@primevue/core": "^4.2.4",
     "@primevue/forms": "^4.2.4",
     "@primevue/themes": "^4.2.3",
     "@types/md5": "^2.3.5",
+    "axios": "^1.7.9",
     "chart.js": "3.3.2",
     "dayjs": "^1.11.13",
     "ioredis": "^5.4.1",

@@ -120,23 +120,15 @@ onMounted(async () => {
     console.log(isTest);
     // 这里仅供测试用!
     if (isTest) {
-        console.log("isTest?");
-        console.log(isTest);
         await nextTick(); // 通过nextTick来确保页面渲染完成，然后自动填充表单
         await delay(2000);
-        const dynamicIndex = await useFetch("/api/dynamic-script"); // 返回一个序号
-        const { getUsers } = useDirectusUsers();
-        const users = (await getUsers({
-            params: {
-                fields: ["id", "email", "first_name", "last_name", "password"],
-                sort: "email",
-                filter: {
-                    role: "0fcfa6da-9e38-4d73-acf5-c5585c0770f8",
-                },
-            },
-        })) as DirectusUsers[];
-
-        let currentUser = users[(dynamicIndex.data.value as number) - 1];
+        const fetchCurrentUser = await useFetch("/api/dynamic-script"); // 返回一个序号
+        
+        const currentUser = fetchCurrentUser.data.value;
+        if (! currentUser) {
+            return alert("获取当前用户失败！");
+        }
+        
         console.log("当前用户", currentUser);
 
         await nextTick(); // 通过nextTick来确保页面渲染完成，然后自动填充表单
