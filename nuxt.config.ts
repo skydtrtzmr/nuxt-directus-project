@@ -47,7 +47,14 @@ export default defineNuxtConfig({
             },
         ],
         "pinia-plugin-persistedstate/nuxt",
+        "nuxt-vite-legacy", // 兼容旧版本浏览器
     ],
+
+    // 这个是给nuxt-vite-legacy用的，用来兼容旧版本浏览器
+    legacy: {
+        targets: ["chrome 69", "chrome 84"],
+        modernPolyfills: ["es.global-this", "es.string.replace-all"],
+    },
 
     hooks: {
         // Nuxt Hooks (build time)写在nuxt.config.ts中或nuxt modules中
