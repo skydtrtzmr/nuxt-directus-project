@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
         console.log("directus_url: ", directus_url);
         
         // TODO 这边要分页获取然后合并列表，因为一次请求只能获取 200 条数据
-        const result = (await directus_client.request(
+        const result_page1 = (await directus_client.request(
             readUsers({
                 fields: ["id,email"],
                 sort: "email",
@@ -47,8 +47,57 @@ export default defineEventHandler(async (event) => {
                         _eq: "0fcfa6da-9e38-4d73-acf5-c5585c0770f8",
                     },
                 },
+                page: 1,
             })
         )) as DirectusUsers[];
+
+        console.log("result_page1: ", result_page1);
+
+        const result_page2 = (await directus_client.request(
+            readUsers({
+                fields: ["id,email"],
+                sort: "email",
+                filter: {
+                    role: {
+                        _eq: "0fcfa6da-9e38-4d73-acf5-c5585c0770f8",
+                    },
+                },
+                page: 2,
+            })
+        )) as DirectusUsers[];
+
+        console.log("result_page2: ", result_page2);
+
+        const result_page3 = (await directus_client.request(
+            readUsers({
+                fields: ["id,email"],
+                sort: "email",
+                filter: {
+                    role: {
+                        _eq: "0fcfa6da-9e38-4d73-acf5-c5585c0770f8",
+                    },
+                },
+                page: 3,
+            })
+        )) as DirectusUsers[];
+        console.log("result_page3: ", result_page3);
+
+        const result_page4 = (await directus_client.request(
+            readUsers({
+                fields: ["id,email"],
+                sort: "email",
+                filter: {
+                    role: {
+                        _eq: "0fcfa6da-9e38-4d73-acf5-c5585c0770f8",
+                    },
+                },
+                page: 4,
+            })
+        )) as DirectusUsers[];
+        console.log("result_page4: ", result_page4);
+
+        const result = result_page1.concat(result_page2, result_page3, result_page4);
+
         console.log("users: ", result);
         users = result;
 

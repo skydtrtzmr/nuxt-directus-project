@@ -54,6 +54,7 @@ export default defineNuxtConfig({
     legacy: {
         targets: ["chrome 69", "chrome 84"],
         modernPolyfills: ["es.global-this", "es.string.replace-all"],
+        // 这里引入的文件参见这里：https://unpkg.com/browse/core-js@3.39.0/
     },
 
     hooks: {
