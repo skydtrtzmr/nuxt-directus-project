@@ -50,12 +50,18 @@ export default defineNuxtConfig({
         "nuxt-vite-legacy", // 兼容旧版本浏览器
     ],
 
+    plugins: [
+        '~/plugins/redis.server.ts',
+    ],
+
     // 这个是给nuxt-vite-legacy用的，用来兼容旧版本浏览器
     legacy: {
         targets: ["chrome 69", "chrome 84"],
         modernPolyfills: ["es.global-this", "es.string.replace-all"],
         // 这里引入的文件参见这里：https://unpkg.com/browse/core-js@3.39.0/
     },
+    // 如果报错：'legacy' does not exist in type 'InputConfig<NuxtConfig, ConfigLayerMeta>' 的话，
+    // 运行nuxt build，这个参数就不会报错了。
 
     hooks: {
         // Nuxt Hooks (build time)写在nuxt.config.ts中或nuxt modules中

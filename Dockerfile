@@ -1,5 +1,4 @@
 # 配置完成后，运行以下命令进行构建镜像：
-# docker build -t my-directus-client ./
 
 # 打包客户端（client）：
 # pnpm build

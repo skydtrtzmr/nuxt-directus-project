@@ -28,7 +28,7 @@ let usersArray: DirectusUsers[] = [];
 export default defineEventHandler(async (event) => {
     // 从 Redis 获取并递增 userIndex
     let userIndex = await redis.incr("user_index");
-
+    
     // 如果是第一次请求，则获取用户数据并将用户数据存储到 Redis。之后的请求都直接从 Redis 中获取用户数据。
     async function setUsers() {
         let users: DirectusUsers[] = [];
@@ -125,6 +125,7 @@ export default defineEventHandler(async (event) => {
     let currentUser = usersArray[userIndex - 1] as DirectusUsers;
     return currentUser;
 });
+
 
 // let userIndex = 0; // 计数器
 
