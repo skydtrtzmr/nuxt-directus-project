@@ -4,9 +4,8 @@
 # 项目默认名称是项目所在文件夹的名称。
 
 # 每次执行，都会重新读取.env文件中的环境变量，并覆盖原有值。
-# 但是请注意，nuxt项目的生产环境不会受到.env文件中环境变量的影响。
-# 如果想在生产环境中设置环境变量，请使用终端将环境变量作为参数传递，例如：
-# $ DATABASE_HOST=mydatabaseconnectionstring node .output/server/index.mjs
+# 但是请注意，nuxt项目的生产环境不会随便受到.env文件中环境变量的影响。
+# 只有前缀为NUXT_的环境变量才会被nuxt项目使用。
 
 # docker compose up的时候，如果设置了env_file，则会自动读取.env文件中的环境变量。
 
@@ -15,7 +14,7 @@
 services:
 
   directus-client:
-    image: skydtrtzmr/my-directus-client:latest
+    image: skydtrtzmr/my-directus-client:1.0.0
     ports:
       - 3001:3000
     env_file:
@@ -24,3 +23,7 @@ services:
     image: redis:6
     ports:
       - 6379:6379
+
+
+# 注意：
+# 

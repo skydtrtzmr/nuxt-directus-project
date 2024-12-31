@@ -20,6 +20,9 @@ const redis = new Redis({
     port: redisPort || 6379,
 });
 
+console.log("redisHost:", redisHost);
+
+
 console.log("连接 Redis 成功");
 
 let usersArray: DirectusUsers[] = [];

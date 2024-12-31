@@ -4,9 +4,6 @@
 # pnpm build
 # docker build -t skydtrtzmr/my-directus-client ./
 
-# 打包客户端-测试用（client-test）：
-# pnpm build:test
-# docker build -t skydtrtzmr/my-directus-client-test ./
 
 # 其实有两种方式构建镜像：
 # 1. 直接在Dockerfile中指定依赖，然后使用RUN命令安装依赖，最后使用COPY命令复制代码，最后使用CMD命令启动服务。
