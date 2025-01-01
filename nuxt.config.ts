@@ -51,7 +51,7 @@ export default defineNuxtConfig({
     ],
 
     plugins: [
-        '~/plugins/redis.server.ts',
+        // '~/plugins/redis.server.ts',
     ],
 
     // 这个是给nuxt-vite-legacy用的，用来兼容旧版本浏览器
