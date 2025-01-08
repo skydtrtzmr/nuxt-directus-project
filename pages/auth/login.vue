@@ -81,7 +81,7 @@ const loginSubmit = async () => {
 
         // 控制延迟范围，可以在500ms - 2000ms之间
         const minDelay = 500; // 最小延迟500ms
-        const maxDelay = 3000; // 最大延迟3000ms
+        const maxDelay = 2000; // 最大延迟2000ms
 
         // 将哈希值映射到延迟范围
         const delay = minDelay + (numericValue % (maxDelay - minDelay));
@@ -122,7 +122,7 @@ onMounted(async () => {
     if (isTest) {
         await nextTick(); // 通过nextTick来确保页面渲染完成，然后自动填充表单
         await delay(2000);
-        const fetchCurrentUser = await useFetch("/api/dynamic-script"); // 返回一个序号
+        const fetchCurrentUser = await useFetch("/api/dynamic-script"); // 返回一个用户
         console.log("fetchCurrentUser: ", fetchCurrentUser);
         
         

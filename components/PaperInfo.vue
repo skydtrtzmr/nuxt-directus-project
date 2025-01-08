@@ -9,7 +9,7 @@
             <h3>{{ submittedPaper.source_paper_prototype.title }}</h3>
             <p>
                 试卷总分:
-                {{ submittedPaper.source_paper_prototype.total_point_value }}
+                {{ submittedPaper.point_value }}
             </p>
         </div>
     </div>

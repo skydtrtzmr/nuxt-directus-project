@@ -43,6 +43,11 @@ import QMcSingle from "~/components/question_type/QMcSingle.vue";
 import QMcMulti from "./question_type/QMcMulti.vue";
 import QMcBinary from "./question_type/QMcBinary.vue";
 import QMcFlexible from "./question_type/QMcFlexible.vue";
+import { useLoadingStateStore } from "@/stores/loadingState";
+
+
+const loadingStateStore = useLoadingStateStore();
+
 const props = defineProps<{
     selectedSubmittedQuestion: SubmittedQuestions;
     exam_page_mode: string;
@@ -128,21 +133,19 @@ onMounted(async () => {
     if (isTest && props.exam_page_mode !== "review") {
         await nextTick();
         // 先等一会儿，等数据加载完毕，等QuestionList组件选中题目。
-        await delay(2000);
 
-        // 先把第一题做了。第一题的时候没有发生变化所以不会触发watch。
-        if (Object.keys(props.selectedSubmittedQuestion).length !== 0) {
-            await autoAnswer();
-        }
+        // [2025-01-07] 注意，测试发现有时候会先触发了QuestionList中的setAllDone，
+        // 然后才触发下面的autoAnswer，导致提交空白试卷，但是点回review时又会发现做了第一题。
 
         watch(
             () => props.selectedSubmittedQuestion,
             async () => {
                 // 判断对象是否为空。注意不要直接用!== null，没用的，{}也不是null。
-                if (Object.keys(props.selectedSubmittedQuestion).length !== 0) {
+                if (loadingStateStore.checkComponentReady("examPage") && Object.keys(props.selectedSubmittedQuestion).length !== 0) {
                     await autoAnswer();
                 }
-            }
+            },
+            { immediate: true }
             // 下面是检测到题目变化时，进行的操作
         );
     }

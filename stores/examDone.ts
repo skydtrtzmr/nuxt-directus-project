@@ -1,4 +1,4 @@
-// stores/useGlobalStore.ts
+// stores/examDone.ts
 import { defineStore } from "pinia";
 
 export const useGlobalStore = defineStore("global", {

@@ -14,11 +14,11 @@
 services:
 
   directus-client:
-    image: skydtrtzmr/my-directus-client:1.0.1
+    image: skydtrtzmr/my-directus-client:latest
     ports:
       - 3001:3000
     env_file:
-      - .env
+      - .env.production
   redis-container:
     image: redis:6
     ports:

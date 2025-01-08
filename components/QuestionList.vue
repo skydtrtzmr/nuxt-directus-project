@@ -57,6 +57,7 @@ import type {
     SubmittedQuestions,
 } from "~~/types/directus_types";
 import { useGlobalStore } from "~~/stores/examDone"; // 引入 Pinia store
+import { useLoadingStateStore } from "@/stores/loadingState"; // 引入 Pinia store
 
 const props = defineProps<{
     submittedPaperChapters: SubmittedPaperChapters[];
@@ -64,6 +65,8 @@ const props = defineProps<{
     selectedSubmittedQuestion: SubmittedQuestions | null;
     exam_page_mode: string;
 }>();
+
+const loadingStateStore = useLoadingStateStore();
 
 const globalStore = useGlobalStore(); // 创建 Pinia store 实例
 
@@ -107,26 +110,127 @@ onMounted(async () => {
     // Only for testing
     if (isTest && props.exam_page_mode !== "review") {
         await nextTick();
-        console.log("测试自动操作脚本开始。");
+
+        // [2025-01-07]
+        // 注意！props.submittedPaperChapters可能为空数组，因为有时候由于网络问题，没有成功获取到数据。
+        // 所以一定要等到数据加载完毕后再开始测试自动操作。
+
+        // 等待父组件数据加载完毕
+        // if (!props.submittedPaperChapters || props.submittedPaperChapters.length === 0) {
+        //     console.log("数据尚未加载完毕，等待数据...");
+        //     return; // 或者可以加上延时再重新检查
+        // }
+
+        
+        // 等待所有依赖组件加载完毕
+
+        console.log("父组件加载完成，开始执行自动切换题目...");
+
+        // 其实加上状态判断之后，这里就可以不用watch了。
+        watch(
+            // () => loadingStateStore.checkComponentReady("examPage"),
+            () => props.submittedPaperChapters,
+            // async (isReady) => {
+            //     console.log("开始执行watch监听");
+            //     console.log('props.submittedPaperChapters:', props.submittedPaperChapters);
+
+            //     if (
+            //         // isReady &&
+            //         props.submittedPaperChapters &&
+            //         props.submittedPaperChapters.length > 0
+            //     ) {
+            //         // 仅在数据加载完毕后才开始测试
+            //         for (
+            //             let i = 0;
+            //             i < props.submittedPaperChapters.length;
+            //             i++
+            //         ) {
+            //             const chapter = props.submittedPaperChapters[i];
+            //             await delay(1000);
+            //             for (
+            //                 let j = 0;
+            //                 j < chapter.submitted_questions.length;
+            //                 j++
+            //             ) {
+            //                 await delay(2000);
+            //                 const question = chapter.submitted_questions[j];
+            //                 handleQuestionClick(question);
+            //                 await delay(1000); // 点击完成之后，要留一点时间等待答题操作
+            //             }
+            //             await delay(1000);
+            //         }
+
+            //         await delay(1000);
+            //         globalStore.setAllDone(true); // 全部做完后，设置全局状态为已完成
+            //         // 做题完成后点击提交试卷。
+            //     } else {
+            //         console.log("数据还未加载完毕，继续等待...");
+            //     }
+            // },
+            async (newChapters) => {
+                console.log("开始执行watch监听");
+                console.log('props.submittedPaperChapters:', props.submittedPaperChapters);
+                console.log('newChapters:', newChapters);
+                
+
+                if (
+                    // isReady &&
+                    newChapters &&
+                    newChapters.length > 0
+                ) {
+                    // 仅在数据加载完毕后才开始测试
+                    for (
+                        let i = 0;
+                        i < newChapters.length;
+                        i++
+                    ) {
+                        const chapter = newChapters[i];
+                        await delay(1000);
+                        for (
+                            let j = 0;
+                            j < chapter.submitted_questions.length;
+                            j++
+                        ) {
+                            await delay(2000);
+                            const question = chapter.submitted_questions[j];
+                            handleQuestionClick(question);
+                            await delay(1000); // 点击完成之后，要留一点时间等待答题操作
+                        }
+                        await delay(1000);
+                    }
+
+                    await delay(1000);
+                    globalStore.setAllDone(true); // 全部做完后，设置全局状态为已完成
+                    // 做题完成后点击提交试卷。
+                } else {
+                    console.log("数据还未加载完毕，继续等待...");
+                }
+            },
+            { immediate: true}
+            // immdiate: true 立即执行一次，once: true 只执行一次
+        );
 
         // 注意！这里delay时间不要随意设置，太短可能导致测试失败。
-        await delay(2000);
-        // 没必要非要点击按钮（双层v-for循环下的ref太复杂了……），直接修改按钮触发的函数即可
-        for (let i = 0; i < props.submittedPaperChapters.length; i++) {
-            const chapter = props.submittedPaperChapters[i];
-            await delay(1000);
-            for (let j = 0; j < chapter.submitted_questions.length; j++) {
-                await delay(2000);
-                const question = chapter.submitted_questions[j];
-                handleQuestionClick(question);
-                await delay(1000); // 点击完成之后，要留一点时间等待答题操作
-                // 根据题型开始作答
-            }
-            await delay(1000);
-        }
+        // (比如有可能因为延迟导致数据还没加载完毕就开始测试)
+        // await delay(2000);
+        // [2025-01-07]之前的版本就是因为太依赖于时间检测,没做逻辑判断,导致会出现问题。
 
-        await delay(1000);
-        globalStore.setAllDone(true); // 全部做完后，设置全局状态为已完成
+        // 没必要非要点击按钮（双层v-for循环下的ref太复杂了……），直接修改按钮触发的函数即可
+        // for (let i = 0; i < props.submittedPaperChapters.length; i++) {
+        //     const chapter = props.submittedPaperChapters[i];
+        //     await delay(1000);
+        //     for (let j = 0; j < chapter.submitted_questions.length; j++) {
+        //         await delay(2000);
+        //         const question = chapter.submitted_questions[j];
+        //         handleQuestionClick(question);
+        //         await delay(1000); // 点击完成之后，要留一点时间等待答题操作
+        //         // 根据题型开始作答
+        //     }
+        //     await delay(1000);
+        // }
+
+        // await delay(1000);
+        // globalStore.setAllDone(true); // 全部做完后，设置全局状态为已完成
         // 做题完成后点击提交试卷。
     }
 });

@@ -104,7 +104,7 @@ import md5 from "md5";
 import { useAuth } from "~~/stores/auth";
 
 import { useGlobalStore } from "@/stores/examDone"; // 引入 Pinia store
-
+import { useLoadingStateStore } from "@/stores/loadingState"; // 引入 Pinia store
 
 const auth = useAuth();
 const { user } = storeToRefs(auth); // 获取store里的user数据，用于根据邮箱设置延迟。
@@ -284,7 +284,6 @@ const fetchSubmittedPaper = async (paperId: string) => {
         params: {
             fields: [
                 "source_paper_prototype.title",
-                "source_paper_prototype.total_point_value",
                 "submitted_paper_chapters",
                 "point_value",
                 "score",
@@ -561,8 +560,8 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // 页面加载时调用
 onMounted(async () => {
-        // 基于email生成延迟时间
-        function generateDelayFromEmail(email: string) {
+    // 基于email生成延迟时间
+    function generateDelayFromEmail(email: string) {
         // 使用md5算法生成email的哈希值
         const hash = md5(email);
 
@@ -585,6 +584,10 @@ onMounted(async () => {
     await fetchExamTimeData(); //
     await nextTick(); // 等待组件渲染完成
     isClient.value = true; // 标记当前是客户端渲染（组件已经挂载）
+
+    const loadingStateStore = useLoadingStateStore();
+    loadingStateStore.setComponentReady('examPage');
+    // 记录全局状态：ExamPage 组件已经准备好，可以执行题目列表循环。
 
     // 如果有效，调用方法进行后续处理
     afterFetchSubmittedExamTime();
