@@ -272,7 +272,9 @@ const fetchSubmittedExams = async () => {
         params: {
             fields: [
                 "id",
-                "exam.*",
+                "title",
+                "exam.start_time",
+                "exam.end_time",
                 "extra_time",
                 "actual_end_time",
                 "actual_start_time",
@@ -454,11 +456,19 @@ onMounted(async () => {
                 console.log("item.??");
                 console.log(item); // 这里的item是对象数据，不是Button
 
-                return (item.exam as Exams).title === targetItemTitle;
+                console.log("item.title:");
+                console.log(item.title);
+                console.log("targetItemTitle:");
+                console.log(targetItemTitle);
+
+                return item.title === targetItemTitle;
             }) || null;
+
+        // 注意，现在这种写法，如果没有找到目标项，targetGirdDiv会是null。
+        
         await delay(2000);
 
-        console.log("targetGirdDiv1");
+        console.log("targetGirdDiv");
         console.log(targetGirdDiv);
 
         // 模拟点击目标按钮

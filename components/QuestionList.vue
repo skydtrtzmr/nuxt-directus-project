@@ -11,7 +11,7 @@
                             'object'
                     "
                 >
-                    {{ chapter.source_paper_prototype_chapter.title }}
+                    {{ chapter.title }}
                 </div>
                 <h4>{{ chapter.title }}</h4>
                 <ul>
@@ -121,7 +121,6 @@ onMounted(async () => {
         //     return; // 或者可以加上延时再重新检查
         // }
 
-        
         // 等待所有依赖组件加载完毕
 
         console.log("父组件加载完成，开始执行自动切换题目...");
@@ -130,48 +129,14 @@ onMounted(async () => {
         watch(
             // () => loadingStateStore.checkComponentReady("examPage"),
             () => props.submittedPaperChapters,
-            // async (isReady) => {
-            //     console.log("开始执行watch监听");
-            //     console.log('props.submittedPaperChapters:', props.submittedPaperChapters);
 
-            //     if (
-            //         // isReady &&
-            //         props.submittedPaperChapters &&
-            //         props.submittedPaperChapters.length > 0
-            //     ) {
-            //         // 仅在数据加载完毕后才开始测试
-            //         for (
-            //             let i = 0;
-            //             i < props.submittedPaperChapters.length;
-            //             i++
-            //         ) {
-            //             const chapter = props.submittedPaperChapters[i];
-            //             await delay(1000);
-            //             for (
-            //                 let j = 0;
-            //                 j < chapter.submitted_questions.length;
-            //                 j++
-            //             ) {
-            //                 await delay(2000);
-            //                 const question = chapter.submitted_questions[j];
-            //                 handleQuestionClick(question);
-            //                 await delay(1000); // 点击完成之后，要留一点时间等待答题操作
-            //             }
-            //             await delay(1000);
-            //         }
-
-            //         await delay(1000);
-            //         globalStore.setAllDone(true); // 全部做完后，设置全局状态为已完成
-            //         // 做题完成后点击提交试卷。
-            //     } else {
-            //         console.log("数据还未加载完毕，继续等待...");
-            //     }
-            // },
             async (newChapters) => {
                 console.log("开始执行watch监听");
-                console.log('props.submittedPaperChapters:', props.submittedPaperChapters);
-                console.log('newChapters:', newChapters);
-                
+                console.log(
+                    "props.submittedPaperChapters:",
+                    props.submittedPaperChapters
+                );
+                console.log("newChapters:", newChapters);
 
                 if (
                     // isReady &&
@@ -179,11 +144,7 @@ onMounted(async () => {
                     newChapters.length > 0
                 ) {
                     // 仅在数据加载完毕后才开始测试
-                    for (
-                        let i = 0;
-                        i < newChapters.length;
-                        i++
-                    ) {
+                    for (let i = 0; i < newChapters.length; i++) {
                         const chapter = newChapters[i];
                         await delay(1000);
                         for (
@@ -206,7 +167,7 @@ onMounted(async () => {
                     console.log("数据还未加载完毕，继续等待...");
                 }
             },
-            { immediate: true}
+            { immediate: true }
             // immdiate: true 立即执行一次，once: true 只执行一次
         );
 

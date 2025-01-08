@@ -2,15 +2,7 @@
     <!-- <h2>考试详情</h2> -->
 
     <p>考试ID: {{ submittedExam?.id }}</p>
-    <p
-        v-if="
-            submittedExam &&
-            submittedExam.exam &&
-            typeof submittedExam.exam == 'object'
-        "
-    >
-        考试名称：{{ submittedExam?.title }}
-    </p>
+    <p>考试名称：{{ submittedExam?.title }}</p>
     <p
         v-if="
             submittedExam &&

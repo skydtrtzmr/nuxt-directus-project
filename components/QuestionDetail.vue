@@ -17,7 +17,7 @@
             <h3 class="m-4 red-text">
                 {{
                     selectedSubmittedQuestion.submitted_paper_chapter
-                        .source_paper_prototype_chapter.title
+                        .title
                 }}
             </h3>
             <p>

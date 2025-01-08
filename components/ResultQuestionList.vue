@@ -11,7 +11,7 @@
                             'object'
                     "
                 >
-                    {{ chapter.source_paper_prototype_chapter.title }}
+                    {{ chapter.title }}
                 </div>
                 <h4>{{ chapter.title }}</h4>
                 <ul>
