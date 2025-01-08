@@ -17,7 +17,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
             </button>
             <router-link to="/" class="layout-topbar-logo">
                 <PracticeAgain />
-                <span>学练考系统</span>
+                <span>学练考系统v20250108</span>
             </router-link>
         </div>
 

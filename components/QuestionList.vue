@@ -4,15 +4,6 @@
         <h5>题目列表</h5>
         <ul>
             <li v-for="chapter in submittedPaperChapters" :key="chapter.id">
-                <div
-                    v-if="
-                        chapter.source_paper_prototype_chapter &&
-                        typeof chapter.source_paper_prototype_chapter ===
-                            'object'
-                    "
-                >
-                    {{ chapter.title }}
-                </div>
                 <h4>{{ chapter.title }}</h4>
                 <ul>
                     <!-- 1 章节下的题目列表，列表式 -->
