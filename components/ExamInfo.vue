@@ -9,7 +9,7 @@
             typeof submittedExam.exam == 'object'
         "
     >
-        考试名称：{{ submittedExam?.exam.title }}
+        考试名称：{{ submittedExam?.title }}
     </p>
     <p
         v-if="

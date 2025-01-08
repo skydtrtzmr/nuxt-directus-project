@@ -67,7 +67,6 @@ export type DirectusAccess = {
 export type DirectusActivity = {
   action: string;
   collection: string;
-  comment?: string | null;
   id: number;
   ip?: string | null;
   item: string;
@@ -524,10 +523,6 @@ export type KnowledgePointsKnowledgePoints = {
   related_knowledge_points_id?: string | KnowledgePoints | null;
 };
 
-export type Map = {
-  id: number;
-};
-
 export type Notices = {
   content?: string | null;
   date_created?: string | null;
@@ -586,6 +581,7 @@ export type PaperPrototypeChapters = {
   date_updated?: string | null;
   description?: string | null;
   id: string;
+  layout_mode?: string | null;
   paper_prototype?: string | PaperPrototypes | null;
   point_values: string;
   q_mc_binary_point_value?: number | null;
@@ -594,6 +590,7 @@ export type PaperPrototypeChapters = {
   q_mc_multi_incomplete_point_value?: number | null;
   q_mc_multi_point_value?: number | null;
   q_mc_single_point_value?: number | null;
+  question_groups: any[] | PaperPrototypeChaptersQuestionGroups[];
   question_point_assign_strategies: any[] | QuestionPointAssignStrategies[];
   questions: any[] | PaperPrototypeChaptersQuestions[];
   sort?: number | null;
@@ -606,6 +603,12 @@ export type PaperPrototypeChapters = {
   "triggers-pqfgnz": string;
   user_created?: string | DirectusUsers | null;
   user_updated?: string | DirectusUsers | null;
+};
+
+export type PaperPrototypeChaptersQuestionGroups = {
+  id: number;
+  paper_prototype_chapters_id?: string | PaperPrototypeChapters | null;
+  question_groups_id?: string | QuestionGroups | null;
 };
 
 export type PaperPrototypeChaptersQuestions = {
@@ -801,7 +804,6 @@ export type Questions = {
   date_created?: string | null;
   date_updated?: string | null;
   difficulty?: number | null;
-  group_sort?: number | null;
   id: string;
   knowledge_points: any[] | QuestionsKnowledgePoints[];
   q_mc?: string | QMc | null;
@@ -818,7 +820,7 @@ export type Questions = {
   status: string;
   stem?: string | null;
   title?: string | null;
-  type?: string | null;
+  type: string;
   user_created?: string | DirectusUsers | null;
   user_updated?: string | DirectusUsers | null;
 };
@@ -899,7 +901,7 @@ export type Students = {
   date_created?: string | null;
   date_updated?: string | null;
   directus_user?: string | DirectusUsers | null;
-  email?: string | null;
+  email: string;
   id: string;
   name?: string | null;
   number?: number | null;
@@ -926,16 +928,20 @@ export type SubmittedExams = {
   actual_start_time?: string | null;
   date_created?: string | null;
   date_updated?: string | null;
+  duration?: number | null;
   exam: string | Exams;
   expected_end_time?: string | null;
   extra_time?: number | null;
   id: string;
+  login_status?: string | null;
   participation_status?: string | null;
   sort?: number | null;
   status: string;
   student?: string | Students | null;
   submit_status?: string | null;
   submitted_papers: any[] | SubmittedPapers[];
+  title?: string | null;
+  triggers_calculate_score: string;
   user_created?: string | DirectusUsers | null;
   user_updated?: string | DirectusUsers | null;
 };
@@ -977,6 +983,7 @@ export type SubmittedPapers = {
 };
 
 export type SubmittedQuestions = {
+  correct_ans?: string | null;
   date_created?: string | null;
   date_updated?: string | null;
   id: string;
@@ -1003,6 +1010,7 @@ export type Teachers = {
   date_created?: string | null;
   date_updated?: string | null;
   id: string;
+  name?: string | null;
   sort?: number | null;
   status: string;
   user_created?: string | DirectusUsers | null;
@@ -1062,12 +1070,12 @@ export type CustomDirectusTypes = {
   institutions: Institutions[];
   knowledge_points: KnowledgePoints[];
   knowledge_points_knowledge_points: KnowledgePointsKnowledgePoints[];
-  map: Map[];
   notices: Notices[];
   paper_gen_strategies: PaperGenStrategies[];
   paper_gen_strategy_chapters: PaperGenStrategyChapters[];
   paper_gen_strategy_items: PaperGenStrategyItems[];
   paper_prototype_chapters: PaperPrototypeChapters[];
+  paper_prototype_chapters_question_groups: PaperPrototypeChaptersQuestionGroups[];
   paper_prototype_chapters_questions: PaperPrototypeChaptersQuestions[];
   paper_prototypes: PaperPrototypes[];
   q_fill_in_blank_answers: QFillInBlankAnswers[];

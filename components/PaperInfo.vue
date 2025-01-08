@@ -6,7 +6,7 @@
                 typeof submittedPaper.source_paper_prototype === 'object'
             "
         >
-            <h3>{{ submittedPaper.source_paper_prototype.title }}</h3>
+            <h3>{{ submittedPaper.title }}</h3>
             <p>
                 试卷总分:
                 {{ submittedPaper.point_value }}

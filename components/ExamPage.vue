@@ -186,7 +186,7 @@ const fetchSubmittedExam = async () => {
         collection: "submitted_exams",
         id: submitted_exam_id,
         params: {
-            fields: ["id", "submitted_papers", "exam.title", "student.name"], // 获取考试的状态和关联的试卷
+            fields: ["id", "submitted_papers", "title", "student.name"], // 获取考试的状态和关联的试卷
         },
     });
     if (submittedExamResponse) {
@@ -205,7 +205,7 @@ const fetchExamTimeData = async () => {
                 "actual_start_time", // 获取考试开始时间，客户端根据此时间计算倒计时。
                 "expected_end_time",
                 "extra_time", // 考试时长补偿，客户端根据此时间计算倒计时。
-                "exam.duration", // 获取考试时长，直接在客户端进行计算。服务端自己计算自己的，跟客户端分开，避免客户端计算错误。
+                "duration", // 获取考试时长，直接在客户端进行计算。服务端自己计算自己的，跟客户端分开，避免客户端计算错误。
             ], // 获取考试的状态和关联的试卷
         },
     });
@@ -254,7 +254,7 @@ const afterFetchSubmittedExam = () => {
 // 把获取时间数据后的操作也跟获取考试其他数据后的操作分开。
 const afterFetchSubmittedExamTime = () => {
     actual_start_time.value = submittedExamTime.value.actual_start_time!;
-    duration.value = (submittedExamTime.value.exam as Exams).duration!;
+    duration.value = submittedExamTime.value.duration!;
     extra_time.value = submittedExamTime.value.extra_time!;
 
     // 先根据实际开始作答时间和考试时长，计算应交卷时间
@@ -283,7 +283,7 @@ const fetchSubmittedPaper = async (paperId: string) => {
         id: paperId,
         params: {
             fields: [
-                "source_paper_prototype.title",
+                "title",
                 "submitted_paper_chapters",
                 "point_value",
                 "score",
