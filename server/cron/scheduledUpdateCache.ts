@@ -20,10 +20,6 @@ const directus_url = url || "http://127.0.0.1:8056";
 
 const directus_client = createDirectus(directus_url).with(rest());
 
-interface WithId {
-    id: string | number; // id 可以是 string 或 number，视你的数据结构而定
-}
-
 const concat_question_list = async () => {
     const question_list1 = await directus_client.request(
         readItems("questions", {
