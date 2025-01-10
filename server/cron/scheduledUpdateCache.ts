@@ -13,7 +13,7 @@ import { fetchAllPaginatedData } from "../utils/directusUtils";
 
 // 注意！每次请求只能返回100条数据，所以如果题目数量多于100，需要分批请求。
 
-export default defineCronHandler("everyThirtyMinutes", () => {
+export default defineCronHandler("everyThirtyMinutes", async() => {
     // do action
     console.log("Scheduled Update Cache");
     updateHashListCache(
@@ -44,6 +44,26 @@ export default defineCronHandler("everyThirtyMinutes", () => {
             }),
         3600 // 1 hour
     );
+    
+    const sdadd = await getHashListItemFromCache(
+        "questions", // 这是 Redis 中存储数据的键
+        "b4227cdf-d6f0-49ad-bcb1-e568c99577e8", // 章节的 id
+        () =>
+            fetchAllPaginatedData({
+                collection: "questions",
+                fields: [
+                    "id",
+                    "q_mc_single.*",
+                    "q_mc_multi.*",
+                    "q_mc_binary.*",
+                    "q_mc_flexible.*",
+                    "question_group.*",
+                ],
+            }) // 获取章节数据的函数
+    );
+
+    console.log("sdadd:", sdadd);
+    
 
     // 上面的写法是把整个列表存为一个值。接下来改成每个列表的每一个对象存为一个值。
     // 这样可以避免列表过长、每次get redis数据量过大的问题。

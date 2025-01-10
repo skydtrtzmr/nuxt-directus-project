@@ -4,7 +4,7 @@
 
 import redis from "~~/server/lib/redis";
 
-// 读取缓存的Hash列表的指定项
+// 读取缓存的Hash列表的指定id的项
 export async function getHashListItemFromCache<T>(
     key: string, // 缓存的key
     id: string, // 要获取的项的id（其实是对应Hash列表的键）
@@ -15,8 +15,11 @@ export async function getHashListItemFromCache<T>(
 
     if (data) {
         // 如果缓存命中，直接返回缓存数据
+        console.log("cache hit", key, id);
         return JSON.parse(data);
     } else {
+        
+        console.log("cache not hit", key, id);
         // 如果缓存未命中，从数据库获取数据更新缓存，然后再返回数据
         await updateHashListCache(key, fetchFunction, ttl);
         let data = await redis.hget(key, id);
@@ -56,7 +59,7 @@ export async function updateHashListCache(
     ttl: number = 3600
 ): Promise<void> {
     const data = await fetchFunction();
-    console.log("update cache", key, data);
+    // console.log("update cache", key, data);
 
     // await redis.set(key, JSON.stringify(data), "EX", ttl); // 设置过期时间
 

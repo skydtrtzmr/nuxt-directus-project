@@ -3,7 +3,6 @@
     <div class="relative">
         <!-- 显示考试信息 -->
         <ExamInfo :submittedExam="submittedExam"></ExamInfo>
-
         <!-- 显示试卷详情 -->
         <template v-if="exam_page_mode !== 'review'">
             <div>
@@ -495,6 +494,7 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 // 页面加载时调用
 onMounted(async () => {
     // 基于email生成延迟时间
+
     function generateDelayFromEmail(email: string) {
         // 使用md5算法生成email的哈希值
         const hash = md5(email);
@@ -519,8 +519,9 @@ onMounted(async () => {
     await nextTick(); // 等待组件渲染完成
     isClient.value = true; // 标记当前是客户端渲染（组件已经挂载）
 
+
     const loadingStateStore = useLoadingStateStore();
-    loadingStateStore.setComponentReady('examPage');
+    loadingStateStore.setComponentReady("examPage");
     // 记录全局状态：ExamPage 组件已经准备好，可以执行题目列表循环。
 
     // 如果有效，调用方法进行后续处理
