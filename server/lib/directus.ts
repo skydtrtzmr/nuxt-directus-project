@@ -1,5 +1,4 @@
-
-import { createDirectus, rest, readUsers, readItems } from "@directus/sdk";
+import { createDirectus, rest } from "@directus/sdk";
 
 const {
     public: {
