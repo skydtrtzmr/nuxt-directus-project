@@ -1,7 +1,9 @@
 import { createDirectus, rest, readUsers } from "@directus/sdk";
 import type { DirectusUsers } from "~~/types/directus_types";
-import Redis from "ioredis";
-import { set } from "zod";
+// import Redis from "ioredis";
+// import { set } from "zod";
+
+import redis from "~~/server/lib/redis";
 
 const {
     public: {
@@ -11,19 +13,6 @@ const {
 } = useRuntimeConfig();
 
 console.log("测试环境，自动脚本获取用户数据并存储到 Redis");
-
-const redis = new Redis({
-    // host: 'redis-container',  // 在Docker中使用的话，这里使用容器的名称
-    host: redisHost || "127.0.0.1", // 在windows系统中直接使用的话，使用127.0.0.1
-    // 所以为了兼容，这里要用环境变量。
-    // 容器内部不能直接访问 127.0.0.1，因为 127.0.0.1 是指容器内部的本地网络地址
-    port: redisPort || 6379,
-});
-
-console.log("redisHost:", redisHost);
-
-
-console.log("连接 Redis 成功");
 
 let usersArray: DirectusUsers[] = [];
 
