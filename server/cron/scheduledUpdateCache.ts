@@ -3,7 +3,7 @@
 // 定期更新缓存
 
 import { defineCronHandler } from "#nuxt/cron";
-import { updateCache } from "~~/server/utils/redisUtils";
+import { updateHashListCache } from "~~/server/utils/redisUtils";
 import { createDirectus, rest, readUsers, readItems } from "@directus/sdk";
 
 // TODO 目前为了方便开发，在directus中把所有权限都开放了，所以现在发起请求的时候不需要带token。
@@ -19,6 +19,10 @@ const {
 const directus_url = url || "http://127.0.0.1:8056";
 
 const directus_client = createDirectus(directus_url).with(rest());
+
+interface WithId {
+    id: string | number; // id 可以是 string 或 number，视你的数据结构而定
+}
 
 const concat_question_list = async () => {
     const question_list1 = await directus_client.request(
@@ -56,7 +60,7 @@ const concat_question_list = async () => {
 export default defineCronHandler("everyThirtyMinutes", () => {
     // do action
     console.log("Scheduled Update Cache");
-    updateCache(
+    updateHashListCache(
         "paper_prototype_chapters",
         () =>
             directus_client.request(
@@ -87,11 +91,15 @@ export default defineCronHandler("everyThirtyMinutes", () => {
     //         ),
     //     3600 // 1 hour
     // );
-    updateCache(
+
+    updateHashListCache(
         "questions",
         () => concat_question_list(),
         3600 // 1 hour
     );
+
+    // 上面的写法是把整个列表存为一个值。接下来改成每个列表的每一个对象存为一个值。
+    // 这样可以避免列表过长、每次get redis数据量过大的问题。
 });
 
 // 已经在nuxt.config.ts中设置了`runOnInit: true`，就不再在函数中写`{ runOnInit: true }`了。
