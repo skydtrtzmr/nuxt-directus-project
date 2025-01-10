@@ -1,5 +1,7 @@
 // server/utils/redisUtils.ts
 
+// 这里存放的是操作redis的工具函数
+
 import redis from "~~/server/lib/redis";
 
 // 读取缓存的Hash列表的指定项

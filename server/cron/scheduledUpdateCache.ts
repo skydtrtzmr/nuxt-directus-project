@@ -4,52 +4,48 @@
 
 import { defineCronHandler } from "#nuxt/cron";
 import { updateHashListCache } from "~~/server/utils/redisUtils";
-import { createDirectus, rest, readUsers, readItems } from "@directus/sdk";
+import directus_client from "~~/server/lib/directus";
+import { readUsers, readItems } from "@directus/sdk";
 
 // TODO 目前为了方便开发，在directus中把所有权限都开放了，所以现在发起请求的时候不需要带token。
 // 后续需要把权限控制好，只允许有权限的用户访问。
 
-const {
-    public: {
-        directus: { url },
-    },
-    private: { redisHost, redisPort },
-} = useRuntimeConfig();
-
-const directus_url = url || "http://127.0.0.1:8056";
-
-const directus_client = createDirectus(directus_url).with(rest());
-
 const concat_question_list = async () => {
-    const question_list1 = await directus_client.request(
+    let allQuestions: any[] = [];
+    let page = 1;
+    let hasMoreData = true;
+  
+    while (hasMoreData) {
+      // 获取当前页的数据
+      const question_list = await directus_client.request(
         readItems("questions", {
-            fields: [
-                "id",
-                "q_mc_single.*",
-                "q_mc_multi.*",
-                "q_mc_binary.*",
-                "q_mc_flexible.*",
-                "question_group.*",
-            ],
-            page: 1,
+          fields: [
+            "id",
+            "q_mc_single.*",
+            "q_mc_multi.*",
+            "q_mc_binary.*",
+            "q_mc_flexible.*",
+            "question_group.*",
+          ],
+          page: page,
+          limit: 100,  // 每页返回100条
         })
-    );
-    const question_list2 = await directus_client.request(
-        readItems("questions", {
-            fields: [
-                "id",
-                "q_mc_single.*",
-                "q_mc_multi.*",
-                "q_mc_binary.*",
-                "q_mc_flexible.*",
-                "question_group.*",
-            ],
-            page: 2,
-        })
-    );
-    const result = question_list1.concat(question_list2);
-    return result;
-};
+      );
+  
+      // 将当前页的数据合并到所有数据中
+      allQuestions = allQuestions.concat(question_list);
+  
+      // 判断是否还有下一页的数据
+      if (question_list.length < 100) {
+        hasMoreData = false;  // 如果返回的数据少于100条，表示没有更多数据了
+      } else {
+        page += 1;  // 否则继续请求下一页
+      }
+    }
+  
+    return allQuestions;  // 返回合并后的所有数据
+  };
+  
 
 // 注意！每次请求只能返回100条数据，所以如果题目数量多于100，需要分批请求。
 

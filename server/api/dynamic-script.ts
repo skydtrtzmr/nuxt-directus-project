@@ -1,6 +1,7 @@
-import { createDirectus, rest, readUsers } from "@directus/sdk";
+import { readUsers } from "@directus/sdk";
 // 注意server里面不能直接用nuxt modules里的函数。
 // 所以我没有用nuxt-directus，而是直接导入了sdk。
+import directus_client from "~~/server/lib/directus";
 
 import type { DirectusUsers } from "~~/types/directus_types";
 // import Redis from "ioredis";
@@ -27,10 +28,6 @@ export default defineEventHandler(async (event) => {
     // 如果是第一次请求，则获取用户数据并将用户数据存储到 Redis。之后的请求都直接从 Redis 中获取用户数据。
     async function setUsers() {
         let users: DirectusUsers[] = [];
-
-        const directus_url = url || "http://127.0.0.1:8056";
-        const directus_client = createDirectus(directus_url).with(rest());
-        console.log("directus_url: ", directus_url);
         
         // TODO 这边要分页获取然后合并列表，因为一次请求只能获取 200 条数据
         const result_page1 = (await directus_client.request(
