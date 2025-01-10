@@ -17,6 +17,7 @@ const redis = new Redis({
     // 所以为了兼容，这里要用环境变量。
     // 容器内部不能直接访问 127.0.0.1，因为 127.0.0.1 是指容器内部的本地网络地址
     port: redisPort || 6379,
+    enableAutoPipelining: true, // 自动管道化，提高性能
 });
 
 export default redis;
