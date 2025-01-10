@@ -1,4 +1,7 @@
 import { createDirectus, rest, readUsers } from "@directus/sdk";
+// 注意server里面不能直接用nuxt modules里的函数。
+// 所以我没有用nuxt-directus，而是直接导入了sdk。
+
 import type { DirectusUsers } from "~~/types/directus_types";
 // import Redis from "ioredis";
 // import { set } from "zod";
