@@ -7,7 +7,7 @@ import redis from "~~/server/lib/redis";
 // TODO  我现在暂时直接把redis.ts复制过来了，让它每次都创建一个连接。
 // 后面再优化一下，用连接池。
 
-import Redis from "ioredis";
+// import Redis from "ioredis";
 
 // 配置 ioredis 客户端
 // const {
@@ -147,7 +147,7 @@ export async function updateHashListCache(
         await redis.hset(key, item.id.toString(), JSON.stringify(item));
     }
     redis.expire(key, ttl).then((didSetExpire) => {
-        console.log("Key has an expiration time set:", didSetExpire);
+        // console.log("Key has an expiration time set:", didSetExpire);
     }); // 设置过期时间
-    console.log("hset");
+    // console.log("hset");
 }

@@ -53,7 +53,7 @@ onMounted(async () => {
         console.log("测试自动操作脚本开始。");
 
         await delay(2000);
-        console.log("跳转到exams页面。");
+        // console.log("跳转到exams页面。");
 
         router.push("/exams");
         await delay(1000);

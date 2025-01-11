@@ -449,35 +449,29 @@ const fetchSubmittedChapterList = async (
         body: {
             ids: questionIds,
         },
-    })) as any; // 注意，这里的类型定义是any，因为返回的数据格式不确定。
+    })) as any; // TODO 注意，这里的类型定义是any，因为返回的数据格式我也不知道。
 
     console.log("questionsData:", questionsData.data.value);
-    
 
-    const flatList = questionsResponses.map((submittedQuestionList) => {
-        return submittedQuestionList.map((submittedQuestion) => {
-            const questionId = submittedQuestion.question as string;
-            const questionData = questionsData.data.value.find(
-                (item: any) => item.id === questionId
-            );
-            console.log('questionData in flatMap:', questionData);
-            
-
-            return {
-                ...submittedQuestion,
-                question: questionData || null, // 合并 question 数据
-                ye: 'ye'
-            };
-        });
-    });
-    console.log('questionsResponses:', questionsResponses);
-    console.log('flatList:', flatList);
-    
-    
+    const questionsResponsesWithData = questionsResponses.map(
+        (submittedQuestionList) => {
+            return submittedQuestionList.map((submittedQuestion) => {
+                const questionId = submittedQuestion.question as string;
+                const questionData = questionsData.data.value.find(
+                    (item: any) => item.id === questionId
+                );
+                return {
+                    ...submittedQuestion,
+                    question: questionData || null, // 合并 question 数据
+                };
+            });
+        }
+    );
+    console.log("questionsResponsesWithData:", questionsResponsesWithData);
 
     // 5. 合并题目数据到章节数据中
     chapterList.forEach((chapter, index) => {
-        chapter.submitted_questions = flatList[index]; // 将题目数据嵌入章节对象
+        chapter.submitted_questions = questionsResponsesWithData[index]; // 将题目数据嵌入章节对象
     });
 
     console.log("chapterList:", chapterList);

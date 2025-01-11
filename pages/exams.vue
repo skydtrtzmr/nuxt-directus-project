@@ -453,14 +453,6 @@ onMounted(async () => {
         const targetGirdDiv: HTMLElement | null =
             gridItems.value.find((button, index) => {
                 const item = submittedExams.value[index]; // 获取对应的项
-                console.log("item.??");
-                console.log(item); // 这里的item是对象数据，不是Button
-
-                console.log("item.title:");
-                console.log(item.title);
-                console.log("targetItemTitle:");
-                console.log(targetItemTitle);
-
                 return item.title === targetItemTitle;
             }) || null;
 
@@ -473,8 +465,6 @@ onMounted(async () => {
 
         // 模拟点击目标按钮
         if (targetGirdDiv && typeof targetGirdDiv == "object") {
-            console.log("targetGirdDiv");
-            console.log(targetGirdDiv);
             const firstButton = (targetGirdDiv as HTMLElement).querySelector(
                 "button"
             );

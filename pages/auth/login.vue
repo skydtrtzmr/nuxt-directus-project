@@ -116,8 +116,8 @@ const {
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 onMounted(async () => {
-    console.log("isTest?");
-    console.log(isTest);
+    // console.log("isTest?");
+    // console.log(isTest);
     // 这里仅供测试用!
     if (isTest) {
         await nextTick(); // 通过nextTick来确保页面渲染完成，然后自动填充表单

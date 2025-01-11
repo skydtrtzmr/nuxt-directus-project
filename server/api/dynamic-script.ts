@@ -29,7 +29,8 @@ export default defineEventHandler(async (event) => {
     async function setUsers() {
         let users: DirectusUsers[] = [];
         
-        // TODO 这边要分页获取然后合并列表，因为一次请求只能获取 200 条数据
+        // 这边要分页获取然后合并列表，因为一次请求只能获取 200 条数据
+        // TODO 现在是手动获取多页的，但是应该自动获取多页
         const result_page1 = (await directus_client.request(
             readUsers({
                 fields: ["id,email"],
@@ -43,7 +44,6 @@ export default defineEventHandler(async (event) => {
             })
         )) as DirectusUsers[];
 
-        console.log("result_page1: ", result_page1);
 
         const result_page2 = (await directus_client.request(
             readUsers({
@@ -58,8 +58,6 @@ export default defineEventHandler(async (event) => {
             })
         )) as DirectusUsers[];
 
-        console.log("result_page2: ", result_page2);
-
         const result_page3 = (await directus_client.request(
             readUsers({
                 fields: ["id,email"],
@@ -72,7 +70,6 @@ export default defineEventHandler(async (event) => {
                 page: 3,
             })
         )) as DirectusUsers[];
-        console.log("result_page3: ", result_page3);
 
         const result_page4 = (await directus_client.request(
             readUsers({
@@ -86,7 +83,6 @@ export default defineEventHandler(async (event) => {
                 page: 4,
             })
         )) as DirectusUsers[];
-        console.log("result_page4: ", result_page4);
 
         const result = result_page1.concat(result_page2, result_page3, result_page4);
 
@@ -102,11 +98,11 @@ export default defineEventHandler(async (event) => {
     console.log("获取 users:", users);
     // 把redis中的数据转换成数组
     if (users && users.length > 0) {
-        console.log("users is not null");
+        // console.log("users is not null");
         
         usersArray = JSON.parse(users);
     } else {
-        console.log("users is null, set users");
+        // console.log("users is null, set users");
         
         await setUsers();
         const users = await redis.get("users");

@@ -25,8 +25,8 @@ const props = defineProps<{
     formattedCountDown: string;
 }>();
 
-console.log("examEndTime in ExamCountdown.vue:");
-console.log(dayjs(props.examEndTime).format("YYYY-MM-DD HH:mm:ss"));
+// console.log("examEndTime in ExamCountdown.vue:");
+// console.log(dayjs(props.examEndTime).format("YYYY-MM-DD HH:mm:ss"));
 </script>
 
 <style scoped></style>

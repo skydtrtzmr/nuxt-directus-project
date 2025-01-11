@@ -2,7 +2,6 @@ import { stringify } from "@primevue/core";
 import { fetchAllPaginatedData } from "~/server/utils/directusUtils";
 
 export default defineEventHandler(async (event) => {
-    console.log("触发事件");
 
     // 获取 URL 中的 id 参数
     const id = getRouterParam(event, "id"); // 获取URL的路由参数：id 
