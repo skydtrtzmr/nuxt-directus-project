@@ -353,6 +353,9 @@ const fetchSubmittedChapterList = async (
     );
 
     const chapterList = submittedChaptersResponsesWithData;
+
+    console.log("chapterList1:", chapterList);
+
     // const chapterList = submittedChaptersResponse;
 
     // 之前的写法是每次发一个hget。现在改成统一发一个hmget。
@@ -376,7 +379,7 @@ const fetchSubmittedChapterList = async (
                     "submitted_ans_q_mc_binary",
                     "submitted_ans_q_mc_flexible",
                     "question", // 只需要查询 question 字段本身，其他字段从 Redis 获取
-                    "submitted_paper_chapter", // 关联的章节
+                    // "submitted_paper_chapter", // 关联的章节，不要在这写，直接从chapter复制。
                 ],
                 sort: "sort_in_chapter",
             },
@@ -428,11 +431,27 @@ const fetchSubmittedChapterList = async (
     // 5. 合并题目数据到章节数据中
     chapterList.forEach((chapter, index) => {
         chapter.submitted_questions = questionsResponsesWithData[index]; // 将题目数据嵌入章节对象
+        // 把试卷原型章节的信息复制给每个题目。
+        console.log(
+            "chapter.source_paper_prototype_chapter:",
+            chapter.source_paper_prototype_chapter
+        );
+
+        chapter.submitted_questions = (
+            chapter.submitted_questions as SubmittedQuestions[]
+        ).map((question) => {
+            return {
+                // 这里为了保持interface的一致性，需要写成嵌套对象字段。
+                ...question,
+                submitted_paper_chapter: {
+                    source_paper_prototype_chapter:
+                        chapter.source_paper_prototype_chapter || null, // 合并 question 数据
+                },
+            };
+        });
     });
 
-    console.log("chapterList:", chapterList);
-
-    // 6. 返回合并后的章节列表
+    // 6. 返回合并后的章节列表，标注当前选择的题目。
     if (submittedChaptersResponse) {
         submittedPaperChapters.value = chapterList;
         console.log(
@@ -448,8 +467,6 @@ const fetchSubmittedChapterList = async (
     }
 };
 
-// 获取题目数据
-// 注意，需要按照题目在章节中的顺序排序
 
 // NOTE：不再使用专门的题目列表，而是直接从章节中获取题目列表。因为我的题目和章节信息是高度关联的，所以直接从章节中获取题目列表更合理。
 

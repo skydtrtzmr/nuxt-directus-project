@@ -3,6 +3,16 @@
 <template>
     <div class="main-content">
         <div class="h-full">
+            <!-- <h3 class="m-4 red-text">
+                {{
+                    selectedSubmittedQuestion.source_paper_prototype_chapter_title
+                }}
+            </h3>
+            <p>
+                {{
+                    selectedSubmittedQuestion.source_paper_prototype_chapter_description
+                }}
+            </p> -->
             <template
                 v-if="
                     selectedSubmittedQuestion &&
@@ -16,7 +26,8 @@
             >
                 <h3 class="m-4 red-text">
                     {{
-                        selectedSubmittedQuestion.submitted_paper_chapter.title
+                        selectedSubmittedQuestion.submitted_paper_chapter
+                            .source_paper_prototype_chapter.title
                     }}
                 </h3>
                 <p>
