@@ -73,8 +73,7 @@ export async function getHashListItemsFromCache<T>(
     if (hitData.length !== ids.length) {
         console.log(
             "cache not hit for some items, fetching from database",
-            key,
-            ids
+            key
         );
 
         // 3. 获取缓存未命中的数据并更新缓存
@@ -90,7 +89,7 @@ export async function getHashListItemsFromCache<T>(
         );
     } else {
         // 如果缓存命中所有请求项，直接返回数据
-        console.log("cache hit", key, ids);
+        console.log("cache hit", key);
         return hitData.map((data) => JSON.parse(data));
     }
 }

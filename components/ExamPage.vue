@@ -454,7 +454,7 @@ const fetchSubmittedChapterList = async (
     console.log("questionsData:", questionsData.data.value);
     
 
-    const flatList = questionsResponses.flatMap((submittedQuestionList) => {
+    const flatList = questionsResponses.map((submittedQuestionList) => {
         return submittedQuestionList.map((submittedQuestion) => {
             const questionId = submittedQuestion.question as string;
             const questionData = questionsData.data.value.find(
@@ -477,7 +477,7 @@ const fetchSubmittedChapterList = async (
 
     // 5. 合并题目数据到章节数据中
     chapterList.forEach((chapter, index) => {
-        chapter.submitted_questions = questionsResponses[index]; // 将题目数据嵌入章节对象
+        chapter.submitted_questions = flatList[index]; // 将题目数据嵌入章节对象
     });
 
     console.log("chapterList:", chapterList);
