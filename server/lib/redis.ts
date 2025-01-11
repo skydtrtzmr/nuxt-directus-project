@@ -11,6 +11,11 @@ const {
 
 console.log("连接 Redis 成功，创建redis实例");
 
+// TODO 还真不要改成现在这样！现在这样所有客户端都共用一个redis实例（在服务器上），这会导致并发问题！
+// 就应该像之前写的dynamic-script那样，每个客户端都有自己的redis实例，每次执行都创建一个连接池。
+
+// https://blog.51cto.com/u_16213418/11828350
+
 const redis = new Redis({
     // host: 'redis-container',  // 在Docker中使用的话，这里使用容器的名称
     host: redisHost || "127.0.0.1", // 在windows系统中直接使用的话，使用127.0.0.1

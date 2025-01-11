@@ -4,6 +4,22 @@
 
 import redis from "~~/server/lib/redis";
 
+// TODO  我现在暂时直接把redis.ts复制过来了，让它每次都创建一个连接。
+// 后面再优化一下，用连接池。
+
+import Redis from "ioredis";
+
+// 配置 ioredis 客户端
+// const {
+//     public: {
+//         directus: { url },
+//     },
+//     private: { redisHost, redisPort },
+// } = useRuntimeConfig();
+
+// TODO
+// https://www.jianshu.com/p/21b488c1ede5
+
 // 读取缓存的Hash列表的指定id的项
 export async function getHashListItemFromCache<T>(
     key: string, // 缓存的key
@@ -11,6 +27,17 @@ export async function getHashListItemFromCache<T>(
     fetchFunction: () => Promise<any[]>, // 从数据库获取列表数据的方法
     ttl: number = 3600 // 缓存的过期时间，默认1小时
 ): Promise<T> {
+    // https://blog.51cto.com/u_16213418/11828350
+
+    // const redis = new Redis({
+    //     // host: 'redis-container',  // 在Docker中使用的话，这里使用容器的名称
+    //     host: redisHost || "127.0.0.1", // 在windows系统中直接使用的话，使用127.0.0.1
+    //     // 所以为了兼容，这里要用环境变量。
+    //     // 容器内部不能直接访问 127.0.0.1，因为 127.0.0.1 是指容器内部的本地网络地址
+    //     port: redisPort || 6379,
+    //     enableAutoPipelining: true, // 自动管道化，提高性能
+    // });
+    // console.log("在utils中，连接 Redis 成功，创建redis实例");
     let data = await redis.hget(key, id);
 
     if (data) {
@@ -18,7 +45,6 @@ export async function getHashListItemFromCache<T>(
         console.log("cache hit", key, id);
         return JSON.parse(data);
     } else {
-        
         console.log("cache not hit", key, id);
         // 如果缓存未命中，从数据库获取数据更新缓存，然后再返回数据
         await updateHashListCache(key, fetchFunction, ttl);
@@ -58,6 +84,17 @@ export async function updateHashListCache(
     fetchFunction: () => Promise<any[]>, // 注意这里一定返回的是个数组，因为是 Hash 列表
     ttl: number = 3600
 ): Promise<void> {
+    // https://blog.51cto.com/u_16213418/11828350
+
+    // const redis = new Redis({
+    //     // host: 'redis-container',  // 在Docker中使用的话，这里使用容器的名称
+    //     host: redisHost || "127.0.0.1", // 在windows系统中直接使用的话，使用127.0.0.1
+    //     // 所以为了兼容，这里要用环境变量。
+    //     // 容器内部不能直接访问 127.0.0.1，因为 127.0.0.1 是指容器内部的本地网络地址
+    //     port: redisPort || 6379,
+    //     enableAutoPipelining: true, // 自动管道化，提高性能
+    // });
+    // console.log("在utils中，连接 Redis 成功，创建redis实例");
     const data = await fetchFunction();
     // console.log("update cache", key, data);
 

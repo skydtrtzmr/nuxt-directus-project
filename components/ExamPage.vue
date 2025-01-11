@@ -338,11 +338,11 @@ const fetchSubmittedChapterList = async (
                     "submitted_ans_q_mc_multi",
                     "submitted_ans_q_mc_binary",
                     "submitted_ans_q_mc_flexible",
-                    // "question.q_mc_single.*",
-                    // "question.q_mc_multi.*",
-                    // "question.q_mc_binary.*",
-                    // "question.q_mc_flexible.*",
-                    // "question.question_group.*",
+                    "question.q_mc_single.*",
+                    "question.q_mc_multi.*",
+                    "question.q_mc_binary.*",
+                    "question.q_mc_flexible.*",
+                    "question.question_group.*",
                     "question", // 上面那些省略掉，只需要question字段（id）即可，改成从redis获取。
                     "submitted_paper_chapter.source_paper_prototype_chapter.id",
                     "submitted_paper_chapter.title",
@@ -350,23 +350,23 @@ const fetchSubmittedChapterList = async (
                 ],
                 sort: "sort_in_chapter",
             },
-        }).then((submittedQuestions) => {
-            // 遍历每个提交的题目
-            return Promise.all(
-                submittedQuestions.map(async (submittedQuestion) => {
-                    // 使用 Redis 缓存中的题目信息
-                    const questionId = submittedQuestion.question as string;
-                    const questionData = await useFetch(
-                        `/api/questions/${questionId}`
-                    );
+        // }).then((submittedQuestions) => {
+        //     // 遍历每个提交的题目
+        //     return Promise.all(
+        //         submittedQuestions.map(async (submittedQuestion) => {
+        //             // 使用 Redis 缓存中的题目信息
+        //             const questionId = submittedQuestion.question as string;
+        //             const questionData = await useFetch(
+        //                 `/api/questions/${questionId}`
+        //             );
 
-                    // 返回合并后的结果
-                    return {
-                        ...submittedQuestion,
-                        question: questionData, // 将从 Redis 获取到的 question 数据合并到 submittedQuestion 中
-                    };
-                })
-            );
+        //             // 返回合并后的结果
+        //             return {
+        //                 ...submittedQuestion,
+        //                 question: questionData, // 将从 Redis 获取到的 question 数据合并到 submittedQuestion 中
+        //             };
+        //         })
+        //     );
         });
     });
 

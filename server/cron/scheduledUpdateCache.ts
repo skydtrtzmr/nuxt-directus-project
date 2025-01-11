@@ -13,7 +13,7 @@ import { fetchAllPaginatedData } from "../utils/directusUtils";
 
 // 注意！每次请求只能返回100条数据，所以如果题目数量多于100，需要分批请求。
 
-export default defineCronHandler("everyThirtyMinutes", async() => {
+export default defineCronHandler("everyThirtyMinutes", async () => {
     // do action
     console.log("Scheduled Update Cache");
     updateHashListCache(
@@ -43,7 +43,7 @@ export default defineCronHandler("everyThirtyMinutes", async() => {
                 ],
             }),
         3600 // 1 hour
-    ); 
+    );
 
     // 上面的写法是把整个列表存为一个值。接下来改成每个列表的每一个对象存为一个值。
     // 这样可以避免列表过长、每次get redis数据量过大的问题。

@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
                 ],
             }) // 获取章节数据的函数
     );
-    console.log("data in redis: ", data);
+    // console.log("data in redis: ", data);
 
     return data;
 });
