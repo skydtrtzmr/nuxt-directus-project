@@ -322,8 +322,62 @@ const fetchSubmittedChapterList = async (
     const chapterList = chaptersResponse;
 
     // 3. 根据章节ID分批加载题目数据
-    const questionsPromises = chapterList.map((chapter) => {
-        return getItems<SubmittedQuestions>({
+    // const questionsPromises = chapterList.map((chapter) => {
+    //     return getItems<SubmittedQuestions>({
+    //         collection: "submitted_questions",
+    //         params: {
+    //             filter: { submitted_paper_chapter: chapter.id },
+    //             fields: [
+    //                 "id",
+    //                 "sort_in_chapter",
+    //                 "option_number",
+    //                 "question_type",
+    //                 "point_value",
+    //                 "score",
+    //                 "submitted_ans_q_mc_single",
+    //                 "submitted_ans_q_mc_multi",
+    //                 "submitted_ans_q_mc_binary",
+    //                 "submitted_ans_q_mc_flexible",
+    //                 // "question.q_mc_single.*",
+    //                 // "question.q_mc_multi.*",
+    //                 // "question.q_mc_binary.*",
+    //                 // "question.q_mc_flexible.*",
+    //                 // "question.question_group.*",
+    //                 "question", // 上面那些省略掉，只需要question字段（id）即可，改成从redis获取。
+    //                 "submitted_paper_chapter.source_paper_prototype_chapter.id",
+    //                 "submitted_paper_chapter.title",
+    //                 "submitted_paper_chapter.source_paper_prototype_chapter.description",
+    //             ],
+    //             sort: "sort_in_chapter",
+    //         },
+    //     }).then((submittedQuestions) => {
+    //         // 遍历每个提交的题目
+    //         return Promise.all(
+    //             submittedQuestions.map(async (submittedQuestion) => {
+    //                 // 使用 Redis 缓存中的题目信息
+    //                 const questionId = submittedQuestion.question as string;
+    //                 const questionData = await useFetch(
+    //                     `/api/questions/${questionId}`
+    //                 );
+    //                 // useFetch返回的是一个响应式对象，
+    //                 // 需要用`.data.value`来获取实际数据。
+    //                 console.log("questionData:", questionData);
+
+    //                 // 返回合并后的结果
+    //                 return {
+    //                     ...submittedQuestion,
+    //                     question: questionData.data.value, // 将从 Redis 获取到的 question 数据合并到 submittedQuestion 中
+    //                 };
+    //             })
+    //         );
+    //     });
+    // });
+
+    // 之前的写法是每次发一个hget。现在改成统一发一个hmget。
+
+    const questionsPromises = chapterList.map(async (chapter) => {
+        // Step 1: 查询章节中的所有提交题目
+        const submittedQuestions = await getItems<SubmittedQuestions>({
             collection: "submitted_questions",
             params: {
                 filter: { submitted_paper_chapter: chapter.id },
@@ -338,39 +392,42 @@ const fetchSubmittedChapterList = async (
                     "submitted_ans_q_mc_multi",
                     "submitted_ans_q_mc_binary",
                     "submitted_ans_q_mc_flexible",
-                    // "question.q_mc_single.*",
-                    // "question.q_mc_multi.*",
-                    // "question.q_mc_binary.*",
-                    // "question.q_mc_flexible.*",
-                    // "question.question_group.*",
-                    "question", // 上面那些省略掉，只需要question字段（id）即可，改成从redis获取。
+                    "question", // 只需要查询 question 字段，其他字段从 Redis 获取
                     "submitted_paper_chapter.source_paper_prototype_chapter.id",
                     "submitted_paper_chapter.title",
                     "submitted_paper_chapter.source_paper_prototype_chapter.description",
                 ],
                 sort: "sort_in_chapter",
             },
-        }).then((submittedQuestions) => {
-            // 遍历每个提交的题目
-            return Promise.all(
-                submittedQuestions.map(async (submittedQuestion) => {
-                    // 使用 Redis 缓存中的题目信息
-                    const questionId = submittedQuestion.question as string;
-                    const questionData = await useFetch(
-                        `/api/questions/${questionId}`
-                    );
-                    // useFetch返回的是一个响应式对象，
-                    // 需要用`.data.value`来获取实际数据。
-                    console.log("questionData:", questionData);
-                    
+        });
 
-                    // 返回合并后的结果
-                    return {
-                        ...submittedQuestion,
-                        question: questionData.data.value, // 将从 Redis 获取到的 question 数据合并到 submittedQuestion 中
-                    };
-                })
+        // Step 2: 获取所有 questionId 的列表
+        const questionIds = submittedQuestions.map((submittedQuestion) => {
+            return submittedQuestion.question as string;
+        });
+
+        // Step 3: 使用批量查询 Redis 获取所有 question 数据
+        const questionsData = await useFetch("/api/questions/list", {
+            method: "POST",
+            body: {
+                ids: questionIds,
+            },
+        }) as any; // 注意，这里的类型定义是any，因为返回的数据格式不确定。
+
+        console.log('questionsData:', questionsData.data.value);
+        
+
+        // Step 4: 将 Redis 返回的数据合并到 submittedQuestions 中
+        return submittedQuestions.map((submittedQuestion) => {
+            const questionId = submittedQuestion.question as string;
+            const questionData = questionsData.data.value.find(
+                (item: any) => item.id === questionId
             );
+
+            return {
+                ...submittedQuestion,
+                question: questionData || null, // 合并 question 数据
+            };
         });
     });
 

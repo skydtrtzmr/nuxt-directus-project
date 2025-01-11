@@ -53,6 +53,48 @@ export async function getHashListItemFromCache<T>(
     }
 }
 
+// 批量读取缓存的Hash列表的指定id列表的多个项
+export async function getHashListItemsFromCache<T>(
+    key: string, // 缓存的key
+    ids: string[], // 要获取的项的id列表
+    fetchFunction: () => Promise<any[]>, // 从数据库获取列表数据的方法
+    ttl: number = 3600 // 缓存的过期时间，默认1小时
+): Promise<T[]> {
+    // 使用 Redis 的 HMGET 方法批量获取多个字段
+    // 1. 获取缓存中的数据
+    const cachedData = await redis.hmget(key, ...ids);
+
+    // 2. 筛选出已命中的数据
+    const hitData: string[] = cachedData.filter(
+        (data) => data !== null && data !== undefined
+    ) as string[];
+
+    // 如果命中缓存的数据量与请求的 ID 列表的数量不同，则表示有些数据没有命中缓存
+    if (hitData.length !== ids.length) {
+        console.log(
+            "cache not hit for some items, fetching from database",
+            key,
+            ids
+        );
+
+        // 3. 获取缓存未命中的数据并更新缓存
+        await updateHashListCache(key, fetchFunction, ttl);
+        // 注意这里不仅仅是更新redis中没有命中的项，还要更新redis中已经存在的项，因为可能有些项已经过期了
+
+        // 4. 再次从缓存中获取数据，确保所有的项都有数据
+        const updatedCachedData = await redis.hmget(key, ...ids);
+
+        // 5. 返回最终的结果，解析数据
+        return updatedCachedData.map((data) =>
+            data ? JSON.parse(data) : null
+        );
+    } else {
+        // 如果缓存命中所有请求项，直接返回数据
+        console.log("cache hit", key, ids);
+        return hitData.map((data) => JSON.parse(data));
+    }
+}
+
 // TODO 下面是获取普通数值类型的缓存的函数，暂时注释掉，因为暂时不需要
 
 // export async function getItemFromCache<T>(
