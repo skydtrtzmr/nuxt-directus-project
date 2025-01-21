@@ -184,7 +184,7 @@ const {
 
 // 获取提交的考试信息。先获取试卷，再获取试卷的章节。
 const fetchSubmittedExam = async () => {
-    const submittedExamResponse = await getItemById<SubmittedExams>({
+    const submittedExamResponse:SubmittedExams = await getItemById<SubmittedExams>({
         collection: "submitted_exams",
         id: submitted_exam_id,
         params: {

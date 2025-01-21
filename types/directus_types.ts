@@ -875,12 +875,14 @@ export type QuestionsSpreadsheet = {
 
 export type Sections = {
   child_nodes: any[] | Sections[];
+  content?: string | null;
   date_created?: string | null;
   date_updated?: string | null;
   id: string;
   knowledge_points: any[] | SectionsKnowledgePoints[];
   level?: number | null;
   parent_node?: string | Sections | null;
+  path?: string | null;
   section_number?: string | null;
   sort?: number | null;
   status: string;

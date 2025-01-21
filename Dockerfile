@@ -4,6 +4,10 @@
 # pnpm build
 # docker build -t skydtrtzmr/my-directus-client ./
 
+# 指定最新版本：
+# docker tag skydtrtzmr/my-directus-client:1.1.0 skydtrtzmr/my-directus-client:latest
+# （注意替换为自己的镜像版本）
+
 
 # 其实有两种方式构建镜像：
 # 1. 直接在Dockerfile中指定依赖，然后使用RUN命令安装依赖，最后使用COPY命令复制代码，最后使用CMD命令启动服务。
@@ -16,7 +20,7 @@ FROM node:18-alpine AS builder
 ENV HOST 0.0.0.0
 
 # 指定App根目录（作为之后的变量使用）
-ENV APP_ROOT ./nuxt-app
+ENV APP_ROOT=./nuxt-app
 
 RUN mkdir -p ${APP_ROOT}
 # COPY . ${APP_ROOT}

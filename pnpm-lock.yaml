@@ -11,6 +11,9 @@ importers:
       '@directus/sdk':
         specifier: ^18.0.3
         version: 18.0.3
+      '@nuxtus/directus-extension-nuxtus-hook':
+        specifier: ^1.4.0
+        version: 1.4.0
       '@pinia/nuxt':
         specifier: ^0.7.0
         version: 0.7.0(magicast@0.3.5)(rollup@4.27.2)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
@@ -1062,6 +1065,9 @@ packages:
 
   '@nuxtjs/tailwindcss@6.12.2':
     resolution: {integrity: sha512-qPJiFH67CkTj/2kBGBzqXihOD1rQXMsbVS4vdQvfBxOBLPfGhU1yw7AATdhPl2BBjO2krjJLuZj39t7dnDYOwg==}
+
+  '@nuxtus/directus-extension-nuxtus-hook@1.4.0':
+    resolution: {integrity: sha512-JTzCk+pliH5Hq58ex501mft5pk/i3o/f+XvMskt2kYApSgvsrBtSV5TCpHZCUmdIi/SyU3A9TJ+IwN/22lv0HA==}
 
   '@parcel/watcher-android-arm64@2.5.0':
     resolution: {integrity: sha512-qlX4eS28bUcQCdribHkg/herLe+0A9RyYC+mm2PXpncit8z5b3nSqGVzMNR3CmtAOgRutiZ02eIJJgP/b1iEFQ==}
@@ -5596,6 +5602,8 @@ snapshots:
       - rollup
       - supports-color
       - ts-node
+
+  '@nuxtus/directus-extension-nuxtus-hook@1.4.0': {}
 
   '@parcel/watcher-android-arm64@2.5.0':
     optional: true
