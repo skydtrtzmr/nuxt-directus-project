@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<c:chartSpace xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:c16r2="http://schemas.microsoft.com/office/drawing/2015/06/chart">
+    <c:pivotSource>
+        <c:name>[会计类专业基本技能考试2024A1-学生成绩列表.xlsx]各考点最高分最低分!数据透视表1</c:name>
+        <c:fmtId val="3"/>
+    </c:pivotSource>
+</c:chartSpace>
