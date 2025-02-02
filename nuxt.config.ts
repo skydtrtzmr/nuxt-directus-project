@@ -140,17 +140,8 @@ export default defineNuxtConfig({
     },
 
     vite: {
-        optimizeDeps: {
-            include: ['rxjs', '@univerjs/presets']
-        },
-        build: {
-            commonjsOptions: {
-                include: [/node_modules/],
-            },
-        },
         resolve: {
-            mainFields: ['module', 'main'],
-            extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json'],
+            // 此项必须配置，否则pnpm dev打开univer sheet会报错。
             alias: {
                 'react': 'react',
                 'react-dom': 'react-dom',
@@ -159,11 +150,8 @@ export default defineNuxtConfig({
             }
         },
         ssr: {
+            // 此项必须配置，否则pnpm dev打开univer sheet会报错。
             noExternal: ['@univerjs/presets', 'rxjs']
         }
-    },
-
-    build: {
-        transpile: ['rxjs', '@univerjs/presets']
     },
 });
