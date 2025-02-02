@@ -138,4 +138,32 @@ export default defineNuxtConfig({
             autoprefixer: {},
         },
     },
+
+    vite: {
+        optimizeDeps: {
+            include: ['rxjs', '@univerjs/presets']
+        },
+        build: {
+            commonjsOptions: {
+                include: [/node_modules/],
+            },
+        },
+        resolve: {
+            mainFields: ['module', 'main'],
+            extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json'],
+            alias: {
+                'react': 'react',
+                'react-dom': 'react-dom',
+                '@univerjs/design/lib/index.css': '@univerjs/design/lib/index.css',
+                '@univerjs/presets/lib/styles/preset-sheets-core.css': '@univerjs/presets/lib/styles/preset-sheets-core.css'
+            }
+        },
+        ssr: {
+            noExternal: ['@univerjs/presets', 'rxjs']
+        }
+    },
+
+    build: {
+        transpile: ['rxjs', '@univerjs/presets']
+    },
 });
