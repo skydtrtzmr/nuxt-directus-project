@@ -17,6 +17,8 @@
     "@primevue/forms": "^4.2.4",
     "@primevue/themes": "^4.2.3",
     "@types/md5": "^2.3.5",
+    "@univerjs-pro/sheets-chart": "^0.5.5",
+    "@univerjs-pro/sheets-chart-ui": "^0.5.5",
     "@univerjs/core": "^0.5.5",
     "@univerjs/design": "^0.5.5",
     "@univerjs/docs": "^0.5.5",

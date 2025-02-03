@@ -22,6 +22,8 @@ const model = ref([
             { label: "考试", icon: "pi pi-fw pi-id-card", to: "/exams" },
             { label: "登录", icon: "pi pi-fw pi-id-card", to: "/auth/login" },
             { label: "test", icon: "pi pi-fw pi-id-card", to: "/test" },
+            { label: "在线表格", icon: "pi pi-fw pi-table", to: "/sheet" },
+            { label: "图表示例", icon: "pi pi-fw pi-chart-line", to: "/sheetchart" },
             // { label: 'Input', icon: 'pi pi-fw pi-check-square', to: '/uikit/input' },
             // { label: 'Button', icon: 'pi pi-fw pi-mobile', to: '/uikit/button', class: 'rotated-icon' },
             // { label: 'Table', icon: 'pi pi-fw pi-table', to: '/uikit/table' },
