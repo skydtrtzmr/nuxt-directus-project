@@ -1,109 +1,74 @@
 <template>
-  <div ref="container" class="sheet-container"></div>
+  <div class="card">
+    <div id="app" style="width: 100%; height: 600px;" />
+  </div>
 </template>
 
-<script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { createUniver, defaultTheme, LocaleType, merge } from '@univerjs/presets'
-import { UniverSheetsAdvancedPreset } from '@univerjs/presets/preset-sheets-advanced'
-import sheetsAdvancedZhCN from '@univerjs/presets/preset-sheets-advanced/locales/zh-CN'
-import { LinePointShape } from '@univerjs-pro/sheets-chart'
+<script setup>
+import { onMounted } from 'vue'
+import {
+    createUniver,
+    defaultTheme,
+    LocaleType,
+    merge,
+} from "@univerjs/presets";
+import { UniverSheetsAdvancedPreset } from "@univerjs/presets/preset-sheets-advanced";
+import UniverPresetSheetsAdvancedEnUS from "@univerjs/presets/preset-sheets-advanced/locales/en-US";
+import { UniverSheetsCorePreset } from "@univerjs/presets/preset-sheets-core";
+import sheetsCoreZhCN from '@univerjs/presets/preset-sheets-core/locales/zh-CN'
+// import sheetsCoreEnUS from "@univerjs/presets/preset-sheets-core/locales/en-US";
+import { UniverSheetsDrawingPreset } from "@univerjs/presets/preset-sheets-drawing";
+import UniverPresetSheetsDrawingEnUS from "@univerjs/presets/preset-sheets-drawing/locales/en-US";
+import { WORKBOOK_DATA } from "../server/lib/data";
+import { insertChart } from "../server/lib/function";
 
-// 基础样式
-import '@univerjs/presets/lib/styles/preset-sheets-advanced.css'
+import "@univerjs/presets/lib/styles/preset-sheets-core.css";
+import "@univerjs/presets/lib/styles/preset-sheets-drawing.css";
+import "@univerjs/presets/lib/styles/preset-sheets-advanced.css";
 
-const container = ref<HTMLElement | null>(null)
+definePageMeta({
+  layout: 'default'
+})
 
-// 示例数据
-const WORKBOOK_DATA = {
-  id: 'sheet-chart-demo',
-  name: '图表示例',
-  sheetOrder: ['sheet1'],
-  sheets: {
-    sheet1: {
-      id: 'sheet1',
-      name: 'Sheet1',
-      rowCount: 20,
-      columnCount: 10,
-      cellData: {
-        0: {
-          0: { v: '月份' },
-          1: { v: '销售额' }
-        },
-        1: {
-          0: { v: '1月' },
-          1: { v: 1000 }
-        },
-        2: {
-          0: { v: '2月' },
-          1: { v: 1500 }
-        },
-        3: {
-          0: { v: '3月' },
-          1: { v: 1200 }
-        },
-        4: {
-          0: { v: '4月' },
-          1: { v: 2000 }
-        },
-        5: {
-          0: { v: '5月' },
-          1: { v: 1800 }
-        }
-      }
-    }
-  }
-}
-
-onMounted(async () => {
-  if (!container.value) return
-
+onMounted(() => {
   const { univerAPI } = createUniver({
-    theme: defaultTheme,
-    locale: LocaleType.ZH_CN,
-    locales: {
-      [LocaleType.ZH_CN]: merge({}, sheetsAdvancedZhCN)
-    },
-    presets: [
-      UniverSheetsAdvancedPreset()
-    ]
-  })
+      locale: LocaleType.EN_US,
+      locales: {
+          [LocaleType.EN_US]: merge(
+              {},
+            //   sheetsCoreEnUS,
+              sheetsCoreZhCN,
+              UniverPresetSheetsDrawingEnUS,
+              UniverPresetSheetsAdvancedEnUS
+          ),
+      },
+      theme: defaultTheme,
+      presets: [
+          UniverSheetsCorePreset(),
+          UniverSheetsDrawingPreset(),
+          UniverSheetsAdvancedPreset({
+            //   license:
+            //       "1846850823316525115-1-eyJpIjoiMTg0Njg1MDgyMzMxNjUyNTExNSIsInYiOiIxIiwicCI6Ikx1aCt4eEVpN3pkRklqbDdOYXEvTy9NcEx1RVROUzIxQWFLM1J2Y0J6dkU9IiwicnQiOjMsImZ0Ijp7InVmIjp7Im11IjoyMTQ3NDgzNjQ2LCJldCI6MTczODM5Mjg4OCwibW0iOjIxNDc0ODM2NDYsImN1IjoyMTQ3NDgzNjQ2fSwic2YiOnsiZXQiOjE3MzgzOTI4ODgsInB0biI6MjE0NzQ4MzY0NiwibWlzIjoyMTQ3NDgzNjQ2LCJtcG4iOjIxNDc0ODM2NDYsIm5jIjoyMTQ3NDgzNjQ2fSwiZGYiOnsiZXQiOjE3MzgzOTI4ODgsInJ2Ijp0cnVlLCJtaXMiOjIxNDc0ODM2NDYsIm1wbiI6MjE0NzQ4MzY0Nn0sIndzZiI6eyJldCI6MTczODM5Mjg4OCwiaG4iOjIxNDc0ODM2NDZ9fSwidWQiOjE3MzgzOTI4ODgsImF0IjoxNzM1ODAwODg4LCJlIjoiMjY3NzU1NjcwMEBxcS5jb20iLCJkIjo4LCJuIjo2MH0=-ty5ziMmVnrlmNdzrFcMi7mBR8OGGn65QHCgF6Ms03IbFMlAkkZW0cb8tYv5E424d4BYtqK6jX/XJg5GL59Z1Cw==-1738392888",
+          }),
+      ],
+  });
 
-  if (container.value) {
-    const containerElement = container.value
-    const divElement = containerElement.querySelector('.univer-sheet') as HTMLElement || containerElement
-    divElement.style.height = '100%'
-  }
-
-  const workbook = univerAPI.createUniverSheet(WORKBOOK_DATA)
-  const sheet = workbook.getActiveSheet()
-
-  // 创建图表
-  setTimeout(async () => {
-    const chartBuilder = sheet.newChart().asLineChart()
-    const chartInfo = chartBuilder
-      .addRange('A1:B6')  // 使用A1到B6的数据范围
-      .setPosition(1, 3, 400, 300)  // 设置图表位置和大小
-      .setDataPointSize(8)  // 设置数据点大小
-      .setDataPointShape(LinePointShape.Circle)  // 使用正确的枚举值
-      .setAxisPointerStyle({
-        indicatorLabelColor: '#ff0000',
-        indicatorLineType: 'solid',  // 使用字符串
-        indicatorLabelTextColor: '#0000ff',
-      })
-      .build()
-
-    await sheet.insertChart(chartInfo)
-  }, 1000)  // 延迟1秒等待表格渲染完成
+  univerAPI.createUniverSheet(WORKBOOK_DATA);
+  insertChart(univerAPI);
 })
 </script>
 
-<style scoped>
-.sheet-container {
-  width: 100%;
-  height: 800px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  overflow: hidden;
+<style>
+#app {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
+.card {
+  background: var(--surface-card);
+  padding: 2rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
 }
 </style>
