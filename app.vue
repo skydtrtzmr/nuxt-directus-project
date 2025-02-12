@@ -10,7 +10,6 @@
 // import { onMounted } from "vue";
 // import { useAuth } from "~/stores/auth";
 
-
 </script>
 
 <style>
