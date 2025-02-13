@@ -8,8 +8,7 @@ import { createUniver, defaultTheme, LocaleType, merge } from '@univerjs/presets
 import { UniverSheetsCorePreset } from '@univerjs/presets/preset-sheets-core'
 import sheetsCoreZhCN from '@univerjs/presets/preset-sheets-core/locales/zh-CN'
 
-// 基础样式
-import '@univerjs/presets/lib/styles/preset-sheets-core.css'
+
 
 const container = ref<HTMLElement | null>(null)
 
@@ -59,6 +58,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
+@import '@univerjs/presets/lib/styles/preset-sheets-core.css';
 .sheet-container {
   width: 100%;
   height: 600px;
