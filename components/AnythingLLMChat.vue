@@ -6,7 +6,7 @@
 import { onMounted, onBeforeUnmount, ref } from 'vue'
 
 const {
-    public: { anythingLLM },
+    public: { anythingllm },
 } = useRuntimeConfig();
 
 const chatContainer = ref(null)
@@ -16,9 +16,9 @@ const initChat = () => {
   // 确保在客户端环境
   if (typeof window !== 'undefined') {
     scriptElement = document.createElement('script')
-    scriptElement.setAttribute('data-embed-id', anythingLLM.embedId)
-    scriptElement.setAttribute('data-base-api-url', anythingLLM.baseApiUrl)
-    scriptElement.src = anythingLLM.scriptUrl
+    scriptElement.setAttribute('data-embed-id', anythingllm.embedId)
+    scriptElement.setAttribute('data-base-api-url', anythingllm.baseApiUrl)
+    scriptElement.src = anythingllm.scriptUrl
     document.body.appendChild(scriptElement)
   }
 }

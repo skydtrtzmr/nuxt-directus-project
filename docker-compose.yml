@@ -11,6 +11,9 @@
 
 # 参考：https://nuxtjs.org.cn/docs/guide/directory-structure/env
 
+# 如果更新了镜像，但是之前已经运行过容器，则需要先删除容器，再重新运行容器。
+# （docker compose down && docker compose up -d）
+
 services:
 
   directus-client:

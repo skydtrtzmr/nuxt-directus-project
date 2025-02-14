@@ -89,7 +89,7 @@ export default defineNuxtConfig({
             // 但是最好不要在nuxt.config.ts文件中直接使用process.env.NUXT_TEST，因为这样会导致build后无法获取到环境变量。
             // 最好通过命令行传参的方式来配置。
             // 以下是AnythingLLM的配置，用于嵌入式聊天机器人
-            anythingLLM: {
+            anythingllm: {
                 embedId: "72e40eec-a5b4-4a5b-9106-6ed6c7f51aef",
                 baseApiUrl: "http://localhost:3001/api/embed",
                 scriptUrl:
@@ -99,7 +99,7 @@ export default defineNuxtConfig({
         private: {
             // private意味着这些配置只能在服务器端代码中访问，不能在客户端代码中访问。
             redisHost: "127.0.0.1",
-            redisPort: 6379,
+            redisPort: 6279,
         },
     },
 
