@@ -5,6 +5,10 @@
 <script setup>
 import { onMounted, onBeforeUnmount, ref } from 'vue'
 
+const {
+    public: { anythingLLM },
+} = useRuntimeConfig();
+
 const chatContainer = ref(null)
 let scriptElement = null
 
@@ -12,10 +16,9 @@ const initChat = () => {
   // 确保在客户端环境
   if (typeof window !== 'undefined') {
     scriptElement = document.createElement('script')
-    scriptElement.setAttribute('data-embed-id', '72e40eec-a5b4-4a5b-9106-6ed6c7f51aef')
-    scriptElement.setAttribute('data-base-api-url', 'http://localhost:3101/api/embed')
-    scriptElement.src = 'http://localhost:3101/embed/anythingllm-chat-widget.min.js'
-    // TODO 得把这边换成动态的，从配置文件读取
+    scriptElement.setAttribute('data-embed-id', anythingLLM.embedId)
+    scriptElement.setAttribute('data-base-api-url', anythingLLM.baseApiUrl)
+    scriptElement.src = anythingLLM.scriptUrl
     document.body.appendChild(scriptElement)
   }
 }
