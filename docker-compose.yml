@@ -16,13 +16,13 @@ services:
   directus-client:
     image: skydtrtzmr/my-directus-client:latest
     ports:
-      - 3001:3000
+      - 3201:3000
     env_file:
       - .env.production
   redis-container:
     image: redis:6
     ports:
-      - 6379:6379
+      - 6279:6379
 
 
 # 注意：
