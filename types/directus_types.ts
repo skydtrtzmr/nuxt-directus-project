@@ -44,16 +44,16 @@ export type Courses = {
   sort?: number | null;
   status: string;
   subject?: string | Subjects | null;
-  teachers: any[] | CoursesDirectusUsers[];
+  teachers: any[] | CoursesTeachers[];
   title?: string | null;
   user_created?: string | DirectusUsers | null;
   user_updated?: string | DirectusUsers | null;
 };
 
-export type CoursesDirectusUsers = {
+export type CoursesTeachers = {
   courses_id?: string | Courses | null;
-  directus_users_id?: string | DirectusUsers | null;
   id: number;
+  teachers_id?: string | Teachers | null;
 };
 
 export type DirectusAccess = {
@@ -186,10 +186,6 @@ export type DirectusFlows = {
   color?: string | null;
   date_created?: string | null;
   description?: string | null;
-  flow_manager_category?: string | null;
-  flow_manager_last_run_at?: string | null;
-  flow_manager_order?: number | null;
-  flow_manager_run_counter?: number | null;
   icon?: string | null;
   id: string;
   name: string;
@@ -350,14 +346,12 @@ export type DirectusSettings = {
   auth_login_attempts?: number | null;
   auth_password_policy?: string | null;
   basemaps?: unknown | null;
-  command_palette_settings?: unknown | null;
   custom_aspect_ratios?: unknown | null;
   custom_css?: string | null;
   default_appearance: string;
   default_language: string;
   default_theme_dark?: string | null;
   default_theme_light?: string | null;
-  flow_manager_categories?: unknown | null;
   id: number;
   mapbox_key?: string | null;
   module_bar?: unknown | null;
@@ -383,6 +377,7 @@ export type DirectusSettings = {
   theme_dark_overrides?: unknown | null;
   theme_light_overrides?: unknown | null;
   theming_group: string;
+  visual_editor_urls?: unknown | null;
 };
 
 export type DirectusShares = {
@@ -485,6 +480,29 @@ export type Exams = {
 
 export type ExamsStudents = {
   exams_id?: string | Exams | null;
+  id: number;
+  students_id?: string | Students | null;
+};
+
+export type Exercises = {
+  date_created?: string | null;
+  date_updated?: string | null;
+  description?: string | null;
+  duration: number;
+  end_time: string;
+  id: string;
+  paper?: string | Papers | null;
+  sort?: number | null;
+  start_time: string;
+  status: string;
+  students: any[] | ExercisesStudents[];
+  title: string;
+  user_created?: string | DirectusUsers | null;
+  user_updated?: string | DirectusUsers | null;
+};
+
+export type ExercisesStudents = {
+  exercises_id?: string | Exercises | null;
   id: number;
   students_id?: string | Students | null;
 };
@@ -629,6 +647,103 @@ export type PaperPrototypes = {
   title?: string | null;
   total_point_value?: number | null;
   total_question_count?: number | null;
+  user_created?: string | DirectusUsers | null;
+  user_updated?: string | DirectusUsers | null;
+};
+
+export type PaperSectionStrategies = {
+  date_created?: string | null;
+  date_updated?: string | null;
+  filter_knowledge_points?: unknown | null;
+  filter_textbook_chapters?: unknown | null;
+  filter_type?: string | null;
+  id: string;
+  paper_strategy?: string | PaperStrategies | null;
+  points_per_question?: number | null;
+  question_type: string;
+  sort?: number | null;
+  sort_in_paper?: number | null;
+  status: string;
+  target_difficulty: number;
+  title?: string | null;
+  total_question_count?: number | null;
+  total_question_points?: number | null;
+  user_created?: string | DirectusUsers | null;
+  user_updated?: string | DirectusUsers | null;
+};
+
+export type PaperSections = {
+  date_created?: string | null;
+  date_updated?: string | null;
+  id: string;
+  paper_id?: string | Papers | null;
+  points_per_question?: number | null;
+  question_type: string;
+  questions: any[] | PaperSectionsQuestions[];
+  sort?: number | null;
+  sort_in_paper?: number | null;
+  status: string;
+  title?: string | null;
+  total_question_count?: number | null;
+  total_question_points?: number | null;
+  user_created?: string | DirectusUsers | null;
+  user_updated?: string | DirectusUsers | null;
+};
+
+export type PaperSectionsQuestions = {
+  id: number;
+  paper_sections_id?: string | PaperSections | null;
+  questions_id?: string | Questions | null;
+  sort_in_chapter?: number | null;
+};
+
+export type PaperStrategies = {
+  date_created?: string | null;
+  date_updated?: string | null;
+  description?: string | null;
+  difficulty?: number | null;
+  id: string;
+  paper_section_strategies: any[] | PaperSectionStrategies[];
+  sort?: number | null;
+  status: string;
+  title?: string | null;
+  user_created?: string | DirectusUsers | null;
+  user_updated?: string | DirectusUsers | null;
+};
+
+export type Papers = {
+  course?: string | Courses | null;
+  date_created?: string | null;
+  date_updated?: string | null;
+  id: string;
+  paper_sections: any[] | PaperSections[];
+  paper_strategy?: string | PaperStrategies | null;
+  sort?: number | null;
+  status: string;
+  title?: string | null;
+  total_point_value?: number | null;
+  total_question_count?: number | null;
+  "triggers-do4gvh": string;
+  user_created?: string | DirectusUsers | null;
+  user_updated?: string | DirectusUsers | null;
+};
+
+export type PracticeSessions = {
+  actual_end_time?: string | null;
+  actual_start_time?: string | null;
+  date_created?: string | null;
+  date_updated?: string | null;
+  exercise_id?: string | Exercises | null;
+  extra_time?: number | null;
+  id: string;
+  paper?: string | Papers | null;
+  question_results: any[] | QuestionResults[];
+  score?: number | null;
+  sort?: number | null;
+  status: string;
+  student_id?: string | Students | null;
+  submit_status?: string | null;
+  title?: string | null;
   user_created?: string | DirectusUsers | null;
   user_updated?: string | DirectusUsers | null;
 };
@@ -798,6 +913,27 @@ export type QuestionPointAssignStrategies = {
   user_updated?: string | DirectusUsers | null;
 };
 
+export type QuestionResults = {
+  correct_ans?: string | null;
+  date_created?: string | null;
+  date_updated?: string | null;
+  id: string;
+  incomplete_point_value?: number | null;
+  option_number?: number | null;
+  point_value?: number | null;
+  practice_session_id?: string | PracticeSessions | null;
+  question_in_paper_id?: number | PaperSectionsQuestions | null;
+  question_type?: string | null;
+  score?: number | null;
+  sort?: number | null;
+  submitted_ans_q_mc_binary?: string | null;
+  submitted_ans_q_mc_flexible?: unknown | null;
+  submitted_ans_q_mc_multi?: unknown | null;
+  submitted_ans_q_mc_single?: string | null;
+  user_created?: string | DirectusUsers | null;
+  user_updated?: string | DirectusUsers | null;
+};
+
 export type Questions = {
   analysis?: string | null;
   answer?: string | null;
@@ -806,6 +942,7 @@ export type Questions = {
   difficulty?: number | null;
   id: string;
   knowledge_points: any[] | QuestionsKnowledgePoints[];
+  paper_section_id?: string | PaperSections | null;
   q_mc?: string | QMc | null;
   q_mc_binary?: string | QMcBinary | null;
   q_mc_flexible?: string | QMcFlexible | null;
@@ -875,14 +1012,12 @@ export type QuestionsSpreadsheet = {
 
 export type Sections = {
   child_nodes: any[] | Sections[];
-  content?: string | null;
   date_created?: string | null;
   date_updated?: string | null;
   id: string;
   knowledge_points: any[] | SectionsKnowledgePoints[];
   level?: number | null;
   parent_node?: string | Sections | null;
-  path?: string | null;
   section_number?: string | null;
   sort?: number | null;
   status: string;
@@ -1039,7 +1174,7 @@ export type CustomDirectusTypes = {
   articles_sections: ArticlesSections[];
   classes: Classes[];
   courses: Courses[];
-  courses_directus_users: CoursesDirectusUsers[];
+  courses_teachers: CoursesTeachers[];
   directus_access: DirectusAccess[];
   directus_activity: DirectusActivity[];
   directus_collections: DirectusCollections[];
@@ -1069,6 +1204,8 @@ export type CustomDirectusTypes = {
   directus_webhooks: DirectusWebhooks[];
   exams: Exams[];
   exams_students: ExamsStudents[];
+  exercises: Exercises[];
+  exercises_students: ExercisesStudents[];
   institutions: Institutions[];
   knowledge_points: KnowledgePoints[];
   knowledge_points_knowledge_points: KnowledgePointsKnowledgePoints[];
@@ -1080,6 +1217,12 @@ export type CustomDirectusTypes = {
   paper_prototype_chapters_question_groups: PaperPrototypeChaptersQuestionGroups[];
   paper_prototype_chapters_questions: PaperPrototypeChaptersQuestions[];
   paper_prototypes: PaperPrototypes[];
+  paper_section_strategies: PaperSectionStrategies[];
+  paper_sections: PaperSections[];
+  paper_sections_questions: PaperSectionsQuestions[];
+  paper_strategies: PaperStrategies[];
+  papers: Papers[];
+  practice_sessions: PracticeSessions[];
   q_fill_in_blank_answers: QFillInBlankAnswers[];
   q_mc: QMc[];
   q_mc_binary: QMcBinary[];
@@ -1090,6 +1233,7 @@ export type CustomDirectusTypes = {
   q_spreadsheet_scoring_items: QSpreadsheetScoringItems[];
   question_groups: QuestionGroups[];
   question_point_assign_strategies: QuestionPointAssignStrategies[];
+  question_results: QuestionResults[];
   questions: Questions[];
   questions_fill_in_blank: QuestionsFillInBlank[];
   questions_fill_in_blank_1: QuestionsFillInBlank1[];
