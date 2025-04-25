@@ -93,7 +93,7 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import utc from "dayjs/plugin/utc";
 import type {
-    SubmittedExams,
+    PracticeSessions,
     SubmittedPapers,
     SubmittedPaperChapters,
     SubmittedQuestions,
@@ -117,7 +117,7 @@ const ended_dialog_visible = ref(false);
 const confirm_submit_dialog_visible = ref(false);
 
 const props = defineProps<{
-    // submitted_exam_id: string;
+    // practice_session_id: string;
     // 暂时不用拿参数，直接用vue-router自己获取。
     exam_page_mode: string; // 考试模式，practice、exam、review
 }>();
@@ -141,16 +141,16 @@ const { getItemById, getItems, updateItem } = useDirectusItems();
 
 const router = useRouter();
 
-// 路由参数：submitted_exam 的 ID
+// 路由参数：practice_session 的 ID
 const route = useRoute(); // 这里的useRoute是vue-router的useRoute方法，而非Nuxt的useRoute方法。
-// const submitted_exam_id = route.params.id;
+// const practice_session_id = route.params.id;
 // 加入预处理参数：在路由守卫或组件加载时，无论是单个值还是数组，都统一解析为单个值。
-const submitted_exam_id = Array.isArray(route.params.id)
+const practice_session_id = Array.isArray(route.params.id)
     ? route.params.id[0]
     : route.params.id;
 
 // 数据绑定
-const submittedExam = ref<SubmittedExams>({} as SubmittedExams);
+const submittedExam = ref<PracticeSessions>({} as PracticeSessions);
 const submittedPaper = ref<SubmittedPapers>({} as SubmittedPapers);
 const submittedPaperChapters = ref<SubmittedPaperChapters[]>([]);
 // const submittedQuestions = ref<SubmittedQuestions[]>([]);
@@ -162,7 +162,7 @@ const chapter_id_list = ref<string[]>([]); // 试卷的所有（试卷原型）�
 const question_id_list = ref<string[]>([]); // 试卷的所有原题目ID列表。用来在redis中查询详情。
 
 // 把考试时间相关数据和考试的其他数据分开，避免混淆。
-const submittedExamTime = ref<SubmittedExams>({} as SubmittedExams); // 考试时间
+const submittedExamTime = ref<PracticeSessions>({} as PracticeSessions); // 考试时间
 // const selectedAnswer = ref(""); // 当前题目的答案
 
 // 倒计时相关
@@ -184,9 +184,9 @@ const {
 
 // 获取提交的考试信息。先获取试卷，再获取试卷的章节。
 const fetchSubmittedExam = async () => {
-    const submittedExamResponse:SubmittedExams = await getItemById<SubmittedExams>({
-        collection: "submitted_exams",
-        id: submitted_exam_id,
+    const submittedExamResponse:PracticeSessions = await getItemById<PracticeSessions>({
+        collection: "practice_sessions",
+        id: practice_session_id,
         params: {
             fields: ["id", "submitted_papers", "title", "student.name"], // 获取考试的状态和关联的试卷
         },
@@ -198,9 +198,9 @@ const fetchSubmittedExam = async () => {
 };
 
 const fetchExamTimeData = async () => {
-    const submittedExamTimeResponse = await getItemById<SubmittedExams>({
-        collection: "submitted_exams",
-        id: submitted_exam_id,
+    const submittedExamTimeResponse = await getItemById<PracticeSessions>({
+        collection: "practice_sessions",
+        id: practice_session_id,
         params: {
             fields: [
                 "id",
@@ -481,8 +481,8 @@ const submitActualEndTime = async (examId: string) => {
     try {
         let nowData = dayjs();
         const newItem = { actual_end_time: nowData };
-        await updateItem<SubmittedExams>({
-            collection: "submitted_exams",
+        await updateItem<PracticeSessions>({
+            collection: "practice_sessions",
             id: examId,
             item: newItem,
         });
@@ -490,12 +490,12 @@ const submitActualEndTime = async (examId: string) => {
 };
 
 // 这个和考试列表里面不太一样，直接传个id就行
-const updateSubmitStatus = async (submitted_exam_id: string) => {
+const updateSubmitStatus = async (practice_session_id: string) => {
     try {
         const newItem = { submit_status: "done" };
-        await updateItem<SubmittedExams>({
-            collection: "submitted_exams",
-            id: submitted_exam_id,
+        await updateItem<PracticeSessions>({
+            collection: "practice_sessions",
+            id: practice_session_id,
             item: newItem,
         });
     } catch (e) {}
@@ -555,7 +555,7 @@ const handleTimeOut = () => {
     // 在这里可以添加倒计时结束后的操作，例如自动提交试卷
     console.log("时间结束！自动提交考试试卷。");
     ended_dialog_visible.value = true;
-    submitExam(submitted_exam_id); // 调用提交试卷的函数
+    submitExam(practice_session_id); // 调用提交试卷的函数
 };
 
 const exitExam = () => {
@@ -565,7 +565,7 @@ const exitExam = () => {
 
 // 这个仅用于手动提交时，确认提交。
 const confirmSubmit = () => {
-    submitExam(submitted_exam_id); // 调用提交试卷的函数
+    submitExam(practice_session_id); // 调用提交试卷的函数
     exitExam();
 };
 

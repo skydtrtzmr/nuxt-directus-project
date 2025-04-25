@@ -35,9 +35,9 @@
             </div>
         </Dialog>
         <DataView
-            :value="submittedExams"
+            :value="practice_sessions_ref"
             :layout="layout"
-            dataKey="submittedExams.id"
+            dataKey="practice_sessions_ref.id"
         >
             <template #header>
                 <div class="flex justify-end">
@@ -107,7 +107,7 @@
                                                 <strong>开始时间:</strong>
                                                 {{
                                                     dayjs(
-                                                        item.exam.start_time
+                                                        item.exercises_students_id.exercises_id.start_time
                                                     ).format(
                                                         "YYYY-MM-DD HH:mm:ss"
                                                     )
@@ -117,7 +117,7 @@
                                                 <strong>结束时间:</strong>
                                                 {{
                                                     dayjs(
-                                                        item.exam.end_time
+                                                        item.exercises_students_id.exercises_id.end_time
                                                     ).format(
                                                         "YYYY-MM-DD HH:mm:ss"
                                                     )
@@ -189,7 +189,7 @@
                                         <div>
                                             {{
                                                 dayjs(
-                                                    item.exam.start_time
+                                                    item.exercises_students_id.exercises_id.start_time
                                                 ).format("YYYY-MM-DD HH:mm:ss")
                                             }}
                                         </div>
@@ -199,7 +199,7 @@
                                         <div>
                                             {{
                                                 dayjs(
-                                                    item.exam.end_time
+                                                    item.exercises_students_id.exercises_id.end_time
                                                 ).format("YYYY-MM-DD HH:mm:ss")
                                             }}
                                         </div>
@@ -236,7 +236,7 @@
 import dayjs from "dayjs";
 import { useAuth } from "~~/stores/auth";
 import type {
-    SubmittedExams,
+    PracticeSessions,
     SubmittedPapers,
     Exams,
 } from "~~/types/directus_types";
@@ -248,7 +248,7 @@ const router = useRouter();
 const gridItems = ref([]);
 console.log("gridItems.value");
 console.log(gridItems.value); // 在这里的时候gridItems还是空数组
-const submittedExams = ref<SubmittedExams[]>([]);
+const practice_sessions_ref = ref<PracticeSessions[]>([]);
 const auth = useAuth();
 const current_user = auth.user; // 获取当前用户
 console.log("current_user:\n", current_user);
@@ -266,52 +266,56 @@ definePageMeta({
 const layout = ref<"grid" | "list" | undefined>("grid"); // 默认显示为网格
 const options = ref(["list", "grid"]);
 
-const fetchSubmittedExams = async () => {
-    const submitted_exams = await getItems<SubmittedExams>({
-        collection: "submitted_exams",
+const fetchPracticeSessions = async () => {
+    const practice_sessions = await getItems<PracticeSessions>({
+        collection: "practice_sessions",
         params: {
             fields: [
                 "id",
                 "title",
-                "exam.start_time",
-                "exam.end_time",
+                "exercises_students_id.exercises_id.start_time",
+                "exercises_students_id.exercises_id.end_time",
                 "extra_time",
                 "actual_end_time",
                 "actual_start_time",
-                "participation_status",
                 "submit_status",
-                "student.*", // 要获得学生的详细信息，因为directus_user在student中。
+                // "student.*", // 要获得学生的详细信息，因为directus_user在student中。
+                "exercises_students_id.students_id.directus_user",
             ],
             // 笔记：注意看，嵌套的字段（例如student.directus_user）要做筛选的话像下面这样。
             filter: {
-                student: {
-                    directus_user: current_user!.id,
+                "exercises_students_id": {
+                    "students_id": {
+                        "directus_user": {
+                            "_eq": current_user!.id,
+                        }
+                    },
                 },
             },
             // 注意！别弄混了，directus中student.id和directus_user.id不一样。
         },
     });
-    submittedExams.value = submitted_exams;
+    practice_sessions_ref.value = practice_sessions;
 };
 
-const updateSubmitStatus = async (submitted_exam: SubmittedExams) => {
+const updateSubmitStatus = async (practice_session: PracticeSessions) => {
     try {
         const newItem = { submit_status: "doing" };
-        await updateItem<SubmittedExams>({
-            collection: "submitted_exams",
-            id: submitted_exam.id,
+        await updateItem<PracticeSessions>({
+            collection: "practice_sessions",
+            id: practice_session.id,
             item: newItem,
         });
     } catch (e) {}
 };
 
-const submitActualStartTime = async (submitted_exam: SubmittedExams) => {
+const submitActualStartTime = async (practice_session: PracticeSessions) => {
     try {
         let nowData = dayjs();
         const newItem = { actual_start_time: nowData };
-        await updateItem<SubmittedExams>({
-            collection: "submitted_exams",
-            id: submitted_exam.id,
+        await updateItem<PracticeSessions>({
+            collection: "practice_sessions",
+            id: practice_session.id,
             item: newItem,
         });
     } catch (e) {}
@@ -319,22 +323,24 @@ const submitActualStartTime = async (submitted_exam: SubmittedExams) => {
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const joinExam = async(examId: string) => {
+const joinExam = async (examId: string) => {
     // 首先判断考试时间
     console.log("当前时间：");
     console.log(dayjs(Date.now()));
     const now_time = dayjs(Date.now());
 
-    const exam_info = submittedExams.value.find((item) => item.id === examId)!;
+    const exam_info = practice_sessions_ref.value.find(
+        (item) => item.id === examId
+    )!;
 
     // 注意因为exam可能是字符串或对象，要用“as”来断言类型
     console.log("考试开始时间：");
-    const exam_start_time = dayjs((exam_info.exam as Exams).start_time);
-    console.log(dayjs((exam_info.exam as Exams).start_time));
+    const exam_start_time = dayjs((exam_info.exercises_students_id.exercise as Exams).start_time);
+    console.log(dayjs((exam_info.exercises_students_id.exercise as Exams).start_time));
 
     console.log("考试结束时间：");
-    const exam_end_time = dayjs((exam_info.exam as Exams).end_time);
-    console.log(dayjs((exam_info.exam as Exams).end_time));
+    const exam_end_time = dayjs((exam_info.exercises_students_id.exercise as Exams).end_time);
+    console.log(dayjs((exam_info.exercises_students_id.exercise as Exams).end_time));
 
     if (now_time.isBefore(exam_start_time)) {
         not_started_dialog_visible.value = true;
@@ -353,14 +359,14 @@ const joinExam = async(examId: string) => {
     console.log(`参加考试：${examId}`);
     // 参加考试之后，需要修改submit_status为doing。
     updateSubmitStatus(
-        submittedExams.value.find((item) => item.id === examId)!
+        practice_sessions_ref.value.find((item) => item.id === examId)!
     );
 
     // 只有第一次才记录实际开始时间，以后就不再记录了。
 
     if (exam_info.actual_start_time === null) {
         submitActualStartTime(
-            submittedExams.value.find((item) => item.id === examId)!
+            practice_sessions_ref.value.find((item) => item.id === examId)!
         );
     }
     // CAUTION: 注意
@@ -372,19 +378,19 @@ const joinExam = async(examId: string) => {
     // 这里的 router.push 必须是 this.$router.push 或者使用 composable useRouter()
 
     router.push(`/exam/${examId}`);
-    // 跳转到具体的考试页面，页面path的最后一项就是submitted_exams的id。
+    // 跳转到具体的考试页面，页面path的最后一项就是practice_sessions的id。
 };
 const reviewExam = (examId: string) => {
     router.push(`/review/${examId}`);
 };
 const getSubmitStatus = (
-    submitted_exam: SubmittedExams
+    practice_session: PracticeSessions
 ):
     | HintedString<
           "secondary" | "success" | "info" | "warn" | "danger" | "contrast"
       >
     | undefined => {
-    switch (submitted_exam.submit_status) {
+    switch (practice_session.submit_status) {
         case "done":
             return "success";
 
@@ -399,8 +405,8 @@ const getSubmitStatus = (
     }
 };
 
-const getSubmitStatusName = (submitted_exam: SubmittedExams) => {
-    switch (submitted_exam.submit_status) {
+const getSubmitStatusName = (practice_session: PracticeSessions) => {
+    switch (practice_session.submit_status) {
         case "done":
             return "已交卷";
 
@@ -415,8 +421,8 @@ const getSubmitStatusName = (submitted_exam: SubmittedExams) => {
     }
 };
 
-const getSubmitStatusAction = (submitted_exam: SubmittedExams) => {
-    switch (submitted_exam.submit_status) {
+const getSubmitStatusAction = (practice_session: PracticeSessions) => {
+    switch (practice_session.submit_status) {
         case "done":
             return "答题完成";
 
@@ -437,27 +443,27 @@ const {
 } = useRuntimeConfig();
 
 onMounted(async () => {
-    await fetchSubmittedExams(); // 注意要await！确保submittedExams.value已经被赋值
+    await fetchPracticeSessions(); // 注意要await！确保PracticeSessions.value已经被赋值
     if (isTest) {
         await nextTick(); // 确保 DOM 渲染完成
         await delay(1000);
 
         // 筛选出标题为特定内容的循环项
         const targetItemTitle = "自动化测试专用考试"; // 需要筛选的标题
-        console.log("submittedExams.value");
-        console.log(submittedExams.value);
+        console.log("practice_sessions_ref.value");
+        console.log(practice_sessions_ref.value);
         console.log("gridItems.value in onMounted");
         console.log(gridItems.value);
         await delay(2000);
         // 注意，下面获得的并不直接是Button，而是其父级div。
         const targetGirdDiv: HTMLElement | null =
             gridItems.value.find((button, index) => {
-                const item = submittedExams.value[index]; // 获取对应的项
+                const item = practice_sessions_ref.value[index]; // 获取对应的项
                 return item.title === targetItemTitle;
             }) || null;
 
         // 注意，现在这种写法，如果没有找到目标项，targetGirdDiv会是null。
-        
+
         await delay(2000);
 
         console.log("targetGirdDiv");
@@ -480,9 +486,8 @@ onMounted(async () => {
 // 不需要下面这样写，因为切换页面时，会自动重新获取数据。
 // onBeforeRouteUpdate(async (to, from) => {
 //     // 每次切换页面时，都要重新获取数据
-//     await fetchSubmittedExams();
+//     await fetchPracticeSessions();
 //     console.log("切换页面时，重新获取数据");
-    
-// });
 
+// });
 </script>

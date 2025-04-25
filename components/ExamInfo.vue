@@ -17,9 +17,9 @@
 </template>
 
 <script setup lang="ts">
-import type { SubmittedExams } from "~~/types/directus_types";
+import type { PracticeSessions } from "~~/types/directus_types";
 defineProps<{
-    submittedExam: SubmittedExams;
+    submittedExam: PracticeSessions;
 }>();
 </script>
 

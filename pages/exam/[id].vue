@@ -14,11 +14,11 @@ const exam_page_mode = ref("practice"); // 考试模式，practice表示练习�
 
 // 虽然可以在这里获取路由参数传给ExamPage，但是暂时直接让ExamPage自己获取也能用，先不改了。
 
-// // 路由参数：submitted_exam 的 ID
+// // 路由参数：practice_session 的 ID
 // const route = useRoute();
-// // const submitted_exam_id = route.params.id;
+// // const practice_session_id = route.params.id;
 // // 加入预处理参数：在路由守卫或组件加载时，无论是单个值还是数组，都统一解析为单个值。
-// const submitted_exam_id = Array.isArray(route.params.id)
+// const practice_session_id = Array.isArray(route.params.id)
 //     ? route.params.id[0]
 //     : route.params.id;
 </script>
