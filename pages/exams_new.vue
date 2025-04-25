@@ -86,7 +86,7 @@
                                             >{{ item.category }}</span
                                         > -->
                                         <div class="text-xl font-medium mt-2">
-                                            {{ item.title }}
+                                            {{ item.exercises_students_id.exercises_id.title }}
                                         </div>
                                     </div>
                                     <div
@@ -174,7 +174,7 @@
                                     class="flex flex-row justify-between items-start gap-2"
                                 >
                                     <div class="text-xl font-medium mt-1">
-                                        {{ item.title }}
+                                        {{ item.exercises_students_id.exercises_id.title }}
                                     </div>
                                     <!-- Tag设为shrink-0，不许它被压缩！ -->
                                     <Tag
@@ -238,7 +238,7 @@ import { useAuth } from "~~/stores/auth";
 import type {
     PracticeSessions,
     SubmittedPapers,
-    Exams,
+    Exercises,
 } from "~~/types/directus_types";
 import type { HintedString } from "@primevue/core";
 
@@ -273,6 +273,7 @@ const fetchPracticeSessions = async () => {
             fields: [
                 "id",
                 "title",
+                "exercises_students_id.exercises_id.title",
                 "exercises_students_id.exercises_id.start_time",
                 "exercises_students_id.exercises_id.end_time",
                 "extra_time",
@@ -335,12 +336,12 @@ const joinExam = async (examId: string) => {
 
     // 注意因为exam可能是字符串或对象，要用“as”来断言类型
     console.log("考试开始时间：");
-    const exam_start_time = dayjs((exam_info.exercises_students_id.exercise as Exams).start_time);
-    console.log(dayjs((exam_info.exercises_students_id.exercise as Exams).start_time));
+    const exam_start_time = dayjs((exam_info.exercises_students_id!.exercises_id as Exercises).start_time);
+    console.log(dayjs((exam_info.exercises_students_id!.exercises_id as Exercises).start_time));
 
     console.log("考试结束时间：");
-    const exam_end_time = dayjs((exam_info.exercises_students_id.exercise as Exams).end_time);
-    console.log(dayjs((exam_info.exercises_students_id.exercise as Exams).end_time));
+    const exam_end_time = dayjs((exam_info.exercises_students_id!.exercises_id as Exercises).end_time);
+    console.log(dayjs((exam_info.exercises_students_id!.exercises_id as Exercises).end_time));
 
     if (now_time.isBefore(exam_start_time)) {
         not_started_dialog_visible.value = true;
