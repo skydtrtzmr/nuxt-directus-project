@@ -280,10 +280,8 @@ const fetchPracticeSessions = async () => {
                 "actual_end_time",
                 "actual_start_time",
                 "submit_status",
-                // "student.*", // 要获得学生的详细信息，因为directus_user在student中。
                 "exercises_students_id.students_id.directus_user",
             ],
-            // 笔记：注意看，嵌套的字段（例如student.directus_user）要做筛选的话像下面这样。
             filter: {
                 "exercises_students_id": {
                     "students_id": {
@@ -293,7 +291,6 @@ const fetchPracticeSessions = async () => {
                     },
                 },
             },
-            // 注意！别弄混了，directus中student.id和directus_user.id不一样。
         },
     });
     practice_sessions_ref.value = practice_sessions;
@@ -334,7 +331,7 @@ const joinExam = async (examId: string) => {
         (item) => item.id === examId
     )!;
 
-    // 注意因为exam可能是字符串或对象，要用“as”来断言类型
+    // 注意因为exam可能是字符串或对象，要用"as"来断言类型
     console.log("考试开始时间：");
     const exam_start_time = dayjs((exam_info.exercises_students_id!.exercises_id as Exercises).start_time);
     console.log(dayjs((exam_info.exercises_students_id!.exercises_id as Exercises).start_time));
@@ -371,7 +368,7 @@ const joinExam = async (examId: string) => {
         );
     }
     // CAUTION: 注意
-    // 在更新考试的“实际开始时间”后，要等后台directus根据它和“考试时长”计算出考试的“实际结束时间”，
+    // 在更新考试的"实际开始时间"后，要等后台directus根据它和"考试时长"计算出考试的"实际结束时间"，
     // 并更新到数据库中，此时考试页面去获取考试信息才能确保后续examEndTime不是null。
     // 解决方法：要在加载ExamPage时确保expected_end_time字段不为空。
 

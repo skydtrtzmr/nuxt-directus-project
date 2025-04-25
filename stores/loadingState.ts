@@ -18,5 +18,29 @@ export const useLoadingStateStore = defineStore("loadingState", {
         checkAllComponentsReady() {
             return Object.values(this.componentsReady).every((state) => state === true);
         },
+        // 等待组件加载完成
+        async waitUntilReady(component: 'examPage') {
+            // 如果组件已就绪，直接返回
+            if (this.checkComponentReady(component)) {
+                return;
+            }
+            
+            // 否则，等待组件就绪
+            return new Promise<void>((resolve) => {
+                const checkInterval = setInterval(() => {
+                    if (this.checkComponentReady(component)) {
+                        clearInterval(checkInterval);
+                        resolve();
+                    }
+                }, 100); // 每100ms检查一次
+                
+                // 超时处理，10秒后自动取消等待
+                setTimeout(() => {
+                    clearInterval(checkInterval);
+                    console.warn(`等待组件 ${component} 就绪超时`);
+                    resolve();
+                }, 10000);
+            });
+        },
     },
 });

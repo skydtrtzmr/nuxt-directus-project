@@ -1,37 +1,28 @@
 <!-- components/QuestionList.vue -->
 <template>
-    <div class="sidebar" v-if="submittedPaperChapters.length > 0">
+    <div class="sidebar" v-if="submittedPaperSections.length > 0">
         <h5>题目列表</h5>
         <ul>
-            <li v-for="chapter in submittedPaperChapters" :key="chapter.id">
-                <h4>{{ chapter.title }}</h4>
+            <li v-for="section in submittedPaperSections" :key="section.id">
+                <h4>{{ section.title }}</h4>
                 <ul>
-                    <!-- 1 章节下的题目列表，列表式 -->
-                    <!-- <li
-                            v-for="question in chapter.submitted_questions"
-                            :key="question.id"
-                        >
-                            <button @click="selectQuestion(question)">
-                                {{ question.sort_in_chapter }}
-                            </button>
-                        </li> -->
-                    <!-- 2 章节下的题目列表，卡片式 -->
+                    <!-- 章节下的题目列表，卡片式 -->
                     <div class="question-card-container">
                         <Button
-                            v-for="question in chapter.submitted_questions"
+                            v-for="question in section.questions"
                             :key="question.id"
-                            :severity="getQuestionSeverity(question)"
+                            :severity="getQuestionSeverity(question.result)"
                             class="question-card"
                             :class="{
                                 selected:
-                                    selectedSubmittedQuestion &&
-                                    selectedSubmittedQuestion.id ===
-                                        question.id,
+                                    selectedQuestionResult &&
+                                    selectedQuestionResult.id ===
+                                        question.result?.id,
                             }"
-                            @click="handleQuestionClick(question)"
+                            @click="handleQuestionClick(question.result)"
                             ref="refItems"
                         >
-                            {{ question.sort_in_chapter }}
+                            {{ question.sort_in_section }}
                         </Button>
                     </div>
                 </ul>
@@ -44,191 +35,89 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type {
-    SubmittedPaperChapters,
-    SubmittedQuestions,
+    PaperSections,
+    QuestionResults,
 } from "~~/types/directus_types";
 import { useGlobalStore } from "~~/stores/examDone"; // 引入 Pinia store
 import { useLoadingStateStore } from "@/stores/loadingState"; // 引入 Pinia store
 
 const props = defineProps<{
-    submittedPaperChapters: SubmittedPaperChapters[];
-    selectQuestion: (question: SubmittedQuestions) => void;
-    selectedSubmittedQuestion: SubmittedQuestions | null;
+    submittedPaperSections: PaperSections[];
+    selectQuestion: (question: QuestionResults) => void;
+    selectedQuestionResult: QuestionResults | null;
     exam_page_mode: string;
 }>();
 
 const loadingStateStore = useLoadingStateStore();
-
 const globalStore = useGlobalStore(); // 创建 Pinia store 实例
-
 const refItems = ref<HTMLButtonElement[]>([]);
 
-// 当前选中题目
-// console.log(
-//     "props.submittedPaperChapters[0].submitted_questions[0]",
-//     props.submittedPaperChapters[0].submitted_questions[0]
-// );
-
-const handleQuestionClick = (question: SubmittedQuestions) => {
-    console.log("handleQuestionClick", question);
-    props.selectQuestion(question); // 调用父组件传递的选择方法
+const handleQuestionClick = (questionResult: QuestionResults | undefined) => {
+    if (questionResult) {
+        console.log("handleQuestionClick", questionResult);
+        props.selectQuestion(questionResult); // 调用父组件传递的选择方法
+    }
 };
 
-const getQuestionSeverity = (question: SubmittedQuestions) => {
+const getQuestionSeverity = (result: QuestionResults | undefined) => {
+    if (!result) return "secondary";
+    
     if (
-        question.submitted_ans_q_mc_single ||
-        (question.submitted_ans_q_mc_multi &&
-            (question.submitted_ans_q_mc_multi as any[]).length > 0) ||
-        // 自动生成的directus type中，这里是unknown，所以需要用类型断言`as any[]`。
-        question.submitted_ans_q_mc_binary ||
-        (question.submitted_ans_q_mc_flexible &&
-            (question.submitted_ans_q_mc_flexible as any[]).length > 0)
-        // 多选题、不定项选择题必须选了选项（数组长度大于0）才算做已提交；
-        // 因为这种题做完之后对应的submitted_ans就会从null变成[]或[null]，所以要加上这个判断
+        result.submit_ans_select_radio ||
+        (result.submit_ans_select_multiple_checkbox &&
+            (result.submit_ans_select_multiple_checkbox as any[]).length > 0)
     ) {
         return "primary";
     } else {
         return "secondary";
     }
 };
+
 // 获取环境变量，确定是否运行测试
 const {
     public: { isTest },
 } = useRuntimeConfig();
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// 自动化测试部分，仍然保留
 onMounted(async () => {
-    // 以下是用于测试的自动操作脚本
-    // Only for testing
-    if (isTest && props.exam_page_mode !== "review") {
-        await nextTick();
-
-        // [2025-01-07]
-        // 注意！props.submittedPaperChapters可能为空数组，因为有时候由于网络问题，没有成功获取到数据。
-        // 所以一定要等到数据加载完毕后再开始测试自动操作。
-
-        // 等待父组件数据加载完毕
-        // if (!props.submittedPaperChapters || props.submittedPaperChapters.length === 0) {
-        //     console.log("数据尚未加载完毕，等待数据...");
-        //     return; // 或者可以加上延时再重新检查
-        // }
-
-        // 等待所有依赖组件加载完毕
-
-        console.log("父组件加载完成，开始执行自动切换题目...");
-
-        // 其实加上状态判断之后，这里就可以不用watch了。
-        watch(
-            // () => loadingStateStore.checkComponentReady("examPage"),
-            () => props.submittedPaperChapters,
-
-            async (newChapters) => {
-                console.log("开始执行watch监听");
-                console.log(
-                    "props.submittedPaperChapters:",
-                    props.submittedPaperChapters
-                );
-                console.log("newChapters:", newChapters);
-
-                if (
-                    // isReady &&
-                    newChapters &&
-                    newChapters.length > 0
-                ) {
-                    // 仅在数据加载完毕后才开始测试
-                    for (let i = 0; i < newChapters.length; i++) {
-                        const chapter = newChapters[i];
-                        await delay(1000);
-                        for (
-                            let j = 0;
-                            j < chapter.submitted_questions.length;
-                            j++
-                        ) {
-                            await delay(2000);
-                            const question = chapter.submitted_questions[j];
-                            handleQuestionClick(question);
-                            await delay(1000); // 点击完成之后，要留一点时间等待答题操作
-                        }
-                        await delay(1000);
-                    }
-
-                    await delay(1000);
-                    globalStore.setAllDone(true); // 全部做完后，设置全局状态为已完成
-                    // 做题完成后点击提交试卷。
-                } else {
-                    console.log("数据还未加载完毕，继续等待...");
-                }
-            },
-            { immediate: true }
-            // immdiate: true 立即执行一次，once: true 只执行一次
-        );
-
-        // 注意！这里delay时间不要随意设置，太短可能导致测试失败。
-        // (比如有可能因为延迟导致数据还没加载完毕就开始测试)
-        // await delay(2000);
-        // [2025-01-07]之前的版本就是因为太依赖于时间检测,没做逻辑判断,导致会出现问题。
-
-        // 没必要非要点击按钮（双层v-for循环下的ref太复杂了……），直接修改按钮触发的函数即可
-        // for (let i = 0; i < props.submittedPaperChapters.length; i++) {
-        //     const chapter = props.submittedPaperChapters[i];
-        //     await delay(1000);
-        //     for (let j = 0; j < chapter.submitted_questions.length; j++) {
-        //         await delay(2000);
-        //         const question = chapter.submitted_questions[j];
-        //         handleQuestionClick(question);
-        //         await delay(1000); // 点击完成之后，要留一点时间等待答题操作
-        //         // 根据题型开始作答
-        //     }
-        //     await delay(1000);
-        // }
-
-        // await delay(1000);
-        // globalStore.setAllDone(true); // 全部做完后，设置全局状态为已完成
-        // 做题完成后点击提交试卷。
+    if (isTest) {
+        if (props.exam_page_mode !== "review") {
+            // 等待所有题目准备就绪
+            await loadingStateStore.waitUntilReady("examPage");
+            
+            // 点击所有题目
+            await nextTick();
+            await delay(500);
+            
+            for (const item of refItems.value) {
+                item.click();
+                await delay(500);
+            }
+            
+            // 设置全部题目已完成
+            globalStore.setAllDone(true);
+        }
     }
 });
 </script>
 
 <style scoped>
-ul {
-    list-style: none;
-    padding-inline-start: 10px;
-    /* 不要缩进太多！ */
-}
-
 .question-card-container {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5列布局 */
-    gap: 10px; /* 卡片间距 */
-    margin-top: 10px;
-    margin-right: 10px;
-    padding-left: 0%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 10px 0;
 }
-
-/* .question-card {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    text-align: center;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.2s;
-} */
-
+.question-card {
+    min-width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .question-card.selected {
-    /* background-color: #28a745; 选中后的背景色 */
-    box-shadow: inset 0 0 2px 3px #747474; /* 内边框效果 */
-    font-weight: bold; /* 字体加粗 */
+    background-color: #ff8f00;
+    color: white;
 }
-
-/* .accordion { */
-/* 样式设置 */
-/* } */
-/* .accordion-header { */
-/* 样式设置 */
-/* } */
-/* .accordion-body { */
-/* 样式设置 */
-/* } */
 </style>

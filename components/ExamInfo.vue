@@ -4,23 +4,46 @@
     <p>考试ID: {{ submittedExam?.id }}</p>
     <p>考试名称：{{ submittedExam?.title }}</p>
     <p
-        v-if="
-            submittedExam &&
-            submittedExam.student &&
-            typeof submittedExam.student == 'object'
-        "
+        v-if="hasStudentInfo"
     >
-        <!-- NOTE：注意这里必须直接从submittedExam.student获取，而不能获取登录的用户信息。
-            因为考试详情页面并非只有考生本人才能查看，教师也可以查看。 -->
-        当前考生：{{ submittedExam?.student.name }}
+        <!-- 从exercises_students_id.students_id获取学生信息 -->
+        当前考生：{{ getStudentName() }}
     </p>
 </template>
 
 <script setup lang="ts">
-import type { PracticeSessions } from "~~/types/directus_types";
-defineProps<{
+import type { PracticeSessions, ExercisesStudents, Students } from "~~/types/directus_types";
+import { computed } from 'vue';
+
+const props = defineProps<{
     submittedExam: PracticeSessions;
 }>();
+
+// 判断是否有学生信息
+const hasStudentInfo = computed(() => {
+    if (!props.submittedExam) return false;
+    
+    const esId = props.submittedExam.exercises_students_id;
+    if (!esId) return false;
+    
+    // 判断是否为对象，并且有students_id属性
+    if (typeof esId === 'object' && 'students_id' in esId) {
+        const studentId = esId.students_id;
+        return typeof studentId === 'object' && studentId !== null;
+    }
+    
+    return false;
+});
+
+// 获取学生姓名
+const getStudentName = () => {
+    if (!hasStudentInfo.value) return '';
+    
+    const esId = props.submittedExam.exercises_students_id as ExercisesStudents;
+    const student = esId.students_id as Students;
+    
+    return student.name || '';
+};
 </script>
 
 <style scoped></style>

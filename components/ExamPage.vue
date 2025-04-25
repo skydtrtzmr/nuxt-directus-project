@@ -26,8 +26,8 @@
         </template>
         <template v-else>
             <div class="absolute top-10 right-10">
-                <div>试卷总分值：{{ submittedPaper.point_value }}</div>
-                <div>当前总得分：{{ submittedPaper.score }}</div>
+                <div>试卷总分值：{{ submittedPaper.total_point_value }}</div>
+                <div>当前总得分：{{ examScore }}</div>
             </div>
         </template>
         <template v-if="exam_page_mode !== 'review'">
@@ -72,8 +72,8 @@
             <QuestionList
                 class="basis-1/5 card"
                 :exam_page_mode="exam_page_mode"
-                :submittedPaperChapters="submittedPaperChapters"
-                :selectedSubmittedQuestion="selectedSubmittedQuestion"
+                :submittedPaperSections="submittedPaperSections"
+                :selectedQuestionResult="selectedQuestionResult"
                 :selectQuestion="selectQuestion"
             ></QuestionList>
 
@@ -81,7 +81,7 @@
             <QuestionDetail
                 :exam_page_mode="exam_page_mode"
                 class="basis-4/5"
-                :selectedSubmittedQuestion="selectedSubmittedQuestion"
+                :selectedQuestionResult="selectedQuestionResult"
             ></QuestionDetail>
         </div>
     </div>
@@ -94,10 +94,12 @@ import { useRoute } from "vue-router";
 import utc from "dayjs/plugin/utc";
 import type {
     PracticeSessions,
-    SubmittedPapers,
-    SubmittedPaperChapters,
-    SubmittedQuestions,
-    Exams,
+    Papers,
+    PaperSections,
+    PaperSectionsQuestions,
+    Questions,
+    Exercises,
+    QuestionResults
 } from "~~/types/directus_types";
 import md5 from "md5";
 import { useAuth } from "~~/stores/auth";
@@ -151,31 +153,26 @@ const practice_session_id = Array.isArray(route.params.id)
 
 // 数据绑定
 const submittedExam = ref<PracticeSessions>({} as PracticeSessions);
-const submittedPaper = ref<SubmittedPapers>({} as SubmittedPapers);
-const submittedPaperChapters = ref<SubmittedPaperChapters[]>([]);
-// const submittedQuestions = ref<SubmittedQuestions[]>([]);
-const selectedSubmittedQuestion = ref<SubmittedQuestions>(
-    {} as SubmittedQuestions
-); // 当前选中的题目
+const submittedPaper = ref<Papers>({} as Papers);
+const submittedPaperSections = ref<PaperSections[]>([]);
+const selectedQuestionResult = ref<QuestionResults>({} as QuestionResults); // 当前选中的题目结果
 
-const chapter_id_list = ref<string[]>([]); // 试卷的所有（试卷原型）章节ID列表。
-const question_id_list = ref<string[]>([]); // 试卷的所有原题目ID列表。用来在redis中查询详情。
+const chapter_id_list = ref<string[]>([]); // 试卷的所有章节ID列表。
+const question_id_list = ref<string[]>([]); // 试卷的所有题目ID列表。用来在redis中查询详情。
 
-// 把考试时间相关数据和考试的其他数据分开，避免混淆。
-const submittedExamTime = ref<PracticeSessions>({} as PracticeSessions); // 考试时间
-// const selectedAnswer = ref(""); // 当前题目的答案
-
-// 倒计时相关
-// TODO 其实这里用的响应式有点多了，有些其实是应该用计算属性来优化的。
-const examEndTime = ref<dayjs.Dayjs>({} as dayjs.Dayjs); // 考试结束时间（对于学生本人）
+// 考试时间相关数据
+const submittedExamTime = ref<PracticeSessions>({} as PracticeSessions); // 考试时间信息
+const examEndTime = ref<dayjs.Dayjs>({} as dayjs.Dayjs); // 考试结束时间
 const countdown = ref(0); // 剩余时间
 const formattedCountDown = ref("00:00:00"); // 倒计时
 const countdownInterval = ref<any>(null); // 倒计时定时器
-const actual_start_time = ref(""); // 从后端导出的时间是字符串类型。
+const actual_start_time = ref(""); // 实际开始时间
 const duration = ref(0); // 考试时长
 const extra_time = ref(0); // 考试时长补偿
-const expected_end_time = ref<Date>(); // 应交卷时间
 const expected_end_time_str = ref(""); // 应交卷时间的字符串形式
+
+// 考试分数（从practice_sessions中获取）
+const examScore = ref<number | null>(null);
 
 // 获取环境变量，确定是否运行测试
 const {
@@ -188,11 +185,18 @@ const fetchSubmittedExam = async () => {
         collection: "practice_sessions",
         id: practice_session_id,
         params: {
-            fields: ["id", "submitted_papers", "title", "student.name"], // 获取考试的状态和关联的试卷
+            fields: [
+                "id", 
+                "paper.id", 
+                "title", 
+                "exercises_students_id.students_id.name",
+                "score" // 获取考试分数
+            ], // 获取考试的状态和关联的试卷
         },
     });
     if (submittedExamResponse) {
         submittedExam.value = submittedExamResponse;
+        examScore.value = submittedExamResponse.score || null; // 确保为null而不是undefined
         afterFetchSubmittedExam();
     }
 };
@@ -205,49 +209,25 @@ const fetchExamTimeData = async () => {
             fields: [
                 "id",
                 "actual_start_time", // 获取考试开始时间，客户端根据此时间计算倒计时。
-                "expected_end_time",
+                "actual_end_time",
                 "extra_time", // 考试时长补偿，客户端根据此时间计算倒计时。
-                "duration", // 获取考试时长，直接在客户端进行计算。服务端自己计算自己的，跟客户端分开，避免客户端计算错误。
-            ], // 获取考试的状态和关联的试卷
+                "exercises_students_id.exercises_id.duration", // 获取考试时长，直接在客户端进行计算
+            ],
         },
     });
 
-    // TODO 以后可以考虑不用这个submittedExamTime了。
     if (submittedExamTimeResponse) {
         submittedExamTime.value = submittedExamTimeResponse;
     }
-
-    // 下面是初始版本，从服务器获取时间数据。
-
-    // if (
-    //     !submittedExamTime.value.expected_end_time ||
-    //     submittedExamTime.value.expected_end_time === "1970-01-01T01:00:00.000Z"
-    //     // 当你获得的时间为 1970-01-01T01:00:00.000Z 时，
-    //     // 这通常表示你的时间值是 undefined 或 null，
-    //     // 在 JavaScript 中被转换为一个“默认”的时间戳。
-    // ) {
-    //     console.log("考试结束时间无效，重新获取...");
-    //     await delay(1000); // 等待一秒钟再重试
-    //     await fetchExamTimeData(); // 递归调用
-    // } else {
-    //     console.log("考试结束时间有效，开始倒计时...");
-    //     console.log("submittedExamTime.value.expected_end_time:");
-    //     console.log(submittedExamTime.value.expected_end_time);
-
-    //     // 如果有效，调用方法进行后续处理
-    //     // afterFetchSubmittedExamTime();
-    // }
 };
 
 const afterFetchSubmittedExam = () => {
     if (
-        submittedExam.value.submitted_papers &&
-        submittedExam.value.submitted_papers.length > 0
+        submittedExam.value.paper &&
+        submittedExam.value.paper
     ) {
-        // 获取第一个试卷的详情。
-        // TODO 以后可能要支持多个试卷，这里只取第一个试卷。
-        const paperId = submittedExam.value.submitted_papers[0];
-        // 注意，如果要定义paperId的话，看好本次请求是深入到哪一层嵌套了。
+        // 获取试卷的详情
+        const paperId = submittedExam.value.paper as string;
         console.log("paperId", paperId);
         fetchSubmittedPaper(paperId);
     }
@@ -256,17 +236,28 @@ const afterFetchSubmittedExam = () => {
 // 把获取时间数据后的操作也跟获取考试其他数据后的操作分开。
 const afterFetchSubmittedExamTime = () => {
     actual_start_time.value = submittedExamTime.value.actual_start_time!;
-    duration.value = submittedExamTime.value.duration!;
+    
+    // 从 exercises_students_id.exercises_id 获取考试时长
+    const esId = submittedExamTime.value.exercises_students_id;
+    if (typeof esId === 'object' && esId && 'exercises_id' in esId && esId.exercises_id) {
+        // 确保exercises_id是对象
+        const exercisesId = esId.exercises_id;
+        if (typeof exercisesId === 'object' && 'duration' in exercisesId) {
+            duration.value = exercisesId.duration as number;
+        }
+    }
+    
     extra_time.value = submittedExamTime.value.extra_time!;
 
     // 先根据实际开始作答时间和考试时长，计算应交卷时间
-    expected_end_time.value = new Date(actual_start_time.value);
-    expected_end_time.value.setMinutes(
-        expected_end_time.value.getMinutes() + duration.value + extra_time.value
+    // 由于expected_end_time不再作为直接字段，手动计算
+    const endTimeDate = new Date(actual_start_time.value);
+    endTimeDate.setMinutes(
+        endTimeDate.getMinutes() + duration.value + extra_time.value
     );
 
     // 注意：Date对象在directus中能正常运算，但不能打印。
-    expected_end_time_str.value = expected_end_time.value.toISOString();
+    expected_end_time_str.value = endTimeDate.toISOString();
 
     // 设置倒计时的结束时间
     examEndTime.value = dayjs(expected_end_time_str.value);
@@ -280,200 +271,150 @@ const afterFetchSubmittedExamTime = () => {
 
 // 获取提交的试卷
 const fetchSubmittedPaper = async (paperId: string) => {
-    const paperResponse = await getItemById<SubmittedPapers>({
-        collection: "submitted_papers",
+    const paperResponse = await getItemById<Papers>({
+        collection: "papers",
         id: paperId,
         params: {
             fields: [
                 "title",
-                "submitted_paper_chapters",
-                "point_value",
-                "score",
+                "paper_sections",
+                "total_point_value",
+                // "score", // Papers可能没有score字段，需要从practice_sessions获取
             ],
         },
     });
     if (paperResponse) {
         submittedPaper.value = paperResponse;
-        fetchSubmittedChapterList(paperResponse.submitted_paper_chapters);
+        fetchSubmittedSectionsList(paperResponse.paper_sections);
     }
 };
 
-// 获取提交的试卷的章节
-
-// 把一次性获取所有章节及其关联的题目信息改成分批获取，避免一次性请求太多数据。
-const fetchSubmittedChapterList = async (
-    chapters: SubmittedPaperChapters[]
+// 获取试卷的章节，修改为使用paper_sections
+const fetchSubmittedSectionsList = async (
+    sections: PaperSections[]
 ) => {
-    // 1. 首先获取章节的基本信息
-    const submittedChaptersResponse = await getItems<SubmittedPaperChapters>({
-        collection: "submitted_paper_chapters",
+    // 获取章节的基本信息
+    const submittedSectionsResponse = await getItems<PaperSections>({
+        collection: "paper_sections",
         params: {
             filter: {
-                id: { _in: chapters }, // 获取章节ID列表
+                id: { _in: sections }, // 获取章节ID列表
             },
             fields: [
                 "id",
                 "sort_in_paper",
                 "title",
-                "source_paper_prototype_chapter", // 关联原题目（此处存的是id）
-                // [2025-01-11]更新策略，在查询submitted章节时存储原章节信息，然后复制给每个题目。
+                "question_type",
+                "total_question_points",
+                "questions"
             ],
             sort: "sort_in_paper", // 排序方式
         },
     });
 
-    // 2. 获取章节数据
-    // 存储试卷原型章节的ID列表
-    chapter_id_list.value = submittedChaptersResponse.map(
-        (submittedChapter) => {
-            return submittedChapter.source_paper_prototype_chapter as string;
-        }
-    );
-
-    const chapterUniqueIds = Array.from(new Set(chapter_id_list.value)); // 去重
-    const chaptersData = (await useFetch("/api/paper_prototype_chapters/list", {
-        method: "POST",
-        body: {
-            ids: chapterUniqueIds,
+    // 获取所有题目的结果
+    const questionResultsPromise = getItems<QuestionResults>({
+        collection: "question_results",
+        params: {
+            filter: {
+                practice_session_id: practice_session_id
+            },
+            fields: [
+                "id",
+                "practice_session_id",
+                "question_in_paper_id", // 指向paper_sections_questions
+                "question_type",
+                "point_value",
+                "score",
+                "submit_ans_select_radio",
+                "submit_ans_select_multiple_checkbox",
+            ],
         },
-    })) as any;
+    });
 
-    const submittedChaptersResponsesWithData = submittedChaptersResponse.map(
-        (submittedChapter) => {
-            const chapterId =
-                submittedChapter.source_paper_prototype_chapter as string;
-            const chapterData = chaptersData.data.value.find(
-                (item: any) => item.id === chapterId
-            );
-            return {
-                ...submittedChapter,
-                source_paper_prototype_chapter: chapterData || null, // 合并 chapter 数据
-            };
-        }
-    );
-
-    const chapterList = submittedChaptersResponsesWithData;
-
-    console.log("chapterList1:", chapterList);
-
-    // const chapterList = submittedChaptersResponse;
-
-    // 之前的写法是每次发一个hget。现在改成统一发一个hmget。
-
-    // 3. 获取章节中的所有提交题目
-    const questionsPromises = chapterList.map(async (chapter) => {
-        // Step 1: 查询章节中的所有提交题目
-        const submittedQuestions = await getItems<SubmittedQuestions>({
-            collection: "submitted_questions",
+    // 等待问题结果数据
+    const questionResults = await questionResultsPromise;
+    
+    // 处理章节和题目数据
+    const sectionList = submittedSectionsResponse;
+    
+    // 获取所有章节中的题目信息
+    const questionsPromises = sectionList.map(async (section) => {
+        // 查询章节中的所有问题
+        const sectionQuestions = await getItems<PaperSectionsQuestions>({
+            collection: "paper_sections_questions",
             params: {
-                filter: { submitted_paper_chapter: chapter.id },
+                filter: { paper_sections_id: section.id },
                 fields: [
                     "id",
-                    "sort_in_chapter",
-                    "option_number",
-                    "question_type",
-                    "point_value",
-                    "score",
-                    "submitted_ans_q_mc_single",
-                    "submitted_ans_q_mc_multi",
-                    "submitted_ans_q_mc_binary",
-                    "submitted_ans_q_mc_flexible",
-                    "question", // 只需要查询 question 字段本身，其他字段从 Redis 获取
-                    // "submitted_paper_chapter", // 关联的章节，不要在这写，直接从chapter复制。
+                    "sort_in_section",
+                    "questions_id",
                 ],
-                sort: "sort_in_chapter",
+                sort: "sort_in_section",
             },
         });
 
-        // Step 2: 获取所有 questionId 的列表
-        const questionIds = submittedQuestions.map((submittedQuestion) => {
-            return submittedQuestion.question as string;
+        // 获取所有问题的ID列表
+        const questionIds = sectionQuestions.map((sectionQuestion) => {
+            return sectionQuestion.questions_id as string;
         });
 
-        // 把这个列表填加入question_id_list中，以便在Redis中查询。
+        // 将这些ID添加到question_id_list中以在Redis中查询
         question_id_list.value = question_id_list.value.concat(questionIds);
 
-        return submittedQuestions;
+        return sectionQuestions;
     });
 
-    // 4. 等待所有请求完成。这里其实是submittedQuestions的数组，每个元素是一题的提交数据。
+    // 等待所有问题数据
     const questionsResponses = await Promise.all(questionsPromises);
 
-    console.log("questionsResponses:", questionsResponses);
-
-    // 统一在redis中查询所有题目数据。
+    // 从Redis获取所有问题数据
     const questionIds = Array.from(new Set(question_id_list.value)); // 去重
     const questionsData = (await useFetch("/api/questions/list", {
         method: "POST",
         body: {
             ids: questionIds,
         },
-    })) as any; // TODO 注意，这里的类型定义是any，因为返回的数据格式我也不知道。
+    })) as any;
 
-    console.log("questionsData:", questionsData.data.value);
-
-    const questionsResponsesWithData = questionsResponses.map(
-        (submittedQuestionList) => {
-            return submittedQuestionList.map((submittedQuestion) => {
-                const questionId = submittedQuestion.question as string;
-                const questionData = questionsData.data.value.find(
-                    (item: any) => item.id === questionId
-                );
-                return {
-                    ...submittedQuestion,
-                    question: questionData || null, // 合并 question 数据
-                };
-            });
-        }
-    );
-    console.log("questionsResponsesWithData:", questionsResponsesWithData);
-
-    // 5. 合并题目数据到章节数据中
-    chapterList.forEach((chapter, index) => {
-        chapter.submitted_questions = questionsResponsesWithData[index]; // 将题目数据嵌入章节对象
-        // 把试卷原型章节的信息复制给每个题目。
-        console.log(
-            "chapter.source_paper_prototype_chapter:",
-            chapter.source_paper_prototype_chapter
-        );
-
-        chapter.submitted_questions = (
-            chapter.submitted_questions as SubmittedQuestions[]
-        ).map((question) => {
+    // 将问题数据与章节数据关联
+    sectionList.forEach((section, index) => {
+        const sectionQuestionsWithData = questionsResponses[index].map((sectionQuestion) => {
+            const questionId = sectionQuestion.questions_id as string;
+            const questionData = questionsData.data.value.find(
+                (item: any) => item.id === questionId
+            );
+            
+            // 查找该题目的提交结果
+            const result = questionResults.find(
+                result => result.question_in_paper_id === sectionQuestion.id
+            );
+            
             return {
-                // 这里为了保持interface的一致性，需要写成嵌套对象字段。
-                ...question,
-                submitted_paper_chapter: {
-                    source_paper_prototype_chapter:
-                        chapter.source_paper_prototype_chapter || null, // 合并 question 数据
-                },
+                ...sectionQuestion,
+                questions_id: questionData || null,
+                result: result || null,
             };
         });
+        
+        section.questions = sectionQuestionsWithData;
     });
 
-    // 6. 返回合并后的章节列表，标注当前选择的题目。
-    if (submittedChaptersResponse) {
-        submittedPaperChapters.value = chapterList;
-        console.log(
-            "submittedPaperChapters.value:",
-            submittedPaperChapters.value
-        );
-        // 默认选择第一个题目
-        selectedSubmittedQuestion.value = chapterList[0].submitted_questions[0];
-        console.log(
-            "selectedSubmittedQuestion.value:",
-            selectedSubmittedQuestion.value
-        );
+    if (submittedSectionsResponse) {
+        submittedPaperSections.value = sectionList;
+        console.log("submittedPaperSections.value:", submittedPaperSections.value);
+        
+        // 默认选择第一个题目的结果
+        if (sectionList[0]?.questions?.[0]?.result) {
+            selectedQuestionResult.value = sectionList[0].questions[0].result;
+            console.log("selectedQuestionResult.value:", selectedQuestionResult.value);
+        }
     }
 };
 
-
-// NOTE：不再使用专门的题目列表，而是直接从章节中获取题目列表。因为我的题目和章节信息是高度关联的，所以直接从章节中获取题目列表更合理。
-
-// 选择一个题目
-const selectQuestion = (question: SubmittedQuestions) => {
-    selectedSubmittedQuestion.value = question;
-    // selectedAnswer.value = ""; // 清空答案
+// 修改选择题目的函数以适应新的数据结构
+const selectQuestion = (questionResult: QuestionResults) => {
+    selectedQuestionResult.value = questionResult;
 };
 
 // 直接传id
