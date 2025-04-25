@@ -160,7 +160,7 @@ export default defineNuxtConfig({
         },
         ssr: {
             // 此项必须配置，否则pnpm dev打开univer sheet会报错。
-            noExternal: ["@univerjs/presets", "rxjs"],
+            noExternal: ["@univerjs/presets", "rxjs", "unplugin-vue-router", "vue-router"],
         },
     },
 });

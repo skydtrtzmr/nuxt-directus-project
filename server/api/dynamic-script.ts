@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
         
         // 这边要分页获取然后合并列表，因为一次请求只能获取 200 条数据
         // TODO 现在是手动获取多页的，但是应该自动获取多页
-        const result_page1 = (await directus_client.request(
+        const result = (await directus_client.request(
             readUsers({
                 fields: ["id,email"],
                 sort: "email",
@@ -40,51 +40,9 @@ export default defineEventHandler(async (event) => {
                         _eq: "0fcfa6da-9e38-4d73-acf5-c5585c0770f8",
                     },
                 },
-                page: 1,
+                limit: -1,
             })
         )) as DirectusUsers[];
-
-
-        const result_page2 = (await directus_client.request(
-            readUsers({
-                fields: ["id,email"],
-                sort: "email",
-                filter: {
-                    role: {
-                        _eq: "0fcfa6da-9e38-4d73-acf5-c5585c0770f8",
-                    },
-                },
-                page: 2,
-            })
-        )) as DirectusUsers[];
-
-        const result_page3 = (await directus_client.request(
-            readUsers({
-                fields: ["id,email"],
-                sort: "email",
-                filter: {
-                    role: {
-                        _eq: "0fcfa6da-9e38-4d73-acf5-c5585c0770f8",
-                    },
-                },
-                page: 3,
-            })
-        )) as DirectusUsers[];
-
-        const result_page4 = (await directus_client.request(
-            readUsers({
-                fields: ["id,email"],
-                sort: "email",
-                filter: {
-                    role: {
-                        _eq: "0fcfa6da-9e38-4d73-acf5-c5585c0770f8",
-                    },
-                },
-                page: 4,
-            })
-        )) as DirectusUsers[];
-
-        const result = result_page1.concat(result_page2, result_page3, result_page4);
 
         console.log("users: ", result);
         users = result;
