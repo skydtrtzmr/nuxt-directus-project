@@ -2,7 +2,7 @@
 <template>
     <div class="relative">
         <!-- 显示考试信息 -->
-        <ExamInfo :submittedExam="submittedExam"></ExamInfo>
+        <ExamInfo :practiceSession="practiceSession"></ExamInfo>
         <!-- 显示试卷详情 -->
         <template v-if="exam_page_mode !== 'review'">
             <div>
@@ -12,7 +12,7 @@
                     <ExamCountdown
                         :isClient="isClient"
                         :examEndTime="examEndTime"
-                        :submittedExamTime="submittedExamTime"
+                        :practiceSessionTime="practiceSessionTime"
                         :formattedCountDown="formattedCountDown"
                     ></ExamCountdown>
                     <Button
@@ -152,7 +152,7 @@ const practice_session_id = Array.isArray(route.params.id)
     : route.params.id;
 
 // 数据绑定
-const submittedExam = ref<PracticeSessions>({} as PracticeSessions);
+const practiceSession = ref<PracticeSessions>({} as PracticeSessions);
 const submittedPaper = ref<Papers>({} as Papers);
 const submittedPaperSections = ref<PaperSections[]>([]);
 const selectedQuestionResult = ref<QuestionResults>({} as QuestionResults); // 当前选中的题目结果
@@ -161,7 +161,7 @@ const chapter_id_list = ref<string[]>([]); // 试卷的所有章节ID列表。
 const question_id_list = ref<string[]>([]); // 试卷的所有题目ID列表。用来在redis中查询详情。
 
 // 考试时间相关数据
-const submittedExamTime = ref<PracticeSessions>({} as PracticeSessions); // 考试时间信息
+const practiceSessionTime = ref<PracticeSessions>({} as PracticeSessions); // 考试时间信息
 const examEndTime = ref<dayjs.Dayjs>({} as dayjs.Dayjs); // 考试结束时间
 const countdown = ref(0); // 剩余时间
 const formattedCountDown = ref("00:00:00"); // 倒计时
@@ -181,7 +181,7 @@ const {
 
 // 获取提交的考试信息。先获取试卷，再获取试卷的章节。
 const fetchSubmittedExam = async () => {
-    const submittedExamResponse:PracticeSessions = await getItemById<PracticeSessions>({
+    const practiceSessionResponse:PracticeSessions = await getItemById<PracticeSessions>({
         collection: "practice_sessions",
         id: practice_session_id,
         params: {
@@ -190,19 +190,20 @@ const fetchSubmittedExam = async () => {
                 "paper.id", 
                 "title", 
                 "exercises_students_id.students_id.name",
+                "exercises_students_id.exercises_id.title",
                 "score" // 获取考试分数
             ], // 获取考试的状态和关联的试卷
         },
     });
-    if (submittedExamResponse) {
-        submittedExam.value = submittedExamResponse;
-        examScore.value = submittedExamResponse.score || null; // 确保为null而不是undefined
+    if (practiceSessionResponse) {
+        practiceSession.value = practiceSessionResponse;
+        examScore.value = practiceSessionResponse.score || null; // 确保为null而不是undefined
         afterFetchSubmittedExam();
     }
 };
 
 const fetchExamTimeData = async () => {
-    const submittedExamTimeResponse = await getItemById<PracticeSessions>({
+    const practiceSessionTimeResponse = await getItemById<PracticeSessions>({
         collection: "practice_sessions",
         id: practice_session_id,
         params: {
@@ -216,18 +217,18 @@ const fetchExamTimeData = async () => {
         },
     });
 
-    if (submittedExamTimeResponse) {
-        submittedExamTime.value = submittedExamTimeResponse;
+    if (practiceSessionTimeResponse) {
+        practiceSessionTime.value = practiceSessionTimeResponse;
     }
 };
 
 const afterFetchSubmittedExam = () => {
     if (
-        submittedExam.value.paper &&
-        submittedExam.value.paper
+        practiceSession.value.paper &&
+        practiceSession.value.paper
     ) {
         // 获取试卷的详情
-        const paperId = submittedExam.value.paper as string;
+        const paperId = practiceSession.value.paper as string;
         console.log("paperId", paperId);
         fetchSubmittedPaper(paperId);
     }
@@ -235,10 +236,10 @@ const afterFetchSubmittedExam = () => {
 
 // 把获取时间数据后的操作也跟获取考试其他数据后的操作分开。
 const afterFetchSubmittedExamTime = () => {
-    actual_start_time.value = submittedExamTime.value.actual_start_time!;
+    actual_start_time.value = practiceSessionTime.value.actual_start_time!;
     
     // 从 exercises_students_id.exercises_id 获取考试时长
-    const esId = submittedExamTime.value.exercises_students_id;
+    const esId = practiceSessionTime.value.exercises_students_id;
     if (typeof esId === 'object' && esId && 'exercises_id' in esId && esId.exercises_id) {
         // 确保exercises_id是对象
         const exercisesId = esId.exercises_id;
@@ -247,7 +248,7 @@ const afterFetchSubmittedExamTime = () => {
         }
     }
     
-    extra_time.value = submittedExamTime.value.extra_time!;
+    extra_time.value = practiceSessionTime.value.extra_time!;
 
     // 先根据实际开始作答时间和考试时长，计算应交卷时间
     // 由于expected_end_time不再作为直接字段，手动计算
@@ -553,8 +554,8 @@ onMounted(async () => {
     afterFetchSubmittedExamTime();
     // 这个就暂时不放在fetchExamTimeData里了，因为它需要在组件渲染完成后开始计算，这样才能确保实际开始时间是渲染完成的时间。
 
-    console.log("submittedExamTime.value.expected_end_time：");
-    console.log(submittedExamTime.value.expected_end_time);
+    console.log("practiceSessionTime.value.expected_end_time：");
+    console.log(practiceSessionTime.value.expected_end_time);
 
     // 目前加上poll会有问题，暂时不用。
 
