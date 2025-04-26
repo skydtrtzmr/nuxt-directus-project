@@ -16,15 +16,15 @@ import { fetchAllPaginatedData } from "../utils/directusUtils";
 export default defineCronHandler("everyThirtyMinutes", async () => {
     // do action
     console.log("Scheduled Update Cache");
-    updateHashListCache(
-        "paper_prototype_chapters",
-        () =>
-            fetchAllPaginatedData({
-                collection: "paper_prototype_chapters",
-                fields: ["id", "title", "description"],
-            }),
-        3600 // 1 hour
-    );
+    // updateHashListCache(
+    //     "paper_prototype_chapters",
+    //     () =>
+    //         fetchAllPaginatedData({
+    //             collection: "paper_prototype_chapters",
+    //             fields: ["id", "title", "description"],
+    //         }),
+    //     3600 // 1 hour
+    // );
     // TODO 暂时题目比较少，所以可以一次性把所有数据都存入redis缓存，
     // 后续如果题目多了，必须只把热点数据存入redis缓存。
 
