@@ -80,8 +80,8 @@ const loginSubmit = async () => {
         const numericValue = parseInt(hash.substring(0, 8), 16); // 取哈希的前8位并转为16进制数字
 
         // 控制延迟范围，可以在500ms - 2000ms之间
-        const minDelay = 500; // 最小延迟500ms
-        const maxDelay = 2000; // 最大延迟2000ms
+        const minDelay = 10; // 最小延迟（ms）
+        const maxDelay = 500; // 最大延迟（ms）
 
         // 将哈希值映射到延迟范围
         const delay = minDelay + (numericValue % (maxDelay - minDelay));

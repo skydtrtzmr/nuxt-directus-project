@@ -6,7 +6,7 @@
         <!-- 显示试卷详情 -->
         <template v-if="exam_page_mode !== 'review'">
             <div>
-                <PaperInfo :submittedPaper="submittedPaper"></PaperInfo>
+                <PaperInfo :submittedPaper="paper"></PaperInfo>
                 <div class="absolute top-0 right-0">
                     <!-- 显示倒计时 -->
                     <ExamCountdown
@@ -26,7 +26,7 @@
         </template>
         <template v-else>
             <div class="absolute top-10 right-10">
-                <div>试卷总分值：{{ submittedPaper.total_point_value }}</div>
+                <div>试卷总分值：{{ paper.total_point_value }}</div>
                 <div>当前总得分：{{ examScore }}</div>
             </div>
         </template>
@@ -153,7 +153,7 @@ const practice_session_id = Array.isArray(route.params.id)
 
 // 数据绑定
 const practiceSession = ref<PracticeSessions>({} as PracticeSessions);
-const submittedPaper = ref<Papers>({} as Papers);
+const paper = ref<Papers>({} as Papers);
 const submittedPaperSections = ref<PaperSections[]>([]);
 const selectedQuestionResult = ref<QuestionResults>({} as QuestionResults); // 当前选中的题目结果
 
@@ -187,8 +187,8 @@ const fetchSubmittedExam = async () => {
         params: {
             fields: [
                 "id", 
-                "paper.id", 
-                "title", 
+                "exercises_students_id.exercises_id.paper", 
+                // "title", 
                 "exercises_students_id.students_id.name",
                 "exercises_students_id.exercises_id.title",
                 "score" // 获取考试分数
@@ -224,13 +224,18 @@ const fetchExamTimeData = async () => {
 
 const afterFetchSubmittedExam = () => {
     if (
-        practiceSession.value.paper &&
-        practiceSession.value.paper
+        practiceSession.value.exercises_students_id 
     ) {
         // 获取试卷的详情
-        const paperId = practiceSession.value.paper as string;
-        console.log("paperId", paperId);
-        fetchSubmittedPaper(paperId);
+        const esId = practiceSession.value.exercises_students_id;
+        if (typeof esId === 'object' && esId && 'exercises_id' in esId && esId.exercises_id) {
+            const exercisesId = esId.exercises_id;
+            if (typeof exercisesId === 'object' && 'paper' in exercisesId) {
+                const paperId = exercisesId.paper as string;
+                console.log("paperId", paperId);
+                fetchSubmittedPaper(paperId);
+            }
+        }
     }
 };
 
@@ -272,6 +277,8 @@ const afterFetchSubmittedExamTime = () => {
 
 // 获取提交的试卷
 const fetchSubmittedPaper = async (paperId: string) => {
+    console.log("fetchSubmittedPaper", paperId);
+    
     const paperResponse = await getItemById<Papers>({
         collection: "papers",
         id: paperId,
@@ -285,7 +292,7 @@ const fetchSubmittedPaper = async (paperId: string) => {
         },
     });
     if (paperResponse) {
-        submittedPaper.value = paperResponse;
+        paper.value = paperResponse;
         fetchSubmittedSectionsList(paperResponse.paper_sections);
     }
 };
