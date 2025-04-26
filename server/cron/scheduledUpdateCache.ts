@@ -33,7 +33,13 @@ export default defineCronHandler("everyThirtyMinutes", async () => {
         () =>
             fetchAllPaginatedData({
                 collection: "paper_sections",
-                fields: ["id", "title", "description"],
+                fields: [
+                    "id",
+                    "paper_id",
+                    "sort_in_paper",
+                    "title",
+                    "description",
+                ],
             }),
         3600 // 1 hour
     );

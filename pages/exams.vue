@@ -86,7 +86,10 @@
                                             >{{ item.category }}</span
                                         > -->
                                         <div class="text-xl font-medium mt-2">
-                                            {{ item.exercises_students_id.exercises_id.title }}
+                                            {{
+                                                item.exercises_students_id
+                                                    .exercises_id.title
+                                            }}
                                         </div>
                                     </div>
                                     <div
@@ -107,7 +110,10 @@
                                                 <strong>开始时间:</strong>
                                                 {{
                                                     dayjs(
-                                                        item.exercises_students_id.exercises_id.start_time
+                                                        item
+                                                            .exercises_students_id
+                                                            .exercises_id
+                                                            .start_time
                                                     ).format(
                                                         "YYYY-MM-DD HH:mm:ss"
                                                     )
@@ -117,7 +123,10 @@
                                                 <strong>结束时间:</strong>
                                                 {{
                                                     dayjs(
-                                                        item.exercises_students_id.exercises_id.end_time
+                                                        item
+                                                            .exercises_students_id
+                                                            .exercises_id
+                                                            .end_time
                                                     ).format(
                                                         "YYYY-MM-DD HH:mm:ss"
                                                     )
@@ -174,7 +183,10 @@
                                     class="flex flex-row justify-between items-start gap-2"
                                 >
                                     <div class="text-xl font-medium mt-1">
-                                        {{ item.exercises_students_id.exercises_id.title }}
+                                        {{
+                                            item.exercises_students_id
+                                                .exercises_id.title
+                                        }}
                                     </div>
                                     <!-- Tag设为shrink-0，不许它被压缩！ -->
                                     <Tag
@@ -189,7 +201,8 @@
                                         <div>
                                             {{
                                                 dayjs(
-                                                    item.exercises_students_id.exercises_id.start_time
+                                                    item.exercises_students_id
+                                                        .exercises_id.start_time
                                                 ).format("YYYY-MM-DD HH:mm:ss")
                                             }}
                                         </div>
@@ -199,7 +212,8 @@
                                         <div>
                                             {{
                                                 dayjs(
-                                                    item.exercises_students_id.exercises_id.end_time
+                                                    item.exercises_students_id
+                                                        .exercises_id.end_time
                                                 ).format("YYYY-MM-DD HH:mm:ss")
                                             }}
                                         </div>
@@ -239,6 +253,7 @@ import type {
     PracticeSessions,
     SubmittedPapers,
     Exercises,
+    ExercisesStudents,
 } from "~~/types/directus_types";
 import type { HintedString } from "@primevue/core";
 
@@ -283,11 +298,11 @@ const fetchPracticeSessions = async () => {
                 "exercises_students_id.students_id.directus_user",
             ],
             filter: {
-                "exercises_students_id": {
-                    "students_id": {
-                        "directus_user": {
-                            "_eq": current_user!.id,
-                        }
+                exercises_students_id: {
+                    students_id: {
+                        directus_user: {
+                            _eq: current_user!.id,
+                        },
                     },
                 },
             },
@@ -327,18 +342,35 @@ const joinExam = async (examId: string) => {
     console.log(dayjs(Date.now()));
     const now_time = dayjs(Date.now());
 
-    const exam_info = practice_sessions_ref.value.find(
+    const exam_info: PracticeSessions = practice_sessions_ref.value.find(
         (item) => item.id === examId
     )!;
 
     // 注意因为exam可能是字符串或对象，要用"as"来断言类型
     console.log("考试开始时间：");
-    const exam_start_time = dayjs((exam_info.exercises_students_id!.exercises_id as Exercises).start_time);
-    console.log(dayjs((exam_info.exercises_students_id!.exercises_id as Exercises).start_time));
+    const exam_start_time = dayjs(
+        (
+            (exam_info.exercises_students_id! as ExercisesStudents)
+                .exercises_id as Exercises
+        ).start_time
+    );
+    console.log(exam_start_time);
 
     console.log("考试结束时间：");
-    const exam_end_time = dayjs((exam_info.exercises_students_id!.exercises_id as Exercises).end_time);
-    console.log(dayjs((exam_info.exercises_students_id!.exercises_id as Exercises).end_time));
+    const exam_end_time = dayjs(
+        (
+            (exam_info.exercises_students_id! as ExercisesStudents)
+                .exercises_id as Exercises
+        ).end_time
+    );
+    console.log(
+        dayjs(
+            (
+                (exam_info.exercises_students_id! as ExercisesStudents)
+                    .exercises_id as Exercises
+            ).end_time
+        )
+    );
 
     if (now_time.isBefore(exam_start_time)) {
         not_started_dialog_visible.value = true;
