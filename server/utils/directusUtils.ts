@@ -8,11 +8,12 @@ interface FetchPaginatedParams {
     // pageSize: number; // 每页的数据条数
 }
 
+// TODO 这里后面其实可以改一下。其实只要加上limit=-1，就会返回所有数据了，不需要手动拼凑页数。
 export async function fetchAllPaginatedData({
     collection,
     fields,
-    // pageSize,
-}: FetchPaginatedParams): Promise<any[]> {
+}: // pageSize,
+FetchPaginatedParams): Promise<any[]> {
     let allData: any[] = [];
     let page = 1;
     let hasMoreData = true;

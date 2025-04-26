@@ -29,6 +29,31 @@ export default defineCronHandler("everyThirtyMinutes", async () => {
     // 后续如果题目多了，必须只把热点数据存入redis缓存。
 
     updateHashListCache(
+        "paper_sections",
+        () =>
+            fetchAllPaginatedData({
+                collection: "paper_sections",
+                fields: ["id", "title", "description"],
+            }),
+        3600 // 1 hour
+    );
+
+    updateHashListCache(
+        "paper_sections_questions",
+        () =>
+            fetchAllPaginatedData({
+                collection: "paper_sections_questions",
+                fields: [
+                    "id",
+                    "paper_sections_id",
+                    "questions_id",
+                    "sort_in_section",
+                ],
+            }),
+        3600 // 1 hour
+    );
+
+    updateHashListCache(
         "questions",
         () =>
             fetchAllPaginatedData({
