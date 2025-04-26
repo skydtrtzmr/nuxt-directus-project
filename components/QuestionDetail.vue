@@ -97,7 +97,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import CommonQuestionContent from "~/components/CommonQuestionContent.vue";
-import type { QuestionResults, Questions, QMcSingle } from "~/types/directus_types";
+import type { QuestionResults, Questions, QMcSingle, QMcMulti } from "~/types/directus_types";
 
 const props = defineProps<{
     selectedQuestionResult: QuestionResults | null;
@@ -120,15 +120,19 @@ const getOptions = (question: Questions) => {
     const options: Record<string, string> = {};
     
     if (question.type === 'q_mc_single' && question.q_mc_single) {
-        if ((question.q_mc_single as QMcSingle).option_a) options['A'] = question.q_mc_single.option_a;
-        if (question.q_mc_single.option_b) options['B'] = question.q_mc_single.option_b;
-        if (question.q_mc_single.option_c) options['C'] = question.q_mc_single.option_c;
-        if (question.q_mc_single.option_d) options['D'] = question.q_mc_single.option_d;
+        // 先断言成 QMcSingle，避免后续 option_* 报错
+        const single = question.q_mc_single as QMcSingle;
+        if (single.option_a) options['A'] = single.option_a;
+        if (single.option_b) options['B'] = single.option_b;
+        if (single.option_c) options['C'] = single.option_c;
+        if (single.option_d) options['D'] = single.option_d;
     } else if (question.type === 'q_mc_multi' && question.q_mc_multi) {
-        if (question.q_mc_multi.option_a) options['A'] = question.q_mc_multi.option_a;
-        if (question.q_mc_multi.option_b) options['B'] = question.q_mc_multi.option_b;
-        if (question.q_mc_multi.option_c) options['C'] = question.q_mc_multi.option_c;
-        if (question.q_mc_multi.option_d) options['D'] = question.q_mc_multi.option_d;
+        // 同理断言成 QMcMulti
+        const multi = question.q_mc_multi as QMcMulti;
+        if (multi.option_a) options['A'] = multi.option_a;
+        if (multi.option_b) options['B'] = multi.option_b;
+        if (multi.option_c) options['C'] = multi.option_c;
+        if (multi.option_d) options['D'] = multi.option_d;
     }
     
     return options;
