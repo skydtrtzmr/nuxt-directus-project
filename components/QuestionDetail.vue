@@ -97,7 +97,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import CommonQuestionContent from "~/components/CommonQuestionContent.vue";
-import type { QuestionResults, Questions } from "~/types/directus_types";
+import type { QuestionResults, Questions, QMcSingle } from "~/types/directus_types";
 
 const props = defineProps<{
     selectedQuestionResult: QuestionResults | null;
@@ -120,7 +120,7 @@ const getOptions = (question: Questions) => {
     const options: Record<string, string> = {};
     
     if (question.type === 'q_mc_single' && question.q_mc_single) {
-        if (question.q_mc_single.option_a) options['A'] = question.q_mc_single.option_a;
+        if ((question.q_mc_single as QMcSingle).option_a) options['A'] = question.q_mc_single.option_a;
         if (question.q_mc_single.option_b) options['B'] = question.q_mc_single.option_b;
         if (question.q_mc_single.option_c) options['C'] = question.q_mc_single.option_c;
         if (question.q_mc_single.option_d) options['D'] = question.q_mc_single.option_d;

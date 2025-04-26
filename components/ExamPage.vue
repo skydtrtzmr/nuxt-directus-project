@@ -79,8 +79,8 @@
 
             <!-- 右侧：题目详情和答题区 -->
             <QuestionDetail
-                :exam_page_mode="exam_page_mode"
                 class="basis-4/5"
+                :exam_page_mode="exam_page_mode"
                 :selectedQuestionResult="selectedQuestionResult"
             ></QuestionDetail>
         </div>
@@ -301,6 +301,8 @@ const fetchSubmittedPaper = async (paperId: string) => {
 const fetchSubmittedSectionsList = async (
     sections: PaperSections[]
 ) => {
+    console.log("fetchSubmittedSectionsList", sections);
+    
     // 获取章节的基本信息
     const submittedSectionsResponse = await getItems<PaperSections>({
         collection: "paper_sections",
@@ -369,7 +371,8 @@ const fetchSubmittedSectionsList = async (
 
         // 将这些ID添加到question_id_list中以在Redis中查询
         question_id_list.value = question_id_list.value.concat(questionIds);
-
+        // console.log("question_id_list", question_id_list.value);
+        
         return sectionQuestions;
     });
 
@@ -378,12 +381,16 @@ const fetchSubmittedSectionsList = async (
 
     // 从Redis获取所有问题数据
     const questionIds = Array.from(new Set(question_id_list.value)); // 去重
+
+    console.log("questionIds", questionIds);
     const questionsData = (await useFetch("/api/questions/list", {
         method: "POST",
         body: {
             ids: questionIds,
         },
     })) as any;
+
+    console.log("questionsData", questionsData);
 
     // 将问题数据与章节数据关联
     sectionList.forEach((section, index) => {
