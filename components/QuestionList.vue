@@ -11,15 +11,15 @@
                         <Button
                             v-for="question in section.questions"
                             :key="question.id"
-                            :severity="getQuestionSeverity(question.result)"
+                            :severity="getQuestionSeverity(question)"
                             class="question-card"
                             :class="{
                                 selected:
                                     selectedQuestion &&
                                     selectedQuestion.id ===
-                                        question.result?.id,
+                                        question.id,
                             }"
-                            @click="handleQuestionClick(question.result)"
+                            @click="handleQuestionClick(question)"
                             ref="refItems"
                         >
                             {{ question.sort_in_section }}
@@ -43,8 +43,8 @@ import { useLoadingStateStore } from "@/stores/loadingState"; // 引入 Pinia st
 
 const props = defineProps<{
     submittedPaperSections: PaperSections[];
-    selectQuestion: (question: QuestionResults) => void;
-    selectedQuestion: QuestionResults | null;
+    selectQuestion: (question: any) => void;
+    selectedQuestion: any | null;
     exam_page_mode: string;
 }>();
 
@@ -52,20 +52,20 @@ const loadingStateStore = useLoadingStateStore();
 const globalStore = useGlobalStore(); // 创建 Pinia store 实例
 const refItems = ref<HTMLButtonElement[]>([]);
 
-const handleQuestionClick = (questionResult: QuestionResults | undefined) => {
-    if (questionResult) {
-        console.log("handleQuestionClick", questionResult);
-        props.selectQuestion(questionResult); // 调用父组件传递的选择方法
+const handleQuestionClick = (question: any | undefined) => {
+    if (question) {
+        console.log("handleQuestionClick", question);
+        props.selectQuestion(question); // 调用父组件传递的选择方法
     }
 };
 
-const getQuestionSeverity = (result: QuestionResults | undefined) => {
-    if (!result) return "secondary";
+const getQuestionSeverity = (question: any | undefined) => {
+    if (!question || !question.result) return "secondary";
     
     if (
-        result.submit_ans_select_radio ||
-        (result.submit_ans_select_multiple_checkbox &&
-            (result.submit_ans_select_multiple_checkbox as any[]).length > 0)
+        question.result.submit_ans_select_radio ||
+        (question.result.submit_ans_select_multiple_checkbox &&
+            (question.result.submit_ans_select_multiple_checkbox as any[]).length > 0)
     ) {
         return "primary";
     } else {

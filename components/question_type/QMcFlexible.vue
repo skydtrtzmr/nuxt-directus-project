@@ -1,16 +1,9 @@
 <!-- components/QMcFlexible.vue -->
 <!-- 这里是题目内容组件 -->
 <template>
-    <div
-        v-if="
-            typeof selectedSubmittedQuestion.question === 'object' &&
-            selectedSubmittedQuestion.question.q_mc_flexible &&
-            typeof selectedSubmittedQuestion.question.q_mc_flexible === 'object'
-        "
-    >
-        <!-- 不定项选择题 -->
-        <p>{{ selectedSubmittedQuestion.question.q_mc_flexible.stem }}</p>
-
+    <div v-if="questionData && questionData.questions_id && questionData.result">
+        <!-- 灵活选择题 -->
+        <p>{{ questionData.questions_id.stem }}</p>
         <BlockUI
             :blocked="blockQuestion"
             class="basis-4/5"
@@ -28,75 +21,43 @@
             <div class="flex flex-col gap-4">
                 <div class="flex items-center gap-2" id="div_option_a">
                     <Checkbox
-                        v-model="
-                            selectedSubmittedQuestion.submitted_ans_q_mc_flexible
-                        "
+                        v-model="questionData.result.submit_ans_select_multiple_checkbox"
                         inputId="option_a"
                         name="A"
                         value="A"
                         @change="updateAnswer"
                     />
-                    <label for="option_a"
-                        >A.
-                        {{
-                            selectedSubmittedQuestion.question.q_mc_flexible
-                                .option_a
-                        }}</label
-                    >
+                    <label for="option_a">A. {{ questionData.questions_id.q_mc_flexible?.option_a }}</label>
                 </div>
                 <div class="flex items-center gap-2" id="div_option_b">
                     <Checkbox
-                        v-model="
-                            selectedSubmittedQuestion.submitted_ans_q_mc_flexible
-                        "
+                        v-model="questionData.result.submit_ans_select_multiple_checkbox"
                         inputId="option_b"
                         name="B"
                         value="B"
                         @change="updateAnswer"
                     />
-                    <label for="option_b"
-                        >B.
-                        {{
-                            selectedSubmittedQuestion.question.q_mc_flexible
-                                .option_b
-                        }}</label
-                    >
+                    <label for="option_b">B. {{ questionData.questions_id.q_mc_flexible?.option_b }}</label>
                 </div>
                 <div class="flex items-center gap-2" id="div_option_c">
                     <Checkbox
-                        v-model="
-                            selectedSubmittedQuestion.submitted_ans_q_mc_flexible
-                        "
+                        v-model="questionData.result.submit_ans_select_multiple_checkbox"
                         inputId="option_c"
                         name="C"
                         value="C"
                         @change="updateAnswer"
                     />
-                    <label for="option_c"
-                        >C.
-                        {{
-                            selectedSubmittedQuestion.question.q_mc_flexible
-                                .option_c
-                        }}</label
-                    >
+                    <label for="option_c">C. {{ questionData.questions_id.q_mc_flexible?.option_c }}</label>
                 </div>
                 <div class="flex items-center gap-2" id="div_option_d">
                     <Checkbox
-                        v-model="
-                            selectedSubmittedQuestion.submitted_ans_q_mc_flexible
-                        "
+                        v-model="questionData.result.submit_ans_select_multiple_checkbox"
                         inputId="option_d"
                         name="D"
                         value="D"
                         @change="updateAnswer"
                     />
-                    <label for="option_d"
-                        >D.
-                        {{
-                            selectedSubmittedQuestion.question.q_mc_flexible
-                                .option_d
-                        }}</label
-                    >
+                    <label for="option_d">D. {{ questionData.questions_id.q_mc_flexible?.option_d }}</label>
                 </div>
             </div>
         </BlockUI>
@@ -105,20 +66,23 @@
         <Divider />
         <!-- 以下是答题结果区域 -->
         <QuestionResult
-            :selectedSubmittedQuestion="selectedSubmittedQuestion"
+            :questionResult="questionData.result"
+            :questionData="questionData"
             :question_type="question_type"
         ></QuestionResult>
     </template>
 </template>
 
 <script setup lang="ts">
-import type { SubmittedQuestions } from "~/types/directus_types";
+import type {
+    QuestionResults,
+    Questions,
+} from "~/types/directus_types";
 
 const props = defineProps<{
-    selectedSubmittedQuestion: SubmittedQuestions;
+    questionData: any;
     exam_page_mode: string;
 }>();
-// 传进来的这个本来就是一个Ref类型，所以不需要用ref包裹
 
 const question_type = "q_mc_flexible";
 
@@ -144,12 +108,11 @@ const { updateItem } = useDirectusItems();
 const updateAnswer = async () => {
     try {
         const submitted_question = {
-            submitted_ans_q_mc_flexible:
-                props.selectedSubmittedQuestion.submitted_ans_q_mc_flexible,
+            submit_ans_select_multiple_checkbox: props.questionData.result.submit_ans_select_multiple_checkbox,
         };
-        const response = await updateItem<SubmittedQuestions>({
-            collection: "submitted_questions",
-            id: props.selectedSubmittedQuestion.id,
+        const response = await updateItem<QuestionResults>({
+            collection: "question_results",
+            id: props.questionData.result.id,
             item: submitted_question,
         });
         console.log("Answer updated successfully:", response);
@@ -159,10 +122,7 @@ const updateAnswer = async () => {
 };
 
 const isCorrectAnswer = computed(() => {
-    if (
-        props.selectedSubmittedQuestion.point_value ===
-        props.selectedSubmittedQuestion.score
-    ) {
+    if (props.questionData.result.point_value === props.questionData.result.score) {
         return true;
     } else {
         return false;

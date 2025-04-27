@@ -3,15 +3,15 @@
 <template>
     <div class="card">
         <h4>公共题干</h4>
-        <p>{{ questionData.question_group.shared_stem }}</p>
+        <p>{{ (question.question_group! as QuestionGroups).shared_stem }}</p>
     </div>
 </template>
 
 <script setup lang="ts">
-import type { Questions } from "~~/types/directus_types";
+import type { Questions, QuestionGroups } from "~~/types/directus_types";
 
 const props = defineProps<{
-    questionData: Questions;
+    question: Questions;
 }>();
 </script>
 

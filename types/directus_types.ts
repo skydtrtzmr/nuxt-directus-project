@@ -467,7 +467,6 @@ export type Exams = {
   duration: number;
   end_time: string;
   id: string;
-  paper_prototype?: string | PaperPrototypes | null;
   sort?: number | null;
   start_time: string;
   status: string;
@@ -604,61 +603,9 @@ export type PaperInstances = {
   user_updated?: string | DirectusUsers | null;
 };
 
-export type PaperPrototypeChapters = {
-  date_created?: string | null;
-  date_updated?: string | null;
-  description?: string | null;
-  id: string;
-  layout_mode?: string | null;
-  paper_prototype?: string | PaperPrototypes | null;
-  point_values: string;
-  q_mc_binary_point_value?: number | null;
-  q_mc_flexible_incomplete_point_value?: number | null;
-  q_mc_flexible_point_value?: number | null;
-  q_mc_multi_incomplete_point_value?: number | null;
-  q_mc_multi_point_value?: number | null;
-  q_mc_single_point_value?: number | null;
-  question_groups: any[] | PaperPrototypeChaptersQuestionGroups[];
-  question_point_assign_strategies: any[] | QuestionPointAssignStrategies[];
-  questions: any[] | PaperPrototypeChaptersQuestions[];
-  sort?: number | null;
-  sort_in_paper?: number | null;
-  statistic: string;
-  status: string;
-  title?: string | null;
-  total_point_value?: number | null;
-  total_question_count?: number | null;
-  "triggers-pqfgnz": string;
-  user_created?: string | DirectusUsers | null;
-  user_updated?: string | DirectusUsers | null;
-};
-
 export type PaperPrototypeChaptersQuestionGroups = {
   id: number;
-  paper_prototype_chapters_id?: string | PaperPrototypeChapters | null;
   question_groups_id?: string | QuestionGroups | null;
-};
-
-export type PaperPrototypeChaptersQuestions = {
-  id: number;
-  paper_prototype_chapters_id?: string | PaperPrototypeChapters | null;
-  questions_id?: string | Questions | null;
-  sort_in_chapter?: number | null;
-};
-
-export type PaperPrototypes = {
-  course?: string | Courses | null;
-  date_created?: string | null;
-  date_updated?: string | null;
-  id: string;
-  paper_prototype_chapters: any[] | PaperPrototypeChapters[];
-  sort?: number | null;
-  status: string;
-  title?: string | null;
-  total_point_value?: number | null;
-  total_question_count?: number | null;
-  user_created?: string | DirectusUsers | null;
-  user_updated?: string | DirectusUsers | null;
 };
 
 export type PaperSectionStrategies = {
@@ -746,6 +693,7 @@ export type PracticeSessions = {
   date_created?: string | null;
   date_updated?: string | null;
   exercises_students_id?: number | ExercisesStudents | null;
+  expected_end_time?: string | null;
   extra_time?: number | null;
   id: string;
   paper?: string | Papers | null;
@@ -914,7 +862,6 @@ export type QuestionPointAssignStrategies = {
   date_updated?: string | null;
   id: string;
   paper_gen_strategy_chapter?: string | PaperGenStrategyChapters | null;
-  paper_prototype_chapter?: string | PaperPrototypeChapters | null;
   question_difficulty?: number | null;
   question_point_value?: number | null;
   question_type?: string | null;
@@ -1069,89 +1016,6 @@ export type Subjects = {
   user_updated?: string | DirectusUsers | null;
 };
 
-export type SubmittedExams = {
-  actual_end_time?: string | null;
-  actual_start_time?: string | null;
-  date_created?: string | null;
-  date_updated?: string | null;
-  duration?: number | null;
-  exam: string | Exams;
-  expected_end_time?: string | null;
-  extra_time?: number | null;
-  id: string;
-  login_status?: string | null;
-  participation_status?: string | null;
-  sort?: number | null;
-  status: string;
-  student?: string | Students | null;
-  submit_status?: string | null;
-  submitted_papers: any[] | SubmittedPapers[];
-  title?: string | null;
-  triggers_calculate_score: string;
-  user_created?: string | DirectusUsers | null;
-  user_updated?: string | DirectusUsers | null;
-};
-
-export type SubmittedPaperChapters = {
-  date_created?: string | null;
-  date_updated?: string | null;
-  id: string;
-  point_value?: number | null;
-  score?: string | null;
-  sort?: number | null;
-  sort_in_paper?: number | null;
-  source_paper_gen_strategy_chapter?: string | PaperGenStrategyChapters | null;
-  source_paper_prototype_chapter?: string | PaperPrototypeChapters | null;
-  status: string;
-  submitted_paper: string | SubmittedPapers;
-  submitted_questions: any[] | SubmittedQuestions[];
-  title?: string | null;
-  user_created?: string | DirectusUsers | null;
-  user_updated?: string | DirectusUsers | null;
-};
-
-export type SubmittedPapers = {
-  date_created?: string | null;
-  date_updated?: string | null;
-  id: string;
-  point_value?: number | null;
-  score?: number | null;
-  sort?: number | null;
-  source_paper_gen_strategies?: string | PaperGenStrategies | null;
-  source_paper_prototype?: string | PaperPrototypes | null;
-  source_type?: string | null;
-  status: string;
-  submitted_exam: string | SubmittedExams;
-  submitted_paper_chapters: any[] | SubmittedPaperChapters[];
-  title?: string | null;
-  user_created?: string | DirectusUsers | null;
-  user_updated?: string | DirectusUsers | null;
-};
-
-export type SubmittedQuestions = {
-  correct_ans?: string | null;
-  date_created?: string | null;
-  date_updated?: string | null;
-  id: string;
-  incomplete_point_value?: number | null;
-  option_number?: number | null;
-  point_value?: number | null;
-  question: string | Questions;
-  question_type?: string | null;
-  score?: number | null;
-  sort?: number | null;
-  sort_in_chapter?: number | null;
-  status: string;
-  student?: string | Students | null;
-  submitted_ans_q_mc_binary?: string | null;
-  submitted_ans_q_mc_flexible?: unknown | null;
-  submitted_ans_q_mc_multi?: unknown | null;
-  submitted_ans_q_mc_single?: string | null;
-  submitted_paper_chapter: string | SubmittedPaperChapters;
-  user_created?: string | DirectusUsers | null;
-  user_updated?: string | DirectusUsers | null;
-};
-
 export type Teachers = {
   date_created?: string | null;
   date_updated?: string | null;
@@ -1223,10 +1087,7 @@ export type CustomDirectusTypes = {
   paper_gen_strategy_chapters: PaperGenStrategyChapters[];
   paper_gen_strategy_items: PaperGenStrategyItems[];
   paper_instances: PaperInstances[];
-  paper_prototype_chapters: PaperPrototypeChapters[];
   paper_prototype_chapters_question_groups: PaperPrototypeChaptersQuestionGroups[];
-  paper_prototype_chapters_questions: PaperPrototypeChaptersQuestions[];
-  paper_prototypes: PaperPrototypes[];
   paper_section_strategies: PaperSectionStrategies[];
   paper_sections: PaperSections[];
   paper_sections_questions: PaperSectionsQuestions[];
@@ -1254,10 +1115,6 @@ export type CustomDirectusTypes = {
   sections_knowledge_points: SectionsKnowledgePoints[];
   students: Students[];
   subjects: Subjects[];
-  submitted_exams: SubmittedExams[];
-  submitted_paper_chapters: SubmittedPaperChapters[];
-  submitted_papers: SubmittedPapers[];
-  submitted_questions: SubmittedQuestions[];
   teachers: Teachers[];
   textbooks: Textbooks[];
 };

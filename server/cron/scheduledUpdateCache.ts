@@ -66,11 +66,16 @@ export default defineCronHandler("everyThirtyMinutes", async () => {
                 collection: "questions",
                 fields: [
                     "id",
+                    "stem",
+                    "type",
+                    "analysis",
                     "q_mc_single.*",
                     "q_mc_multi.*",
                     "q_mc_binary.*",
                     "q_mc_flexible.*",
                     "question_group.*",
+                    "correct_ans_select_radio",
+                    "correct_ans_select_multiple_checkbox",
                 ],
             }),
         3600 // 1 hour

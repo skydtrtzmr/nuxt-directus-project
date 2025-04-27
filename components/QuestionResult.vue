@@ -5,77 +5,37 @@
         </div>
         <div class="text-gray-700 mt-2">
             <span class="font-medium">考生得分: </span>
-            <span class="text-lg">{{ selectedSubmittedQuestion.score }}</span>
+            <span class="text-lg">{{ questionResult.score }}</span>
         </div>
         <div class="text-gray-700">
             <span class="font-medium">本题总分: </span>
-            <span class="text-lg">{{
-                selectedSubmittedQuestion.point_value
-            }}</span>
+            <span class="text-lg">{{ questionResult.point_value }}</span>
         </div>
         <div>
-            <span class="font-medium">考生答案: </span
-            ><span class="text-lg">{{ submitted_ans_question_type }}</span>
+            <span class="font-medium">考生答案: </span>
+            <span class="text-lg">{{ getSubmittedAnswer() }}</span>
         </div>
         <div>
-            <span class="font-medium">正确答案: </span
-            ><span
-                class="text-lg"
-                v-if="
-                    typeof selectedSubmittedQuestion.question === 'object' &&
-                    selectedSubmittedQuestion.question[question_type] &&
-                    typeof selectedSubmittedQuestion.question[question_type] ===
-                        'object' &&
-                    typeof selectedSubmittedQuestion_question_type === 'object'
-                "
-                >{{
-                    question_type === ("q_mc_single" || "q_mc_binary") // 别忘了加括号！
-                        ? (
-                              selectedSubmittedQuestion_question_type as
-                                  | QMcSingle
-                                  | QMcBinary
-                          )?.correct_option
-                        : (
-                              selectedSubmittedQuestion_question_type as
-                                  | QMcMulti
-                                  | QMcFlexible
-                          )?.correct_options
-                }}</span
-            >
+            <span class="font-medium">正确答案: </span>
+            <span class="text-lg">{{ getCorrectAnswer() }}</span>
         </div>
         <br/>
         <div>
             <p class="font-medium">题目解析:</p>
-            <span
-                class="text-lg"
-                v-if="
-                    typeof selectedSubmittedQuestion.question === 'object' &&
-                    selectedSubmittedQuestion.question[question_type] &&
-                    typeof selectedSubmittedQuestion.question[question_type] ===
-                        'object' &&
-                    typeof selectedSubmittedQuestion_question_type === 'object'
-                "
-                >{{ selectedSubmittedQuestion_question_type!.analysis }}</span
-            >
+            <span class="text-lg">{{ getAnalysis() }}</span>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import type {
-    SubmittedQuestions,
+    QuestionResults,
     Questions,
-    QMcSingle,
-    QMcBinary,
-    QMcMulti,
-    QMcFlexible,
 } from "~/types/directus_types";
 
-// TODO 目前是把题目连带答案、解析都一起fetch的，即使是考试模式也会fetch。
-// 这样肯定是不安全的，得把考试模式和考试结果查看模式分开考虑。
-
 const props = defineProps<{
-    selectedSubmittedQuestion: SubmittedQuestions;
+    questionResult: QuestionResults;
+    questionData?: any; // 可选的完整题目数据
     question_type:
         | "q_mc_single"
         | "q_mc_multi"
@@ -83,41 +43,60 @@ const props = defineProps<{
         | "q_mc_flexible";
 }>();
 
-const selectedSubmittedQuestion_question_type = computed(() => {
-    if (props.question_type === "q_mc_single") {
-        return (props.selectedSubmittedQuestion.question as Questions)
-            .q_mc_single;
-    } else if (props.question_type === "q_mc_multi") {
-        return (props.selectedSubmittedQuestion.question as Questions)
-            .q_mc_multi;
-    } else if (props.question_type === "q_mc_binary") {
-        return (props.selectedSubmittedQuestion.question as Questions)
-            .q_mc_binary;
-    } else if (props.question_type === "q_mc_flexible") {
-        return (props.selectedSubmittedQuestion.question as Questions)
-            .q_mc_flexible;
-    } else {
-        return null;
+// 获取学生提交的答案
+const getSubmittedAnswer = () => {
+    if (props.question_type === "q_mc_single" || props.question_type === "q_mc_binary") {
+        return props.questionResult.submit_ans_select_radio;
+    } else if (props.question_type === "q_mc_multi" || props.question_type === "q_mc_flexible") {
+        return props.questionResult.submit_ans_select_multiple_checkbox;
     }
-});
+    return null;
+};
 
-const submitted_ans_question_type = computed(() => {
-    if (props.question_type === "q_mc_single") {
-        return props.selectedSubmittedQuestion.submitted_ans_q_mc_single;
-    } else if (props.question_type === "q_mc_multi") {
-        return props.selectedSubmittedQuestion.submitted_ans_q_mc_multi;
-    } else if (props.question_type === "q_mc_binary") {
-        return props.selectedSubmittedQuestion.submitted_ans_q_mc_binary;
-    } else if (props.question_type === "q_mc_flexible") {
-        return props.selectedSubmittedQuestion.submitted_ans_q_mc_flexible;
+// 获取题目的正确答案
+const getCorrectAnswer = () => {
+    if (!props.questionData || !props.questionData.questions_id) {
+        return "";
     }
-});
+    
+    const questionInfo = props.questionData.questions_id;
+    
+    if (props.question_type === "q_mc_single" && questionInfo.q_mc_single) {
+        return questionInfo.q_mc_single.correct_option || "";
+    } else if (props.question_type === "q_mc_binary" && questionInfo.q_mc_binary) {
+        return questionInfo.q_mc_binary.correct_option || "";
+    } else if (props.question_type === "q_mc_multi" && questionInfo.q_mc_multi) {
+        return JSON.stringify(questionInfo.q_mc_multi.correct_options) || "";
+    } else if (props.question_type === "q_mc_flexible" && questionInfo.q_mc_flexible) {
+        return JSON.stringify(questionInfo.q_mc_flexible.correct_options) || "";
+    }
+    
+    return "";
+};
+
+// 获取题目解析
+const getAnalysis = () => {
+    if (!props.questionData || !props.questionData.questions_id) {
+        return "";
+    }
+    
+    const questionInfo = props.questionData.questions_id;
+    
+    if (props.question_type === "q_mc_single" && questionInfo.q_mc_single) {
+        return questionInfo.q_mc_single.analysis || "";
+    } else if (props.question_type === "q_mc_binary" && questionInfo.q_mc_binary) {
+        return questionInfo.q_mc_binary.analysis || "";
+    } else if (props.question_type === "q_mc_multi" && questionInfo.q_mc_multi) {
+        return questionInfo.q_mc_multi.analysis || "";
+    } else if (props.question_type === "q_mc_flexible" && questionInfo.q_mc_flexible) {
+        return questionInfo.q_mc_flexible.analysis || "";
+    }
+    
+    return "";
+};
 
 const isCorrectAnswer = computed(() => {
-    if (
-        props.selectedSubmittedQuestion.point_value ===
-        props.selectedSubmittedQuestion.score
-    ) {
+    if (props.questionResult.point_value === props.questionResult.score) {
         return true;
     } else {
         return false;

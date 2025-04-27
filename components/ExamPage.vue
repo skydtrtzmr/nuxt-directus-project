@@ -99,7 +99,7 @@ import type {
     PaperSectionsQuestions,
     Questions,
     Exercises,
-    QuestionResults
+    QuestionResults,
 } from "~~/types/directus_types";
 import md5 from "md5";
 import { useAuth } from "~~/stores/auth";
@@ -155,7 +155,7 @@ const practice_session_id = Array.isArray(route.params.id)
 const practiceSession = ref<PracticeSessions>({} as PracticeSessions);
 const paper = ref<Papers>({} as Papers);
 const submittedPaperSections = ref<PaperSections[]>([]);
-const selectedQuestion = ref<QuestionResults>({} as QuestionResults); // 当前选中的题目结果
+const selectedQuestion = ref({} as any); // 当前选中的题目结果
 
 const chapter_id_list = ref<string[]>([]); // 试卷的所有章节ID列表。
 const question_id_list = ref<string[]>([]); // 试卷的所有题目ID列表。用来在redis中查询详情。
@@ -181,20 +181,21 @@ const {
 
 // 获取提交的考试信息。先获取试卷，再获取试卷的章节。
 const fetchSubmittedExam = async () => {
-    const practiceSessionResponse:PracticeSessions = await getItemById<PracticeSessions>({
-        collection: "practice_sessions",
-        id: practice_session_id,
-        params: {
-            fields: [
-                "id", 
-                "exercises_students_id.exercises_id.paper", 
-                // "title", 
-                "exercises_students_id.students_id.name",
-                "exercises_students_id.exercises_id.title",
-                "score" // 获取考试分数
-            ], // 获取考试的状态和关联的试卷
-        },
-    });
+    const practiceSessionResponse: PracticeSessions =
+        await getItemById<PracticeSessions>({
+            collection: "practice_sessions",
+            id: practice_session_id,
+            params: {
+                fields: [
+                    "id",
+                    "exercises_students_id.exercises_id.paper",
+                    // "title",
+                    "exercises_students_id.students_id.name",
+                    "exercises_students_id.exercises_id.title",
+                    "score", // 获取考试分数
+                ], // 获取考试的状态和关联的试卷
+            },
+        });
     if (practiceSessionResponse) {
         practiceSession.value = practiceSessionResponse;
         examScore.value = practiceSessionResponse.score || null; // 确保为null而不是undefined
@@ -212,8 +213,8 @@ const fetchExamTimeData = async () => {
                 "actual_start_time", // 获取考试开始时间，客户端根据此时间计算倒计时。
                 "actual_end_time",
                 "extra_time", // 考试时长补偿，客户端根据此时间计算倒计时。
+                "expected_end_time",
                 "exercises_students_id.exercises_id.duration", // 获取考试时长，直接在客户端进行计算
-                "exercises_students_id.exercises_id.expected_end_time", // 获取考试结束时间，客户端根据此时间计算倒计时。
                 "exercises_students_id.exercises_id.paper", // 获取考试试卷ID，客户端根据此ID获取试卷详情。
             ],
         },
@@ -225,14 +226,17 @@ const fetchExamTimeData = async () => {
 };
 
 const afterFetchSubmittedExam = () => {
-    if (
-        practiceSession.value.exercises_students_id 
-    ) {
+    if (practiceSession.value.exercises_students_id) {
         // 获取试卷的详情
         const esId = practiceSession.value.exercises_students_id;
-        if (typeof esId === 'object' && esId && 'exercises_id' in esId && esId.exercises_id) {
+        if (
+            typeof esId === "object" &&
+            esId &&
+            "exercises_id" in esId &&
+            esId.exercises_id
+        ) {
             const exercisesId = esId.exercises_id;
-            if (typeof exercisesId === 'object' && 'paper' in exercisesId) {
+            if (typeof exercisesId === "object" && "paper" in exercisesId) {
                 const paperId = exercisesId.paper as string;
                 console.log("paperId", paperId);
                 fetchSubmittedPaper(paperId);
@@ -244,17 +248,22 @@ const afterFetchSubmittedExam = () => {
 // 把获取时间数据后的操作也跟获取考试其他数据后的操作分开。
 const afterFetchSubmittedExamTime = () => {
     actual_start_time.value = practiceSessionTime.value.actual_start_time!;
-    
+
     // 从 exercises_students_id.exercises_id 获取考试时长
     const esId = practiceSessionTime.value.exercises_students_id;
-    if (typeof esId === 'object' && esId && 'exercises_id' in esId && esId.exercises_id) {
+    if (
+        typeof esId === "object" &&
+        esId &&
+        "exercises_id" in esId &&
+        esId.exercises_id
+    ) {
         // 确保exercises_id是对象
         const exercisesId = esId.exercises_id;
-        if (typeof exercisesId === 'object' && 'duration' in exercisesId) {
+        if (typeof exercisesId === "object" && "duration" in exercisesId) {
             duration.value = exercisesId.duration as number;
         }
     }
-    
+
     extra_time.value = practiceSessionTime.value.extra_time!;
 
     // 先根据实际开始作答时间和考试时长，计算应交卷时间
@@ -280,7 +289,7 @@ const afterFetchSubmittedExamTime = () => {
 // 获取提交的试卷
 const fetchSubmittedPaper = async (paperId: string) => {
     console.log("fetchSubmittedPaper", paperId);
-    
+
     const paperResponse = await getItemById<Papers>({
         collection: "papers",
         id: paperId,
@@ -300,11 +309,9 @@ const fetchSubmittedPaper = async (paperId: string) => {
 };
 
 // 获取试卷的章节，修改为使用paper_sections
-const fetchSubmittedSectionsList = async (
-    sections: PaperSections[]
-) => {
+const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
     console.log("fetchSubmittedSectionsList", sections);
-    
+
     // 获取章节的基本信息
     const submittedSectionsResponse = await getItems<PaperSections>({
         collection: "paper_sections",
@@ -318,7 +325,7 @@ const fetchSubmittedSectionsList = async (
                 "title",
                 "question_type",
                 "total_question_points",
-                "questions"
+                "questions",
             ],
             sort: "sort_in_paper", // 排序方式
         },
@@ -329,7 +336,7 @@ const fetchSubmittedSectionsList = async (
         collection: "question_results",
         params: {
             filter: {
-                practice_session_id: practice_session_id
+                practice_session_id: practice_session_id,
             },
             fields: [
                 "id",
@@ -346,10 +353,10 @@ const fetchSubmittedSectionsList = async (
 
     // 等待问题结果数据
     const questionResults = await questionResultsPromise;
-    
+
     // 处理章节和题目数据
     const sectionList = submittedSectionsResponse;
-    
+
     // 获取所有章节中的题目信息
     const questionsPromises = sectionList.map(async (section) => {
         // 查询章节中的所有问题
@@ -357,11 +364,7 @@ const fetchSubmittedSectionsList = async (
             collection: "paper_sections_questions",
             params: {
                 filter: { paper_sections_id: section.id },
-                fields: [
-                    "id",
-                    "sort_in_section",
-                    "questions_id",
-                ],
+                fields: ["id", "sort_in_section", "questions_id"],
                 sort: "sort_in_section",
             },
         });
@@ -374,7 +377,7 @@ const fetchSubmittedSectionsList = async (
         // 将这些ID添加到question_id_list中以在Redis中查询
         question_id_list.value = question_id_list.value.concat(questionIds);
         // console.log("question_id_list", question_id_list.value);
-        
+
         return sectionQuestions;
     });
 
@@ -396,42 +399,50 @@ const fetchSubmittedSectionsList = async (
 
     // 将问题数据与章节数据关联
     sectionList.forEach((section, index) => {
-        const sectionQuestionsWithData = questionsResponses[index].map((sectionQuestion) => {
-            const questionId = sectionQuestion.questions_id as string;
-            const questionData = questionsData.data.value.find(
-                (item: any) => item.id === questionId
-            );
-            
-            // 查找该题目的提交结果
-            const result = questionResults.find(
-                result => result.question_in_paper_id === sectionQuestion.id
-            );
-            
-            return {
-                ...sectionQuestion,
-                questions_id: questionData || null,
-                result: result || null,
-            };
-        });
-        
+        const sectionQuestionsWithData = questionsResponses[index].map(
+            (sectionQuestion) => {
+                const questionId = sectionQuestion.questions_id as string;
+                const questionData = questionsData.data.value.find(
+                    (item: any) => item.id === questionId
+                );
+
+                // 查找该题目的提交结果
+                const result = questionResults.find(
+                    (result) =>
+                        result.question_in_paper_id === sectionQuestion.id
+                );
+
+                return {
+                    ...sectionQuestion,
+                    questions_id: questionData || null,
+                    result: result || null,
+                };
+            }
+        );
+
         section.questions = sectionQuestionsWithData;
     });
 
     if (submittedSectionsResponse) {
         submittedPaperSections.value = sectionList;
-        console.log("submittedPaperSections.value:", submittedPaperSections.value);
-        
+        console.log(
+            "submittedPaperSections.value:",
+            submittedPaperSections.value
+        );
+
         // 默认选择第一个题目的结果
         if (sectionList[0]?.questions?.[0]) {
             selectedQuestion.value = sectionList[0].questions[0];
+            // 注意：这里的question[0]是一个混合了PaperSectionsQuestions和QuestionResults的数据。
             console.log("selectedQuestion.value:", selectedQuestion.value);
         }
     }
 };
 
 // 修改选择题目的函数以适应新的数据结构
-const selectQuestion = (questionResult: QuestionResults) => {
-    selectedQuestion.value = questionResult;
+const selectQuestion = (question: any) => {
+    // 注意：这里的question是一个混合了PaperSectionsQuestions和QuestionResults的数据。
+    selectedQuestion.value = question;
 };
 
 // 直接传id
