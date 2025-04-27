@@ -16,10 +16,10 @@
 </template>
 
 <script setup lang="ts">
-import type { SubmittedPapers } from "~~/types/directus_types";
+import type { Papers } from "~~/types/directus_types";
 
 const props = defineProps<{
-    submittedPaper: SubmittedPapers | null;
+    submittedPaper: Papers | null;
 }>();
 </script>
 

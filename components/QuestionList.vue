@@ -15,8 +15,8 @@
                             class="question-card"
                             :class="{
                                 selected:
-                                    selectedQuestionResult &&
-                                    selectedQuestionResult.id ===
+                                    selectedQuestion &&
+                                    selectedQuestion.id ===
                                         question.result?.id,
                             }"
                             @click="handleQuestionClick(question.result)"
@@ -44,7 +44,7 @@ import { useLoadingStateStore } from "@/stores/loadingState"; // 引入 Pinia st
 const props = defineProps<{
     submittedPaperSections: PaperSections[];
     selectQuestion: (question: QuestionResults) => void;
-    selectedQuestionResult: QuestionResults | null;
+    selectedQuestion: QuestionResults | null;
     exam_page_mode: string;
 }>();
 

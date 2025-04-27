@@ -4,7 +4,7 @@
     <div class="main-content">
         <div class="h-full">
             <template
-                v-if="questionData && selectedQuestionResult"
+                v-if="questionData && selectedQuestion"
             >
                 <h3 class="m-4 red-text">
                     {{ questionData.title || '试题' }}
@@ -34,7 +34,7 @@
 
                 <!-- 题目内容和答题区 -->
                 <div class="basis-3/5 h-full">
-                    <div v-if="selectedQuestionResult && questionData">
+                    <div v-if="selectedQuestion && questionData">
                         <!-- 题目类型判断和渲染 -->
                         <div>
                             <h4>题目：</h4>
@@ -46,7 +46,7 @@
                                 <template v-if="questionData.type === 'q_mc_single'">
                                     <div v-for="(option, key) in getOptions(questionData)" :key="key" class="option-item">
                                         <RadioButton
-                                            v-model="selectedQuestionResult.submit_ans_select_radio"
+                                            v-model="selectedQuestion.submit_ans_select_radio"
                                             :value="key"
                                             :disabled="exam_page_mode === 'review'"
                                             @change="updateAnswer"
@@ -58,7 +58,7 @@
                                 <template v-else-if="questionData.type === 'q_mc_multi'">
                                     <div v-for="(option, key) in getOptions(questionData)" :key="key" class="option-item">
                                         <Checkbox
-                                            v-model="selectedQuestionResult.submit_ans_select_multiple_checkbox"
+                                            v-model="selectedQuestion.submit_ans_select_multiple_checkbox"
                                             :value="key"
                                             :disabled="exam_page_mode === 'review'"
                                             @change="updateAnswer"
@@ -75,7 +75,7 @@
                                 </div>
                                 <div class="mt-2">
                                     <span class="font-medium">得分：</span>
-                                    {{ selectedQuestionResult.score }} / {{ selectedQuestionResult.point_value }}
+                                    {{ selectedQuestion.score }} / {{ selectedQuestion.point_value }}
                                 </div>
                                 <div class="mt-2">
                                     <span class="font-medium">正确答案：</span>
@@ -100,7 +100,7 @@ import CommonQuestionContent from "~/components/CommonQuestionContent.vue";
 import type { QuestionResults, Questions, QMcSingle, QMcMulti } from "~/types/directus_types";
 
 const props = defineProps<{
-    selectedQuestionResult: QuestionResults | null;
+    selectedQuestion: QuestionResults | null;
     exam_page_mode: string;
 }>();
 
@@ -108,7 +108,7 @@ const { updateItem } = useDirectusItems();
 
 // 获取题目数据
 const questionData = computed(() => {
-    if (!props.selectedQuestionResult) return null;
+    if (!props.selectedQuestion) return null;
     
     // 这里需要调整，根据实际情况从QuestionResults中获取题目数据
     // 可能需要从关联字段中获取，或通过API单独获取题目详情
@@ -151,26 +151,26 @@ const getCorrectAnswer = (question: Questions) => {
 
 // 判断答案是否正确
 const isCorrect = computed(() => {
-    if (!props.selectedQuestionResult) return false;
-    return props.selectedQuestionResult.score === props.selectedQuestionResult.point_value;
+    if (!props.selectedQuestion) return false;
+    return props.selectedQuestion.score === props.selectedQuestion.point_value;
 });
 
 // 更新答案
 const updateAnswer = async () => {
-    if (!props.selectedQuestionResult || props.exam_page_mode === 'review') return;
+    if (!props.selectedQuestion || props.exam_page_mode === 'review') return;
     
     try {
         const updateData: any = {};
         
         if (questionData.value?.type === 'q_mc_single') {
-            updateData.submit_ans_select_radio = props.selectedQuestionResult.submit_ans_select_radio;
+            updateData.submit_ans_select_radio = props.selectedQuestion.submit_ans_select_radio;
         } else if (questionData.value?.type === 'q_mc_multi') {
-            updateData.submit_ans_select_multiple_checkbox = props.selectedQuestionResult.submit_ans_select_multiple_checkbox;
+            updateData.submit_ans_select_multiple_checkbox = props.selectedQuestion.submit_ans_select_multiple_checkbox;
         }
         
         await updateItem({
             collection: 'question_results',
-            id: props.selectedQuestionResult.id,
+            id: props.selectedQuestion.id,
             item: updateData
         });
         console.log('答案已更新');

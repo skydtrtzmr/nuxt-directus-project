@@ -73,7 +73,7 @@
                 class="basis-1/5 card"
                 :exam_page_mode="exam_page_mode"
                 :submittedPaperSections="submittedPaperSections"
-                :selectedQuestionResult="selectedQuestionResult"
+                :selectedQuestion="selectedQuestion"
                 :selectQuestion="selectQuestion"
             ></QuestionList>
 
@@ -81,7 +81,7 @@
             <QuestionDetail
                 class="basis-4/5"
                 :exam_page_mode="exam_page_mode"
-                :selectedQuestionResult="selectedQuestionResult"
+                :selectedQuestion="selectedQuestion"
             ></QuestionDetail>
         </div>
     </div>
@@ -155,7 +155,7 @@ const practice_session_id = Array.isArray(route.params.id)
 const practiceSession = ref<PracticeSessions>({} as PracticeSessions);
 const paper = ref<Papers>({} as Papers);
 const submittedPaperSections = ref<PaperSections[]>([]);
-const selectedQuestionResult = ref<QuestionResults>({} as QuestionResults); // 当前选中的题目结果
+const selectedQuestion = ref<QuestionResults>({} as QuestionResults); // 当前选中的题目结果
 
 const chapter_id_list = ref<string[]>([]); // 试卷的所有章节ID列表。
 const question_id_list = ref<string[]>([]); // 试卷的所有题目ID列表。用来在redis中查询详情。
@@ -213,6 +213,8 @@ const fetchExamTimeData = async () => {
                 "actual_end_time",
                 "extra_time", // 考试时长补偿，客户端根据此时间计算倒计时。
                 "exercises_students_id.exercises_id.duration", // 获取考试时长，直接在客户端进行计算
+                "exercises_students_id.exercises_id.expected_end_time", // 获取考试结束时间，客户端根据此时间计算倒计时。
+                "exercises_students_id.exercises_id.paper", // 获取考试试卷ID，客户端根据此ID获取试卷详情。
             ],
         },
     });
@@ -420,16 +422,16 @@ const fetchSubmittedSectionsList = async (
         console.log("submittedPaperSections.value:", submittedPaperSections.value);
         
         // 默认选择第一个题目的结果
-        if (sectionList[0]?.questions?.[0]?.result) {
-            selectedQuestionResult.value = sectionList[0].questions[0].result;
-            console.log("selectedQuestionResult.value:", selectedQuestionResult.value);
+        if (sectionList[0]?.questions?.[0]) {
+            selectedQuestion.value = sectionList[0].questions[0];
+            console.log("selectedQuestion.value:", selectedQuestion.value);
         }
     }
 };
 
 // 修改选择题目的函数以适应新的数据结构
 const selectQuestion = (questionResult: QuestionResults) => {
-    selectedQuestionResult.value = questionResult;
+    selectedQuestion.value = questionResult;
 };
 
 // 直接传id
