@@ -6,7 +6,7 @@
         <!-- 显示试卷详情 -->
         <template v-if="exam_page_mode !== 'review'">
             <div>
-                <PaperInfo :submittedPaper="paper"></PaperInfo>
+                <PaperInfo :paper="paper"></PaperInfo>
                 <div class="absolute top-0 right-0">
                     <!-- 显示倒计时 -->
                     <ExamCountdown

@@ -251,7 +251,6 @@ import dayjs from "dayjs";
 import { useAuth } from "~~/stores/auth";
 import type {
     PracticeSessions,
-    SubmittedPapers,
     Exercises,
     ExercisesStudents,
 } from "~~/types/directus_types";
