@@ -1,44 +1,49 @@
 <!-- components/QuestionList.vue -->
 <template>
     <div 
-        class="sidebar card" 
-        :class="{'sidebar-collapsed': isSidebarCollapsed}"
+        class="question-list-container" 
+        :class="{'collapsed': isSidebarCollapsed}"
         v-if="submittedPaperSections.length > 0"
     >
-        <div class="sidebar-header">
-            <h5>题目列表</h5>
+        <div class="toggle-button-wrapper">
             <Button
-                :icon="isSidebarCollapsed ? 'pi pi-chevron-down' : 'pi pi-chevron-up'"
-                class="p-button-rounded p-button-text p-button-sm sidebar-toggle-btn"
+                :icon="isSidebarCollapsed ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"
+                class="p-button-rounded p-button-text toggle-button"
                 @click="toggleSidebar"
                 :aria-label="isSidebarCollapsed ? '展开题目列表' : '收起题目列表'"
             />
         </div>
-        <div class="sidebar-content" :class="{'hidden': isSidebarCollapsed}">
-            <div v-for="(section, index) in submittedPaperSections" :key="section.id" class="section-container">
-                <div class="section-header" @click="toggleSection(index)">
-                    <h6 class="section-title">{{ section.title }}</h6>
-                    <i :class="{'pi pi-chevron-down': !expandedSections.includes(index), 'pi pi-chevron-up': expandedSections.includes(index)}"></i>
-                </div>
-                <div class="section-content" v-show="expandedSections.includes(index)">
-                    <!-- 章节下的题目列表，卡片式 -->
-                    <div class="question-card-container">
-                        <Button
-                            v-for="question in section.questions"
-                            :key="question.id"
-                            :severity="getQuestionSeverity(question)"
-                            class="question-card"
-                            :class="{
-                                selected:
-                                    selectedQuestion &&
-                                    selectedQuestion.id ===
-                                        question.id,
-                            }"
-                            @click="handleQuestionClick(question)"
-                            ref="refItems"
-                        >
-                            {{ question.sort_in_section }}
-                        </Button>
+
+        <div class="sidebar card" :class="{'hidden': isSidebarCollapsed}">
+            <div class="sidebar-header">
+                <h5>题目列表</h5>
+            </div>
+            <div class="sidebar-content">
+                <div v-for="(section, index) in submittedPaperSections" :key="section.id" class="section-container">
+                    <div class="section-header" @click="toggleSection(index)">
+                        <h6 class="section-title">{{ section.title }}</h6>
+                        <i :class="{'pi pi-chevron-down': !expandedSections.includes(index), 'pi pi-chevron-up': expandedSections.includes(index)}"></i>
+                    </div>
+                    <div class="section-content" v-show="expandedSections.includes(index)">
+                        <!-- 章节下的题目列表，卡片式 -->
+                        <div class="question-card-container">
+                            <Button
+                                v-for="question in section.questions"
+                                :key="question.id"
+                                :severity="getQuestionSeverity(question)"
+                                class="question-card"
+                                :class="{
+                                    selected:
+                                        selectedQuestion &&
+                                        selectedQuestion.id ===
+                                            question.id,
+                                }"
+                                @click="handleQuestionClick(question)"
+                                ref="refItems"
+                            >
+                                {{ question.sort_in_section }}
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -47,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from "vue";
+import { ref, onMounted, nextTick, watch } from "vue";
 import type {
     PaperSections,
     QuestionResults,
@@ -62,6 +67,8 @@ const props = defineProps<{
     exam_page_mode: string;
 }>();
 
+const emit = defineEmits(['sidebar-toggle']);
+
 const loadingStateStore = useLoadingStateStore();
 const globalStore = useGlobalStore(); // 创建 Pinia store 实例
 const refItems = ref<HTMLButtonElement[]>([]);
@@ -70,6 +77,17 @@ const expandedSections = ref<number[]>([0]); // 默认展开第一个章节
 
 const toggleSidebar = () => {
     isSidebarCollapsed.value = !isSidebarCollapsed.value;
+    emit('sidebar-toggle', isSidebarCollapsed.value);
+};
+
+// 监听窗口尺寸变化，在移动端下自动折叠
+const checkMobileView = () => {
+    if (typeof window !== 'undefined') {
+        if (window.innerWidth < 768 && !isSidebarCollapsed.value) {
+            isSidebarCollapsed.value = true;
+            emit('sidebar-toggle', true);
+        }
+    }
 };
 
 const toggleSection = (index: number) => {
@@ -85,6 +103,12 @@ const handleQuestionClick = (question: any | undefined) => {
     if (question) {
         console.log("handleQuestionClick", question);
         props.selectQuestion(question); // 调用父组件传递的选择方法
+        
+        // 在移动设备上，选中题目后自动收起题目列表
+        if (typeof window !== 'undefined' && window.innerWidth < 768) {
+            isSidebarCollapsed.value = true;
+            emit('sidebar-toggle', true);
+        }
     }
 };
 
@@ -128,16 +152,64 @@ onMounted(async () => {
             globalStore.setAllDone(true);
         }
     }
+    
+    // 检查是否为移动设备，初始化时自动收起
+    checkMobileView();
+    
+    // 添加窗口尺寸变化监听器
+    if (typeof window !== 'undefined') {
+        window.addEventListener('resize', checkMobileView);
+    }
+});
+
+// 组件卸载时移除事件监听器
+onUnmounted(() => {
+    if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', checkMobileView);
+    }
 });
 </script>
 
 <style scoped>
+.question-list-container {
+    position: relative;
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+}
+
 .sidebar {
     background-color: var(--surface-card);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    transition: width 0.3s ease;
+    overflow: hidden;
+    flex: 1;
+}
+
+.toggle-button-wrapper {
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.toggle-button {
+    background-color: var(--surface-card);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--surface-border);
+}
+
+.question-list-container.collapsed {
+    width: 40px !important;
+    min-width: 40px !important;
+}
+
+.question-list-container.collapsed .sidebar {
+    width: 0;
     overflow: hidden;
 }
 
@@ -149,23 +221,10 @@ onMounted(async () => {
     border-bottom: 1px solid var(--surface-border);
 }
 
-.sidebar-toggle-btn {
-    margin-right: -0.5rem;
-}
-
 .sidebar-content {
     padding: 0.5rem;
-    transition: all 0.3s ease;
-    max-height: 75vh;
+    max-height: calc(100% - 50px);
     overflow-y: auto;
-}
-
-.sidebar-collapsed {
-    max-width: 100%;
-}
-
-.sidebar-collapsed .sidebar-content {
-    display: none;
 }
 
 .section-container {
@@ -227,20 +286,46 @@ onMounted(async () => {
 
 /* 移动端样式适配 */
 @media screen and (max-width: 768px) {
-    .sidebar {
+    .question-list-container {
         position: fixed;
-        bottom: 0;
         left: 0;
-        right: 0;
-        z-index: 100;
-        border-radius: 12px 12px 0 0;
-        max-height: 50vh;
-        max-width: 100%;
-        transition: all 0.3s ease;
+        bottom: 0;
+        top: auto;
+        width: 100%;
+        height: auto;
+        max-height: 60vh;
+        z-index: 1000;
     }
     
-    .sidebar-collapsed {
-        max-height: 50px;
+    .question-list-container.collapsed {
+        width: 100% !important;
+        height: 40px;
+        max-height: 40px;
+    }
+    
+    .toggle-button-wrapper {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        transform: none;
+    }
+    
+    .toggle-button {
+        transform: rotate(90deg);
+    }
+    
+    .question-list-container.collapsed .toggle-button {
+        transform: rotate(-90deg);
+    }
+    
+    .sidebar {
+        border-radius: 12px 12px 0 0;
+        height: 100%;
+        max-height: calc(60vh - 40px);
+    }
+    
+    .sidebar-content {
+        max-height: calc(60vh - 90px);
     }
     
     .question-card {

@@ -1,36 +1,53 @@
 <!-- pages/exam/[id].vue -->
 <template>
-    <div class="relative">
-        <!-- 显示考试信息 -->
-        <ExamInfo :practiceSession="practiceSession"></ExamInfo>
-        <!-- 显示试卷详情 -->
-        <template v-if="exam_page_mode !== 'review'">
-            <div>
-                <PaperInfo :paper="paper"></PaperInfo>
-                <div class="md:absolute md:top-0 md:right-0 flex flex-col md:flex-row items-center gap-2 mb-4 md:mb-0">
-                    <!-- 显示倒计时 -->
-                    <ExamCountdown
-                        :isClient="isClient"
-                        :examEndTime="examEndTime"
-                        :practiceSessionTime="practiceSessionTime"
-                        :formattedCountDown="formattedCountDown"
-                    ></ExamCountdown>
-                    <Button
-                        icon="pi pi-save"
-                        aria-label="Submit"
-                        label="提交试卷"
-                        @click="manualSubmit()"
-                        class="w-full md:w-auto"
-                    />
+    <div class="exam-page relative">
+        <div class="mb-4">
+            <!-- 顶部信息区域：考试信息、计时器和提交按钮 -->
+            <div class="card p-4">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    <!-- 左侧：考试信息 -->
+                    <div class="lg:col-span-8">
+                        <ExamInfo :practiceSession="practiceSession"></ExamInfo>
+                        
+                        <!-- 显示试卷详情 -->
+                        <div v-if="exam_page_mode !== 'review'" class="mt-3">
+                            <PaperInfo :paper="paper"></PaperInfo>
+                        </div>
+                        <div v-else class="flex flex-col mt-3 p-3 bg-surface-50 dark:bg-surface-800 rounded-lg">
+                            <div class="flex gap-4 items-center">
+                                <div class="font-medium text-lg">试卷总分值：{{ paper.total_point_value }}</div>
+                                <div class="font-medium text-lg text-primary">当前得分：{{ examScore }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 右侧：倒计时和提交按钮 -->
+                    <div class="lg:col-span-4" v-if="exam_page_mode !== 'review'">
+                        <div class="flex flex-col h-full">
+                            <!-- 显示倒计时 -->
+                            <ExamCountdown
+                                :isClient="isClient"
+                                :examEndTime="examEndTime"
+                                :practiceSessionTime="practiceSessionTime"
+                                :formattedCountDown="formattedCountDown"
+                                class="mb-3"
+                            ></ExamCountdown>
+                            
+                            <Button
+                                icon="pi pi-save"
+                                aria-label="Submit"
+                                label="提交试卷"
+                                @click="manualSubmit()"
+                                class="p-button-lg"
+                                severity="warning"
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
-        </template>
-        <template v-else>
-            <div class="md:absolute md:top-10 md:right-10 flex flex-col items-center md:items-end mb-4 md:mb-0">
-                <div>试卷总分值：{{ paper.total_point_value }}</div>
-                <div>当前总得分：{{ examScore }}</div>
-            </div>
-        </template>
+        </div>
+        
+        <!-- 对话框区域 -->
         <template v-if="exam_page_mode !== 'review'">
             <Dialog
                 v-model:visible="ended_dialog_visible"
@@ -62,27 +79,41 @@
                 <div class="flex justify-end gap-2">
                     <Button
                         type="button"
+                        label="取消"
+                        severity="secondary"
+                        @click="confirm_submit_dialog_visible = false"
+                        class="mr-2"
+                    ></Button>
+                    <Button
+                        type="button"
                         label="确定"
+                        severity="danger"
                         @click="confirmSubmit()"
                     ></Button>
                 </div>
             </Dialog>
         </template>
-        <div class="flex flex-col lg:flex-row gap-4 mt-4">
+        
+        <!-- 题目区域 -->
+        <div class="question-area flex flex-col lg:flex-row gap-4">
             <!-- 左侧：题目列表 -->
             <QuestionList
-                class="w-full lg:w-1/4 xl:w-1/5"
+                class="lg:w-3/12"
+                :class="{'lg:w-0': sidebarCollapsed}"
                 :exam_page_mode="exam_page_mode"
                 :submittedPaperSections="submittedPaperSections"
                 :selectedQuestion="selectedQuestion"
                 :selectQuestion="selectQuestion"
+                @sidebar-toggle="handleSidebarToggle"
             ></QuestionList>
 
             <!-- 右侧：题目详情和答题区 -->
             <QuestionDetail
-                class="w-full lg:w-3/4 xl:w-4/5 card p-4"
+                class="flex-1 transition-all duration-300"
+                :class="{'lg:ml-0': sidebarCollapsed, 'lg:ml-3': !sidebarCollapsed}"
                 :exam_page_mode="exam_page_mode"
                 :selectedQuestion="selectedQuestion"
+                @navigate-question="navigateToQuestion"
             ></QuestionDetail>
         </div>
     </div>
@@ -90,7 +121,7 @@
 
 <script setup lang="ts">
 import dayjs from "dayjs";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import { useRoute } from "vue-router";
 import utc from "dayjs/plugin/utc";
 import type {
@@ -118,6 +149,7 @@ dayjs.extend(utc);
 
 const ended_dialog_visible = ref(false);
 const confirm_submit_dialog_visible = ref(false);
+const sidebarCollapsed = ref(false); // 控制侧边栏收缩状态
 
 const props = defineProps<{
     // practice_session_id: string;
@@ -125,20 +157,9 @@ const props = defineProps<{
     exam_page_mode: string; // 考试模式，practice、exam、review
 }>();
 
-// const { refreshTokens } = useDirectusToken();
-
-// // 刷新 token，确保仍然有效
-// const newToken = refreshTokens();
-// // 返回一个DirectusAuthResponse，与login返回的结构一致
-// // {
-// //     user: DirectusUser;
-// //     access_token: string;
-// //     expires: number;
-// //     refresh_token: string;
-// // }
-// console.log("触发refreshTokens()。");
-
-// console.log("newToken:", newToken);
+const handleSidebarToggle = (collapsed: boolean) => {
+    sidebarCollapsed.value = collapsed;
+};
 
 const { getItemById, getItems, updateItem } = useDirectusItems();
 
@@ -622,20 +643,65 @@ onUnmounted(() => {
     //     clearInterval(pollingInterval);
     // }
 });
-// TODO 这段可能重复了
+
+// 获取全部题目列表（扁平化）
+const allQuestions = computed(() => {
+    const questions: any[] = [];
+    submittedPaperSections.value.forEach(section => {
+        if (section.questions && Array.isArray(section.questions)) {
+            questions.push(...section.questions);
+        }
+    });
+    return questions.sort((a, b) => {
+        // 按章节顺序和题目顺序排序
+        const sectionIndexA = submittedPaperSections.value.findIndex(s => s.id === a.paper_sections_id);
+        const sectionIndexB = submittedPaperSections.value.findIndex(s => s.id === b.paper_sections_id);
+        
+        if (sectionIndexA !== sectionIndexB) {
+            return sectionIndexA - sectionIndexB;
+        }
+        
+        return a.sort_in_section - b.sort_in_section;
+    });
+});
+
+// 导航到上一题或下一题
+const navigateToQuestion = (direction: number) => {
+    if (!selectedQuestion.value || allQuestions.value.length === 0) return;
+    
+    const currentIndex = allQuestions.value.findIndex(q => q.id === selectedQuestion.value.id);
+    if (currentIndex === -1) return;
+    
+    let nextIndex = currentIndex + direction;
+    
+    // 循环导航
+    if (nextIndex < 0) {
+        nextIndex = allQuestions.value.length - 1;
+    } else if (nextIndex >= allQuestions.value.length) {
+        nextIndex = 0;
+    }
+    
+    selectQuestion(allQuestions.value[nextIndex]);
+};
 </script>
 
-<style>
-/* 添加全局媒体查询样式，适配不同设备 */
-@media screen and (max-width: 1024px) {
-    .layout-main {
-        padding: 1rem;
-    }
+<style scoped>
+.exam-page {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 120px);
+}
+
+.question-area {
+    flex: 1;
+    position: relative;
+    min-height: 500px;
 }
 
 @media screen and (max-width: 768px) {
-    .layout-main {
-        padding: 0.5rem;
+    .question-area {
+        margin-bottom: 40px; /* 为移动端底部题目列表留出空间 */
+        min-height: 400px;
     }
 }
 </style>
