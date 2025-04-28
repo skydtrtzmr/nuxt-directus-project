@@ -7,7 +7,7 @@
         <template v-if="exam_page_mode !== 'review'">
             <div>
                 <PaperInfo :paper="paper"></PaperInfo>
-                <div class="absolute top-0 right-0">
+                <div class="md:absolute md:top-0 md:right-0 flex flex-col md:flex-row items-center gap-2 mb-4 md:mb-0">
                     <!-- 显示倒计时 -->
                     <ExamCountdown
                         :isClient="isClient"
@@ -20,12 +20,13 @@
                         aria-label="Submit"
                         label="提交试卷"
                         @click="manualSubmit()"
+                        class="w-full md:w-auto"
                     />
                 </div>
             </div>
         </template>
         <template v-else>
-            <div class="absolute top-10 right-10">
+            <div class="md:absolute md:top-10 md:right-10 flex flex-col items-center md:items-end mb-4 md:mb-0">
                 <div>试卷总分值：{{ paper.total_point_value }}</div>
                 <div>当前总得分：{{ examScore }}</div>
             </div>
@@ -67,10 +68,10 @@
                 </div>
             </Dialog>
         </template>
-        <div class="flex">
+        <div class="flex flex-col lg:flex-row gap-4 mt-4">
             <!-- 左侧：题目列表 -->
             <QuestionList
-                class="basis-1/5 card"
+                class="w-full lg:w-1/4 xl:w-1/5"
                 :exam_page_mode="exam_page_mode"
                 :submittedPaperSections="submittedPaperSections"
                 :selectedQuestion="selectedQuestion"
@@ -79,7 +80,7 @@
 
             <!-- 右侧：题目详情和答题区 -->
             <QuestionDetail
-                class="basis-4/5"
+                class="w-full lg:w-3/4 xl:w-4/5 card p-4"
                 :exam_page_mode="exam_page_mode"
                 :selectedQuestion="selectedQuestion"
             ></QuestionDetail>
@@ -624,19 +625,17 @@ onUnmounted(() => {
 // TODO 这段可能重复了
 </script>
 
-<style scoped>
-.countdown {
-    font-size: 1rem;
-    font-weight: bold;
-    color: red;
+<style>
+/* 添加全局媒体查询样式，适配不同设备 */
+@media screen and (max-width: 1024px) {
+    .layout-main {
+        padding: 1rem;
+    }
 }
 
-.sidebar {
-    width: 260px;
-    /* 固定宽度 */
-    float: left;
-    padding: 15px;
-    border-right: 2px solid #ddd;
-    margin: 20px;
+@media screen and (max-width: 768px) {
+    .layout-main {
+        padding: 0.5rem;
+    }
 }
 </style>

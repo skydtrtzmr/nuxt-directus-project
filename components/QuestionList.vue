@@ -1,11 +1,26 @@
 <!-- components/QuestionList.vue -->
 <template>
-    <div class="sidebar" v-if="submittedPaperSections.length > 0">
-        <h5>题目列表</h5>
-        <ul>
-            <li v-for="section in submittedPaperSections" :key="section.id">
-                <h4>{{ section.title }}</h4>
-                <ul>
+    <div 
+        class="sidebar card" 
+        :class="{'sidebar-collapsed': isSidebarCollapsed}"
+        v-if="submittedPaperSections.length > 0"
+    >
+        <div class="sidebar-header">
+            <h5>题目列表</h5>
+            <Button
+                :icon="isSidebarCollapsed ? 'pi pi-chevron-down' : 'pi pi-chevron-up'"
+                class="p-button-rounded p-button-text p-button-sm sidebar-toggle-btn"
+                @click="toggleSidebar"
+                :aria-label="isSidebarCollapsed ? '展开题目列表' : '收起题目列表'"
+            />
+        </div>
+        <div class="sidebar-content" :class="{'hidden': isSidebarCollapsed}">
+            <div v-for="(section, index) in submittedPaperSections" :key="section.id" class="section-container">
+                <div class="section-header" @click="toggleSection(index)">
+                    <h6 class="section-title">{{ section.title }}</h6>
+                    <i :class="{'pi pi-chevron-down': !expandedSections.includes(index), 'pi pi-chevron-up': expandedSections.includes(index)}"></i>
+                </div>
+                <div class="section-content" v-show="expandedSections.includes(index)">
                     <!-- 章节下的题目列表，卡片式 -->
                     <div class="question-card-container">
                         <Button
@@ -25,15 +40,14 @@
                             {{ question.sort_in_section }}
                         </Button>
                     </div>
-                </ul>
-                <br />
-            </li>
-        </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, nextTick } from "vue";
 import type {
     PaperSections,
     QuestionResults,
@@ -51,6 +65,21 @@ const props = defineProps<{
 const loadingStateStore = useLoadingStateStore();
 const globalStore = useGlobalStore(); // 创建 Pinia store 实例
 const refItems = ref<HTMLButtonElement[]>([]);
+const isSidebarCollapsed = ref(false);
+const expandedSections = ref<number[]>([0]); // 默认展开第一个章节
+
+const toggleSidebar = () => {
+    isSidebarCollapsed.value = !isSidebarCollapsed.value;
+};
+
+const toggleSection = (index: number) => {
+    const foundIndex = expandedSections.value.indexOf(index);
+    if (foundIndex > -1) {
+        expandedSections.value.splice(foundIndex, 1);
+    } else {
+        expandedSections.value.push(index);
+    }
+};
 
 const handleQuestionClick = (question: any | undefined) => {
     if (question) {
@@ -103,21 +132,120 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.sidebar {
+    background-color: var(--surface-card);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--surface-border);
+}
+
+.sidebar-toggle-btn {
+    margin-right: -0.5rem;
+}
+
+.sidebar-content {
+    padding: 0.5rem;
+    transition: all 0.3s ease;
+    max-height: 75vh;
+    overflow-y: auto;
+}
+
+.sidebar-collapsed {
+    max-width: 100%;
+}
+
+.sidebar-collapsed .sidebar-content {
+    display: none;
+}
+
+.section-container {
+    margin-bottom: 0.5rem;
+    border: 1px solid var(--surface-border);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background-color: var(--surface-ground);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.section-header:hover {
+    background-color: var(--surface-hover);
+}
+
+.section-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.section-content {
+    padding: 0.75rem;
+    border-top: 1px solid var(--surface-border);
+    background-color: var(--surface-section);
+}
+
 .question-card-container {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin: 10px 0;
 }
+
 .question-card {
     min-width: 40px;
     height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s ease;
 }
+
 .question-card.selected {
-    background-color: #ff8f00;
+    background-color: var(--primary-color);
     color: white;
+    transform: scale(1.05);
+    font-weight: bold;
+}
+
+/* 移动端样式适配 */
+@media screen and (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        border-radius: 12px 12px 0 0;
+        max-height: 50vh;
+        max-width: 100%;
+        transition: all 0.3s ease;
+    }
+    
+    .sidebar-collapsed {
+        max-height: 50px;
+    }
+    
+    .question-card {
+        min-width: 36px;
+        height: 36px;
+    }
 }
 </style>
