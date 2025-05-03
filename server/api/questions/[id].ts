@@ -30,6 +30,7 @@ export default defineEventHandler(async (event) => {
                     "q_mc_binary.*",
                     "q_mc_flexible.*",
                     "question_group.*",
+                    "sort_in_group",
                     "correct_ans_select_radio",
                     "correct_ans_select_multiple_checkbox",
                 ],
