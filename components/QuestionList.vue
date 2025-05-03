@@ -27,22 +27,45 @@
                     <div class="section-content" v-show="expandedSections.includes(index)">
                         <!-- 章节下的题目列表，卡片式 -->
                         <div class="question-card-container">
-                            <Button
-                                v-for="question in section.questions"
-                                :key="question.id"
-                                :severity="getQuestionSeverity(question)"
-                                class="question-card"
-                                :class="{
-                                    selected:
-                                        selectedQuestion &&
-                                        selectedQuestion.id ===
-                                            question.id,
-                                }"
-                                @click="handleQuestionClick(question)"
-                                ref="refItems"
-                            >
-                                {{ question.sort_in_section }}
-                            </Button>
+                            <!-- 单题模式 -->
+                            <template v-if="!isGroupMode(section)">
+                                <Button
+                                    v-for="question in section.questions"
+                                    :key="question.id"
+                                    :severity="getQuestionSeverity(question)"
+                                    class="question-card"
+                                    :class="{
+                                        selected:
+                                            selectedQuestion &&
+                                            selectedQuestion.id ===
+                                                question.id,
+                                    }"
+                                    @click="handleQuestionClick(question, false)"
+                                    ref="refItems"
+                                >
+                                    {{ question.sort_in_section }}
+                                </Button>
+                            </template>
+                            
+                            <!-- 题组模式 -->
+                            <template v-else>
+                                <Button
+                                    v-for="group in section.question_groups"
+                                    :key="group.id"
+                                    :severity="getQuestionGroupSeverity(group, section)"
+                                    class="question-card"
+                                    :class="{
+                                        selected:
+                                            selectedQuestion &&
+                                            selectedQuestion.question_groups_id ===
+                                                group.id,
+                                    }"
+                                    @click="handleQuestionGroupClick(group, section)"
+                                    ref="refItems"
+                                >
+                                    {{ group.sort_in_section }}
+                                </Button>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -56,6 +79,9 @@ import { ref, onMounted, nextTick, watch } from "vue";
 import type {
     PaperSections,
     QuestionResults,
+    QuestionGroups,
+    Questions,
+    PaperSectionsQuestionGroups
 } from "~~/types/directus_types";
 import { useGlobalStore } from "~~/stores/examDone"; // 引入 Pinia store
 import { useLoadingStateStore } from "@/stores/loadingState"; // 引入 Pinia store
@@ -65,6 +91,8 @@ const props = defineProps<{
     selectQuestion: (question: any) => void;
     selectedQuestion: any | null;
     exam_page_mode: string;
+    questionResults: QuestionResults[];
+    practiceSessionId: string;
 }>();
 
 const emit = defineEmits(['sidebar-toggle']);
@@ -78,6 +106,11 @@ const expandedSections = ref<number[]>([0]); // 默认展开第一个章节
 const toggleSidebar = () => {
     isSidebarCollapsed.value = !isSidebarCollapsed.value;
     emit('sidebar-toggle', isSidebarCollapsed.value);
+};
+
+// 判断章节是否使用题组模式
+const isGroupMode = (section: PaperSections) => {
+    return section.question_mode === 'group';
 };
 
 // 监听窗口尺寸变化，在移动端下自动折叠
@@ -99,7 +132,8 @@ const toggleSection = (index: number) => {
     }
 };
 
-const handleQuestionClick = (question: any | undefined) => {
+// 处理题目点击（单题模式）
+const handleQuestionClick = (question: any | undefined, isGroupMode: boolean) => {
     if (question) {
         console.log("handleQuestionClick", question);
         props.selectQuestion(question); // 调用父组件传递的选择方法
@@ -112,6 +146,52 @@ const handleQuestionClick = (question: any | undefined) => {
     }
 };
 
+// 处理题组点击（题组模式）
+const handleQuestionGroupClick = async (group: any, section: PaperSections) => {
+    if (!group || !group.question_groups_id) return;
+    
+    // 获取题组ID
+    const groupId = typeof group.question_groups_id === 'string' 
+        ? group.question_groups_id 
+        : group.question_groups_id.id;
+        
+    // 查找题组详情
+    let questionGroup: QuestionGroups | null = null;
+    if (typeof group.question_groups_id === 'object') {
+        questionGroup = group.question_groups_id;
+    } else {
+        // 此处应该使用题组ID查询题组详情
+        // 由于无法在这里执行实际查询，假设能从某个地方获取
+        console.log("需要查询题组详情:", groupId);
+    }
+    
+    // 获取该题组包含的题目列表
+    const groupQuestionIds = group.group_question_ids || [];
+    const groupQuestions = section.questions.filter(q => groupQuestionIds.includes(q.id));
+    
+    // 创建包含题组的question对象
+    const enhancedQuestion = {
+        ...group,
+        isGroupMode: true,
+        questionGroup: questionGroup,
+        questions_id: { type: 'group' }, // 保留一个虚拟的questions_id以兼容现有代码
+        section_id: section.id,
+        paper_sections_id: section.id,
+        sort_in_section: group.sort_in_section,
+        groupQuestions: groupQuestions // 添加组内题目列表
+    };
+    
+    // 调用父组件的选择方法
+    props.selectQuestion(enhancedQuestion);
+    
+    // 在移动设备上，选中题目后自动收起题目列表
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+        isSidebarCollapsed.value = true;
+        emit('sidebar-toggle', true);
+    }
+};
+
+// 获取题目样式
 const getQuestionSeverity = (question: any | undefined) => {
     if (!question || !question.result) return "secondary";
     
@@ -124,6 +204,40 @@ const getQuestionSeverity = (question: any | undefined) => {
     } else {
         return "secondary";
     }
+};
+
+// 获取题组样式（检查题组内的所有题目是否都已经作答）
+const getQuestionGroupSeverity = (group: any, section: PaperSections) => {
+    // 如果题组ID是对象而非字符串，或者为null
+    const groupId = group.question_groups_id
+        ? (typeof group.question_groups_id === 'string' 
+            ? group.question_groups_id 
+            : group.question_groups_id.id)
+        : null;
+    
+    if (!groupId) return "secondary";
+    
+    // 获取该题组下的所有题目IDs
+    const groupQuestionIds = group.group_question_ids || [];
+    
+    // 如果找不到题目，返回secondary
+    if (groupQuestionIds.length === 0) return "secondary";
+    
+    // 获取该题组对应的实际题目列表
+    const groupQuestions = section.questions.filter(q => groupQuestionIds.includes(q.id));
+    
+    // 检查题组内是否有至少一个题目已作答
+    const hasAnsweredQuestion = groupQuestions.some(question => {
+        if (!question.result) return false;
+        
+        return (
+            question.result.submit_ans_select_radio ||
+            (question.result.submit_ans_select_multiple_checkbox &&
+                (question.result.submit_ans_select_multiple_checkbox as any[]).length > 0)
+        );
+    });
+    
+    return hasAnsweredQuestion ? "primary" : "secondary";
 };
 
 // 获取环境变量，确定是否运行测试

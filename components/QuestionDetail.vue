@@ -9,16 +9,21 @@
                         <span class="mr-2 bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center text-sm">
                             {{ selectedQuestion.sort_in_section || '?' }}
                         </span>
-                        {{ selectedQuestion.questions_id.title || "试题" }}
+                        <template v-if="isGroupMode">
+                            {{ selectedQuestion.questionGroup ? selectedQuestion.questionGroup.title || "题组" : "题组" }}
+                        </template>
+                        <template v-else>
+                            {{ selectedQuestion.questions_id.title || "试题" }}
+                        </template>
                     </h3>
                     <Tag 
-                        v-if="selectedQuestion.result && selectedQuestion.result.point_value"
+                        v-if="!isGroupMode && selectedQuestion.result && selectedQuestion.result.point_value"
                         :severity="getScoreSeverity(selectedQuestion)"
                     >
                         {{ getScoreDisplay(selectedQuestion) }}
                     </Tag>
                 </div>
-                <p v-if="selectedQuestion.questions_id.description" class="mt-3 text-surface-600 dark:text-surface-400">
+                <p v-if="!isGroupMode && selectedQuestion.questions_id.description" class="mt-3 text-surface-600 dark:text-surface-400">
                     {{ selectedQuestion.questions_id.description || "" }}
                 </p>
             </template>
@@ -32,27 +37,47 @@
                 <!-- 公共题干 -->
                 <CommonQuestionContent
                     class="w-full lg:w-2/5 p-4 bg-surface-50 dark:bg-surface-800 rounded-lg shadow-sm"
-                    v-if="selectedQuestion && selectedQuestion.questions_id && selectedQuestion.questions_id.question_group"
-                    :question="selectedQuestion.questions_id"
+                    v-if="selectedQuestion && selectedQuestion.questions_id && 
+                        ((isGroupMode && selectedQuestion.questionGroup && selectedQuestion.questionGroup.shared_stem) ||
+                        (!isGroupMode && selectedQuestion.questions_id.question_group))"
+                    :question="isGroupMode ? null : selectedQuestion.questions_id"
+                    :questionGroup="isGroupMode ? selectedQuestion.questionGroup : null"
                 />
 
                 <Divider
                     layout="horizontal"
                     class="lg:hidden"
-                    v-if="selectedQuestion && selectedQuestion.questions_id && selectedQuestion.questions_id.question_group"
+                    v-if="selectedQuestion && selectedQuestion.questions_id && 
+                        ((isGroupMode && selectedQuestion.questionGroup && selectedQuestion.questionGroup.shared_stem) ||
+                        (!isGroupMode && selectedQuestion.questions_id.question_group))"
                 />
                 
                 <Divider
                     layout="vertical"
                     class="hidden lg:block"
-                    v-if="selectedQuestion && selectedQuestion.questions_id && selectedQuestion.questions_id.question_group"
+                    v-if="selectedQuestion && selectedQuestion.questions_id && 
+                        ((isGroupMode && selectedQuestion.questionGroup && selectedQuestion.questionGroup.shared_stem) ||
+                        (!isGroupMode && selectedQuestion.questions_id.question_group))"
                 />
 
                 <!-- 题目内容和答题区 -->
-                <div class="w-full lg:w-3/5 p-4 bg-surface-50 dark:bg-surface-800 rounded-lg shadow-sm">
-                    <!-- 使用QuestionContent组件 -->
+                <div class="w-full p-4 bg-surface-50 dark:bg-surface-800 rounded-lg shadow-sm" :class="{'lg:w-3/5': selectedQuestion && selectedQuestion.questions_id && 
+                    ((isGroupMode && selectedQuestion.questionGroup && selectedQuestion.questionGroup.shared_stem) ||
+                    (!isGroupMode && selectedQuestion.questions_id.question_group))}">
+                    
+                    <!-- 题组模式 -->
+                    <QuestionGroupContent
+                        v-if="isGroupMode && selectedQuestion && selectedQuestion.questionGroup"
+                        :questionGroup="selectedQuestion.questionGroup"
+                        :practiceSessionId="practiceSessionId"
+                        :questionResults="questionResults"
+                        :exam_page_mode="exam_page_mode"
+                        :groupQuestions="selectedQuestion.groupQuestions || []"
+                    />
+                    
+                    <!-- 单题模式 -->
                     <QuestionContent
-                        v-if="selectedQuestion"
+                        v-else-if="selectedQuestion"
                         :selectedQuestion="selectedQuestion"
                         :exam_page_mode="exam_page_mode"
                     />
@@ -84,13 +109,24 @@
 import { watch, computed } from "vue";
 import CommonQuestionContent from "~/components/CommonQuestionContent.vue";
 import QuestionContent from "~/components/QuestionContent.vue";
+import QuestionGroupContent from "~/components/QuestionGroupContent.vue";
+import type { QuestionResults } from "~/types/directus_types";
 
 const props = defineProps<{
     selectedQuestion: any | null;
     exam_page_mode: string;
+    practiceSessionId: string;
+    questionResults: QuestionResults[];
 }>();
 
 const emit = defineEmits(['navigate-question']);
+
+// 判断是否为题组模式
+const isGroupMode = computed(() => {
+    return props.selectedQuestion && 
+           props.selectedQuestion.isGroupMode === true &&
+           props.selectedQuestion.questionGroup !== undefined;
+});
 
 // 监听选中题目变化
 watch(

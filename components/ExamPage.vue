@@ -104,6 +104,8 @@
                 :submittedPaperSections="submittedPaperSections"
                 :selectedQuestion="selectedQuestion"
                 :selectQuestion="selectQuestion"
+                :questionResults="questionResults"
+                :practiceSessionId="practice_session_id"
                 @sidebar-toggle="handleSidebarToggle"
             ></QuestionList>
 
@@ -113,6 +115,8 @@
                 :class="{'lg:ml-0': sidebarCollapsed, 'lg:ml-3': !sidebarCollapsed}"
                 :exam_page_mode="exam_page_mode"
                 :selectedQuestion="selectedQuestion"
+                :practiceSessionId="practice_session_id"
+                :questionResults="questionResults"
                 @navigate-question="navigateToQuestion"
             ></QuestionDetail>
         </div>
@@ -132,6 +136,8 @@ import type {
     Questions,
     Exercises,
     QuestionResults,
+    PaperSectionsQuestionGroups,
+    QuestionGroups,
 } from "~~/types/directus_types";
 import md5 from "md5";
 import { useAuth } from "~~/stores/auth";
@@ -181,6 +187,8 @@ const selectedQuestion = ref({} as any); // 当前选中的题目结果
 
 const chapter_id_list = ref<string[]>([]); // 试卷的所有章节ID列表。
 const question_id_list = ref<string[]>([]); // 试卷的所有题目ID列表。用来在redis中查询详情。
+const question_groups_id_list = ref<string[]>([]); // 试卷的所有题组ID列表
+const questionResults = ref<QuestionResults[]>([]); // 所有题目的作答结果
 
 // 考试时间相关数据
 const practiceSessionTime = ref<PracticeSessions>({} as PracticeSessions); // 考试时间信息
@@ -346,8 +354,10 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
                 "sort_in_paper",
                 "title",
                 "question_type",
+                "question_mode", // 添加question_mode字段
                 "total_question_points",
                 "questions",
+                "question_groups", // 添加question_groups字段
             ],
             sort: "sort_in_paper", // 排序方式
         },
@@ -374,7 +384,9 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
     });
 
     // 等待问题结果数据
-    const questionResults = await questionResultsPromise;
+    const questionResultsData = await questionResultsPromise;
+    // 保存问题结果到全局变量
+    questionResults.value = questionResultsData;
 
     // 处理章节和题目数据
     const sectionList = submittedSectionsResponse;
@@ -398,17 +410,44 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
 
         // 将这些ID添加到question_id_list中以在Redis中查询
         question_id_list.value = question_id_list.value.concat(questionIds);
-        // console.log("question_id_list", question_id_list.value);
 
         return sectionQuestions;
     });
 
-    // 等待所有问题数据
+    // 获取所有章节中的题组信息（如果是题组模式）
+    const questionGroupsPromises = sectionList.map(async (section) => {
+        // 如果不是题组模式，返回空数组
+        if (section.question_mode !== 'group') {
+            return [];
+        }
+
+        // 查询章节中的所有题组
+        const sectionQuestionGroups = await getItems<PaperSectionsQuestionGroups>({
+            collection: "paper_sections_question_groups",
+            params: {
+                filter: { paper_sections_id: section.id },
+                fields: ["id", "sort_in_section", "question_groups_id"],
+                sort: "sort_in_section",
+            },
+        });
+
+        // 获取所有题组的ID列表
+        const questionGroupIds = sectionQuestionGroups.map((sectionQuestionGroup) => {
+            return sectionQuestionGroup.question_groups_id as string;
+        });
+
+        // 将这些ID添加到question_groups_id_list中
+        question_groups_id_list.value = question_groups_id_list.value.concat(questionGroupIds);
+
+        return sectionQuestionGroups;
+    });
+
+    // 等待所有问题和题组数据
     const questionsResponses = await Promise.all(questionsPromises);
+    const questionGroupsResponses = await Promise.all(questionGroupsPromises);
 
     // 从Redis获取所有问题数据
     const questionIds = Array.from(new Set(question_id_list.value)); // 去重
-
     console.log("questionIds", questionIds);
     const questionsData = (await useFetch("/api/questions/list", {
         method: "POST",
@@ -419,8 +458,73 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
 
     console.log("questionsData", questionsData);
 
+    // 获取所有题组数据
+    const questionGroupIds = Array.from(new Set(question_groups_id_list.value)); // 去重
+    let questionGroupsData: any[] = [];
+    
+    if (questionGroupIds.length > 0) {
+        // 获取题组数据
+        const questionGroupsResponse = await getItems<QuestionGroups>({
+            collection: "question_groups",
+            params: {
+                filter: {
+                    id: { _in: questionGroupIds },
+                },
+                fields: [
+                    "id",
+                    "title",
+                    "shared_stem",
+                    "questions.id",
+                    "questions.title",
+                    "questions.type",
+                    "questions.stem",
+                    "questions.sort_in_group",
+                    // 单选题字段
+                    "questions.q_mc_single.id",
+                    "questions.q_mc_single.stem",
+                    "questions.q_mc_single.option_a",
+                    "questions.q_mc_single.option_b",
+                    "questions.q_mc_single.option_c",
+                    "questions.q_mc_single.option_d",
+                    "questions.q_mc_single.option_e",
+                    "questions.q_mc_single.option_f",
+                    "questions.q_mc_single.correct_option",
+                    // 多选题字段
+                    "questions.q_mc_multi.id",
+                    "questions.q_mc_multi.stem",
+                    "questions.q_mc_multi.option_a",
+                    "questions.q_mc_multi.option_b",
+                    "questions.q_mc_multi.option_c",
+                    "questions.q_mc_multi.option_d",
+                    "questions.q_mc_multi.option_e",
+                    "questions.q_mc_multi.option_f",
+                    "questions.q_mc_multi.correct_options",
+                    // 二元选择题字段
+                    "questions.q_mc_binary.id",
+                    "questions.q_mc_binary.stem",
+                    "questions.q_mc_binary.option_a",
+                    "questions.q_mc_binary.option_b",
+                    "questions.q_mc_binary.correct_option",
+                    // 灵活选择题字段
+                    "questions.q_mc_flexible.id",
+                    "questions.q_mc_flexible.stem",
+                    "questions.q_mc_flexible.option_a",
+                    "questions.q_mc_flexible.option_b",
+                    "questions.q_mc_flexible.option_c",
+                    "questions.q_mc_flexible.option_d",
+                    "questions.q_mc_flexible.option_e",
+                    "questions.q_mc_flexible.option_f",
+                    "questions.q_mc_flexible.correct_options"
+                ],
+            },
+        });
+        
+        questionGroupsData = questionGroupsResponse;
+    }
+
     // 将问题数据与章节数据关联
     sectionList.forEach((section, index) => {
+        // 处理普通问题
         const sectionQuestionsWithData = questionsResponses[index].map(
             (sectionQuestion) => {
                 const questionId = sectionQuestion.questions_id as string;
@@ -429,7 +533,7 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
                 );
 
                 // 查找该题目的提交结果
-                const result = questionResults.find(
+                const result = questionResults.value.find(
                     (result) =>
                         result.question_in_paper_id === sectionQuestion.id
                 );
@@ -443,6 +547,56 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
         );
 
         section.questions = sectionQuestionsWithData;
+        
+        // 处理题组问题（如果是题组模式）
+        if (section.question_mode === 'group') {
+            const sectionQuestionGroupsWithData = questionGroupsResponses[index].map(
+                (sectionQuestionGroup) => {
+                    const questionGroupId = sectionQuestionGroup.question_groups_id as string;
+                    const questionGroupData = questionGroupsData.find(
+                        (item: any) => item.id === questionGroupId
+                    );
+                    
+                    // 找出该章节中属于这个题组的所有题目
+                    if (questionGroupData) {
+                        // 获取题组ID
+                        const groupId = questionGroupData.id;
+                        
+                        // 在section.questions中找出所有question_group等于该题组ID的题目
+                        const groupQuestions = section.questions.filter(questionItem => {
+                            // 处理question_group可能是字符串或对象的情况
+                            if (!questionItem.questions_id || !questionItem.questions_id.question_group) {
+                                return false;
+                            }
+                            
+                            const qGroup = questionItem.questions_id.question_group;
+                            
+                            if (typeof qGroup === 'string') {
+                                return qGroup === groupId;
+                            } else if (typeof qGroup === 'object' && qGroup !== null) {
+                                return qGroup.id === groupId;
+                            }
+                            
+                            return false;
+                        });
+                        
+                        // 将找到的题目IDs保存到题组数据中，方便后续渲染
+                        return {
+                            ...sectionQuestionGroup,
+                            question_groups_id: questionGroupData || null,
+                            group_question_ids: groupQuestions.map(q => q.id)
+                        };
+                    }
+
+                    return {
+                        ...sectionQuestionGroup,
+                        question_groups_id: questionGroupData || null
+                    };
+                }
+            );
+
+            section.question_groups = sectionQuestionGroupsWithData;
+        }
     });
 
     if (submittedSectionsResponse) {
@@ -452,12 +606,30 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
             submittedPaperSections.value
         );
 
-        // 默认选择第一个题目的结果
-        if (sectionList[0]?.questions?.[0]) {
+        // 根据章节的question_mode判断是选择题目还是题组
+        if (sectionList[0].question_mode === 'group' && sectionList[0].question_groups && sectionList[0].question_groups.length > 0) {
+            const firstGroup = sectionList[0].question_groups[0];
+            
+            // 获取该题组包含的题目列表
+            const groupQuestionIds = firstGroup.group_question_ids || [];
+            const groupQuestions = sectionList[0].questions.filter(q => groupQuestionIds.includes(q.id));
+            
+            // 创建包含题组的enhancedQuestion对象
+            const enhancedQuestion = {
+                ...firstGroup,
+                isGroupMode: true,
+                questionGroup: firstGroup.question_groups_id,
+                questions_id: { type: 'group' }, // 保留一个虚拟的questions_id以兼容现有代码
+                section_id: sectionList[0].id,
+                paper_sections_id: sectionList[0].id,
+                sort_in_section: firstGroup.sort_in_section,
+                groupQuestions: groupQuestions // 添加组内题目列表
+            };
+            selectedQuestion.value = enhancedQuestion;
+        } else if (sectionList[0].questions && sectionList[0].questions.length > 0) {
             selectedQuestion.value = sectionList[0].questions[0];
-            // 注意：这里的question[0]是一个混合了PaperSectionsQuestions和QuestionResults的数据。
-            console.log("selectedQuestion.value:", selectedQuestion.value);
         }
+        console.log("selectedQuestion.value:", selectedQuestion.value);
     }
 };
 
