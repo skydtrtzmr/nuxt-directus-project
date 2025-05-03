@@ -53,8 +53,18 @@
             <div class="question-item mb-4 border-l-4 pl-4" :class="getQuestionBorderClass(questionItem)">
               <div class="question-header flex justify-between items-center mb-2">
                 <h3 class="text-lg font-medium">{{ questionItem.questions_id.title }}</h3>
-                <div class="score-label" :class="getQuestionScoreSeverity(questionItem)">
-                  {{ getQuestionScoreDisplay(questionItem) }}
+                <div class="flex items-center gap-2">
+                  <Button
+                    :icon="isQuestionFlagged(questionItem) ? 'pi pi-flag-fill' : 'pi pi-flag'"
+                    :class="{ 'p-button-danger': isQuestionFlagged(questionItem) }"
+                    class="p-button-rounded p-button-sm p-button-text"
+                    @click="toggleQuestionFlag(questionItem)"
+                    :aria-label="isQuestionFlagged(questionItem) ? '取消标记疑问' : '标记疑问'"
+                    v-tooltip.bottom="isQuestionFlagged(questionItem) ? '取消标记疑问' : '标记疑问'"
+                  />
+                  <div class="score-label" :class="getQuestionScoreSeverity(questionItem)">
+                    {{ getQuestionScoreDisplay(questionItem) }}
+                  </div>
                 </div>
               </div>
               <QuestionContent 
@@ -85,6 +95,8 @@ const props = defineProps<{
   groupQuestions?: any[]; // 接收从父组件传递的题组内题目列表
 }>();
 
+const emit = defineEmits(['flag-question']);
+
 // 控制公共题干区域的收缩状态
 const isStemCollapsed = ref(false);
 const isMobile = ref(false);
@@ -92,6 +104,42 @@ const isMobile = ref(false);
 // 收缩/展开公共题干
 const toggleStem = () => {
   isStemCollapsed.value = !isStemCollapsed.value;
+};
+
+// 判断题目是否被标记为有疑问
+const isQuestionFlagged = (question: any) => {
+  if (!question || !question.result) return false;
+  return question.result.is_flagged === true;
+};
+
+// 标记或取消标记题目
+const toggleQuestionFlag = async (question: any) => {
+  if (!question || !question.result || !question.result.id) return;
+  
+  // 先更新本地状态，提供即时反馈
+  const updatedFlag = !isQuestionFlagged(question);
+  question.result.is_flagged = updatedFlag;
+  
+  try {
+    // 直接提交到数据库
+    const { updateItem } = useDirectusItems();
+    
+    const submitted_flag = {
+      is_flagged: updatedFlag
+    };
+    
+    const response = await updateItem({
+      collection: "question_results",
+      id: question.result.id,
+      item: submitted_flag,
+    });
+    
+    console.log(`题目已${updatedFlag ? '标记' : '取消标记'}为疑问:`, response);
+  } catch (error) {
+    // 如果提交失败，恢复原状态
+    question.result.is_flagged = !updatedFlag;
+    console.error("更新标记状态时出错:", error);
+  }
 };
 
 // 检测设备类型

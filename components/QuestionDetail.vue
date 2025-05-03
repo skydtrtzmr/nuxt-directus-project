@@ -16,12 +16,23 @@
                             {{ selectedQuestion.questions_id.title || "试题" }}
                         </template>
                     </h3>
-                    <Tag 
-                        v-if="!isGroupMode && selectedQuestion.result && selectedQuestion.result.point_value"
-                        :severity="getScoreSeverity(selectedQuestion)"
-                    >
-                        {{ getScoreDisplay(selectedQuestion) }}
-                    </Tag>
+                    <div class="flex items-center gap-2">
+                        <Button
+                            v-if="!isGroupMode"
+                            :icon="isQuestionFlagged ? 'pi pi-flag-fill' : 'pi pi-flag'"
+                            :class="{ 'p-button-danger': isQuestionFlagged }"
+                            class="p-button-rounded p-button-sm"
+                            @click="toggleQuestionFlag"
+                            :aria-label="isQuestionFlagged ? '取消标记疑问' : '标记疑问'"
+                            v-tooltip.bottom="isQuestionFlagged ? '取消标记疑问' : '标记疑问'"
+                        />
+                        <Tag 
+                            v-if="!isGroupMode && selectedQuestion.result && selectedQuestion.result.point_value"
+                            :severity="getScoreSeverity(selectedQuestion)"
+                        >
+                            {{ getScoreDisplay(selectedQuestion) }}
+                        </Tag>
+                    </div>
                 </div>
                 <p v-if="!isGroupMode && selectedQuestion.questions_id.description" class="mt-3 text-surface-600 dark:text-surface-400">
                     {{ selectedQuestion.questions_id.description || "" }}
@@ -77,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, computed } from "vue";
+import { watch, computed, ref } from "vue";
 import QuestionContent from "~/components/QuestionContent.vue";
 import QuestionGroupContent from "~/components/QuestionGroupContent.vue";
 import type { QuestionResults } from "~/types/directus_types";
@@ -97,6 +108,46 @@ const isGroupMode = computed(() => {
            props.selectedQuestion.isGroupMode === true &&
            props.selectedQuestion.questionGroup !== undefined;
 });
+
+// 判断当前题目是否被标记为有疑问
+const isQuestionFlagged = computed(() => {
+    if (!props.selectedQuestion || !props.selectedQuestion.result) return false;
+    return props.selectedQuestion.result.is_flagged === true;
+});
+
+// 标记或取消标记当前题目
+const toggleQuestionFlag = async () => {
+    if (!props.selectedQuestion || !props.selectedQuestion.result || !props.selectedQuestion.result.id) return;
+    
+    try {
+        // 先更新本地状态，提供即时反馈
+        const updatedFlag = !isQuestionFlagged.value;
+        if (props.selectedQuestion && props.selectedQuestion.result) {
+            props.selectedQuestion.result.is_flagged = updatedFlag;
+        }
+        
+        // 然后提交到数据库
+        const { updateItem } = useDirectusItems();
+        
+        const submitted_flag = {
+            is_flagged: updatedFlag
+        };
+        
+        const response = await updateItem({
+            collection: "question_results",
+            id: props.selectedQuestion.result.id,
+            item: submitted_flag,
+        });
+        
+        console.log(`题目已${updatedFlag ? '标记' : '取消标记'}为疑问:`, response);
+    } catch (error) {
+        // 如果提交失败，恢复原状态
+        if (props.selectedQuestion && props.selectedQuestion.result) {
+            props.selectedQuestion.result.is_flagged = !props.selectedQuestion.result.is_flagged;
+        }
+        console.error("更新标记状态时出错:", error);
+    }
+};
 
 // 监听选中题目变化
 watch(

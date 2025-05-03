@@ -29,42 +29,51 @@
                         <div class="question-card-container">
                             <!-- 单题模式 -->
                             <template v-if="!isGroupMode(section)">
-                                <Button
+                                <div
                                     v-for="question in section.questions"
                                     :key="question.id"
-                                    :severity="getQuestionSeverity(question)"
-                                    class="question-card"
-                                    :class="{
-                                        selected:
-                                            selectedQuestion &&
-                                            selectedQuestion.id ===
-                                                question.id,
-                                    }"
-                                    @click="handleQuestionClick(question, false)"
-                                    ref="refItems"
+                                    class="question-btn-wrapper"
                                 >
-                                    {{ question.sort_in_section }}
-                                </Button>
+                                    <Button
+                                        :severity="isQuestionAnswered(question) ? 'primary' : 'secondary'"
+                                        class="question-card"
+                                        :class="{
+                                            'selected': selectedQuestion && selectedQuestion.id === question.id
+                                        }"
+                                        @click="handleQuestionClick(question, false)"
+                                        ref="refItems"
+                                    >
+                                        {{ question.sort_in_section }}
+                                    </Button>
+                                    <span class="flag-indicator" :class="{'visible': isQuestionFlagged(question)}">?</span>
+                                </div>
                             </template>
                             
                             <!-- 题组模式 -->
                             <template v-else>
-                                <Button
+                                <div
                                     v-for="group in section.question_groups"
                                     :key="group.id"
-                                    :severity="getQuestionGroupSeverity(group, section)"
-                                    class="question-card"
-                                    :class="{
-                                        selected:
-                                            selectedQuestion &&
-                                            selectedQuestion.question_groups_id ===
-                                                group.id,
-                                    }"
-                                    @click="handleQuestionGroupClick(group, section)"
-                                    ref="refItems"
+                                    class="question-btn-wrapper"
                                 >
-                                    {{ group.sort_in_section }}
-                                </Button>
+                                    <Button
+                                        :severity="isGroupAnswered(group, section) ? 'primary' : 'secondary'"
+                                        class="question-card"
+                                        :class="{
+                                            'selected': selectedQuestion && 
+                                                        selectedQuestion.isGroupMode &&
+                                                        selectedQuestion.questionGroup &&
+                                                        selectedQuestion.questionGroup.id === (typeof group.question_groups_id === 'string' 
+                                                            ? group.question_groups_id 
+                                                            : group.question_groups_id.id)
+                                        }"
+                                        @click="handleQuestionGroupClick(group, section)"
+                                        ref="refItems"
+                                    >
+                                        {{ group.sort_in_section }}
+                                    </Button>
+                                    <span class="flag-indicator" :class="{'visible': isGroupFlagged(group, section)}">?</span>
+                                </div>
                             </template>
                         </div>
                     </div>
@@ -299,6 +308,55 @@ onUnmounted(() => {
         window.removeEventListener('resize', checkMobileView);
     }
 });
+
+// 判断题目是否被标记为有疑问
+const isQuestionFlagged = (question: any) => {
+    if (!question || !question.result) return false;
+    return question.result.is_flagged === true;
+};
+
+// 判断题组中是否有题目被标记为有疑问
+const isGroupFlagged = (group: any, section: PaperSections) => {
+    // 获取该题组下的所有题目IDs
+    const groupQuestionIds = group.group_question_ids || [];
+    
+    // 如果找不到题目，返回false
+    if (groupQuestionIds.length === 0) return false;
+    
+    // 获取该题组对应的实际题目列表
+    const groupQuestions = section.questions.filter(q => groupQuestionIds.includes(q.id));
+    
+    // 检查题组内是否有至少一个题目被标记
+    return groupQuestions.some(question => isQuestionFlagged(question));
+};
+
+// 判断题目是否已作答
+const isQuestionAnswered = (question: any) => {
+    if (!question || !question.result) return false;
+    
+    return (
+        !!question.result.submit_ans_select_radio ||
+        (question.result.submit_ans_select_multiple_checkbox &&
+            Array.isArray(question.result.submit_ans_select_multiple_checkbox) &&
+            question.result.submit_ans_select_multiple_checkbox.length > 0) ||
+        !!question.result.submit_ans_text
+    );
+};
+
+// 判断题组中是否有题目已作答
+const isGroupAnswered = (group: any, section: PaperSections) => {
+    // 获取该题组下的所有题目IDs
+    const groupQuestionIds = group.group_question_ids || [];
+    
+    // 如果找不到题目，返回false
+    if (groupQuestionIds.length === 0) return false;
+    
+    // 获取该题组对应的实际题目列表
+    const groupQuestions = section.questions.filter(q => groupQuestionIds.includes(q.id));
+    
+    // 检查题组内是否有至少一个题目已作答
+    return groupQuestions.some(question => isQuestionAnswered(question));
+};
 </script>
 
 <style scoped>
@@ -398,7 +456,19 @@ onUnmounted(() => {
     margin: 10px 0;
 }
 
+.question-btn-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+}
+
 .question-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     min-width: 40px;
     height: 40px;
     display: flex;
@@ -406,13 +476,57 @@ onUnmounted(() => {
     justify-content: center;
     border-radius: 4px;
     transition: all 0.2s ease;
+    /* 确保边框不会改变盒子大小 */
+    box-sizing: border-box;
+    border: 2px solid transparent;
 }
 
+/* 已答题状态 */
+.question-card.p-button-primary {
+    opacity: 0.95;
+}
+
+/* 选中状态 */
 .question-card.selected {
-    background-color: var(--primary-color);
-    color: white;
-    transform: scale(1.05);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* 半透明的蓝色阴影 */
+    border: 2px solid var(--primary-700, #2563EB);
+    transform: none; /* 移除缩放效果，防止影响布局 */
     font-weight: bold;
+    z-index: 2;
+    opacity: 1;
+}
+
+/* 既是选中状态又是已答题状态 */
+.question-card.selected.p-button-primary {
+    border-color: var(--primary-800, #1D4ED8);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.7); /* 更明显的阴影 */
+}
+
+.flag-indicator {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: var(--red-500);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    /* 默认隐藏但保留空间 */
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 3;
+}
+
+.flag-indicator.visible {
+    visibility: visible;
+    opacity: 1;
 }
 
 /* 移动端样式适配 */
@@ -459,9 +573,15 @@ onUnmounted(() => {
         max-height: calc(60vh - 90px);
     }
     
+    .question-btn-wrapper {
+        width: 36px;
+        height: 36px;
+    }
+    
     .question-card {
         min-width: 36px;
         height: 36px;
     }
 }
 </style>
+
