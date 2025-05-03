@@ -854,48 +854,67 @@ const allQuestions = computed(() => {
 
 // 导航到上一题或下一题
 const navigateToQuestion = (direction: number) => {
-    if (!selectedQuestion.value || allQuestions.value.length === 0) return;
+    if (!selectedQuestion.value) return;
     
-    // 获取当前题目及其信息
+    // 获取当前选中题目的信息
     const currentQuestion = selectedQuestion.value;
     console.log("当前题目:", currentQuestion);
     
-    // paper_sections_id可能是字符串或对象，需要处理
+    // 获取当前章节ID
     let currentSectionId;
-    if (typeof currentQuestion.paper_sections_id === 'string') {
+    if (typeof currentQuestion.section_id === 'string') {
+        currentSectionId = currentQuestion.section_id;
+    } else if (typeof currentQuestion.paper_sections_id === 'string') {
         currentSectionId = currentQuestion.paper_sections_id;
     } else if (currentQuestion.paper_sections_id && typeof currentQuestion.paper_sections_id === 'object') {
-        // 如果是对象，尝试获取id属性
         currentSectionId = currentQuestion.paper_sections_id.id;
     } else {
         console.error("无法确定题目所属章节", currentQuestion);
-        
-        // 尝试使用备选导航方法
-        return useBackupNavigation(currentQuestion, direction);
+        return;
     }
     
-    // 确保sort_in_section存在
-    if (currentQuestion.sort_in_section === undefined) {
-        console.error("题目缺少排序属性", currentQuestion);
-        return useBackupNavigation(currentQuestion, direction);
-    }
-    
-    const currentSortInSection = currentQuestion.sort_in_section;
-    
-    // 获取当前章节
+    // 查找当前章节
     const currentSection = submittedPaperSections.value.find(section => section.id === currentSectionId);
     if (!currentSection) {
-        console.error("找不到当前题目所属章节", currentSectionId);
-        return useBackupNavigation(currentQuestion, direction);
+        console.error("找不到当前题目所属章节");
+        return;
     }
     
+    // 判断当前章节的题目模式
+    const isGroupMode = currentSection.question_mode === 'group';
+    
+    // 按照sort_in_paper排序的章节列表
+    const sortedSections = [...submittedPaperSections.value].sort(
+        (a, b) => (a.sort_in_paper || 0) - (b.sort_in_paper || 0)
+    );
+    
+    // 获取当前章节在排序后列表中的索引
+    const currentSectionIndex = sortedSections.findIndex(section => section.id === currentSectionId);
+    
+    if (isGroupMode) {
+        // 题组模式导航
+        navigateInGroupMode(currentSection, sortedSections, currentSectionIndex, currentQuestion, direction);
+    } else {
+        // 单题模式导航
+        navigateInSingleMode(currentSection, sortedSections, currentSectionIndex, currentQuestion, direction);
+    }
+};
+
+// 单题模式下的导航
+const navigateInSingleMode = (
+    currentSection: PaperSections, 
+    sortedSections: PaperSections[], 
+    currentSectionIndex: number, 
+    currentQuestion: any, 
+    direction: number
+) => {
+    // 获取当前题目在章节中的排序号
+    const currentSortInSection = currentQuestion.sort_in_section;
+    
     // 确保章节的题目按sort_in_section排序
-    const sortedSectionQuestions = [...currentSection.questions].sort((a, b) => a.sort_in_section - b.sort_in_section);
-    
-    // 获取当前章节的索引
-    const currentSectionIndex = submittedPaperSections.value.findIndex(section => section.id === currentSectionId);
-    
-    console.log(`当前章节索引: ${currentSectionIndex}, 当前题目序号: ${currentSortInSection}`);
+    const sortedSectionQuestions = [...currentSection.questions].sort(
+        (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
+    );
     
     if (direction === 1) { // 下一题
         // 在当前章节中查找下一题
@@ -905,22 +924,30 @@ const navigateToQuestion = (direction: number) => {
             return selectQuestion(sortedSectionQuestions[nextQuestionIndex]);
         }
         
-        // 如果没有下一题，跳到下一章节的第一题
-        if (currentSectionIndex < submittedPaperSections.value.length - 1) {
-            const nextSection = submittedPaperSections.value[currentSectionIndex + 1];
-            if (nextSection.questions && nextSection.questions.length > 0) {
-                const sortedNextQuestions = [...nextSection.questions].sort((a, b) => a.sort_in_section - b.sort_in_section);
-                console.log("跳转到下一章节的第一题", sortedNextQuestions[0]);
-                return selectQuestion(sortedNextQuestions[0]);
+        // 如果当前是章节的最后一题，且有下一章节，则跳转到下一章节的第一题
+        if (currentSectionIndex < sortedSections.length - 1) {
+            const nextSection = sortedSections[currentSectionIndex + 1];
+            
+            // 根据下一章节的模式决定跳转到题目或题组
+            if (nextSection.question_mode === 'group' && nextSection.question_groups && nextSection.question_groups.length > 0) {
+                // 跳转到下一章节的第一个题组
+                const sortedGroups = [...nextSection.question_groups].sort(
+                    (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
+                );
+                if (sortedGroups.length > 0) {
+                    const firstGroup = sortedGroups[0];
+                    return handleQuestionGroupClick(firstGroup, nextSection);
+                }
+            } else if (nextSection.questions && nextSection.questions.length > 0) {
+                // 跳转到下一章节的第一题
+                const sortedNextQuestions = [...nextSection.questions].sort(
+                    (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
+                );
+                if (sortedNextQuestions.length > 0) {
+                    console.log("跳转到下一章节的第一题", sortedNextQuestions[0]);
+                    return selectQuestion(sortedNextQuestions[0]);
+                }
             }
-        }
-        
-        // 如果已经是最后一个章节的最后一题，循环到第一章节的第一题
-        const firstSection = submittedPaperSections.value[0];
-        if (firstSection.questions && firstSection.questions.length > 0) {
-            const sortedFirstQuestions = [...firstSection.questions].sort((a, b) => a.sort_in_section - b.sort_in_section);
-            console.log("循环到第一章节的第一题", sortedFirstQuestions[0]);
-            return selectQuestion(sortedFirstQuestions[0]);
         }
     } else if (direction === -1) { // 上一题
         // 在当前章节中从后往前查找上一题
@@ -931,53 +958,186 @@ const navigateToQuestion = (direction: number) => {
             return selectQuestion(prevQuestion);
         }
         
-        // 如果没有上一题，跳到上一章节的最后一题
+        // 如果当前是章节的第一题，且有上一章节，则跳转到上一章节的最后一题/题组
         if (currentSectionIndex > 0) {
-            const prevSection = submittedPaperSections.value[currentSectionIndex - 1];
-            if (prevSection.questions && prevSection.questions.length > 0) {
-                const sortedPrevQuestions = [...prevSection.questions].sort((a, b) => a.sort_in_section - b.sort_in_section);
-                const lastQuestion = sortedPrevQuestions[sortedPrevQuestions.length - 1];
-                console.log("跳转到上一章节的最后一题", lastQuestion);
-                return selectQuestion(lastQuestion);
+            const prevSection = sortedSections[currentSectionIndex - 1];
+            
+            // 根据上一章节的模式决定跳转到题目或题组
+            if (prevSection.question_mode === 'group' && prevSection.question_groups && prevSection.question_groups.length > 0) {
+                // 跳转到上一章节的最后一个题组
+                const sortedGroups = [...prevSection.question_groups].sort(
+                    (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
+                );
+                if (sortedGroups.length > 0) {
+                    const lastGroup = sortedGroups[sortedGroups.length - 1];
+                    return handleQuestionGroupClick(lastGroup, prevSection);
+                }
+            } else if (prevSection.questions && prevSection.questions.length > 0) {
+                // 跳转到上一章节的最后一题
+                const sortedPrevQuestions = [...prevSection.questions].sort(
+                    (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
+                );
+                if (sortedPrevQuestions.length > 0) {
+                    const lastQuestion = sortedPrevQuestions[sortedPrevQuestions.length - 1];
+                    console.log("跳转到上一章节的最后一题", lastQuestion);
+                    return selectQuestion(lastQuestion);
+                }
             }
         }
-        
-        // 如果已经是第一个章节的第一题，循环到最后一个章节的最后一题
-        const lastSection = submittedPaperSections.value[submittedPaperSections.value.length - 1];
-        if (lastSection.questions && lastSection.questions.length > 0) {
-            const sortedLastQuestions = [...lastSection.questions].sort((a, b) => a.sort_in_section - b.sort_in_section);
-            const lastQuestion = sortedLastQuestions[sortedLastQuestions.length - 1];
-            console.log("循环到最后章节的最后一题", lastQuestion);
-            return selectQuestion(lastQuestion);
-        }
     }
-    
-    // 如果上面的逻辑都失败了，使用备选导航方法
-    return useBackupNavigation(currentQuestion, direction);
 };
 
-// 备选导航方法：使用全局索引导航
-const useBackupNavigation = (currentQuestion: any, direction: number) => {
-    console.log("使用备选导航方法");
-    
-    // 使用全局索引导航
-    const currentIndex = allQuestions.value.findIndex(q => q.id === currentQuestion.id);
-    if (currentIndex === -1) {
-        console.error("在全局题目列表中找不到当前题目", currentQuestion.id);
+// 题组模式下的导航
+const navigateInGroupMode = (
+    currentSection: PaperSections, 
+    sortedSections: PaperSections[], 
+    currentSectionIndex: number, 
+    currentQuestion: any, 
+    direction: number
+) => {
+    // 确保章节的题组按sort_in_section排序
+    if (!currentSection.question_groups || currentSection.question_groups.length === 0) {
+        console.error("当前章节没有题组");
         return;
     }
     
-    let nextIndex = currentIndex + direction;
+    const sortedGroups = [...currentSection.question_groups].sort(
+        (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
+    );
     
-    // 循环导航
-    if (nextIndex < 0) {
-        nextIndex = allQuestions.value.length - 1;
-    } else if (nextIndex >= allQuestions.value.length) {
-        nextIndex = 0;
+    // 获取当前题组在章节中的索引
+    let currentGroupIndex = -1;
+    
+    // 根据当前题目的信息判断当前题组
+    if (currentQuestion.isGroupMode && currentQuestion.questionGroup) {
+        // 如果是题组模式，直接获取题组ID
+        const currentGroupId = typeof currentQuestion.questionGroup === 'string' 
+            ? currentQuestion.questionGroup 
+            : currentQuestion.questionGroup.id;
+            
+        currentGroupIndex = sortedGroups.findIndex(group => {
+            const groupId = typeof group.question_groups_id === 'string' 
+                ? group.question_groups_id 
+                : group.question_groups_id.id;
+            return groupId === currentGroupId;
+        });
     }
     
-    console.log("使用全局索引导航到题目", allQuestions.value[nextIndex]);
-    selectQuestion(allQuestions.value[nextIndex]);
+    if (currentGroupIndex === -1) {
+        console.error("在章节中找不到当前题组");
+        return;
+    }
+    
+    if (direction === 1) { // 下一题组
+        if (currentGroupIndex < sortedGroups.length - 1) {
+            // 跳转到当前章节的下一个题组
+            const nextGroup = sortedGroups[currentGroupIndex + 1];
+            return handleQuestionGroupClick(nextGroup, currentSection);
+        } else if (currentSectionIndex < sortedSections.length - 1) {
+            // 跳转到下一章节的第一个题目/题组
+            const nextSection = sortedSections[currentSectionIndex + 1];
+            
+            if (nextSection.question_mode === 'group' && nextSection.question_groups && nextSection.question_groups.length > 0) {
+                // 跳转到下一章节的第一个题组
+                const sortedNextGroups = [...nextSection.question_groups].sort(
+                    (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
+                );
+                if (sortedNextGroups.length > 0) {
+                    return handleQuestionGroupClick(sortedNextGroups[0], nextSection);
+                }
+            } else if (nextSection.questions && nextSection.questions.length > 0) {
+                // 跳转到下一章节的第一个题目
+                const sortedNextQuestions = [...nextSection.questions].sort(
+                    (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
+                );
+                if (sortedNextQuestions.length > 0) {
+                    return selectQuestion(sortedNextQuestions[0]);
+                }
+            }
+        }
+    } else if (direction === -1) { // 上一题组
+        if (currentGroupIndex > 0) {
+            // 跳转到当前章节的上一个题组
+            const prevGroup = sortedGroups[currentGroupIndex - 1];
+            return handleQuestionGroupClick(prevGroup, currentSection);
+        } else if (currentSectionIndex > 0) {
+            // 跳转到上一章节的最后一个题目/题组
+            const prevSection = sortedSections[currentSectionIndex - 1];
+            
+            if (prevSection.question_mode === 'group' && prevSection.question_groups && prevSection.question_groups.length > 0) {
+                // 跳转到上一章节的最后一个题组
+                const sortedPrevGroups = [...prevSection.question_groups].sort(
+                    (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
+                );
+                if (sortedPrevGroups.length > 0) {
+                    return handleQuestionGroupClick(sortedPrevGroups[sortedPrevGroups.length - 1], prevSection);
+                }
+            } else if (prevSection.questions && prevSection.questions.length > 0) {
+                // 跳转到上一章节的最后一个题目
+                const sortedPrevQuestions = [...prevSection.questions].sort(
+                    (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
+                );
+                if (sortedPrevQuestions.length > 0) {
+                    return selectQuestion(sortedPrevQuestions[sortedPrevQuestions.length - 1]);
+                }
+            }
+        }
+    }
+};
+
+/**
+ * 处理题组点击事件
+ * 在题组模式下，点击题组时查找并加载该题组内的所有题目
+ */
+const handleQuestionGroupClick = async (group: any, section: PaperSections) => {
+    if (!group || !group.question_groups_id) return;
+    
+    // 获取题组ID
+    const groupId = typeof group.question_groups_id === 'string' 
+        ? group.question_groups_id 
+        : group.question_groups_id.id;
+        
+    // 查找题组详情
+    let questionGroup: QuestionGroups | null = null;
+    if (typeof group.question_groups_id === 'object') {
+        questionGroup = group.question_groups_id;
+    } else {
+        // 此处应该使用题组ID查询题组详情
+        console.log("需要查询题组详情:", groupId);
+    }
+    
+    // 获取该题组包含的题目列表
+    const groupQuestionIds = group.group_question_ids || [];
+    const groupQuestions = section.questions.filter(q => groupQuestionIds.includes(q.id));
+    
+    // 题组模式下按sort_in_group字段排序题目
+    const sortedGroupQuestions = [...groupQuestions].sort((a, b) => {
+        // 优先使用sort_in_group排序
+        const aSort = a.questions_id.sort_in_group ?? 999;
+        const bSort = b.questions_id.sort_in_group ?? 999;
+        
+        // 如果sort_in_group相同或不存在，再使用sort_in_section作为备选
+        if (aSort === bSort) {
+            return (a.sort_in_section || 0) - (b.sort_in_section || 0);
+        }
+        
+        return aSort - bSort;
+    });
+    
+    // 创建包含题组的question对象
+    const enhancedQuestion = {
+        ...group,
+        isGroupMode: true,
+        questionGroup: questionGroup,
+        questions_id: { type: 'group' }, // 保留一个虚拟的questions_id以兼容现有代码
+        section_id: section.id,
+        paper_sections_id: section.id,
+        sort_in_section: group.sort_in_section,
+        groupQuestions: sortedGroupQuestions // 使用排序后的题目列表
+    };
+    
+    // 调用选择方法
+    selectQuestion(enhancedQuestion);
 };
 </script>
 
