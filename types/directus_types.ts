@@ -819,6 +819,7 @@ export type QuestionResults = {
   date_created?: string | null;
   date_updated?: string | null;
   id: string;
+  is_flagged?: boolean | null;
   option_number?: number | null;
   point_value?: number | null;
   practice_session_id?: string | PracticeSessions | null;
