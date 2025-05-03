@@ -460,29 +460,6 @@ export type DirectusWebhooks = {
   was_active_before_deprecation: boolean;
 };
 
-export type Exams = {
-  date_created?: string | null;
-  date_updated?: string | null;
-  description?: string | null;
-  duration: number;
-  end_time: string;
-  id: string;
-  sort?: number | null;
-  start_time: string;
-  status: string;
-  students: any[] | ExamsStudents[];
-  title: string;
-  type?: string | null;
-  user_created?: string | DirectusUsers | null;
-  user_updated?: string | DirectusUsers | null;
-};
-
-export type ExamsStudents = {
-  exams_id?: string | Exams | null;
-  id: number;
-  students_id?: string | Students | null;
-};
-
 export type Exercises = {
   date_created?: string | null;
   date_updated?: string | null;
@@ -552,47 +529,6 @@ export type Notices = {
   user_updated?: string | DirectusUsers | null;
 };
 
-export type PaperGenStrategies = {
-  date_created?: string | null;
-  date_updated?: string | null;
-  id: string;
-  is_template?: boolean | null;
-  name?: string | null;
-  paper_gen_strategy_chapters: any[] | PaperGenStrategyChapters[];
-  sort?: number | null;
-  status: string;
-  user_created?: string | DirectusUsers | null;
-  user_updated?: string | DirectusUsers | null;
-};
-
-export type PaperGenStrategyChapters = {
-  date_created?: string | null;
-  date_updated?: string | null;
-  id: string;
-  paper_gen_strategy?: string | PaperGenStrategies | null;
-  paper_gen_strategy_items: any[] | PaperGenStrategyItems[];
-  question_point_assign_strategies: any[] | QuestionPointAssignStrategies[];
-  sort?: number | null;
-  status: string;
-  title?: string | null;
-  user_created?: string | DirectusUsers | null;
-  user_updated?: string | DirectusUsers | null;
-};
-
-export type PaperGenStrategyItems = {
-  date_created?: string | null;
-  date_updated?: string | null;
-  id: string;
-  knowledge_point?: string | KnowledgePoints | null;
-  paper_gen_strategy_chapter?: string | PaperGenStrategyChapters | null;
-  question_num?: number | null;
-  question_type?: string | null;
-  sort?: number | null;
-  status: string;
-  user_created?: string | DirectusUsers | null;
-  user_updated?: string | DirectusUsers | null;
-};
-
 export type PaperInstances = {
   date_created?: string | null;
   date_updated?: string | null;
@@ -601,11 +537,6 @@ export type PaperInstances = {
   status: string;
   user_created?: string | DirectusUsers | null;
   user_updated?: string | DirectusUsers | null;
-};
-
-export type PaperPrototypeChaptersQuestionGroups = {
-  id: number;
-  question_groups_id?: string | QuestionGroups | null;
 };
 
 export type PaperSectionStrategies = {
@@ -636,8 +567,11 @@ export type PaperSections = {
   id: string;
   paper_id?: string | Papers | null;
   points_per_question?: number | null;
+  question_groups: any[] | PaperSectionsQuestionGroups[];
+  question_mode?: string | null;
   question_type: string;
   questions: any[] | PaperSectionsQuestions[];
+  save_and_stay: string;
   sort?: number | null;
   sort_in_paper?: number | null;
   status: string;
@@ -646,6 +580,13 @@ export type PaperSections = {
   total_question_points?: number | null;
   user_created?: string | DirectusUsers | null;
   user_updated?: string | DirectusUsers | null;
+};
+
+export type PaperSectionsQuestionGroups = {
+  id: number;
+  paper_sections_id?: string | PaperSections | null;
+  question_groups_id?: string | QuestionGroups | null;
+  sort_in_section?: number | null;
 };
 
 export type PaperSectionsQuestions = {
@@ -677,6 +618,7 @@ export type Papers = {
   id: string;
   paper_sections: any[] | PaperSections[];
   paper_strategy?: string | PaperStrategies | null;
+  save_and_stay: string;
   sort?: number | null;
   status: string;
   title?: string | null;
@@ -848,6 +790,7 @@ export type QuestionGroups = {
   date_created?: string | null;
   date_updated?: string | null;
   id: string;
+  question_count?: number | null;
   questions: any[] | Questions[];
   shared_stem?: string | null;
   sort?: number | null;
@@ -861,7 +804,6 @@ export type QuestionPointAssignStrategies = {
   date_created?: string | null;
   date_updated?: string | null;
   id: string;
-  paper_gen_strategy_chapter?: string | PaperGenStrategyChapters | null;
   question_difficulty?: number | null;
   question_point_value?: number | null;
   question_type?: string | null;
@@ -1075,21 +1017,16 @@ export type CustomDirectusTypes = {
   directus_users: DirectusUsers[];
   directus_versions: DirectusVersions[];
   directus_webhooks: DirectusWebhooks[];
-  exams: Exams[];
-  exams_students: ExamsStudents[];
   exercises: Exercises[];
   exercises_students: ExercisesStudents[];
   institutions: Institutions[];
   knowledge_points: KnowledgePoints[];
   knowledge_points_knowledge_points: KnowledgePointsKnowledgePoints[];
   notices: Notices[];
-  paper_gen_strategies: PaperGenStrategies[];
-  paper_gen_strategy_chapters: PaperGenStrategyChapters[];
-  paper_gen_strategy_items: PaperGenStrategyItems[];
   paper_instances: PaperInstances[];
-  paper_prototype_chapters_question_groups: PaperPrototypeChaptersQuestionGroups[];
   paper_section_strategies: PaperSectionStrategies[];
   paper_sections: PaperSections[];
+  paper_sections_question_groups: PaperSectionsQuestionGroups[];
   paper_sections_questions: PaperSectionsQuestions[];
   paper_strategies: PaperStrategies[];
   papers: Papers[];
