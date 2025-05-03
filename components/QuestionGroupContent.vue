@@ -2,7 +2,12 @@
 <template>
   <div class="question-group-content">
     <div v-if="groupQuestions.length > 0">
-     
+      <!-- 题组公共题干 -->
+      <div class="shared-stem mb-4" v-if="questionGroup && questionGroup.shared_stem">
+        <div class="text-lg font-medium mb-2">公共题干</div>
+        <div class="p-3 bg-surface-100 dark:bg-surface-700 rounded-lg" v-html="questionGroup.shared_stem"></div>
+      </div>
+      
       <!-- 题组内的题目列表 -->
       <div class="group-questions mt-4">
         <template v-for="(questionItem, index) in groupQuestions" :key="questionItem.id">
@@ -37,22 +42,26 @@ const props = defineProps<{
   practiceSessionId: string;
   questionResults: QuestionResults[];
   exam_page_mode: string;
-  groupQuestions?: any[]; // 新增属性接收从父组件传递的题组内题目列表
+  groupQuestions?: any[]; // 接收从父组件传递的题组内题目列表
 }>();
 
-// 获取题组内的题目列表
+/**
+ * 获取题组内的题目列表并按照正确的顺序排序
+ * 在题组模式下，优先按照题目的sort_in_group字段排序，而非sort_in_section
+ */
 const groupQuestions = computed(() => {
   if (props.groupQuestions && props.groupQuestions.length > 0) {
     // 如果父组件传递了题组内题目列表，优先使用
-    return props.groupQuestions.sort((a, b) => {
-      // 如果有sort_in_section属性，按此排序
-      if (a.sort_in_section !== undefined && b.sort_in_section !== undefined) {
-        return a.sort_in_section - b.sort_in_section;
+    return [...props.groupQuestions].sort((a, b) => {
+      // 题组模式下，优先使用sort_in_group字段排序
+      const aSort = a.questions_id?.sort_in_group ?? 999;
+      const bSort = b.questions_id?.sort_in_group ?? 999;
+      
+      // 如果sort_in_group相同或不存在，再使用sort_in_section作为备选
+      if (aSort === bSort) {
+        return (a.sort_in_section || 0) - (b.sort_in_section || 0);
       }
       
-      // 否则尝试获取题目中的sort_in_group属性
-      const aSort = a.questions_id?.sort_in_group || 0;
-      const bSort = b.questions_id?.sort_in_group || 0;
       return aSort - bSort;
     });
   }
@@ -60,7 +69,10 @@ const groupQuestions = computed(() => {
   return [];
 });
 
-// 获取题目边框类样式，基于题目的完成状态
+/**
+ * 获取题目边框类样式，基于题目的完成状态
+ * 用于直观显示题目是否已作答及结果正确性
+ */
 const getQuestionBorderClass = (question: any) => {
   if (!question.result) return 'border-gray-300';
   
@@ -77,15 +89,20 @@ const getQuestionBorderClass = (question: any) => {
   return 'border-gray-300';
 };
 
-// 增强题目对象，添加在题组中的索引
+/**
+ * 为题目对象添加组内索引，确保在题组模式下正确标识每个题目
+ * 这对于解决题组内多个题目选项ID冲突问题非常重要
+ */
 const enhanceQuestionWithIndex = (question: any, index: number) => {
   return {
     ...question,
-    groupQuestionIndex: index
+    groupQuestionIndex: index // 添加组内索引，用于生成唯一ID
   };
 };
 
-// 获取题目得分展示
+/**
+ * 获取题目得分展示文本
+ */
 const getQuestionScoreDisplay = (question: any) => {
   if (!question.result) return '';
   
@@ -99,7 +116,9 @@ const getQuestionScoreDisplay = (question: any) => {
   return `${score}/${pointValue}分`;
 };
 
-// 获取题目分数标签样式
+/**
+ * 获取题目分数标签样式，根据得分比例显示不同的颜色
+ */
 const getQuestionScoreSeverity = (question: any) => {
   if (!question.result) return 'info';
   
@@ -140,7 +159,7 @@ const getQuestionScoreSeverity = (question: any) => {
   font-size: 0.8rem;
 }
 
-/* 确保题目内容区域相互隔离 */
+/* 确保题目内容区域相互隔离，防止DOM事件冒泡导致的选项混淆 */
 :deep(.group-question-item) {
   isolation: isolate;
 }

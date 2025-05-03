@@ -146,7 +146,10 @@ const handleQuestionClick = (question: any | undefined, isGroupMode: boolean) =>
     }
 };
 
-// 处理题组点击（题组模式）
+/**
+ * 处理题组点击事件
+ * 在题组模式下，点击题组时查找并加载该题组内的所有题目
+ */
 const handleQuestionGroupClick = async (group: any, section: PaperSections) => {
     if (!group || !group.question_groups_id) return;
     
@@ -169,6 +172,20 @@ const handleQuestionGroupClick = async (group: any, section: PaperSections) => {
     const groupQuestionIds = group.group_question_ids || [];
     const groupQuestions = section.questions.filter(q => groupQuestionIds.includes(q.id));
     
+    // 题组模式下按sort_in_group字段排序题目
+    const sortedGroupQuestions = [...groupQuestions].sort((a, b) => {
+        // 优先使用sort_in_group排序
+        const aSort = a.questions_id.sort_in_group ?? 999;
+        const bSort = b.questions_id.sort_in_group ?? 999;
+        
+        // 如果sort_in_group相同或不存在，再使用sort_in_section作为备选
+        if (aSort === bSort) {
+            return (a.sort_in_section || 0) - (b.sort_in_section || 0);
+        }
+        
+        return aSort - bSort;
+    });
+    
     // 创建包含题组的question对象
     const enhancedQuestion = {
         ...group,
@@ -178,7 +195,7 @@ const handleQuestionGroupClick = async (group: any, section: PaperSections) => {
         section_id: section.id,
         paper_sections_id: section.id,
         sort_in_section: group.sort_in_section,
-        groupQuestions: groupQuestions // 添加组内题目列表
+        groupQuestions: sortedGroupQuestions // 使用排序后的题目列表
     };
     
     // 调用父组件的选择方法

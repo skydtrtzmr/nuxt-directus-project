@@ -614,6 +614,20 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
             const groupQuestionIds = firstGroup.group_question_ids || [];
             const groupQuestions = sectionList[0].questions.filter(q => groupQuestionIds.includes(q.id));
             
+            // 题组模式下按sort_in_group字段排序题目
+            const sortedGroupQuestions = [...groupQuestions].sort((a, b) => {
+                // 优先使用sort_in_group排序
+                const aSort = a.questions_id.sort_in_group ?? 999;
+                const bSort = b.questions_id.sort_in_group ?? 999;
+                
+                // 如果sort_in_group相同或不存在，再使用sort_in_section作为备选
+                if (aSort === bSort) {
+                    return (a.sort_in_section || 0) - (b.sort_in_section || 0);
+                }
+                
+                return aSort - bSort;
+            });
+            
             // 创建包含题组的enhancedQuestion对象
             const enhancedQuestion = {
                 ...firstGroup,
@@ -623,7 +637,7 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
                 section_id: sectionList[0].id,
                 paper_sections_id: sectionList[0].id,
                 sort_in_section: firstGroup.sort_in_section,
-                groupQuestions: groupQuestions // 添加组内题目列表
+                groupQuestions: sortedGroupQuestions // 使用排序后的题目列表
             };
             selectedQuestion.value = enhancedQuestion;
         } else if (sectionList[0].questions && sectionList[0].questions.length > 0) {
