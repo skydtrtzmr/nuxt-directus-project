@@ -379,6 +379,7 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
                 "score",
                 "submit_ans_select_radio",
                 "submit_ans_select_multiple_checkbox",
+                "is_flagged"
             ],
         },
     });
