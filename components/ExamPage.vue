@@ -399,7 +399,7 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
             collection: "paper_sections_questions",
             params: {
                 filter: { paper_sections_id: section.id },
-                fields: ["id", "sort_in_section", "questions_id"],
+                fields: ["id", "sort_in_section", "questions_id", "paper_sections_id"],
                 sort: "sort_in_section",
             },
         });
@@ -427,7 +427,7 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
             collection: "paper_sections_question_groups",
             params: {
                 filter: { paper_sections_id: section.id },
-                fields: ["id", "sort_in_section", "question_groups_id"],
+                fields: ["id", "sort_in_section", "question_groups_id", "paper_sections_id"],
                 sort: "sort_in_section",
             },
         });
