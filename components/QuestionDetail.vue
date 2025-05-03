@@ -1,5 +1,5 @@
 <!-- components/QuestionDetail.vue -->
-<!-- 题目详情页。这里是包含整个题目详情的页面，包括题目所属的章节、公共题干、题目内容、答题区、 -->
+<!-- 题目详情页。这里是包含整个题目详情的页面，包括题目所属的章节、题目内容、答题区 -->
 <template>
     <div class="question-detail card h-full overflow-hidden flex flex-col">
         <div class="question-header p-4 bg-surface-50 dark:bg-surface-700 border-b border-surface-200 dark:border-surface-600">
@@ -33,38 +33,9 @@
         </div>
         
         <div class="question-content flex-1 overflow-auto p-2">
-            <div class="flex flex-col lg:flex-row gap-4 h-full">
-                <!-- 公共题干 -->
-                <CommonQuestionContent
-                    class="w-full lg:w-2/5 p-4 bg-surface-50 dark:bg-surface-800 rounded-lg shadow-sm"
-                    v-if="selectedQuestion && selectedQuestion.questions_id && 
-                        ((isGroupMode && selectedQuestion.questionGroup && selectedQuestion.questionGroup.shared_stem) ||
-                        (!isGroupMode && selectedQuestion.questions_id.question_group))"
-                    :question="isGroupMode ? null : selectedQuestion.questions_id"
-                    :questionGroup="isGroupMode ? selectedQuestion.questionGroup : null"
-                />
-
-                <Divider
-                    layout="horizontal"
-                    class="lg:hidden"
-                    v-if="selectedQuestion && selectedQuestion.questions_id && 
-                        ((isGroupMode && selectedQuestion.questionGroup && selectedQuestion.questionGroup.shared_stem) ||
-                        (!isGroupMode && selectedQuestion.questions_id.question_group))"
-                />
-                
-                <Divider
-                    layout="vertical"
-                    class="hidden lg:block"
-                    v-if="selectedQuestion && selectedQuestion.questions_id && 
-                        ((isGroupMode && selectedQuestion.questionGroup && selectedQuestion.questionGroup.shared_stem) ||
-                        (!isGroupMode && selectedQuestion.questions_id.question_group))"
-                />
-
+            <div class="h-full">
                 <!-- 题目内容和答题区 -->
-                <div class="w-full p-4 bg-surface-50 dark:bg-surface-800 rounded-lg shadow-sm" :class="{'lg:w-3/5': selectedQuestion && selectedQuestion.questions_id && 
-                    ((isGroupMode && selectedQuestion.questionGroup && selectedQuestion.questionGroup.shared_stem) ||
-                    (!isGroupMode && selectedQuestion.questions_id.question_group))}">
-                    
+                <div class="w-full p-4 bg-surface-50 dark:bg-surface-800 rounded-lg shadow-sm">
                     <!-- 题组模式 -->
                     <QuestionGroupContent
                         v-if="isGroupMode && selectedQuestion && selectedQuestion.questionGroup"
@@ -107,7 +78,6 @@
 
 <script setup lang="ts">
 import { watch, computed } from "vue";
-import CommonQuestionContent from "~/components/CommonQuestionContent.vue";
 import QuestionContent from "~/components/QuestionContent.vue";
 import QuestionGroupContent from "~/components/QuestionGroupContent.vue";
 import type { QuestionResults } from "~/types/directus_types";

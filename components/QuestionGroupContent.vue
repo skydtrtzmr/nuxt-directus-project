@@ -1,39 +1,79 @@
 <!-- components/QuestionGroupContent.vue -->
 <template>
   <div class="question-group-content">
-    <div v-if="groupQuestions.length > 0">
-      <!-- 题组公共题干 -->
-      <div class="shared-stem mb-4" v-if="questionGroup && questionGroup.shared_stem">
-        <div class="text-lg font-medium mb-2">公共题干</div>
-        <div class="p-3 bg-surface-100 dark:bg-surface-700 rounded-lg" v-html="questionGroup.shared_stem"></div>
+    <!-- 自适应布局容器：电脑端左右布局，手机端上下布局 -->
+    <div class="flex flex-col lg:flex-row gap-4">
+      <!-- 公共题干区域 - 可收缩 -->
+      <div 
+        v-if="questionGroup && questionGroup.shared_stem" 
+        class="shared-stem-container"
+        :class="{
+          'lg:w-1/3': !isStemCollapsed,
+          'lg:w-10': isStemCollapsed,
+          'h-auto': !isStemCollapsed || isMobile,
+          'h-10': isStemCollapsed && !isMobile
+        }"
+      >
+        <!-- 收缩按钮 - 桌面端显示左右按钮 -->
+        <Button
+          :icon="isStemCollapsed ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"
+          class="p-button-rounded p-button-text stem-toggle-btn hidden lg:block"
+          @click="toggleStem"
+          :aria-label="isStemCollapsed ? '展开公共题干' : '收起公共题干'"
+        />
+        
+        <!-- 收缩按钮 - 移动端显示上下按钮 -->
+        <Button
+          :icon="isStemCollapsed ? 'pi pi-chevron-down' : 'pi pi-chevron-up'"
+          class="p-button-rounded p-button-text stem-toggle-btn-mobile lg:hidden"
+          @click="toggleStem"
+          :aria-label="isStemCollapsed ? '展开公共题干' : '收起公共题干'"
+        />
+        
+        <!-- 公共题干内容区域 -->
+        <div 
+          class="shared-stem-content p-3 bg-surface-100 dark:bg-surface-700 rounded-lg"
+          :class="{'hidden': isStemCollapsed}"
+        >
+          <div class="text-lg font-medium mb-2">公共题干</div>
+          <div v-html="questionGroup.shared_stem"></div>
+        </div>
       </div>
       
-      <!-- 题组内的题目列表 -->
-      <div class="group-questions mt-4">
-        <template v-for="(questionItem, index) in groupQuestions" :key="questionItem.id">
-          <div class="question-item mb-4 border-l-4 pl-4" :class="getQuestionBorderClass(questionItem)">
-            <div class="question-header flex justify-between items-center mb-2">
-              <h3 class="text-lg font-medium">{{ questionItem.questions_id.title }}</h3>
-              <div class="score-label" :class="getQuestionScoreSeverity(questionItem)">
-                {{ getQuestionScoreDisplay(questionItem) }}
+      <!-- 题目列表区域 -->
+      <div 
+        class="group-questions"
+        :class="{
+          'lg:w-2/3': questionGroup && questionGroup.shared_stem && !isStemCollapsed,
+          'lg:flex-1': !questionGroup || !questionGroup.shared_stem || isStemCollapsed
+        }"
+      >
+        <div v-if="groupQuestions.length > 0">
+          <template v-for="(questionItem, index) in groupQuestions" :key="questionItem.id">
+            <div class="question-item mb-4 border-l-4 pl-4" :class="getQuestionBorderClass(questionItem)">
+              <div class="question-header flex justify-between items-center mb-2">
+                <h3 class="text-lg font-medium">{{ questionItem.questions_id.title }}</h3>
+                <div class="score-label" :class="getQuestionScoreSeverity(questionItem)">
+                  {{ getQuestionScoreDisplay(questionItem) }}
+                </div>
               </div>
+              <QuestionContent 
+                :selectedQuestion="enhanceQuestionWithIndex(questionItem, index)" 
+                :exam_page_mode="exam_page_mode"
+              />
             </div>
-            <QuestionContent 
-              :selectedQuestion="enhanceQuestionWithIndex(questionItem, index)" 
-              :exam_page_mode="exam_page_mode"
-            />
-          </div>
-        </template>
+          </template>
+        </div>
+        <div v-else class="text-center p-4 text-surface-500">
+          未找到题组内容
+        </div>
       </div>
-    </div>
-    <div v-else class="text-center p-4 text-surface-500">
-      未找到题组内容
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, onMounted, onUnmounted } from 'vue';
 import type { QuestionGroups, Questions, QuestionResults } from '~/types/directus_types';
 import QuestionContent from '~/components/QuestionContent.vue';
 
@@ -44,6 +84,34 @@ const props = defineProps<{
   exam_page_mode: string;
   groupQuestions?: any[]; // 接收从父组件传递的题组内题目列表
 }>();
+
+// 控制公共题干区域的收缩状态
+const isStemCollapsed = ref(false);
+const isMobile = ref(false);
+
+// 收缩/展开公共题干
+const toggleStem = () => {
+  isStemCollapsed.value = !isStemCollapsed.value;
+};
+
+// 检测设备类型
+onMounted(() => {
+  // 检查是否为移动设备
+  const checkMobile = () => {
+    isMobile.value = window.innerWidth < 768;
+  };
+  
+  // 初始检查
+  checkMobile();
+  
+  // 监听窗口大小变化
+  window.addEventListener('resize', checkMobile);
+  
+  // 组件卸载时移除事件监听
+  onUnmounted(() => {
+    window.removeEventListener('resize', checkMobile);
+  });
+});
 
 /**
  * 获取题组内的题目列表并按照正确的顺序排序
@@ -147,12 +215,44 @@ const getQuestionScoreSeverity = (question: any) => {
   overflow-y: auto;
 }
 
-.group-question-item {
+/* 公共题干容器样式 */
+.shared-stem-container {
+  position: relative;
+  transition: all 0.3s ease;
   background-color: var(--surface-50);
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.group-question-item:hover {
-  background-color: var(--surface-100);
+/* 收缩按钮样式 - 桌面端 */
+.stem-toggle-btn {
+  position: absolute;
+  right: -15px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background-color: var(--surface-card);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 收缩按钮样式 - 移动端 */
+.stem-toggle-btn-mobile {
+  position: absolute;
+  right: 10px;
+  top: 0;
+  z-index: 10;
+  background-color: var(--surface-card);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 题目内容区域样式 */
+.group-questions {
+  transition: all 0.3s ease;
+}
+
+.question-item {
+  transition: background-color 0.2s;
 }
 
 :deep(.p-tag) {
@@ -165,12 +265,19 @@ const getQuestionScoreSeverity = (question: any) => {
 }
 
 @media (prefers-color-scheme: dark) {
-  .group-question-item {
+  .shared-stem-container {
     background-color: var(--surface-800);
   }
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+  .shared-stem-container {
+    margin-bottom: 15px;
+  }
   
-  .group-question-item:hover {
-    background-color: var(--surface-700);
+  .stem-toggle-btn-mobile {
+    top: 5px;
   }
 }
 </style> 
