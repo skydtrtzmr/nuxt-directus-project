@@ -506,8 +506,8 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
     position: absolute;
     top: -8px;
     right: -8px;
-    background-color: var(--red-500);
-    color: white;
+    background-color: rgb(246, 242, 44);
+    color: rgb(237, 19, 19);
     border-radius: 50%;
     width: 20px;
     height: 20px;
@@ -516,7 +516,7 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
     justify-content: center;
     font-size: 12px;
     font-weight: bold;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px rgba(231, 139, 139, 0.253);
     /* 默认隐藏但保留空间 */
     visibility: hidden;
     opacity: 0;
