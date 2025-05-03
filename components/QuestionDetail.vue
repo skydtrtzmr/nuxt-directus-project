@@ -115,7 +115,11 @@ const isQuestionFlagged = computed(() => {
     return props.selectedQuestion.result.is_flagged === true;
 });
 
-// 标记或取消标记当前题目
+// 切换单题"疑问"标记状态
+// 步骤：
+//  1. 本地翻转 result.is_flagged，立即反馈 UI
+//  2. 调用后端接口更新数据库
+//  3. 用后端返回的 response.is_flagged 再次同步本地状态
 const toggleQuestionFlag = async () => {
     if (!props.selectedQuestion || !props.selectedQuestion.result || !props.selectedQuestion.result.id) return;
     
