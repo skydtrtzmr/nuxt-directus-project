@@ -67,15 +67,15 @@ const getTimerClass = (time: string) => {
 
 <style scoped>
 .countdown-container {
-    background-color: var(--surface-card);
-    border: 1px solid var(--surface-border);
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .countdown-item {
     padding: 0.5rem;
     border-radius: 4px;
-    background-color: var(--surface-ground);
+    background-color: #f8f9fa;
 }
 
 .timer-display {
@@ -89,18 +89,18 @@ const getTimerClass = (time: string) => {
 }
 
 .timer-normal {
-    background-color: var(--primary-color);
-    color: var(--primary-color-text);
+    background-color: #3B82F6;
+    color: #ffffff;
 }
 
 .timer-warning {
-    background-color: var(--yellow-500);
-    color: var(--yellow-900);
+    background-color: #F59E0B;
+    color: #ffffff;
     animation: pulse 2s infinite;
 }
 
 .timer-danger {
-    background-color: var(--red-500);
+    background-color: #EF4444;
     color: white;
     animation: pulse 1s infinite;
 }
