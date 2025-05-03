@@ -19,45 +19,45 @@
             }"
         >
             <div class="flex flex-col gap-4">
-                <div class="flex items-center gap-2" id="div_option_a">
+                <div class="flex items-center gap-2" :id="`div_option_a_${uniqueId}`">
                     <RadioButton
                         v-model="userAnswer"
-                        inputId="option_a"
+                        :inputId="`option_a_${uniqueId}`"
                         name="option"
                         value="A"
                         @change="updateAnswer"
                     />
-                    <label for="option_a">A. {{ questionData.questions_id.q_mc_single?.option_a }}</label>
+                    <label :for="`option_a_${uniqueId}`">A. {{ questionData.questions_id.q_mc_single?.option_a }}</label>
                 </div>
-                <div class="flex items-center gap-2" id="div_option_b">
+                <div class="flex items-center gap-2" :id="`div_option_b_${uniqueId}`">
                     <RadioButton
                         v-model="userAnswer"
-                        inputId="option_b"
+                        :inputId="`option_b_${uniqueId}`"
                         name="option"
                         value="B"
                         @change="updateAnswer"
                     />
-                    <label for="option_b">B. {{ questionData.questions_id.q_mc_single?.option_b }}</label>
+                    <label :for="`option_b_${uniqueId}`">B. {{ questionData.questions_id.q_mc_single?.option_b }}</label>
                 </div>
-                <div class="flex items-center gap-2" id="div_option_c">
+                <div class="flex items-center gap-2" :id="`div_option_c_${uniqueId}`">
                     <RadioButton
                         v-model="userAnswer"
-                        inputId="option_c"
+                        :inputId="`option_c_${uniqueId}`"
                         name="option"
                         value="C"
                         @change="updateAnswer"
                     />
-                    <label for="option_c">C. {{ questionData.questions_id.q_mc_single?.option_c }}</label>
+                    <label :for="`option_c_${uniqueId}`">C. {{ questionData.questions_id.q_mc_single?.option_c }}</label>
                 </div>
-                <div class="flex items-center gap-2" id="div_option_d">
+                <div class="flex items-center gap-2" :id="`div_option_d_${uniqueId}`">
                     <RadioButton
                         v-model="userAnswer"
-                        inputId="option_d"
+                        :inputId="`option_d_${uniqueId}`"
                         name="option"
                         value="D"
                         @change="updateAnswer"
                     />
-                    <label for="option_d">D. {{ questionData.questions_id.q_mc_single?.option_d }}</label>
+                    <label :for="`option_d_${uniqueId}`">D. {{ questionData.questions_id.q_mc_single?.option_d }}</label>
                 </div>
             </div>
         </BlockUI>
@@ -88,6 +88,17 @@ const props = defineProps<{
 console.log("props.questionData", props.questionData);
 
 const question_type = "q_mc_single";
+
+// 生成唯一ID用于区分不同题目实例
+const uniqueId = computed(() => {
+  // 使用题目ID和groupQuestionIndex(如果存在)创建唯一标识
+  const questionId = props.questionData?.id || 'unknown';
+  const groupIndex = props.questionData?.groupQuestionIndex !== undefined 
+    ? `_group_${props.questionData.groupQuestionIndex}` 
+    : '';
+  
+  return `${questionId}${groupIndex}`;
+});
 
 // 创建一个本地的响应式变量用于绑定UI
 const userAnswer = ref<string>("");

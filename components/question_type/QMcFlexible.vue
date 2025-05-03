@@ -19,45 +19,45 @@
             }"
         >
             <div class="flex flex-col gap-4">
-                <div class="flex items-center gap-2" id="div_option_a">
+                <div class="flex items-center gap-2" :id="`div_option_a_${uniqueId}`">
                     <Checkbox
                         v-model="questionData.result.submit_ans_select_multiple_checkbox"
-                        inputId="option_a"
+                        :inputId="`option_a_${uniqueId}`"
                         name="A"
                         value="A"
                         @change="updateAnswer"
                     />
-                    <label for="option_a">A. {{ questionData.questions_id.q_mc_flexible?.option_a }}</label>
+                    <label :for="`option_a_${uniqueId}`">A. {{ questionData.questions_id.q_mc_flexible?.option_a }}</label>
                 </div>
-                <div class="flex items-center gap-2" id="div_option_b">
+                <div class="flex items-center gap-2" :id="`div_option_b_${uniqueId}`">
                     <Checkbox
                         v-model="questionData.result.submit_ans_select_multiple_checkbox"
-                        inputId="option_b"
+                        :inputId="`option_b_${uniqueId}`"
                         name="B"
                         value="B"
                         @change="updateAnswer"
                     />
-                    <label for="option_b">B. {{ questionData.questions_id.q_mc_flexible?.option_b }}</label>
+                    <label :for="`option_b_${uniqueId}`">B. {{ questionData.questions_id.q_mc_flexible?.option_b }}</label>
                 </div>
-                <div class="flex items-center gap-2" id="div_option_c">
+                <div class="flex items-center gap-2" :id="`div_option_c_${uniqueId}`">
                     <Checkbox
                         v-model="questionData.result.submit_ans_select_multiple_checkbox"
-                        inputId="option_c"
+                        :inputId="`option_c_${uniqueId}`"
                         name="C"
                         value="C"
                         @change="updateAnswer"
                     />
-                    <label for="option_c">C. {{ questionData.questions_id.q_mc_flexible?.option_c }}</label>
+                    <label :for="`option_c_${uniqueId}`">C. {{ questionData.questions_id.q_mc_flexible?.option_c }}</label>
                 </div>
-                <div class="flex items-center gap-2" id="div_option_d">
+                <div class="flex items-center gap-2" :id="`div_option_d_${uniqueId}`">
                     <Checkbox
                         v-model="questionData.result.submit_ans_select_multiple_checkbox"
-                        inputId="option_d"
+                        :inputId="`option_d_${uniqueId}`"
                         name="D"
                         value="D"
                         @change="updateAnswer"
                     />
-                    <label for="option_d">D. {{ questionData.questions_id.q_mc_flexible?.option_d }}</label>
+                    <label :for="`option_d_${uniqueId}`">D. {{ questionData.questions_id.q_mc_flexible?.option_d }}</label>
                 </div>
             </div>
         </BlockUI>
@@ -74,6 +74,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import type {
     QuestionResults,
     Questions,
@@ -85,6 +86,17 @@ const props = defineProps<{
 }>();
 
 const question_type = "q_mc_flexible";
+
+// 生成唯一ID用于区分不同题目实例
+const uniqueId = computed(() => {
+  // 使用题目ID和groupQuestionIndex(如果存在)创建唯一标识
+  const questionId = props.questionData?.id || 'unknown';
+  const groupIndex = props.questionData?.groupQuestionIndex !== undefined 
+    ? `_group_${props.questionData.groupQuestionIndex}` 
+    : '';
+  
+  return `${questionId}${groupIndex}`;
+});
 
 const showResult = computed(() => {
     if (props.exam_page_mode === "review") {

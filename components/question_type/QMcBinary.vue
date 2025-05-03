@@ -19,25 +19,25 @@
             }"
         >
             <div class="flex flex-col gap-4">
-                <div class="flex items-center gap-2" id="div_option_a">
+                <div class="flex items-center gap-2" :id="`div_option_a_${uniqueId}`">
                     <RadioButton
                         v-model="userAnswer"
-                        inputId="option_a"
+                        :inputId="`option_a_${uniqueId}`"
                         name="option"
                         value="A"
                         @change="updateAnswer"
                     />
-                    <label for="option_a">A. {{ questionData.questions_id.q_mc_binary?.option_a }}</label>
+                    <label :for="`option_a_${uniqueId}`">A. {{ questionData.questions_id.q_mc_binary?.option_a }}</label>
                 </div>
-                <div class="flex items-center gap-2" id="div_option_b">
+                <div class="flex items-center gap-2" :id="`div_option_b_${uniqueId}`">
                     <RadioButton
                         v-model="userAnswer"
-                        inputId="option_b"
+                        :inputId="`option_b_${uniqueId}`"
                         name="option"
                         value="B"
                         @change="updateAnswer"
                     />
-                    <label for="option_b">B. {{ questionData.questions_id.q_mc_binary?.option_b }}</label>
+                    <label :for="`option_b_${uniqueId}`">B. {{ questionData.questions_id.q_mc_binary?.option_b }}</label>
                 </div>
             </div>
         </BlockUI>
@@ -67,8 +67,19 @@ const props = defineProps<{
 
 const question_type = "q_mc_binary";
 
+// 生成唯一ID用于区分不同题目实例
+const uniqueId = computed(() => {
+  // 使用题目ID和groupQuestionIndex(如果存在)创建唯一标识
+  const questionId = props.questionData?.id || 'unknown';
+  const groupIndex = props.questionData?.groupQuestionIndex !== undefined 
+    ? `_group_${props.questionData.groupQuestionIndex}` 
+    : '';
+  
+  return `${questionId}${groupIndex}`;
+});
+
 // 创建一个本地的响应式变量用于绑定UI
-const userAnswer = ref("");
+const userAnswer = ref<string>("");
 
 // 监听整个questionData对象的变化，确保在题目切换时重置答案
 watch(
