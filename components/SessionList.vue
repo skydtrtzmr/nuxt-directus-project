@@ -4,7 +4,7 @@
             <h1 class="page-title">{{ pageTitle }}</h1>
             <p class="page-description">{{ pageDescription }}</p>
         </div>
-        
+
         <div class="card exam-list-card">
             <Dialog
                 v-model:visible="not_started_dialog_visible"
@@ -26,7 +26,7 @@
                     ></Button>
                 </div>
             </Dialog>
-            
+
             <Dialog
                 v-model:visible="have_ended_dialog_visible"
                 modal
@@ -47,7 +47,7 @@
                     ></Button>
                 </div>
             </Dialog>
-            
+
             <DataView
                 :value="practice_sessions_ref"
                 :layout="layout"
@@ -77,10 +77,14 @@
                         </div>
                     </div>
                 </template>
-                
+
                 <template #list="slotProps">
                     <div class="exam-list-view">
-                        <div v-for="(item, index) in slotProps.items" :key="index" class="exam-item">
+                        <div
+                            v-for="(item, index) in slotProps.items"
+                            :key="index"
+                            class="exam-item"
+                        >
                             <div
                                 class="exam-item-content"
                                 :class="{
@@ -94,34 +98,54 @@
                                         class="status-tag"
                                     ></Tag>
                                 </div>
-                                
+
                                 <div class="exam-details">
                                     <div class="exam-info">
                                         <div class="exam-title">
-                                            {{ item.exercises_students_id.exercises_id.title }}
+                                            {{
+                                                item.exercises_students_id
+                                                    .exercises_id.title
+                                            }}
                                         </div>
-                                        
+
                                         <div class="exam-time-info">
                                             <div class="time-item">
                                                 <i class="pi pi-calendar"></i>
                                                 <span>
                                                     <strong>开始：</strong>
-                                                    {{ formatDateTime(item.exercises_students_id.exercises_id.start_time) }}
+                                                    {{
+                                                        formatDateTime(
+                                                            item
+                                                                .exercises_students_id
+                                                                .exercises_id
+                                                                .start_time
+                                                        )
+                                                    }}
                                                 </span>
                                             </div>
                                             <div class="time-item">
-                                                <i class="pi pi-calendar-times"></i>
+                                                <i
+                                                    class="pi pi-calendar-times"
+                                                ></i>
                                                 <span>
                                                     <strong>结束：</strong>
-                                                    {{ formatDateTime(item.exercises_students_id.exercises_id.end_time) }}
+                                                    {{
+                                                        formatDateTime(
+                                                            item
+                                                                .exercises_students_id
+                                                                .exercises_id
+                                                                .end_time
+                                                        )
+                                                    }}
                                                 </span>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="exam-actions">
                                         <span class="exam-duration">
-                                            <i class="pi pi-clock"></i> {{ sessionTypeText }}时长：120分钟
+                                            <i class="pi pi-clock"></i>
+                                            {{ sessionTypeText }}时长：120分钟
                                         </span>
                                         <div class="action-buttons">
                                             <Button
@@ -134,11 +158,21 @@
                                             <Button
                                                 @click="joinSession(item.id)"
                                                 class="join-button"
-                                                :disabled="getSubmitStatusName(item) == '已交卷'"
-                                                :class="{'p-button-success': getSubmitStatusName(item) == '未答题'}"
+                                                :disabled="
+                                                    getSubmitStatusName(item) ==
+                                                    '已交卷'
+                                                "
+                                                :class="{
+                                                    'p-button-success':
+                                                        getSubmitStatusName(
+                                                            item
+                                                        ) == '未答题',
+                                                }"
                                             >
                                                 <i class="pi pi-play"></i>
-                                                {{ getSubmitStatusAction(item) }}
+                                                {{
+                                                    getSubmitStatusAction(item)
+                                                }}
                                             </Button>
                                         </div>
                                     </div>
@@ -159,7 +193,10 @@
                             <div class="exam-card-content">
                                 <div class="exam-card-header">
                                     <div class="exam-card-title">
-                                        {{ item.exercises_students_id.exercises_id.title }}
+                                        {{
+                                            item.exercises_students_id
+                                                .exercises_id.title
+                                        }}
                                     </div>
                                     <Tag
                                         :value="getSubmitStatusName(item)"
@@ -167,40 +204,69 @@
                                         class="status-tag"
                                     ></Tag>
                                 </div>
-                                
+
                                 <div class="exam-card-body">
                                     <div class="time-item">
                                         <i class="pi pi-calendar"></i>
                                         <div>
                                             <strong>开始时间：</strong>
-                                            <div>{{ formatDateTime(item.exercises_students_id.exercises_id.start_time) }}</div>
+                                            <div>
+                                                {{
+                                                    formatDateTime(
+                                                        item
+                                                            .exercises_students_id
+                                                            .exercises_id
+                                                            .start_time
+                                                    )
+                                                }}
+                                            </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="time-item">
                                         <i class="pi pi-calendar-times"></i>
                                         <div>
                                             <strong>结束时间：</strong>
-                                            <div>{{ formatDateTime(item.exercises_students_id.exercises_id.end_time) }}</div>
+                                            <div>
+                                                {{
+                                                    formatDateTime(
+                                                        item
+                                                            .exercises_students_id
+                                                            .exercises_id
+                                                            .end_time
+                                                    )
+                                                }}
+                                            </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="time-item">
                                         <i class="pi pi-clock"></i>
                                         <div>
-                                            <strong>{{ sessionTypeText }}时长：</strong>
+                                            <strong
+                                                >{{
+                                                    sessionTypeText
+                                                }}时长：</strong
+                                            >
                                             <div>120分钟</div>
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="exam-card-footer">
                                     <Button
                                         :key="item.id"
                                         @click="joinSession(item.id)"
                                         class="join-button"
-                                        :disabled="getSubmitStatusName(item) == '已交卷'"
-                                        :class="{'p-button-success': getSubmitStatusName(item) == '未答题'}"
+                                        :disabled="
+                                            getSubmitStatusName(item) ==
+                                            '已交卷'
+                                        "
+                                        :class="{
+                                            'p-button-success':
+                                                getSubmitStatusName(item) ==
+                                                '未答题',
+                                        }"
                                     >
                                         <i class="pi pi-play"></i>
                                         {{ getSubmitStatusAction(item) }}
@@ -217,7 +283,7 @@
                         </div>
                     </div>
                 </template>
-                
+
                 <template #empty>
                     <div class="empty-state">
                         <i class="pi pi-search empty-icon"></i>
@@ -244,16 +310,25 @@ const props = defineProps({
     mode: {
         type: String,
         required: true,
-        validator: (value: string) => ['exam', 'practice'].includes(value)
-    }
+        validator: (value: string) => ["exam", "practice"].includes(value),
+    },
 });
 
+console.log("props.mode:", props.mode);
+
+
 // 根据模式设置页面标题和其他文本
-const pageTitle = computed(() => props.mode === 'exam' ? '考试中心' : '练习中心');
-const pageDescription = computed(() => props.mode === 'exam' 
-    ? '这里列出了您可以参加的所有考试' 
-    : '这里列出了您可以进行的所有练习');
-const sessionTypeText = computed(() => props.mode === 'exam' ? '考试' : '练习');
+const pageTitle = computed(() =>
+    props.mode === "exam" ? "考试中心" : "练习中心"
+);
+const pageDescription = computed(() =>
+    props.mode === "exam"
+        ? "这里列出了您可以参加的所有考试"
+        : "这里列出了您可以进行的所有练习"
+);
+const sessionTypeText = computed(() =>
+    props.mode === "exam" ? "考试" : "练习"
+);
 
 // 如果使用 useRouter，需要引入并使用
 const router = useRouter();
@@ -290,18 +365,26 @@ const fetchPracticeSessions = async () => {
                 "exercises_students_id.students_id.directus_user",
             ],
             filter: {
-                exercises_students_id: {
-                    students_id: {
-                        directus_user: {
-                            _eq: current_user!.id,
+                _and: [
+                    {
+                        "exercises_students_id": {
+                            "students_id": {
+                                "directus_user": {
+                                    "_eq": current_user!.id,
+                                },
+                            },
                         },
                     },
-                    exercises_id: {
-                        mode: {
-                            _eq: props.mode,
+                    {
+                        "exercises_students_id": {
+                            "exercises_id": {
+                                "mode": {
+                                    "_eq": props.mode,
+                                },
+                            },
                         },
                     },
-                },
+                ],
             },
         },
     });
@@ -691,7 +774,8 @@ onMounted(async () => {
     gap: 0.75rem;
 }
 
-.join-button, .review-button {
+.join-button,
+.review-button {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -853,4 +937,4 @@ onMounted(async () => {
     justify-content: center;
     padding-top: 1rem;
 }
-</style> 
+</style>
