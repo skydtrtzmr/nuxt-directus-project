@@ -112,6 +112,9 @@ const refItems = ref<HTMLButtonElement[]>([]);
 const isSidebarCollapsed = ref(false);
 const expandedSections = ref<number[]>([0]); // 默认展开第一个章节
 
+// 控制章节展开/折叠的状态和样式
+const sectionStyles = ref<{ [key: number]: any }>({});
+
 const toggleSidebar = () => {
     isSidebarCollapsed.value = !isSidebarCollapsed.value;
     emit('sidebar-toggle', isSidebarCollapsed.value);
@@ -132,13 +135,57 @@ const checkMobileView = () => {
     }
 };
 
+// 修改toggleSection函数，增加动画效果控制
 const toggleSection = (index: number) => {
     const foundIndex = expandedSections.value.indexOf(index);
-    if (foundIndex > -1) {
-        expandedSections.value.splice(foundIndex, 1);
-    } else {
-        expandedSections.value.push(index);
-    }
+    
+    // 获取章节内容的DOM元素
+    nextTick(() => {
+        const sectionContentEl = document.querySelectorAll('.section-content')[index] as HTMLElement;
+        if (sectionContentEl) {
+            if (foundIndex > -1) {
+                // 折叠动画
+                sectionContentEl.style.maxHeight = sectionContentEl.scrollHeight + 'px';
+                
+                // 强制重绘
+                void sectionContentEl.offsetHeight;
+                
+                // 开始折叠
+                sectionContentEl.style.maxHeight = '0px';
+                
+                // 等待动画完成后从数组中移除
+                setTimeout(() => {
+                    expandedSections.value.splice(foundIndex, 1);
+                }, 300);
+            } else {
+                // 首先添加到展开数组
+                expandedSections.value.push(index);
+                
+                // 在下一个渲染循环中设置高度动画
+                nextTick(() => {
+                    sectionContentEl.style.maxHeight = '0px';
+                    
+                    // 强制重绘
+                    void sectionContentEl.offsetHeight;
+                    
+                    // 设置实际高度以展开
+                    sectionContentEl.style.maxHeight = sectionContentEl.scrollHeight + 'px';
+                    
+                    // 动画完成后清除maxHeight限制
+                    setTimeout(() => {
+                        sectionContentEl.style.maxHeight = 'none';
+                    }, 300);
+                });
+            }
+        } else {
+            // 如果没有找到DOM元素，退回到简单切换
+            if (foundIndex > -1) {
+                expandedSections.value.splice(foundIndex, 1);
+            } else {
+                expandedSections.value.push(index);
+            }
+        }
+    });
 };
 
 // 处理题目点击（单题模式）
@@ -381,8 +428,7 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
 .toggle-button-wrapper {
     position: absolute;
     right: -20px;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 10px;
     z-index: 10;
 }
 
@@ -390,6 +436,7 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
     background-color: var(--surface-card);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border: 1px solid var(--surface-border);
+    transition: transform 0.3s ease;
 }
 
 .question-list-container.collapsed {
@@ -447,6 +494,9 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
     padding: 0.75rem;
     border-top: 1px solid var(--surface-border);
     background-color: var(--surface-section);
+    transition: max-height 0.3s ease;
+    overflow: hidden;
+    max-height: none;
 }
 
 .question-card-container {
@@ -461,6 +511,7 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
     display: inline-block;
     width: 40px;
     height: 40px;
+    margin: 2px;
 }
 
 .question-card {
@@ -540,12 +591,15 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
         height: auto;
         max-height: 60vh;
         z-index: 1000;
+        padding-bottom: 20px; /* 确保最后一行题目完全可见 */
     }
     
     .question-list-container.collapsed {
         width: 100% !important;
         height: 40px;
         max-height: 40px;
+        padding-bottom: 0;
+        transition: all 0.3s ease;
     }
     
     .toggle-button-wrapper {
@@ -556,21 +610,24 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
     }
     
     .toggle-button {
-        transform: rotate(90deg);
+        transform: rotate(180deg); /* 调整箭头方向 */
+        transition: transform 0.3s ease; /* 添加旋转动画 */
     }
     
     .question-list-container.collapsed .toggle-button {
-        transform: rotate(-90deg);
+        transform: rotate(0deg);
     }
     
     .sidebar {
         border-radius: 12px 12px 0 0;
         height: 100%;
         max-height: calc(60vh - 40px);
+        overflow-y: auto; /* 确保内容可滚动 */
     }
     
     .sidebar-content {
         max-height: calc(60vh - 90px);
+        padding-bottom: 20px; /* 底部额外填充 */
     }
     
     .question-btn-wrapper {
@@ -581,6 +638,42 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
     .question-card {
         min-width: 36px;
         height: 36px;
+        position: relative; /* 确保位置一致性 */
+    }
+
+    /* 确保展开时内容有动画效果 */
+    .section-content {
+        transition: max-height 0.3s ease;
+        overflow: hidden;
+    }
+}
+
+/* 添加桌面视图的题目按钮位置一致性 */
+@media screen and (min-width: 769px) {
+    .question-card {
+        position: relative;
+    }
+    
+    .question-btn-wrapper {
+        margin: 2px;
+    }
+    
+    .section-content {
+        transition: max-height 0.3s ease;
+        overflow: hidden;
+    }
+    
+    /* 桌面端收缩按钮样式 */
+    .toggle-button-wrapper {
+        position: absolute;
+        right: -20px;
+        top: 10px; /* 固定在顶部 */
+        transform: none;
+    }
+    
+    /* 保持桌面端收缩展开按钮一致 */
+    .question-list-container.collapsed .toggle-button-wrapper {
+        right: -20px;
     }
 }
 </style>
