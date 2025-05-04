@@ -96,12 +96,22 @@ onMounted(() => {
         <div class="topbar-container">
             <app-topbar>
                 <template #end>
-                    <Button 
-                        :icon="isDarkMode ? 'pi pi-sun' : 'pi pi-moon'" 
-                        @click="toggleDarkMode" 
-                        class="p-button-rounded p-button-text ml-2" 
-                        v-tooltip.bottom="isDarkMode ? '切换到亮色模式' : '切换到暗色模式'"
-                    />
+                    <div class="topbar-actions">
+                        <router-link to="/" class="home-link">
+                            <i class="pi pi-home"></i>
+                            <span>首页</span>
+                        </router-link>
+                        <router-link to="/dashboard" class="dashboard-link">
+                            <i class="pi pi-desktop"></i>
+                            <span>控制台</span>
+                        </router-link>
+                        <Button 
+                            :icon="isDarkMode ? 'pi pi-sun' : 'pi pi-moon'" 
+                            @click="toggleDarkMode" 
+                            class="p-button-rounded p-button-text" 
+                            v-tooltip.bottom="isDarkMode ? '切换到亮色模式' : '切换到暗色模式'"
+                        />
+                    </div>
                 </template>
             </app-topbar>
         </div>
@@ -132,21 +142,51 @@ onMounted(() => {
     z-index: 999;
 }
 
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.home-link, .dashboard-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--surface-0);
+    text-decoration: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.home-link:hover, .dashboard-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.home-link i, .dashboard-link i {
+    font-size: 1rem;
+}
+
 .layout-main-container {
     flex: 1;
     display: flex;
     flex-direction: column;
+    margin-top: -0.5rem; /* 调整内容区域向上偏移 */
 }
 
 .layout-main {
     flex: 1;
-    padding: 1.5rem;
+    padding: 0 1.5rem 1.5rem 1.5rem; /* 减少顶部内边距 */
 }
 
 .content-wrapper {
     max-width: 1440px;
     margin: 0 auto;
     width: 100%;
+    background-color: var(--surface-0);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
 }
 
 /* 暗色模式样式覆盖 */
@@ -155,22 +195,49 @@ onMounted(() => {
     color: var(--surface-0);
 }
 
+.dark-mode .content-wrapper {
+    background-color: var(--surface-800);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .home-link, .dark-mode .dashboard-link {
+    color: var(--surface-0);
+}
+
 /* 响应式设计 */
 @media screen and (max-width: 1024px) {
     .layout-main {
-        padding: 1rem;
+        padding: 0 1rem 1rem 1rem;
+    }
+    
+    .content-wrapper {
+        padding: 1.25rem;
     }
 }
 
 @media screen and (max-width: 768px) {
     .layout-main {
-        padding: 0.75rem;
+        padding: 0 0.75rem 0.75rem 0.75rem;
+    }
+    
+    .content-wrapper {
+        padding: 1rem;
+        border-radius: 6px;
+    }
+    
+    .home-link span, .dashboard-link span {
+        display: none;
     }
 }
 
 @media screen and (max-width: 576px) {
     .layout-main {
-        padding: 0.5rem;
+        padding: 0 0.5rem 0.5rem 0.5rem;
+    }
+    
+    .content-wrapper {
+        padding: 0.75rem;
+        border-radius: 4px;
     }
 }
 </style>

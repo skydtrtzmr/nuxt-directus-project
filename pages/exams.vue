@@ -1,248 +1,232 @@
 <template>
-    <div class="card">
-        <Dialog
-            v-model:visible="not_started_dialog_visible"
-            modal
-            header="提示"
-            :style="{ width: '25rem' }"
-        >
-            <span class="text-surface-500 dark:text-surface-400 block mb-8"
-                >未到考试开始时间！</span
+    <div>
+        <div class="page-header">
+            <h1 class="page-title">考试中心</h1>
+            <p class="page-description">这里列出了您可以参加的所有考试</p>
+        </div>
+        
+        <div class="card exam-list-card">
+            <Dialog
+                v-model:visible="not_started_dialog_visible"
+                modal
+                header="提示"
+                :style="{ width: '25rem' }"
+                class="custom-dialog"
             >
-            <div class="flex justify-end gap-2">
-                <Button
-                    type="button"
-                    label="确定"
-                    @click="not_started_dialog_visible = false"
-                ></Button>
-            </div>
-        </Dialog>
-        <Dialog
-            v-model:visible="have_ended_dialog_visible"
-            modal
-            header="提示"
-            :style="{ width: '25rem' }"
-        >
-            <span class="text-surface-500 dark:text-surface-400 block mb-8"
-                >已过考试结束时间！</span
-            >
-            <div class="flex justify-end gap-2">
-                <Button
-                    type="button"
-                    label="确定"
-                    @click="have_ended_dialog_visible = false"
-                ></Button>
-            </div>
-        </Dialog>
-        <DataView
-            :value="practice_sessions_ref"
-            :layout="layout"
-            dataKey="practice_sessions_ref.id"
-        >
-            <template #header>
-                <div class="flex justify-end">
-                    <SelectButton
-                        v-model="layout"
-                        :options="options"
-                        :allowEmpty="false"
-                    >
-                        <template #option="{ option }">
-                            <i
-                                :class="[
-                                    option === 'list'
-                                        ? 'pi pi-bars'
-                                        : 'pi pi-table',
-                                ]"
-                            />
-                        </template>
-                    </SelectButton>
+                <div class="dialog-content">
+                    <i class="pi pi-clock dialog-icon"></i>
+                    <span class="dialog-message">未到考试开始时间！</span>
                 </div>
-            </template>
-            <template #list="slotProps">
-                <div class="flex flex-col">
-                    <div v-for="(item, index) in slotProps.items" :key="index">
-                        <div
-                            class="flex flex-col sm:flex-row sm:items-center p-6 gap-4"
-                            :class="{
-                                'border-t border-surface-200 dark:border-surface-700':
-                                    index !== 0,
-                            }"
-                        >
-                            <div class="md:w-40 relative">
-                                <Tag
-                                    :value="getSubmitStatusName(item)"
-                                    :severity="getSubmitStatus(item)"
-                                ></Tag>
-                            </div>
-                            <div
-                                class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6"
+                <div class="dialog-footer">
+                    <Button
+                        type="button"
+                        label="确定"
+                        @click="not_started_dialog_visible = false"
+                        class="p-button-primary"
+                    ></Button>
+                </div>
+            </Dialog>
+            
+            <Dialog
+                v-model:visible="have_ended_dialog_visible"
+                modal
+                header="提示"
+                :style="{ width: '25rem' }"
+                class="custom-dialog"
+            >
+                <div class="dialog-content">
+                    <i class="pi pi-exclamation-triangle dialog-icon"></i>
+                    <span class="dialog-message">已过考试结束时间！</span>
+                </div>
+                <div class="dialog-footer">
+                    <Button
+                        type="button"
+                        label="确定"
+                        @click="have_ended_dialog_visible = false"
+                        class="p-button-primary"
+                    ></Button>
+                </div>
+            </Dialog>
+            
+            <DataView
+                :value="practice_sessions_ref"
+                :layout="layout"
+                dataKey="practice_sessions_ref.id"
+                class="exam-data-view"
+            >
+                <template #header>
+                    <div class="data-view-header">
+                        <div class="view-options">
+                            <span class="view-label">视图：</span>
+                            <SelectButton
+                                v-model="layout"
+                                :options="options"
+                                :allowEmpty="false"
+                                class="view-selector"
                             >
-                                <div
-                                    class="flex flex-row md:flex-col justify-between items-start gap-2"
-                                >
-                                    <div>
-                                        <!-- <span
-                                            class="font-medium text-surface-500 dark:text-surface-400 text-sm"
-                                            >{{ item.category }}</span
-                                        > -->
-                                        <div class="text-xl font-medium mt-2">
-                                            {{
-                                                item.exercises_students_id
-                                                    .exercises_id.title
-                                            }}
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="bg-surface-100 p-1"
-                                        style="border-radius: 10px"
-                                    >
-                                        <div
-                                            class="bg-surface-0 flex items-center gap-2 justify-center py-1 px-2"
-                                            style="
-                                                border-radius: 10px;
-                                                box-shadow: 0px 1px 2px 0px
-                                                        rgba(0, 0, 0, 0.04),
-                                                    0px 1px 2px 0px
-                                                        rgba(0, 0, 0, 0.06);
-                                            "
-                                        >
-                                            <span>
-                                                <strong>开始时间:</strong>
-                                                {{
-                                                    dayjs(
-                                                        item
-                                                            .exercises_students_id
-                                                            .exercises_id
-                                                            .start_time
-                                                    ).format(
-                                                        "YYYY-MM-DD HH:mm:ss"
-                                                    )
-                                                }}
-                                            </span>
-                                            <span>
-                                                <strong>结束时间:</strong>
-                                                {{
-                                                    dayjs(
-                                                        item
-                                                            .exercises_students_id
-                                                            .exercises_id
-                                                            .end_time
-                                                    ).format(
-                                                        "YYYY-MM-DD HH:mm:ss"
-                                                    )
-                                                }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex flex-col md:items-end gap-8">
-                                    <span class="text-xl font-semibold"
-                                        >考试时长{{ item.price }}</span
-                                    >
-                                    <div
-                                        class="flex flex-row-reverse md:flex-row gap-2"
-                                    >
-                                        <Button
-                                            icon="pi pi-info-circle"
-                                            outlined
-                                        ></Button>
-                                        <Button
-                                            @click="joinExam(item.id)"
-                                            class="join-button flex-auto md:flex-initial whitespace-nowrap"
-                                            :disabled="
-                                                getSubmitStatusName(item) ==
-                                                '已交卷'
-                                            "
-                                        >
-                                            {{ getSubmitStatusAction(item) }}
-                                        </Button>
-                                    </div>
-                                </div>
-                            </div>
+                                <template #option="{ option }">
+                                    <i
+                                        :class="[
+                                            option === 'list'
+                                                ? 'pi pi-bars'
+                                                : 'pi pi-table',
+                                        ]"
+                                    />
+                                </template>
+                            </SelectButton>
                         </div>
                     </div>
-                </div>
-            </template>
-
-            <template #grid="slotProps">
-                <div class="grid grid-cols-12 gap-4">
-                    <!-- 总共分为12列 -->
-                    <div
-                        v-for="(item, index) in slotProps.items"
-                        :key="index"
-                        class="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3 p-2"
-                        ref="gridItems"
-                    >
-                        <!-- 根据屏幕尺寸，决定每行显示的数量 -->
-                        <!-- 尺寸从大到小分别是：sm/md/lg/xl/2xl -->
-                        <div
-                            class="p-6 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded flex flex-col"
-                        >
-                            <div class="pt-6">
-                                <div
-                                    class="flex flex-row justify-between items-start gap-2"
-                                >
-                                    <div class="text-xl font-medium mt-1">
-                                        {{
-                                            item.exercises_students_id
-                                                .exercises_id.title
-                                        }}
-                                    </div>
-                                    <!-- Tag设为shrink-0，不许它被压缩！ -->
+                </template>
+                
+                <template #list="slotProps">
+                    <div class="exam-list-view">
+                        <div v-for="(item, index) in slotProps.items" :key="index" class="exam-item">
+                            <div
+                                class="exam-item-content"
+                                :class="{
+                                    'border-top': index !== 0,
+                                }"
+                            >
+                                <div class="exam-status">
                                     <Tag
-                                        class="shrink-0"
                                         :value="getSubmitStatusName(item)"
                                         :severity="getSubmitStatus(item)"
+                                        class="status-tag"
                                     ></Tag>
                                 </div>
-                                <div class="flex flex-col gap-2 mt-6">
-                                    <div>
-                                        <strong>开始时间:</strong>
-                                        <div>
-                                            {{
-                                                dayjs(
-                                                    item.exercises_students_id
-                                                        .exercises_id.start_time
-                                                ).format("YYYY-MM-DD HH:mm:ss")
-                                            }}
+                                
+                                <div class="exam-details">
+                                    <div class="exam-info">
+                                        <div class="exam-title">
+                                            {{ item.exercises_students_id.exercises_id.title }}
+                                        </div>
+                                        
+                                        <div class="exam-time-info">
+                                            <div class="time-item">
+                                                <i class="pi pi-calendar"></i>
+                                                <span>
+                                                    <strong>开始：</strong>
+                                                    {{ formatDateTime(item.exercises_students_id.exercises_id.start_time) }}
+                                                </span>
+                                            </div>
+                                            <div class="time-item">
+                                                <i class="pi pi-calendar-times"></i>
+                                                <span>
+                                                    <strong>结束：</strong>
+                                                    {{ formatDateTime(item.exercises_students_id.exercises_id.end_time) }}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div>
-                                        <strong>结束时间:</strong>
-                                        <div>
-                                            {{
-                                                dayjs(
-                                                    item.exercises_students_id
-                                                        .exercises_id.end_time
-                                                ).format("YYYY-MM-DD HH:mm:ss")
-                                            }}
+                                    
+                                    <div class="exam-actions">
+                                        <span class="exam-duration">
+                                            <i class="pi pi-clock"></i> 考试时长：120分钟
+                                        </span>
+                                        <div class="action-buttons">
+                                            <Button
+                                                @click="reviewExam(item.id)"
+                                                icon="pi pi-info-circle"
+                                                outlined
+                                                class="p-button-info review-button"
+                                                v-tooltip.top="'查看详情'"
+                                            ></Button>
+                                            <Button
+                                                @click="joinExam(item.id)"
+                                                class="join-button"
+                                                :disabled="getSubmitStatusName(item) == '已交卷'"
+                                                :class="{'p-button-success': getSubmitStatusName(item) == '未答题'}"
+                                            >
+                                                <i class="pi pi-play"></i>
+                                                {{ getSubmitStatusAction(item) }}
+                                            </Button>
                                         </div>
-                                    </div>
-                                    <div class="flex gap-2">
-                                        <Button
-                                            :key="item.id"
-                                            @click="joinExam(item.id)"
-                                            class="join-button flex-auto whitespace-nowrap"
-                                            :disabled="
-                                                getSubmitStatusName(item) ==
-                                                '已交卷'
-                                            "
-                                        >
-                                            {{ getSubmitStatusAction(item) }}
-                                        </Button>
-                                        <Button
-                                            @click="reviewExam(item.id)"
-                                            icon="pi pi-info-circle"
-                                            outlined
-                                        ></Button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </template>
-        </DataView>
+                </template>
+
+                <template #grid="slotProps">
+                    <div class="exam-grid-view">
+                        <div
+                            v-for="(item, index) in slotProps.items"
+                            :key="index"
+                            class="exam-card"
+                            ref="gridItems"
+                        >
+                            <div class="exam-card-content">
+                                <div class="exam-card-header">
+                                    <div class="exam-card-title">
+                                        {{ item.exercises_students_id.exercises_id.title }}
+                                    </div>
+                                    <Tag
+                                        :value="getSubmitStatusName(item)"
+                                        :severity="getSubmitStatus(item)"
+                                        class="status-tag"
+                                    ></Tag>
+                                </div>
+                                
+                                <div class="exam-card-body">
+                                    <div class="time-item">
+                                        <i class="pi pi-calendar"></i>
+                                        <div>
+                                            <strong>开始时间：</strong>
+                                            <div>{{ formatDateTime(item.exercises_students_id.exercises_id.start_time) }}</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="time-item">
+                                        <i class="pi pi-calendar-times"></i>
+                                        <div>
+                                            <strong>结束时间：</strong>
+                                            <div>{{ formatDateTime(item.exercises_students_id.exercises_id.end_time) }}</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="time-item">
+                                        <i class="pi pi-clock"></i>
+                                        <div>
+                                            <strong>考试时长：</strong>
+                                            <div>120分钟</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="exam-card-footer">
+                                    <Button
+                                        :key="item.id"
+                                        @click="joinExam(item.id)"
+                                        class="join-button"
+                                        :disabled="getSubmitStatusName(item) == '已交卷'"
+                                        :class="{'p-button-success': getSubmitStatusName(item) == '未答题'}"
+                                    >
+                                        <i class="pi pi-play"></i>
+                                        {{ getSubmitStatusAction(item) }}
+                                    </Button>
+                                    <Button
+                                        @click="reviewExam(item.id)"
+                                        icon="pi pi-info-circle"
+                                        outlined
+                                        class="p-button-info review-button"
+                                        v-tooltip.top="'查看详情'"
+                                    ></Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                
+                <template #empty>
+                    <div class="empty-state">
+                        <i class="pi pi-search empty-icon"></i>
+                        <h3>暂无考试</h3>
+                        <p>您当前没有可参加的考试</p>
+                    </div>
+                </template>
+            </DataView>
+        </div>
     </div>
 </template>
 
@@ -334,6 +318,11 @@ const submitActualStartTime = async (practice_session: PracticeSessions) => {
 };
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// 格式化日期时间
+const formatDateTime = (dateTime: any) => {
+    return dayjs(dateTime).format("YYYY-MM-DD HH:mm");
+};
 
 const joinExam = async (examId: string) => {
     // 首先判断考试时间
@@ -511,12 +500,308 @@ onMounted(async () => {
         }
     }
 });
-
-// 不需要下面这样写，因为切换页面时，会自动重新获取数据。
-// onBeforeRouteUpdate(async (to, from) => {
-//     // 每次切换页面时，都要重新获取数据
-//     await fetchPracticeSessions();
-//     console.log("切换页面时，重新获取数据");
-
-// });
 </script>
+
+<style scoped>
+.page-header {
+    margin-bottom: 1.5rem;
+}
+
+.page-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #2a4b8d;
+    margin: 0 0 0.5rem 0;
+}
+
+.page-description {
+    color: #666;
+    margin: 0;
+}
+
+.exam-list-card {
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+}
+
+.custom-dialog .dialog-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+.dialog-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.dialog-message {
+    font-size: 1.1rem;
+    text-align: center;
+    color: #333;
+}
+
+.dialog-footer {
+    display: flex;
+    justify-content: center;
+    padding-top: 1rem;
+}
+
+.data-view-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+.view-options {
+    display: flex;
+    align-items: center;
+}
+
+.view-label {
+    margin-right: 0.5rem;
+    color: #666;
+}
+
+.view-selector :deep(.p-selectbutton) {
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* 列表视图样式 */
+.exam-list-view {
+    display: flex;
+    flex-direction: column;
+}
+
+.exam-item {
+    margin-bottom: 1rem;
+}
+
+.exam-item-content {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    padding: 1.25rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.exam-item-content:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.border-top {
+    border-top: 1px solid #f0f0f0;
+}
+
+.exam-status {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.75rem;
+}
+
+.status-tag {
+    font-weight: 500;
+}
+
+.exam-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .exam-details {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+.exam-info {
+    flex: 1;
+}
+
+.exam-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.exam-time-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+    .exam-time-info {
+        flex-direction: row;
+        gap: 1.5rem;
+    }
+}
+
+.time-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #666;
+}
+
+.time-item i {
+    color: var(--primary-color);
+}
+
+.exam-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.exam-duration {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: #555;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.join-button, .review-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.join-button {
+    flex: 1;
+}
+
+/* 网格视图样式 */
+.exam-grid-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.exam-card {
+    height: 100%;
+}
+
+.exam-card-content {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    padding: 1.25rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.exam-card-content:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.exam-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+}
+
+.exam-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.exam-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex: 1;
+}
+
+.exam-card-footer {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: auto;
+}
+
+.exam-card-footer .join-button {
+    flex: 1;
+}
+
+/* 空状态 */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 0;
+    color: #888;
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #ddd;
+}
+
+.empty-state h3 {
+    font-size: 1.25rem;
+    margin: 0 0 0.5rem 0;
+    color: #555;
+}
+
+.empty-state p {
+    margin: 0;
+}
+
+/* 深色模式适配 */
+:deep(.dark-mode) .exam-item-content,
+:deep(.dark-mode) .exam-card-content {
+    background-color: var(--surface-800);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+:deep(.dark-mode) .page-title {
+    color: var(--surface-0);
+}
+
+:deep(.dark-mode) .page-description {
+    color: var(--surface-200);
+}
+
+:deep(.dark-mode) .exam-title,
+:deep(.dark-mode) .exam-card-title {
+    color: var(--surface-0);
+}
+
+:deep(.dark-mode) .time-item,
+:deep(.dark-mode) .exam-duration {
+    color: var(--surface-200);
+}
+
+:deep(.dark-mode) .border-top {
+    border-color: var(--surface-700);
+}
+</style>
