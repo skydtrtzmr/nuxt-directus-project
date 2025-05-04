@@ -505,6 +505,7 @@ onMounted(async () => {
 <style scoped>
 .page-header {
     margin-bottom: 1.5rem;
+    padding-top: 0.5rem; /* 减少顶部留白 */
 }
 
 .page-title {
@@ -526,35 +527,29 @@ onMounted(async () => {
     padding: 0;
 }
 
-.custom-dialog .dialog-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1rem 0;
+/* DataView容器样式 */
+.exam-data-view {
+    margin: 0.5rem 0 1rem 0; /* 减少顶部间距 */
 }
 
-.dialog-icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    color: var(--primary-color);
-}
-
-.dialog-message {
-    font-size: 1.1rem;
-    text-align: center;
-    color: #333;
-}
-
-.dialog-footer {
-    display: flex;
-    justify-content: center;
-    padding-top: 1rem;
+.exam-data-view :deep(.p-dataview-content) {
+    padding: 1.5rem;
+    background-color: var(--surface-0);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--surface-300);
 }
 
 .data-view-header {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 1rem;
+    background-color: var(--surface-0);
+    padding: 1rem 1.5rem;
+    border-radius: 8px 8px 0 0;
+    border: 1px solid var(--surface-200);
+    border-bottom: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .view-options {
@@ -576,25 +571,29 @@ onMounted(async () => {
 .exam-list-view {
     display: flex;
     flex-direction: column;
+    gap: 1.25rem; /* 增加列表项之间的间距 */
 }
 
 .exam-item {
-    margin-bottom: 1rem;
+    margin-bottom: 0; /* 移除底部外边距，因为已经有gap了 */
 }
 
 .exam-item-content {
     display: flex;
     flex-direction: column;
-    background-color: white;
+    background-color: var(--surface-50); /* 浅色背景 */
     border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    padding: 1.25rem;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem;
     transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid var(--surface-200);
 }
 
 .exam-item-content:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    background-color: #ffffff; /* 纯白背景，增强悬停效果 */
+    border-color: var(--primary-color-lighter, #c7d8f7);
 }
 
 .border-top {
@@ -694,6 +693,7 @@ onMounted(async () => {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
+    padding: 0.5rem;
 }
 
 .exam-card {
@@ -701,19 +701,22 @@ onMounted(async () => {
 }
 
 .exam-card-content {
-    background-color: white;
+    background-color: var(--surface-50); /* 浅色背景 */
     border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    padding: 1.25rem;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem;
     height: 100%;
     display: flex;
     flex-direction: column;
     transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid var(--surface-200);
 }
 
 .exam-card-content:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    background-color: #ffffff; /* 纯白背景，增强悬停效果 */
+    border-color: var(--primary-color-lighter, #c7d8f7);
 }
 
 .exam-card-header {
@@ -779,8 +782,16 @@ onMounted(async () => {
 /* 深色模式适配 */
 :deep(.dark-mode) .exam-item-content,
 :deep(.dark-mode) .exam-card-content {
-    background-color: var(--surface-800);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    background-color: var(--surface-700);
+    border-color: var(--surface-600);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+:deep(.dark-mode) .exam-item-content:hover,
+:deep(.dark-mode) .exam-card-content:hover {
+    background-color: var(--surface-600);
+    border-color: var(--primary-300, #90caf9);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
 }
 
 :deep(.dark-mode) .page-title {
@@ -803,5 +814,30 @@ onMounted(async () => {
 
 :deep(.dark-mode) .border-top {
     border-color: var(--surface-700);
+}
+
+.custom-dialog .dialog-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+.dialog-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.dialog-message {
+    font-size: 1.1rem;
+    text-align: center;
+    color: #333;
+}
+
+.dialog-footer {
+    display: flex;
+    justify-content: center;
+    padding-top: 1rem;
 }
 </style>

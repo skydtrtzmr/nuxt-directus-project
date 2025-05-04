@@ -8,4 +8,15 @@ import AppMenu from './AppMenu.vue';
     </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.layout-sidebar {
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid var(--surface-200);
+    z-index: 990;
+}
+
+:deep(.dark-mode) .layout-sidebar {
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.25);
+    border-right: 1px solid var(--surface-700);
+}
+</style>

@@ -171,12 +171,14 @@ onMounted(() => {
     flex: 1;
     display: flex;
     flex-direction: column;
-    margin-top: -0.5rem; /* 调整内容区域向上偏移 */
+    padding: 2rem;
+    margin-top: 0; /* 移除顶部偏移 */
 }
 
 .layout-main {
     flex: 1;
-    padding: 0 1.5rem 1.5rem 1.5rem; /* 减少顶部内边距 */
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    background-color: var(--surface-300); /* 加深背景色 */
 }
 
 .content-wrapper {
@@ -185,8 +187,9 @@ onMounted(() => {
     width: 100%;
     background-color: var(--surface-0);
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     padding: 1.5rem;
+    border: 1px solid var(--surface-300);
 }
 
 /* 暗色模式样式覆盖 */
@@ -197,7 +200,8 @@ onMounted(() => {
 
 .dark-mode .content-wrapper {
     background-color: var(--surface-800);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--surface-600);
 }
 
 .dark-mode .home-link, .dark-mode .dashboard-link {
