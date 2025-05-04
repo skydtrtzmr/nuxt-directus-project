@@ -96,7 +96,7 @@ const loginSubmit = async () => {
             await auth.login({ email: email.value, password: password.value });
             // alert("登录成功！");
 
-            router.push("/");
+            router.push("/dashboard");
         } catch (e) {
             error_message = "登录信息错误！";
             alert(error_message);
