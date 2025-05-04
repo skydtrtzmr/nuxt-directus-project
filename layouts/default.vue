@@ -124,7 +124,7 @@ onMounted(() => {
             </div>
             <app-footer></app-footer>
         </div>
-        <div class="layout-mask animate-fadein"></div>
+        <div class="layout-mask" @click="resetMenu"></div>
     </div>
     <Toast />
 </template>
@@ -192,6 +192,18 @@ onMounted(() => {
     border: 1px solid var(--surface-300);
 }
 
+/* 遮罩层 */
+.layout-mask {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 998;
+    width: 100%;
+    height: 100%;
+    background-color: var(--maskbg, rgba(0, 0, 0, 0.4));
+}
+
 /* 暗色模式样式覆盖 */
 .dark-mode .layout-main {
     background-color: var(--surface-900);
@@ -242,6 +254,19 @@ onMounted(() => {
     .content-wrapper {
         padding: 0.75rem;
         border-radius: 4px;
+    }
+}
+
+/* 移动端布局 */
+@media (max-width: 991px) {
+    .layout-wrapper.layout-mobile-active .layout-mask {
+        display: block;
+    }
+}
+
+@media (min-width: 992px) {
+    .layout-wrapper .layout-mask {
+        display: none;
     }
 }
 </style>

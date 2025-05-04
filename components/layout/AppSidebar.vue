@@ -12,7 +12,7 @@ import AppMenu from './AppMenu.vue';
 .layout-sidebar {
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
     border-right: 1px solid var(--surface-200);
-    z-index: 990;
+    z-index: 999;
 }
 
 :deep(.dark-mode) .layout-sidebar {
