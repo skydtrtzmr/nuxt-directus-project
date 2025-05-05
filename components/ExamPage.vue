@@ -1,39 +1,52 @@
 <!-- pages/exam/[id].vue -->
 <template>
     <div class="exam-page relative">
-        <!-- 顶部紧凑信息栏 -->
-        <div class="top-info-bar bg-surface-0 dark:bg-surface-900 border-b border-surface-200 dark:border-surface-700 py-1 px-2 mb-1 sticky top-0 z-10">
-            <div class="flex flex-col gap-1">
-                <!-- 第一行：考试信息和倒计时组件 -->
-                <div class="flex items-stretch justify-between">
-                    <!-- 左侧：考试信息 -->
-                    <ExamInfo :practiceSession="practiceSession" class="flex-grow"></ExamInfo>
-                    
-                    <!-- 右侧：倒计时和提交按钮 -->
-                    <div class="flex items-center gap-1" v-if="exam_page_mode !== 'review'">
-                        <!-- 倒计时组件 -->
-                        <ExamCountdown
-                            :isClient="isClient"
-                            :actualStartTime="actual_start_time"
-                            :examEndTime="examEndTime"
-                            :practiceSessionTime="practiceSessionTime"
-                            :formattedCountDown="formattedCountDown"
-                            class="w-auto"
-                        ></ExamCountdown>
-
-                        <!-- 提交按钮 -->
-                        <Button
-                            icon="pi pi-send"
-                            aria-label="Submit"
-                            @click="manualSubmit()"
-                            class="p-button-rounded p-button-sm"
-                            severity="warning"
-                            v-tooltip.bottom="'提交试卷'"
-                        />
+        <!-- 顶部紧凑信息栏 - 改为一体化设计 -->
+        <div class="top-info-bar bg-blue-50 dark:bg-blue-900 sticky top-0 z-10 mb-2 shadow-sm">
+            <!-- 第一行：个人信息和考试信息 -->
+            <div class="flex justify-between items-center p-2 border-b border-blue-100 dark:border-blue-800">
+                <!-- 左侧：个人信息 -->
+                <div class="user-info flex items-center">
+                    <div class="avatar bg-blue-500 text-white h-10 w-10 rounded-full flex items-center justify-center mr-2">
+                        <i class="pi pi-user text-xl"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="flex gap-4 text-sm">
+                            <span>姓名: {{ userData.name || '考生' }}</span>
+                            <span>准考证号: {{ userData.examId || '未设置' }}</span>
+                        </div>
+                        <div class="text-xs text-blue-700 dark:text-blue-300">
+                            {{ getExamTitle() }}
+                        </div>
                     </div>
                 </div>
+                
+                <!-- 右侧：倒计时和提交按钮 -->
+                <div class="flex items-center gap-2" v-if="exam_page_mode !== 'review'">
+                    <!-- 倒计时组件 -->
+                    <ExamCountdown
+                        :isClient="isClient"
+                        :actualStartTime="actual_start_time"
+                        :examEndTime="examEndTime"
+                        :practiceSessionTime="practiceSessionTime"
+                        :formattedCountDown="formattedCountDown"
+                        class="mr-1"
+                    ></ExamCountdown>
 
-                <!-- 第二行：试卷信息 -->
+                    <!-- 提交按钮 - 改为带文字的按钮 -->
+                    <Button
+                        icon="pi pi-send"
+                        label="提交试卷"
+                        aria-label="Submit"
+                        @click="manualSubmit()"
+                        class="p-button"
+                        severity="warning"
+                    />
+                </div>
+            </div>
+
+            <!-- 第二行：试卷信息 -->
+            <div class="p-2">
                 <div v-if="exam_page_mode !== 'review'">
                     <PaperInfo :paper="paper"></PaperInfo>
                 </div>
@@ -155,6 +168,34 @@ import { useLoadingStateStore } from "@/stores/loadingState"; // 引入 Pinia st
 const auth = useAuth();
 const { user } = storeToRefs(auth); // 获取store里的user数据，用于根据邮箱设置延迟。
 const email = ref(user.value?.email || "");
+
+// 用户信息
+const userData = computed(() => {
+    return {
+        name: user.value?.first_name || "考生",
+        examId: user.value?.id || "", // 使用id代替external_id
+        email: user.value?.email || ""
+    };
+});
+
+// 获取考试标题
+const getExamTitle = () => {
+    if (!practiceSession.value?.exercises_students_id) return "考试信息";
+
+    const esId = practiceSession.value.exercises_students_id;
+    if (typeof esId === "object" && "exercises_id" in esId) {
+        const exerciseId = esId.exercises_id;
+        if (
+            typeof exerciseId === "object" &&
+            exerciseId &&
+            "title" in exerciseId
+        ) {
+            return exerciseId.title || "考试信息";
+        }
+    }
+
+    return "考试信息";
+};
 
 const globalStore = useGlobalStore(); // 创建 Pinia store 实例
 
@@ -1281,7 +1322,7 @@ const handleQuestionGroupClick = async (group: any, section: PaperSections) => {
 }
 
 .top-info-bar {
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    border-bottom: 2px solid var(--blue-200);
 }
 
 .question-area {
@@ -1297,12 +1338,15 @@ const handleQuestionGroupClick = async (group: any, section: PaperSections) => {
     }
 }
 
-:deep(.p-button.p-button-sm) {
-    width: 2rem;
-    height: 2rem;
+:deep(.p-button) {
+    font-size: 0.875rem;
 }
 
 :deep(.p-tooltip) {
     font-size: 0.75rem;
+}
+
+:deep(.navigation-buttons .p-button) {
+    min-width: 100px; /* 确保导航按钮足够宽 */
 }
 </style>

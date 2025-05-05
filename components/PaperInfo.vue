@@ -18,9 +18,9 @@
                     <i class="pi pi-list text-primary mr-1"></i>
                     <span>{{ paper.total_question_count }}题</span>
                 </div>
-                <Tag severity="info" class="text-xs px-1 py-0 rounded-full">
+                <!-- <Tag severity="info" class="text-xs px-1 py-0 rounded-full">
                     {{ formatCurrentDate() }}
-                </Tag>
+                </Tag> -->
             </div>
         </div>
     </div>

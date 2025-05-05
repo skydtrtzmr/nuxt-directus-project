@@ -68,21 +68,20 @@
         </div>
         
         <div v-if="selectedQuestion && exam_page_mode !== 'review'" class="question-footer p-3 bg-surface-50 dark:bg-surface-700 border-t border-surface-200 dark:border-surface-600 flex justify-between">
-            <Button 
-                @click="navigateQuestion(-1)"
-                icon="pi pi-angle-left" 
-                label="上一题" 
-                outlined 
-                class="p-button-sm"
-            />
-            <Button 
-                @click="navigateQuestion(1)"
-                icon="pi pi-angle-right" 
-                iconPos="right"
-                label="下一题" 
-                outlined 
-                class="p-button-sm"
-            />
+            <div class="navigation-buttons flex justify-between mt-4">
+                <Button
+                    @click="navigateQuestion(-1)"
+                    icon="pi pi-arrow-left"
+                    label="上一题"
+                    class="p-button-outlined"
+                />
+                <Button
+                    @click="navigateQuestion(1)"
+                    icon="pi pi-arrow-right"
+                    iconPos="right"
+                    label="下一题"
+                />
+            </div>
         </div>
     </div>
 </template>
