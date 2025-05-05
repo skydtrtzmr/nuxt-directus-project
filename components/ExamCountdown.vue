@@ -4,31 +4,63 @@
             <h3 class="text-lg font-semibold">考试倒计时</h3>
             <i class="pi pi-clock text-lg"></i>
         </div>
-        
+
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div class="countdown-item" v-if="isClient">
-                <div class="text-xs text-surface-600 dark:text-surface-400">当前时间</div>
-                <div class="text-sm">{{ dayjs().format("YYYY-MM-DD HH:mm:ss") }}</div>
+                <div class="text-xs text-surface-600 dark:text-surface-400">
+                    开始时间
+                </div>
+                <div class="text-sm">
+                    {{ dayjs(actualStartTime).format("YYYY-MM-DD HH:mm:ss") }}
+                </div>
             </div>
             <div class="countdown-item" v-if="!isClient">
-                <div class="text-xs text-surface-600 dark:text-surface-400">当前时间</div>
+                <div class="text-xs text-surface-600 dark:text-surface-400">
+                    开始时间
+                </div>
                 <div class="text-sm">计算中...</div>
             </div>
-            
+
             <div class="countdown-item" v-if="isClient">
-                <div class="text-xs text-surface-600 dark:text-surface-400">结束时间</div>
-                <div class="text-sm">{{ dayjs(examEndTime).format("YYYY-MM-DD HH:mm:ss") }}</div>
+                <div class="text-xs text-surface-600 dark:text-surface-400">
+                    当前时间
+                </div>
+                <div class="text-sm">
+                    {{ dayjs().format("YYYY-MM-DD HH:mm:ss") }}
+                </div>
             </div>
             <div class="countdown-item" v-if="!isClient">
-                <div class="text-xs text-surface-600 dark:text-surface-400">结束时间</div>
+                <div class="text-xs text-surface-600 dark:text-surface-400">
+                    当前时间
+                </div>
+                <div class="text-sm">计算中...</div>
+            </div>
+
+            <div class="countdown-item" v-if="isClient">
+                <div class="text-xs text-surface-600 dark:text-surface-400">
+                    结束时间
+                </div>
+                <div class="text-sm">
+                    {{ dayjs(examEndTime).format("YYYY-MM-DD HH:mm:ss") }}
+                </div>
+            </div>
+            <div class="countdown-item" v-if="!isClient">
+                <div class="text-xs text-surface-600 dark:text-surface-400">
+                    结束时间
+                </div>
                 <div class="text-sm">计算中...</div>
             </div>
         </div>
-        
+
         <div class="countdown-timer mt-3 text-center">
-            <div class="text-sm text-surface-600 dark:text-surface-400 mb-1">剩余时间</div>
-            <div class="timer-display" :class="getTimerClass(formattedCountDown)">
-                {{ isClient ? formattedCountDown : '计算中...' }}
+            <div class="text-sm text-surface-600 dark:text-surface-400 mb-1">
+                剩余时间
+            </div>
+            <div
+                class="timer-display"
+                :class="getTimerClass(formattedCountDown)"
+            >
+                {{ isClient ? formattedCountDown : "计算中..." }}
             </div>
         </div>
     </div>
@@ -42,40 +74,41 @@ const props = defineProps<{
     examEndTime: dayjs.Dayjs;
     formattedCountDown: string;
     practiceSessionTime?: any;
+    actualStartTime?: any;
 }>();
 
 // 根据剩余时间获取CSS类名
 const getTimerClass = (time: string) => {
-    if (!time) return 'timer-normal';
-    
+    if (!time) return "timer-normal";
+
     // 解析时间格式 HH:MM:SS
-    const parts = time.split(':');
-    if (parts.length !== 3) return 'timer-normal';
-    
+    const parts = time.split(":");
+    if (parts.length !== 3) return "timer-normal";
+
     const hours = parseInt(parts[0]);
     const minutes = parseInt(parts[1]);
-    
+
     if (hours === 0 && minutes < 15) {
-        return 'timer-danger';
+        return "timer-danger";
     } else if (hours === 0 && minutes < 30) {
-        return 'timer-warning';
+        return "timer-warning";
     } else {
-        return 'timer-normal';
+        return "timer-normal";
     }
 };
 </script>
 
 <style scoped>
 .countdown-container {
-    background-color: #ffffff;
-    border: 1px solid #dee2e6;
+    background-color: #f0f0f0;
+    border: 1px solid #f0f0f0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .countdown-item {
     padding: 0.5rem;
     border-radius: 4px;
-    background-color: #f8f9fa;
+    background-color: #f0f0f0;
 }
 
 .timer-display {
@@ -89,18 +122,18 @@ const getTimerClass = (time: string) => {
 }
 
 .timer-normal {
-    background-color: #3B82F6;
+    background-color: #3b82f6;
     color: #ffffff;
 }
 
 .timer-warning {
-    background-color: #F59E0B;
+    background-color: #f59e0b;
     color: #ffffff;
     animation: pulse 2s infinite;
 }
 
 .timer-danger {
-    background-color: #EF4444;
+    background-color: #ef4444;
     color: white;
     animation: pulse 1s infinite;
 }

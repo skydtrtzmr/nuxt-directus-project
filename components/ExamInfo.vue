@@ -41,11 +41,14 @@ import type {
     Students,
     Exercises,
 } from "~~/types/directus_types";
-import { computed } from "vue";
+import { computed, watchEffect, ref } from "vue";
 
 const props = defineProps<{
     practiceSession: PracticeSessions;
 }>();
+
+// 使用ref存储计算结果，使其可以在数据加载后更新
+const duration = ref("60分钟");
 
 // 判断是否有学生信息
 const hasStudentInfo = computed(() => {
@@ -82,23 +85,43 @@ const getExamTitle = () => {
     return "考试信息";
 };
 
-// 格式化考试时长
-const formattedDuration = computed(() => {
-    // 查找考试时长相关属性
-    const durationValue =
-        (
-            (props.practiceSession.exercises_students_id as ExercisesStudents)
-                .exercises_id! as Exercises
-        ).duration || 60; // 默认60分钟
+// 使用watchEffect监听数据变化，计算考试时长
+watchEffect(() => {
+    try {
+        // 检查属性链上的每个对象是否存在
+        const exercisesStudents = props.practiceSession?.exercises_students_id;
+        if (!exercisesStudents || typeof exercisesStudents !== "object") {
+            duration.value = "60分钟"; // 默认值
+            return;
+        }
 
-    if (durationValue >= 60) {
-        const hours = Math.floor(durationValue / 60);
-        const minutes = durationValue % 60;
-        return `${hours}小时${minutes > 0 ? ` ${minutes}分钟` : ""}`;
-    } else {
-        return `${durationValue}分钟`;
+        const exercisesId = (exercisesStudents as ExercisesStudents)
+            ?.exercises_id;
+        if (!exercisesId || typeof exercisesId !== "object") {
+            duration.value = "60分钟"; // 默认值
+            return;
+        }
+
+        // 安全获取时长
+        const durationValue = (exercisesId as Exercises)?.duration || 60; // 默认60分钟
+
+        if (durationValue >= 60) {
+            const hours = Math.floor(durationValue / 60);
+            const minutes = durationValue % 60;
+            duration.value = `${hours}小时${
+                minutes > 0 ? ` ${minutes}分钟` : ""
+            }`;
+        } else {
+            duration.value = `${durationValue}分钟`;
+        }
+    } catch (error) {
+        console.error("计算考试时长时出错:", error);
+        duration.value = "60分钟"; // 出错时返回默认值
     }
 });
+
+// 格式化考试时长
+const formattedDuration = computed(() => duration.value);
 
 // 获取考试日期
 const getExamDate = () => {

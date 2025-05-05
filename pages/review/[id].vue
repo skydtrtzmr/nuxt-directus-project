@@ -1,4 +1,4 @@
-<!-- pages/exam/[id].vue -->
+<!-- pages/review/[id].vue -->
 <template>
     <ExamPage :exam_page_mode="exam_page_mode"/>
 </template>

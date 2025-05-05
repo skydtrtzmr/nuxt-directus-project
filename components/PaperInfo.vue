@@ -1,21 +1,25 @@
 <template>
-    <div v-if="paper" class="paper-info rounded-lg bg-surface-50 dark:bg-surface-800 p-4">
+    <div
+        v-if="paper"
+        class="paper-info rounded-lg bg-surface-50 dark:bg-surface-800 p-4"
+    >
         <div class="flex flex-col sm:flex-row justify-between gap-3">
             <div>
                 <h3 class="text-xl font-semibold mb-2 flex items-center">
                     <i class="pi pi-file-pdf text-primary mr-2"></i>
                     {{ paper.title }}
                 </h3>
-                <div class="flex flex-wrap items-center text-surface-600 dark:text-surface-400 gap-3">
+                <div
+                    class="flex flex-wrap items-center text-surface-600 dark:text-surface-400 gap-3"
+                >
                     <div class="flex items-center">
                         <i class="pi pi-star-fill text-yellow-500 mr-2"></i>
                         <span>试卷总分: {{ paper.total_point_value }}</span>
                     </div>
-                    <div v-if="totalQuestions > 0" class="flex items-center">
+                    <div class="flex items-center">
                         <i class="pi pi-list text-primary mr-2"></i>
-                        <span>总题数: {{ totalQuestions }}</span>
+                        <span>总题数: {{ paper.total_question_count }}</span>
                     </div>
-
                 </div>
             </div>
             <div class="paper-actions mt-2 sm:mt-0">
@@ -33,8 +37,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Papers } from "~~/types/directus_types";
-import { computed } from 'vue';
+import type { Courses, Papers } from "~~/types/directus_types";
+import { computed } from "vue";
 
 const props = defineProps<{
     paper: Papers;
@@ -42,27 +46,13 @@ const props = defineProps<{
 
 console.log("paperinfo:", props.paper);
 
-// 计算总题数
-const totalQuestions = computed(() => {
-    if (!props.paper.paper_sections) return 0;
-    
-    let count = 0;
-    if (Array.isArray(props.paper.paper_sections)) {
-        count = props.paper.paper_sections.length;
-    }
-    
-    return count;
-});
-
-
-
 // 格式化当前日期
 const formatCurrentDate = () => {
     const date = new Date();
-    return date.toLocaleDateString('zh-CN', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+    return date.toLocaleDateString("zh-CN", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
     });
 };
 </script>
