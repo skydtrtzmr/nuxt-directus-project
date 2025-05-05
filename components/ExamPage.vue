@@ -1,58 +1,51 @@
 <!-- pages/exam/[id].vue -->
 <template>
     <div class="exam-page relative">
-        <div class="mb-4">
-            <!-- 顶部信息区域：考试信息、计时器和提交按钮 -->
-            <div class="card p-4">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <!-- 顶部紧凑信息栏 -->
+        <div class="top-info-bar bg-surface-0 dark:bg-surface-900 border-b border-surface-200 dark:border-surface-700 py-1 px-2 mb-1 sticky top-0 z-10">
+            <div class="flex flex-col gap-1">
+                <!-- 第一行：考试信息和倒计时组件 -->
+                <div class="flex items-stretch justify-between">
                     <!-- 左侧：考试信息 -->
-                    <div class="lg:col-span-8">
-                        <ExamInfo :practiceSession="practiceSession"></ExamInfo>
-
-                        <!-- 显示试卷详情 -->
-                        <div v-if="exam_page_mode !== 'review'" class="mt-3">
-                            <PaperInfo :paper="paper"></PaperInfo>
-                        </div>
-                        <div
-                            v-else
-                            class="flex flex-col mt-3 p-3 bg-surface-50 dark:bg-surface-800 rounded-lg"
-                        >
-                            <div class="flex gap-4 items-center">
-                                <div class="font-medium text-lg">
-                                    试卷总分值：{{ paper.total_point_value }}
-                                </div>
-                                <div class="font-medium text-lg text-primary">
-                                    当前得分：{{ examScore }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                    <ExamInfo :practiceSession="practiceSession" class="flex-grow"></ExamInfo>
+                    
                     <!-- 右侧：倒计时和提交按钮 -->
-                    <div
-                        class="lg:col-span-4"
-                        v-if="exam_page_mode !== 'review'"
-                    >
-                        <div class="flex flex-col h-full">
-                            <!-- 显示倒计时 -->
-                            <ExamCountdown
-                                :isClient="isClient"
-                                :actualStartTime="actual_start_time"
-                                :examEndTime="examEndTime"
-                                :practiceSessionTime="practiceSessionTime"
-                                :formattedCountDown="formattedCountDown"
-                                class="mb-3"
-                            ></ExamCountdown>
+                    <div class="flex items-center gap-1" v-if="exam_page_mode !== 'review'">
+                        <!-- 倒计时组件 -->
+                        <ExamCountdown
+                            :isClient="isClient"
+                            :actualStartTime="actual_start_time"
+                            :examEndTime="examEndTime"
+                            :practiceSessionTime="practiceSessionTime"
+                            :formattedCountDown="formattedCountDown"
+                            class="w-auto"
+                        ></ExamCountdown>
 
-                            <Button
-                                icon="pi pi-save"
-                                aria-label="Submit"
-                                label="提交试卷"
-                                @click="manualSubmit()"
-                                class="p-button-lg"
-                                severity="warning"
-                            />
-                        </div>
+                        <!-- 提交按钮 -->
+                        <Button
+                            icon="pi pi-send"
+                            aria-label="Submit"
+                            @click="manualSubmit()"
+                            class="p-button-rounded p-button-sm"
+                            severity="warning"
+                            v-tooltip.bottom="'提交试卷'"
+                        />
+                    </div>
+                </div>
+
+                <!-- 第二行：试卷信息 -->
+                <div v-if="exam_page_mode !== 'review'">
+                    <PaperInfo :paper="paper"></PaperInfo>
+                </div>
+                <div
+                    v-else
+                    class="flex items-center p-2 bg-surface-50 dark:bg-surface-800 rounded-md"
+                >
+                    <div class="text-sm font-medium mr-4">
+                        试卷总分值：{{ paper.total_point_value }}
+                    </div>
+                    <div class="text-sm font-medium text-primary">
+                        当前得分：{{ examScore }}
                     </div>
                 </div>
             </div>
@@ -106,7 +99,7 @@
         </template>
 
         <!-- 题目区域 -->
-        <div class="question-area flex flex-col lg:flex-row gap-4">
+        <div class="question-area flex flex-col lg:flex-row gap-2">
             <!-- 左侧：题目列表 -->
             <QuestionList
                 class="lg:w-3/12"
@@ -1287,6 +1280,10 @@ const handleQuestionGroupClick = async (group: any, section: PaperSections) => {
     min-height: calc(100vh - 120px);
 }
 
+.top-info-bar {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
 .question-area {
     flex: 1;
     position: relative;
@@ -1298,5 +1295,14 @@ const handleQuestionGroupClick = async (group: any, section: PaperSections) => {
         margin-bottom: 40px; /* 为移动端底部题目列表留出空间 */
         min-height: 400px;
     }
+}
+
+:deep(.p-button.p-button-sm) {
+    width: 2rem;
+    height: 2rem;
+}
+
+:deep(.p-tooltip) {
+    font-size: 0.75rem;
 }
 </style>
