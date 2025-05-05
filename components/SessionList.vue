@@ -327,6 +327,8 @@ const props = defineProps({
 
 console.log("props.mode:", props.mode);
 
+
+
 // 根据模式设置页面标题和其他文本
 const pageTitle = computed(() =>
     props.mode === "exam" ? "考试中心" : "练习中心"

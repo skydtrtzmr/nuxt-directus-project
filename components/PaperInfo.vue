@@ -15,10 +15,7 @@
                         <i class="pi pi-list text-primary mr-2"></i>
                         <span>总题数: {{ totalQuestions }}</span>
                     </div>
-                    <div class="flex items-center">
-                        <i class="pi pi-clock text-blue-500 mr-2"></i>
-                        <span>时长: {{ formattedDuration }}</span>
-                    </div>
+
                 </div>
             </div>
             <div class="paper-actions mt-2 sm:mt-0">
@@ -57,19 +54,7 @@ const totalQuestions = computed(() => {
     return count;
 });
 
-// 格式化考试时长
-const formattedDuration = computed(() => {
-    // 查找考试时长相关属性
-    const durationValue = (props.paper as any).duration || 60; // 默认60分钟
-    
-    if (durationValue >= 60) {
-        const hours = Math.floor(durationValue / 60);
-        const minutes = durationValue % 60;
-        return `${hours}小时${minutes > 0 ? ` ${minutes}分钟` : ''}`;
-    } else {
-        return `${durationValue}分钟`;
-    }
-});
+
 
 // 格式化当前日期
 const formatCurrentDate = () => {

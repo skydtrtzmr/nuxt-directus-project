@@ -222,6 +222,7 @@ const fetchSubmittedExam = async () => {
                     // "title",
                     "exercises_students_id.students_id.name",
                     "exercises_students_id.exercises_id.title",
+                    "exercises_students_id.exercises_id.duration",
                     "score", // 获取考试分数
                 ], // 获取考试的状态和关联的试卷
             },

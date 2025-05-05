@@ -1,6 +1,10 @@
 <template>
-    <div class="exam-info p-4 mb-4 rounded-lg shadow-sm bg-surface-50 dark:bg-surface-800">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div
+        class="exam-info p-4 mb-4 rounded-lg shadow-sm bg-surface-50 dark:bg-surface-800"
+    >
+        <div
+            class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
+        >
             <div class="flex flex-col">
                 <h2 class="text-xl font-semibold mb-2">
                     {{ getExamTitle() }}
@@ -10,16 +14,20 @@
                         <i class="pi pi-id-card"></i>
                         <span>考试ID: {{ practiceSession?.id }}</span>
                     </span>
-                    <span v-if="hasStudentInfo" class="inline-flex items-center gap-2">
+                    <span
+                        v-if="hasStudentInfo"
+                        class="inline-flex items-center gap-2"
+                    >
                         <i class="pi pi-user"></i>
                         <span>考生: {{ getStudentName() }}</span>
                     </span>
+                    <div class="flex items-center">
+                        <i class="pi pi-clock text-blue-500 mr-2"></i>
+                        <span>时长: {{ formattedDuration }}</span>
+                    </div>
                 </div>
             </div>
-            <Tag 
-                severity="info" 
-                class="text-sm px-3 py-2 rounded-full"
-            >
+            <Tag severity="info" class="text-sm px-3 py-2 rounded-full">
                 {{ getExamDate() }}
             </Tag>
         </div>
@@ -58,30 +66,56 @@ const hasStudentInfo = computed(() => {
 // 获取考试标题
 const getExamTitle = () => {
     if (!props.practiceSession?.exercises_students_id) return "考试信息";
-    
+
     const esId = props.practiceSession.exercises_students_id;
     if (typeof esId === "object" && "exercises_id" in esId) {
         const exerciseId = esId.exercises_id;
-        if (typeof exerciseId === "object" && exerciseId && "title" in exerciseId) {
+        if (
+            typeof exerciseId === "object" &&
+            exerciseId &&
+            "title" in exerciseId
+        ) {
             return exerciseId.title || "考试信息";
         }
     }
-    
+
     return "考试信息";
 };
+
+// 格式化考试时长
+const formattedDuration = computed(() => {
+    // 查找考试时长相关属性
+    const durationValue =
+        (
+            (props.practiceSession.exercises_students_id as ExercisesStudents)
+                .exercises_id! as Exercises
+        ).duration || 60; // 默认60分钟
+
+    if (durationValue >= 60) {
+        const hours = Math.floor(durationValue / 60);
+        const minutes = durationValue % 60;
+        return `${hours}小时${minutes > 0 ? ` ${minutes}分钟` : ""}`;
+    } else {
+        return `${durationValue}分钟`;
+    }
+});
 
 // 获取考试日期
 const getExamDate = () => {
     if (!props.practiceSession?.exercises_students_id) return "";
-    
+
     const esId = props.practiceSession.exercises_students_id;
     if (typeof esId === "object" && "exercises_id" in esId) {
         const exerciseId = esId.exercises_id;
-        if (typeof exerciseId === "object" && exerciseId && "created_at" in exerciseId) {
+        if (
+            typeof exerciseId === "object" &&
+            exerciseId &&
+            "created_at" in exerciseId
+        ) {
             return formatDate(exerciseId.created_at as string);
         }
     }
-    
+
     return "";
 };
 
@@ -98,12 +132,12 @@ const getStudentName = () => {
 
 // 格式化日期
 const formatDate = (dateString?: string) => {
-    if (!dateString) return '';
+    if (!dateString) return "";
     const date = new Date(dateString);
-    return date.toLocaleDateString('zh-CN', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+    return date.toLocaleDateString("zh-CN", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
     });
 };
 </script>
