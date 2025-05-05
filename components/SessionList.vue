@@ -145,7 +145,13 @@
                                     <div class="exam-actions">
                                         <span class="exam-duration">
                                             <i class="pi pi-clock"></i>
-                                            {{ sessionTypeText }}时长：120分钟
+                                            {{ sessionTypeText }}时长：
+                                            <div>
+                                                {{
+                                                    item.exercises_students_id
+                                                        .exercises_id.duration
+                                                }}分钟
+                                            </div>
                                         </span>
                                         <div class="action-buttons">
                                             <Button
@@ -248,7 +254,12 @@
                                                     sessionTypeText
                                                 }}时长：</strong
                                             >
-                                            <div>120分钟</div>
+                                            <div>
+                                                {{
+                                                    item.exercises_students_id
+                                                        .exercises_id.duration
+                                                }}分钟
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -316,7 +327,6 @@ const props = defineProps({
 
 console.log("props.mode:", props.mode);
 
-
 // 根据模式设置页面标题和其他文本
 const pageTitle = computed(() =>
     props.mode === "exam" ? "考试中心" : "练习中心"
@@ -358,6 +368,7 @@ const fetchPracticeSessions = async () => {
                 "exercises_students_id.exercises_id.mode",
                 "exercises_students_id.exercises_id.start_time",
                 "exercises_students_id.exercises_id.end_time",
+                "exercises_students_id.exercises_id.duration",
                 "extra_time",
                 "actual_end_time",
                 "actual_start_time",
@@ -367,19 +378,19 @@ const fetchPracticeSessions = async () => {
             filter: {
                 _and: [
                     {
-                        "exercises_students_id": {
-                            "students_id": {
-                                "directus_user": {
-                                    "_eq": current_user!.id,
+                        exercises_students_id: {
+                            students_id: {
+                                directus_user: {
+                                    _eq: current_user!.id,
                                 },
                             },
                         },
                     },
                     {
-                        "exercises_students_id": {
-                            "exercises_id": {
-                                "mode": {
-                                    "_eq": props.mode,
+                        exercises_students_id: {
+                            exercises_id: {
+                                mode: {
+                                    _eq: props.mode,
                                 },
                             },
                         },

@@ -417,12 +417,13 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
 .sidebar {
     background-color: var(--surface-card);
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
     width: 100%;
     height: 100%;
     transition: width 0.3s ease;
     overflow: hidden;
     flex: 1;
+    border: 1px solid var(--surface-border);
 }
 
 .toggle-button-wrapper {
@@ -610,19 +611,20 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
     }
     
     .toggle-button {
-        transform: rotate(180deg); /* 调整箭头方向 */
-        transition: transform 0.3s ease; /* 添加旋转动画 */
+        transform: rotate(90deg); /* 调整箭头方向为向下 */
+        transition: transform 0.3s ease;
     }
     
     .question-list-container.collapsed .toggle-button {
-        transform: rotate(0deg);
+        transform: rotate(270deg); /* 折叠时箭头向上 */
     }
     
     .sidebar {
         border-radius: 12px 12px 0 0;
         height: 100%;
         max-height: calc(60vh - 40px);
-        overflow-y: auto; /* 确保内容可滚动 */
+        overflow-y: auto;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2); /* 增强阴影效果 */
     }
     
     .sidebar-content {
