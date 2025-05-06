@@ -3,7 +3,7 @@
 <template>
     <div v-if="questionData && questionData.questions_id && questionData.result">
         <!-- 多选题题干 -->
-        <p>{{ questionData.questions_id.stem }}</p>
+        <div v-html="renderMarkdown(questionData.questions_id.stem)" class="markdown-content"></div>
         <BlockUI
             :blocked="blockQuestion"
             class="basis-4/5"
@@ -21,7 +21,7 @@
             <!-- 多选题选项列表 -->
             <div class="flex flex-col gap-4">
                 <!-- 每个选项容器使用唯一ID，防止在题组模式下ID冲突 -->
-                <div class="flex items-center gap-2" :id="`div_option_a_${uniqueId}`">
+                <div class="flex items-start gap-3" :id="`div_option_a_${uniqueId}`">
                     <Checkbox
                         v-model="userAnswers"
                         :inputId="`option_a_${uniqueId}`"
@@ -30,9 +30,12 @@
                         @change="updateAnswer"
                     />
                     <!-- 标签的for属性使用唯一ID，确保点击文字时正确关联到对应选项 -->
-                    <label :for="`option_a_${uniqueId}`">A. {{ questionData.questions_id.q_mc_multi?.option_a }}</label>
+                    <label :for="`option_a_${uniqueId}`" class="option-label flex-1">
+                        <span class="option-marker">A</span>
+                        <span v-html="renderMarkdown(questionData.questions_id.q_mc_multi?.option_a)" class="markdown-content"></span>
+                    </label>
                 </div>
-                <div class="flex items-center gap-2" :id="`div_option_b_${uniqueId}`">
+                <div class="flex items-start gap-3" :id="`div_option_b_${uniqueId}`">
                     <Checkbox
                         v-model="userAnswers"
                         :inputId="`option_b_${uniqueId}`"
@@ -40,9 +43,12 @@
                         value="B"
                         @change="updateAnswer"
                     />
-                    <label :for="`option_b_${uniqueId}`">B. {{ questionData.questions_id.q_mc_multi?.option_b }}</label>
+                    <label :for="`option_b_${uniqueId}`" class="option-label flex-1">
+                        <span class="option-marker">B</span>
+                        <span v-html="renderMarkdown(questionData.questions_id.q_mc_multi?.option_b)" class="markdown-content"></span>
+                    </label>
                 </div>
-                <div class="flex items-center gap-2" :id="`div_option_c_${uniqueId}`">
+                <div class="flex items-start gap-3" :id="`div_option_c_${uniqueId}`">
                     <Checkbox
                         v-model="userAnswers"
                         :inputId="`option_c_${uniqueId}`"
@@ -50,9 +56,12 @@
                         value="C"
                         @change="updateAnswer"
                     />
-                    <label :for="`option_c_${uniqueId}`">C. {{ questionData.questions_id.q_mc_multi?.option_c }}</label>
+                    <label :for="`option_c_${uniqueId}`" class="option-label flex-1">
+                        <span class="option-marker">C</span>
+                        <span v-html="renderMarkdown(questionData.questions_id.q_mc_multi?.option_c)" class="markdown-content"></span>
+                    </label>
                 </div>
-                <div class="flex items-center gap-2" :id="`div_option_d_${uniqueId}`">
+                <div class="flex items-start gap-3" :id="`div_option_d_${uniqueId}`">
                     <Checkbox
                         v-model="userAnswers"
                         :inputId="`option_d_${uniqueId}`"
@@ -60,7 +69,10 @@
                         value="D"
                         @change="updateAnswer"
                     />
-                    <label :for="`option_d_${uniqueId}`">D. {{ questionData.questions_id.q_mc_multi?.option_d }}</label>
+                    <label :for="`option_d_${uniqueId}`" class="option-label flex-1">
+                        <span class="option-marker">D</span>
+                        <span v-html="renderMarkdown(questionData.questions_id.q_mc_multi?.option_d)" class="markdown-content"></span>
+                    </label>
                 </div>
             </div>
         </BlockUI>
@@ -72,6 +84,7 @@
             :questionResult="questionData.result"
             :questionData="questionData"
             :question_type="question_type"
+            :renderMarkdown="renderMarkdown"
         ></QuestionResult>
     </template>
 </template>
@@ -86,6 +99,7 @@ import type {
 const props = defineProps<{
     questionData: any;
     exam_page_mode: string;
+    renderMarkdown: (content: string) => string;
 }>();
 
 // 定义题目类型，用于答题结果展示
@@ -194,3 +208,47 @@ const answerClass = computed(() => {
     return isCorrectAnswer.value ? "text-green-600" : "text-red-600";
 });
 </script>
+
+<style scoped>
+/* 确保Markdown内容的样式在此组件中正确显示 */
+:deep(.markdown-content) {
+    display: inline-block;
+}
+
+:deep(.markdown-content p) {
+    margin-bottom: 0.5em;
+    display: inline;
+}
+
+/* 选项标签样式 */
+.option-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+/* 选项标记样式 */
+.option-marker {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    background-color: #f0f0f0;
+    color: #333;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 0 4px;
+    margin-right: 8px;
+    font-size: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* 深色模式下的选项标记 */
+@media (prefers-color-scheme: dark) {
+    .option-marker {
+        background-color: #444;
+        color: #fff;
+    }
+}
+</style>
