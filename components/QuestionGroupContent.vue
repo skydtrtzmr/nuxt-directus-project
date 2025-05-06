@@ -267,7 +267,7 @@ const getQuestionScoreSeverity = (question: any) => {
 .shared-stem-container {
   position: relative;
   transition: all 0.3s ease;
-  background-color: var(--surface-50);
+  background-color: #f9fafb; /* 替换 var(--surface-50) */
   border-radius: 8px;
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -280,7 +280,7 @@ const getQuestionScoreSeverity = (question: any) => {
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
-  background-color: var(--surface-card);
+  background-color: #ffffff; /* 替换 var(--surface-card) */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -290,7 +290,7 @@ const getQuestionScoreSeverity = (question: any) => {
   right: 10px;
   top: 0;
   z-index: 10;
-  background-color: var(--surface-card);
+  background-color: #ffffff; /* 替换 var(--surface-card) */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -314,7 +314,7 @@ const getQuestionScoreSeverity = (question: any) => {
 
 @media (prefers-color-scheme: dark) {
   .shared-stem-container {
-    background-color: var(--surface-800);
+    background-color: #1f2937; /* 替换 var(--surface-800) */
   }
 }
 

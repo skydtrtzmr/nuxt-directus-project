@@ -653,10 +653,10 @@ onMounted(async () => {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 1rem;
-    background-color: var(--surface-0);
+    background-color: #ffffff; /* 替换 var(--surface-0) */
     padding: 1rem 1.5rem;
     border-radius: 8px 8px 0 0;
-    border: 1px solid var(--surface-200);
+    border: 1px solid #e5e7eb; /* 替换 var(--surface-200) */
     border-bottom: none;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
@@ -690,12 +690,12 @@ onMounted(async () => {
 .exam-item-content {
     display: flex;
     flex-direction: column;
-    background-color: var(--surface-50); /* 浅色背景 */
+    background-color: #f9fafb; /* 替换 var(--surface-50) */
     border-radius: 8px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
     padding: 1.5rem;
     transition: transform 0.2s, box-shadow 0.2s;
-    border: 1px solid var(--surface-200);
+    border: 1px solid #e5e7eb; /* 替换 var(--surface-200) */
 }
 
 .exam-item-content:hover {
@@ -811,7 +811,7 @@ onMounted(async () => {
 }
 
 .exam-card-content {
-    background-color: var(--surface-50); /* 浅色背景 */
+    background-color: #f9fafb; /* 替换 var(--surface-50) */
     border-radius: 8px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
     padding: 1.5rem;
@@ -819,7 +819,7 @@ onMounted(async () => {
     display: flex;
     flex-direction: column;
     transition: transform 0.2s, box-shadow 0.2s;
-    border: 1px solid var(--surface-200);
+    border: 1px solid #e5e7eb; /* 替换 var(--surface-200) */
 }
 
 .exam-card-content:hover {
@@ -892,38 +892,38 @@ onMounted(async () => {
 /* 深色模式适配 */
 :deep(.dark-mode) .exam-item-content,
 :deep(.dark-mode) .exam-card-content {
-    background-color: var(--surface-700);
-    border-color: var(--surface-600);
+    background-color: #374151; /* 替换 var(--surface-700) */
+    border-color: #4b5563; /* 替换 var(--surface-600) */
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
 }
 
 :deep(.dark-mode) .exam-item-content:hover,
 :deep(.dark-mode) .exam-card-content:hover {
-    background-color: var(--surface-600);
+    background-color: #4b5563; /* 替换 var(--surface-600) */
     border-color: var(--primary-300, #90caf9);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
 }
 
 :deep(.dark-mode) .page-title {
-    color: var(--surface-0);
+    color: #ffffff; /* 替换 var(--surface-0) */
 }
 
 :deep(.dark-mode) .page-description {
-    color: var(--surface-200);
+    color: #e5e7eb; /* 替换 var(--surface-200) */
 }
 
 :deep(.dark-mode) .exam-title,
 :deep(.dark-mode) .exam-card-title {
-    color: var(--surface-0);
+    color: #ffffff; /* 替换 var(--surface-0) */
 }
 
 :deep(.dark-mode) .time-item,
 :deep(.dark-mode) .exam-duration {
-    color: var(--surface-200);
+    color: #e5e7eb; /* 替换 var(--surface-200) */
 }
 
 :deep(.dark-mode) .border-top {
-    border-color: var(--surface-700);
+    border-color: #374151; /* 替换 var(--surface-700) */
 }
 
 .custom-dialog .dialog-content {

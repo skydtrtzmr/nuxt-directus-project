@@ -153,8 +153,8 @@ onMounted(() => {
 
 /* 暗色模式样式覆盖 */
 .dark-mode .layout-main {
-    background-color: var(--surface-900);
-    color: var(--surface-0);
+    background-color: #111827;
+    color: #ffffff;
 }
 
 /* 响应式设计 */

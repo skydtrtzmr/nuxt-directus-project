@@ -238,12 +238,12 @@ onUnmounted(() => {
 .time-label {
     display: flex;
     align-items: center;
-    color: var(--surface-600);
+    color: #4b5563;
     font-weight: 500;
 }
 
 .time-value {
-    color: var(--surface-900);
+    color: #111827;
     font-family: monospace;
 }
 

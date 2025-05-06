@@ -2,7 +2,7 @@
     <div class="home-container">
         <header class="header">
             <div class="header-content">
-                <h1 class="logo">学练考</h1>
+                <h1 class="logo">学练考系统</h1>
                 <nav class="main-nav">
                     <ul>
                         <li><router-link to="/" class="nav-link active">首页</router-link></li>
@@ -83,7 +83,7 @@
 
         <footer class="footer">
             <div class="footer-content">
-                <div class="footer-logo">学练考</div>
+                <div class="footer-logo">学练考系统</div>
                 <div class="footer-links">
                     <h3>快速链接</h3>
                     <ul>
@@ -100,7 +100,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2023 学练考系统 版权所有</p>
+                <p>&copy; 2023 南京泰迪云智科技有限公司 版权所有</p>
             </div>
         </footer>
     </div>

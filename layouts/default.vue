@@ -152,7 +152,7 @@ onMounted(() => {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: var(--surface-0);
+    color: #ffffff;
     text-decoration: none;
     padding: 0.5rem 0.75rem;
     border-radius: 6px;
@@ -178,18 +178,17 @@ onMounted(() => {
 .layout-main {
     flex: 1;
     padding: 0 1.5rem 1.5rem 1.5rem;
-    background-color: var(--surface-300); /* 加深背景色 */
 }
 
 .content-wrapper {
     max-width: 1440px;
     margin: 0 auto;
     width: 100%;
-    background-color: var(--surface-0);
+    background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     padding: 1.5rem;
-    border: 1px solid var(--surface-300);
+    border: 1px solid #d1d5db;
 }
 
 /* 遮罩层 */
@@ -201,23 +200,23 @@ onMounted(() => {
     z-index: 998;
     width: 100%;
     height: 100%;
-    background-color: var(--maskbg, rgba(0, 0, 0, 0.4));
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 /* 暗色模式样式覆盖 */
 .dark-mode .layout-main {
-    background-color: var(--surface-900);
-    color: var(--surface-0);
+    background-color: #111827;
+    color: #ffffff;
 }
 
 .dark-mode .content-wrapper {
-    background-color: var(--surface-800);
+    background-color: #1f2937;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--surface-600);
+    border: 1px solid #4b5563;
 }
 
 .dark-mode .home-link, .dark-mode .dashboard-link {
-    color: var(--surface-0);
+    color: #ffffff;
 }
 
 /* 响应式设计 */
