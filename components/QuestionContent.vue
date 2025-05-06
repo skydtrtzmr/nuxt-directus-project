@@ -6,7 +6,10 @@
             <!-- 显示公共题干（如果有） -->
             <div v-if="hasSharedStem" class="mb-4 p-3 bg-surface-100 dark:bg-surface-700 rounded-lg">
                 <div class="text-lg font-medium mb-2">公共题干</div>
-                <div v-html="renderMarkdown(sharedStemContent)" class="markdown-content"></div>
+                    <div
+                        v-html="renderMarkdown(questionGroup.shared_stem)"
+                        class="markdown-content"
+                    ></div>
             </div>
             
             <!-- 单选题 -->
@@ -58,13 +61,14 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { QuestionResults } from "~/types/directus_types";
+import type { QuestionResults, QuestionGroups } from "~/types/directus_types";
 import QMcSingle from "~/components/question_type/QMcSingle.vue";
 import QMcMulti from "~/components/question_type/QMcMulti.vue";
 import QMcBinary from "~/components/question_type/QMcBinary.vue";
 import QMcFlexible from "~/components/question_type/QMcFlexible.vue";
 
 const props = defineProps<{
+    questionGroup: QuestionGroups | null;
     selectedQuestion: any | null;
     exam_page_mode: string;
     renderMarkdown: (content: string) => string;
@@ -73,7 +77,7 @@ const props = defineProps<{
 // 判断是否有公共题干需要显示
 const hasSharedStem = computed(() => {
     // 检查题目是否属于题组并且有公共题干
-    if (props.selectedQuestion?.question_group) {
+    if (props.questionGroup) {
         // 如果question_group是对象并且有shared_stem属性
         if (typeof props.selectedQuestion.question_group === 'object' && 
             props.selectedQuestion.question_group !== null && 
@@ -88,6 +92,7 @@ const hasSharedStem = computed(() => {
 const sharedStemContent = computed(() => {
     if (!hasSharedStem.value) return '';
     
+    // 从题目的question_group对象中获取shared_stem
     if (typeof props.selectedQuestion.question_group === 'object' && 
         props.selectedQuestion.question_group !== null) {
         return props.selectedQuestion.question_group.shared_stem || '';

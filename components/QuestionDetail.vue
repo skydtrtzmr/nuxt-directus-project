@@ -61,6 +61,7 @@
                     <!-- 单题模式 -->
                     <QuestionContent
                         v-else-if="selectedQuestion"
+                        :questionGroup="selectedQuestion.questionGroup"
                         :selectedQuestion="selectedQuestion"
                         :exam_page_mode="exam_page_mode"
                         :renderMarkdown="renderMarkdown"
