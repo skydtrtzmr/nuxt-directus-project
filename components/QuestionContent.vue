@@ -74,32 +74,22 @@ const props = defineProps<{
     renderMarkdown: (content: string) => string;
 }>();
 
+console.log("questionGroup", props.questionGroup);
+
 // 判断是否有公共题干需要显示
 const hasSharedStem = computed(() => {
     // 检查题目是否属于题组并且有公共题干
     if (props.questionGroup) {
         // 如果question_group是对象并且有shared_stem属性
-        if (typeof props.selectedQuestion.question_group === 'object' && 
-            props.selectedQuestion.question_group !== null && 
-            props.selectedQuestion.question_group.shared_stem) {
+        if (typeof props.questionGroup === 'object' && 
+            props.questionGroup !== null && 
+            props.questionGroup.shared_stem) {
             return true;
         }
     }
     return false;
 });
 
-// 获取公共题干内容
-const sharedStemContent = computed(() => {
-    if (!hasSharedStem.value) return '';
-    
-    // 从题目的question_group对象中获取shared_stem
-    if (typeof props.selectedQuestion.question_group === 'object' && 
-        props.selectedQuestion.question_group !== null) {
-        return props.selectedQuestion.question_group.shared_stem || '';
-    }
-    
-    return '';
-});
 </script>
 
 <style scoped>

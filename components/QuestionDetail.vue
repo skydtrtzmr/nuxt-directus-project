@@ -60,7 +60,7 @@
                     
                     <!-- 单题模式 -->
                     <QuestionContent
-                        v-else-if="selectedQuestion"
+                        v-else-if="selectedQuestion && selectedQuestion.questionGroup"
                         :questionGroup="selectedQuestion.questionGroup"
                         :selectedQuestion="selectedQuestion"
                         :exam_page_mode="exam_page_mode"
