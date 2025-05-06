@@ -32,11 +32,11 @@
         
         <!-- 公共题干内容区域 -->
         <div 
-          class="shared-stem-content p-3 bg-surface-100 dark:bg-surface-700 rounded-lg"
+          class="shared-stem-content p-3 bg-surface-100 dark:bg-surface-700 rounded-lg markdown-content"
           :class="{'hidden': isStemCollapsed}"
         >
           <div class="text-lg font-medium mb-2">公共题干</div>
-          <div v-html="questionGroup.shared_stem"></div>
+          <div v-html="renderMarkdown(questionGroup.shared_stem)" class="markdown-content"></div>
         </div>
       </div>
       
@@ -70,6 +70,7 @@
               <QuestionContent 
                 :selectedQuestion="enhanceQuestionWithIndex(questionItem, index)" 
                 :exam_page_mode="exam_page_mode"
+                :renderMarkdown="renderMarkdown"
               />
             </div>
           </template>
@@ -93,6 +94,7 @@ const props = defineProps<{
   questionResults: QuestionResults[];
   exam_page_mode: string;
   groupQuestions?: any[]; // 接收从父组件传递的题组内题目列表
+  renderMarkdown: (content: string) => string;
 }>();
 
 const emit = defineEmits(['flag-question']);
@@ -310,6 +312,69 @@ const getQuestionScoreSeverity = (question: any) => {
 /* 确保题目内容区域相互隔离，防止DOM事件冒泡导致的选项混淆 */
 :deep(.group-question-item) {
   isolation: isolate;
+}
+
+/* Markdown样式 */
+:deep(.markdown-content) h1,
+:deep(.markdown-content) h2,
+:deep(.markdown-content) h3,
+:deep(.markdown-content) h4,
+:deep(.markdown-content) h5,
+:deep(.markdown-content) h6 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-weight: bold;
+}
+
+:deep(.markdown-content) p {
+  margin-bottom: 1em;
+}
+
+:deep(.markdown-content) ul,
+:deep(.markdown-content) ol {
+  padding-left: 2em;
+  margin-bottom: 1em;
+}
+
+:deep(.markdown-content) code {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+}
+
+:deep(.markdown-content) pre {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 1em;
+  border-radius: 5px;
+  overflow-x: auto;
+  margin-bottom: 1em;
+}
+
+:deep(.markdown-content) blockquote {
+  border-left: 4px solid #ddd;
+  padding-left: 1em;
+  color: #666;
+  margin-bottom: 1em;
+}
+
+:deep(.markdown-content) img {
+  max-width: 100%;
+}
+
+:deep(.markdown-content) table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+:deep(.markdown-content) th,
+:deep(.markdown-content) td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+:deep(.markdown-content) th {
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 @media (prefers-color-scheme: dark) {

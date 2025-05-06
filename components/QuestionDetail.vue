@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <p v-if="!isGroupMode && selectedQuestion.questions_id.description" class="mt-3 text-surface-600 dark:text-surface-400">
-                    {{ selectedQuestion.questions_id.description || "" }}
+                    <span v-html="renderMarkdown(selectedQuestion.questions_id.description || '')"></span>
                 </p>
             </template>
             <div v-else class="text-center p-4 text-surface-500">
@@ -55,6 +55,7 @@
                         :questionResults="questionResults"
                         :exam_page_mode="exam_page_mode"
                         :groupQuestions="selectedQuestion.groupQuestions || []"
+                        :renderMarkdown="renderMarkdown"
                     />
                     
                     <!-- 单题模式 -->
@@ -62,6 +63,7 @@
                         v-else-if="selectedQuestion"
                         :selectedQuestion="selectedQuestion"
                         :exam_page_mode="exam_page_mode"
+                        :renderMarkdown="renderMarkdown"
                     />
                 </div>
             </div>
@@ -87,10 +89,25 @@
 </template>
 
 <script setup lang="ts">
-import { watch, computed, ref } from "vue";
+import { watch, computed, ref, onMounted } from "vue";
 import QuestionContent from "~/components/QuestionContent.vue";
 import QuestionGroupContent from "~/components/QuestionGroupContent.vue";
 import type { QuestionResults } from "~/types/directus_types";
+// @ts-ignore
+import markdownit from 'markdown-it';
+
+// 创建markdown-it实例
+const md = markdownit({
+    html: true,
+    breaks: true,
+    linkify: true
+});
+
+// 渲染markdown内容为HTML
+const renderMarkdown = (content: string) => {
+    if (!content) return '';
+    return md.render(content);
+};
 
 const props = defineProps<{
     selectedQuestion: any | null;
@@ -214,5 +231,68 @@ const getScoreSeverity = (question: any) => {
         border-radius: 8px;
         margin-bottom: 60px;
     }
+}
+
+/* Markdown样式 */
+:deep(.markdown-content) h1,
+:deep(.markdown-content) h2,
+:deep(.markdown-content) h3,
+:deep(.markdown-content) h4,
+:deep(.markdown-content) h5,
+:deep(.markdown-content) h6 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    font-weight: bold;
+}
+
+:deep(.markdown-content) p {
+    margin-bottom: 1em;
+}
+
+:deep(.markdown-content) ul,
+:deep(.markdown-content) ol {
+    padding-left: 2em;
+    margin-bottom: 1em;
+}
+
+:deep(.markdown-content) code {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+}
+
+:deep(.markdown-content) pre {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 1em;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin-bottom: 1em;
+}
+
+:deep(.markdown-content) blockquote {
+    border-left: 4px solid #ddd;
+    padding-left: 1em;
+    color: #666;
+    margin-bottom: 1em;
+}
+
+:deep(.markdown-content) img {
+    max-width: 100%;
+}
+
+:deep(.markdown-content) table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+:deep(.markdown-content) th,
+:deep(.markdown-content) td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+:deep(.markdown-content) th {
+    background-color: rgba(0, 0, 0, 0.05);
 }
 </style>

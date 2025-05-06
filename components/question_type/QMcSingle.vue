@@ -3,7 +3,7 @@
 <template>
     <div v-if="questionData && questionData.questions_id && questionData.result">
         <!-- 单选题 -->
-        <p>{{ questionData.questions_id.stem }}</p>
+        <div v-html="renderMarkdown(questionData.questions_id.stem)" class="markdown-content"></div>
         <BlockUI
             :blocked="blockQuestion"
             class="basis-4/5"
@@ -30,7 +30,10 @@
                         @change="updateAnswer"
                     />
                     <!-- 标签的for属性使用唯一ID，确保点击文字时正确关联到对应选项 -->
-                    <label :for="`option_a_${uniqueId}`">A. {{ questionData.questions_id.q_mc_single?.option_a }}</label>
+                    <label :for="`option_a_${uniqueId}`" class="flex-1">
+                        <span>A. </span>
+                        <span v-html="renderMarkdown(questionData.questions_id.q_mc_single?.option_a)" class="markdown-content"></span>
+                    </label>
                 </div>
                 <div class="flex items-center gap-2" :id="`div_option_b_${uniqueId}`">
                     <RadioButton
@@ -40,7 +43,10 @@
                         value="B"
                         @change="updateAnswer"
                     />
-                    <label :for="`option_b_${uniqueId}`">B. {{ questionData.questions_id.q_mc_single?.option_b }}</label>
+                    <label :for="`option_b_${uniqueId}`" class="flex-1">
+                        <span>B. </span>
+                        <span v-html="renderMarkdown(questionData.questions_id.q_mc_single?.option_b)" class="markdown-content"></span>
+                    </label>
                 </div>
                 <div class="flex items-center gap-2" :id="`div_option_c_${uniqueId}`">
                     <RadioButton
@@ -50,7 +56,10 @@
                         value="C"
                         @change="updateAnswer"
                     />
-                    <label :for="`option_c_${uniqueId}`">C. {{ questionData.questions_id.q_mc_single?.option_c }}</label>
+                    <label :for="`option_c_${uniqueId}`" class="flex-1">
+                        <span>C. </span>
+                        <span v-html="renderMarkdown(questionData.questions_id.q_mc_single?.option_c)" class="markdown-content"></span>
+                    </label>
                 </div>
                 <div class="flex items-center gap-2" :id="`div_option_d_${uniqueId}`">
                     <RadioButton
@@ -60,7 +69,10 @@
                         value="D"
                         @change="updateAnswer"
                     />
-                    <label :for="`option_d_${uniqueId}`">D. {{ questionData.questions_id.q_mc_single?.option_d }}</label>
+                    <label :for="`option_d_${uniqueId}`" class="flex-1">
+                        <span>D. </span>
+                        <span v-html="renderMarkdown(questionData.questions_id.q_mc_single?.option_d)" class="markdown-content"></span>
+                    </label>
                 </div>
             </div>
         </BlockUI>
@@ -72,6 +84,7 @@
             :questionResult="questionData.result"
             :questionData="questionData"
             :question_type="question_type"
+            :renderMarkdown="renderMarkdown"
         ></QuestionResult>
     </template>
 </template>
@@ -86,6 +99,7 @@ import type {
 const props = defineProps<{
     questionData: any;
     exam_page_mode: string;
+    renderMarkdown: (content: string) => string;
 }>();
 
 console.log("props.questionData", props.questionData);
@@ -192,3 +206,21 @@ const answerClass = computed(() => {
     return isCorrectAnswer.value ? "text-green-600" : "text-red-600";
 });
 </script>
+
+<style scoped>
+/* 确保Markdown内容的样式在此组件中正确显示 */
+:deep(.markdown-content) {
+    display: inline-block;
+}
+
+:deep(.markdown-content p) {
+    margin-bottom: 0.5em;
+    display: inline;
+}
+
+/* 确保选项文字垂直居中对齐 */
+.flex.items-center > label {
+    display: flex;
+    align-items: center;
+}
+</style>

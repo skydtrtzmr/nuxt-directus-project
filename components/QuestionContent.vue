@@ -7,7 +7,8 @@
             <template v-if="selectedQuestion.questions_id.type === 'q_mc_single'">
                 <QMcSingle 
                     :questionData="selectedQuestion" 
-                    :exam_page_mode="exam_page_mode" 
+                    :exam_page_mode="exam_page_mode"
+                    :renderMarkdown="renderMarkdown" 
                 />
             </template>
             
@@ -15,7 +16,8 @@
             <template v-else-if="selectedQuestion.questions_id.type === 'q_mc_multi'">
                 <QMcMulti 
                     :questionData="selectedQuestion" 
-                    :exam_page_mode="exam_page_mode" 
+                    :exam_page_mode="exam_page_mode"
+                    :renderMarkdown="renderMarkdown" 
                 />
             </template>
             
@@ -23,7 +25,8 @@
             <template v-else-if="selectedQuestion.questions_id.type === 'q_mc_binary'">
                 <QMcBinary 
                     :questionData="selectedQuestion" 
-                    :exam_page_mode="exam_page_mode" 
+                    :exam_page_mode="exam_page_mode"
+                    :renderMarkdown="renderMarkdown" 
                 />
             </template>
             
@@ -31,7 +34,8 @@
             <template v-else-if="selectedQuestion.questions_id.type === 'q_mc_flexible'">
                 <QMcFlexible 
                     :questionData="selectedQuestion" 
-                    :exam_page_mode="exam_page_mode" 
+                    :exam_page_mode="exam_page_mode"
+                    :renderMarkdown="renderMarkdown" 
                 />
             </template>
             
@@ -57,6 +61,7 @@ import QMcFlexible from "~/components/question_type/QMcFlexible.vue";
 const props = defineProps<{
     selectedQuestion: any | null;
     exam_page_mode: string;
+    renderMarkdown: (content: string) => string;
 }>();
 </script>
 
