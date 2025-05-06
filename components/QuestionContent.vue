@@ -6,10 +6,7 @@
             <!-- 显示公共题干（如果有） -->
             <div v-if="hasSharedStem" class="mb-4 p-3 bg-surface-100 dark:bg-surface-700 rounded-lg">
                 <div class="text-lg font-medium mb-2">公共题干</div>
-                    <div
-                        v-html="renderMarkdown(selectedQuestion.question_id.question_group.shared_stem)"
-                        class="markdown-content"
-                    ></div>
+                <div v-html="renderMarkdown(sharedStemContent)" class="markdown-content"></div>
             </div>
             
             <!-- 单选题 -->
@@ -56,11 +53,16 @@
                 </div>
             </template>
         </template>
+        <template v-else>
+            <div class="text-center p-4 text-surface-500">
+                正在加载题目数据...
+            </div>
+        </template>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import type { QuestionResults, QuestionGroups } from "~/types/directus_types";
 import QMcSingle from "~/components/question_type/QMcSingle.vue";
 import QMcMulti from "~/components/question_type/QMcMulti.vue";
@@ -73,22 +75,42 @@ const props = defineProps<{
     renderMarkdown: (content: string) => string;
 }>();
 
-console.log("selectedQuestion in QuestionContent", props.selectedQuestion);
+// 监听props.selectedQuestion的变化，便于调试
+watch(() => props.selectedQuestion, (newVal) => {
+    console.log("selectedQuestion in QuestionContent changed:", newVal);
+}, { immediate: true, deep: true });
 
 // 判断是否有公共题干需要显示
 const hasSharedStem = computed(() => {
-    // 检查题目是否属于题组并且有公共题干
-    if (props.selectedQuestion) {
-        // 如果question_group是对象并且有shared_stem属性
-        if (typeof props.selectedQuestion.questionGroup === 'object' && 
-            props.selectedQuestion.questionGroup !== null && 
-            props.selectedQuestion.questionGroup.shared_stem) {
-            return true;
-        }
+    // 严格检查 selectedQuestion 是否存在
+    if (!props.selectedQuestion) return false;
+    
+    // 检查题目是否关联了题组
+    if (props.selectedQuestion.questions_id.question_group) {
+        return !!(props.selectedQuestion.questions_id.question_group.shared_stem);
     }
     return false;
 });
 
+// 获取公共题干内容
+const sharedStemContent = computed(() => {
+    if (!props.selectedQuestion) return '';
+    if (!hasSharedStem.value) return '';
+    
+    // 从questionGroup获取
+    if (props.selectedQuestion.questions_id.question_group && props.selectedQuestion.questions_id.question_group.shared_stem) {
+        return props.selectedQuestion.questions_id.question_group.shared_stem;
+    }
+    
+    // 从question_group获取（适应不同的API响应结构）
+    if (props.selectedQuestion.questions_id.question_group && 
+        typeof props.selectedQuestion.questions_id.question_group === 'object' && 
+        props.selectedQuestion.questions_id.question_group.shared_stem) {
+        return props.selectedQuestion.questions_id.question_group.shared_stem;
+    }
+    
+    return '';
+});
 </script>
 
 <style scoped>
