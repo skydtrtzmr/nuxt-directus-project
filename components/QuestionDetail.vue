@@ -60,8 +60,7 @@
                     
                     <!-- 单题模式 -->
                     <QuestionContent
-                        v-else-if="selectedQuestion && selectedQuestion.questionGroup"
-                        :questionGroup="selectedQuestion.questionGroup"
+                        v-else-if="selectedQuestion"
                         :selectedQuestion="selectedQuestion"
                         :exam_page_mode="exam_page_mode"
                         :renderMarkdown="renderMarkdown"
@@ -116,6 +115,8 @@ const props = defineProps<{
     practiceSessionId: string;
     questionResults: QuestionResults[];
 }>();
+
+console.log("selectedQuestion in QuestionDetail", props.selectedQuestion.value);
 
 const emit = defineEmits(['navigate-question']);
 

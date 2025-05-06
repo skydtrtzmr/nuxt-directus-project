@@ -165,6 +165,8 @@ const props = defineProps<{
     renderMarkdown: (content: string) => string;
 }>();
 
+console.log("questionGroup in QuestionGroupContent", props.questionGroup);
+
 const emit = defineEmits(["flag-question"]);
 
 // 控制公共题干区域的收缩状态

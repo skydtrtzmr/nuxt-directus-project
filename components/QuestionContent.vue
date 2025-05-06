@@ -7,7 +7,7 @@
             <div v-if="hasSharedStem" class="mb-4 p-3 bg-surface-100 dark:bg-surface-700 rounded-lg">
                 <div class="text-lg font-medium mb-2">公共题干</div>
                     <div
-                        v-html="renderMarkdown(questionGroup.shared_stem)"
+                        v-html="renderMarkdown(selectedQuestion.question_id.question_group.shared_stem)"
                         class="markdown-content"
                     ></div>
             </div>
@@ -68,22 +68,21 @@ import QMcBinary from "~/components/question_type/QMcBinary.vue";
 import QMcFlexible from "~/components/question_type/QMcFlexible.vue";
 
 const props = defineProps<{
-    questionGroup: QuestionGroups | null;
     selectedQuestion: any | null;
     exam_page_mode: string;
     renderMarkdown: (content: string) => string;
 }>();
 
-console.log("questionGroup", props.questionGroup);
+console.log("selectedQuestion in QuestionContent", props.selectedQuestion);
 
 // 判断是否有公共题干需要显示
 const hasSharedStem = computed(() => {
     // 检查题目是否属于题组并且有公共题干
-    if (props.questionGroup) {
+    if (props.selectedQuestion) {
         // 如果question_group是对象并且有shared_stem属性
-        if (typeof props.questionGroup === 'object' && 
-            props.questionGroup !== null && 
-            props.questionGroup.shared_stem) {
+        if (typeof props.selectedQuestion.questionGroup === 'object' && 
+            props.selectedQuestion.questionGroup !== null && 
+            props.selectedQuestion.questionGroup.shared_stem) {
             return true;
         }
     }
