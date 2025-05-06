@@ -2,11 +2,11 @@
 <!-- 题目详情页。这里是包含整个题目详情的页面，包括题目所属的章节、题目内容、答题区 -->
 <template>
     <div class="question-detail card h-full overflow-hidden flex flex-col">
-        <div class="question-header p-4 bg-surface-50 dark:bg-surface-700 border-b border-surface-200 dark:border-surface-600">
+        <div class="question-header p-5 bg-surface-50 dark:bg-surface-700 border-b border-surface-200 dark:border-surface-600">
             <template v-if="selectedQuestion && selectedQuestion.questions_id">
                 <div class="flex justify-between items-start">
                     <h3 class="text-xl font-semibold text-primary flex items-center">
-                        <span class="mr-2 bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center text-sm">
+                        <span class="mr-3 bg-primary text-white rounded-full w-9 h-9 flex items-center justify-center text-sm shadow-sm">
                             {{ selectedQuestion.sort_in_section || '?' }}
                         </span>
                         <template v-if="isGroupMode">
@@ -16,7 +16,7 @@
                             {{ selectedQuestion.questions_id.title || "试题" }}
                         </template>
                     </h3>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-3">
                         <Button
                             v-if="!isGroupMode"
                             :icon="isQuestionFlagged ? 'pi pi-flag-fill' : 'pi pi-flag'"
@@ -29,24 +29,25 @@
                         <Tag 
                             v-if="!isGroupMode && selectedQuestion.result && selectedQuestion.result.point_value"
                             :severity="getScoreSeverity(selectedQuestion)"
+                            class="font-medium"
                         >
                             {{ getScoreDisplay(selectedQuestion) }}
                         </Tag>
                     </div>
                 </div>
-                <p v-if="!isGroupMode && selectedQuestion.questions_id.description" class="mt-3 text-surface-600 dark:text-surface-400">
+                <p v-if="!isGroupMode && selectedQuestion.questions_id.description" class="mt-4 text-surface-600 dark:text-surface-400 bg-surface-100 dark:bg-surface-800 p-3 rounded-md">
                     <span v-html="renderMarkdown(selectedQuestion.questions_id.description || '')"></span>
                 </p>
             </template>
-            <div v-else class="text-center p-4 text-surface-500">
-                请选择一个题目开始答题
+            <div v-else class="text-center p-5 text-surface-500">
+                <i class="pi pi-book mr-2"></i>请选择一个题目开始答题
             </div>
         </div>
         
-        <div class="question-content flex-1 overflow-auto p-2">
+        <div class="question-content flex-1 overflow-auto p-4">
             <div class="h-full">
                 <!-- 题目内容和答题区 -->
-                <div class="w-full p-4 bg-surface-50 dark:bg-surface-800 rounded-lg shadow-sm">
+                <div class="w-full p-5 bg-surface-50 dark:bg-surface-800 rounded-lg shadow-sm">
                     <!-- 题组模式 -->
                     <QuestionGroupContent
                         v-if="isGroupMode && selectedQuestion && selectedQuestion.questionGroup"
@@ -69,19 +70,20 @@
             </div>
         </div>
         
-        <div v-if="selectedQuestion && exam_page_mode !== 'review'" class="question-footer p-3 bg-surface-50 dark:bg-surface-700 border-t border-surface-200 dark:border-surface-600 flex justify-between">
-            <div class="navigation-buttons flex justify-between mt-4">
+        <div v-if="selectedQuestion && exam_page_mode !== 'review'" class="question-footer p-4 bg-surface-50 dark:bg-surface-700 border-t border-surface-200 dark:border-surface-600">
+            <div class="navigation-buttons flex justify-between">
                 <Button
                     @click="navigateQuestion(-1)"
                     icon="pi pi-arrow-left"
                     label="上一题"
-                    class="p-button-outlined"
+                    class="p-button-outlined p-button-sm"
                 />
                 <Button
                     @click="navigateQuestion(1)"
                     icon="pi pi-arrow-right"
                     iconPos="right"
                     label="下一题"
+                    class="p-button-sm"
                 />
             </div>
         </div>
@@ -225,13 +227,53 @@ const getScoreSeverity = (question: any) => {
 .question-detail {
     border-radius: 8px;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+}
+
+.question-header h3 {
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+}
+
+.question-content {
+    background-color: var(--surface-100);
+}
+
+.navigation-buttons {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.navigation-buttons .p-button {
+    min-width: 120px;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.navigation-buttons .p-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 @media screen and (max-width: 768px) {
     .question-detail {
         border-radius: 8px;
         margin-bottom: 60px;
+    }
+    
+    .question-header {
+        padding: 0.75rem 1rem;
+    }
+    
+    .navigation-buttons {
+        max-width: 100%;
+    }
+    
+    .navigation-buttons .p-button {
+        min-width: auto;
     }
 }
 
@@ -242,59 +284,92 @@ const getScoreSeverity = (question: any) => {
 :deep(.markdown-content) h4,
 :deep(.markdown-content) h5,
 :deep(.markdown-content) h6 {
-    margin-top: 1em;
-    margin-bottom: 0.5em;
+    margin-top: 1.2em;
+    margin-bottom: 0.8em;
     font-weight: bold;
+    line-height: 1.4;
+}
+
+:deep(.markdown-content) h1 {
+    font-size: 1.8em;
+}
+
+:deep(.markdown-content) h2 {
+    font-size: 1.6em;
+}
+
+:deep(.markdown-content) h3 {
+    font-size: 1.4em;
 }
 
 :deep(.markdown-content) p {
-    margin-bottom: 1em;
+    margin-bottom: 1.2em;
+    line-height: 1.6;
 }
 
 :deep(.markdown-content) ul,
 :deep(.markdown-content) ol {
     padding-left: 2em;
-    margin-bottom: 1em;
+    margin-bottom: 1.2em;
+    line-height: 1.6;
+}
+
+:deep(.markdown-content) li {
+    margin-bottom: 0.5em;
 }
 
 :deep(.markdown-content) code {
     background-color: rgba(0, 0, 0, 0.05);
     padding: 0.2em 0.4em;
     border-radius: 3px;
+    font-family: monospace;
 }
 
 :deep(.markdown-content) pre {
     background-color: rgba(0, 0, 0, 0.05);
-    padding: 1em;
-    border-radius: 5px;
+    padding: 1.2em;
+    border-radius: 6px;
     overflow-x: auto;
-    margin-bottom: 1em;
+    margin-bottom: 1.2em;
 }
 
 :deep(.markdown-content) blockquote {
     border-left: 4px solid #ddd;
-    padding-left: 1em;
+    padding: 0.8em 1.2em;
     color: #666;
-    margin-bottom: 1em;
+    margin: 1.2em 0;
+    background-color: rgba(0, 0, 0, 0.02);
+    border-radius: 0 6px 6px 0;
 }
 
 :deep(.markdown-content) img {
     max-width: 100%;
+    border-radius: 4px;
+    margin: 1em 0;
 }
 
 :deep(.markdown-content) table {
     border-collapse: collapse;
     width: 100%;
-    margin-bottom: 1em;
+    margin: 1.2em 0;
+    overflow: hidden;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 :deep(.markdown-content) th,
 :deep(.markdown-content) td {
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 10px 16px;
 }
 
 :deep(.markdown-content) th {
     background-color: rgba(0, 0, 0, 0.05);
+    text-align: left;
+    font-weight: 600;
+}
+
+:deep(.markdown-content) tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.02);
 }
 </style>

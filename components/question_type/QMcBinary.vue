@@ -3,10 +3,10 @@
 <template>
     <div v-if="questionData && questionData.questions_id && questionData.result">
         <!-- 判断题题干 -->
-        <div v-html="renderMarkdown(questionData.questions_id.stem)" class="markdown-content"></div>
+        <div v-html="renderMarkdown(questionData.questions_id.stem)" class="markdown-content question-stem"></div>
         <BlockUI
             :blocked="blockQuestion"
-            class="basis-4/5"
+            class="basis-4/5 options-container mt-4"
             :pt="{
                 // 通过透传pt参数，控制BlockUI的样式
                 mask: {
@@ -19,9 +19,13 @@
             }"
         >
             <!-- 判断题选项列表 -->
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-3">
                 <!-- 每个选项容器使用唯一ID，防止在题组模式下ID冲突 -->
-                <div class="flex items-start gap-3" :id="`div_option_a_${uniqueId}`">
+                <div 
+                    class="flex items-start gap-3 option-item p-2 rounded-lg transition-all" 
+                    :id="`div_option_a_${uniqueId}`"
+                    :class="{'option-selected': userAnswer === 'A'}"
+                >
                     <RadioButton
                         v-model="userAnswer"
                         :inputId="`option_a_${uniqueId}`"
@@ -30,12 +34,16 @@
                         @change="updateAnswer"
                     />
                     <!-- 标签的for属性使用唯一ID，确保点击文字时正确关联到对应选项 -->
-                    <label :for="`option_a_${uniqueId}`" class="option-label flex-1">
+                    <label :for="`option_a_${uniqueId}`" class="option-label flex-1 cursor-pointer">
                         <span class="option-marker">A</span>
                         <span v-html="renderMarkdown(questionData.questions_id.q_mc_binary?.option_a)" class="markdown-content"></span>
                     </label>
                 </div>
-                <div class="flex items-start gap-3" :id="`div_option_b_${uniqueId}`">
+                <div 
+                    class="flex items-start gap-3 option-item p-2 rounded-lg transition-all" 
+                    :id="`div_option_b_${uniqueId}`"
+                    :class="{'option-selected': userAnswer === 'B'}"
+                >
                     <RadioButton
                         v-model="userAnswer"
                         :inputId="`option_b_${uniqueId}`"
@@ -43,7 +51,7 @@
                         value="B"
                         @change="updateAnswer"
                     />
-                    <label :for="`option_b_${uniqueId}`" class="option-label flex-1">
+                    <label :for="`option_b_${uniqueId}`" class="option-label flex-1 cursor-pointer">
                         <span class="option-marker">B</span>
                         <span v-html="renderMarkdown(questionData.questions_id.q_mc_binary?.option_b)" class="markdown-content"></span>
                     </label>
@@ -181,13 +189,48 @@ const answerClass = computed(() => {
 </script>
 
 <style scoped>
+/* 题干样式 */
+.question-stem {
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--primary-color);
+    background-color: rgba(var(--surface-50), 0.6);
+    border-radius: 0 8px 8px 0;
+    font-size: 1.05rem;
+}
+
+/* 选项容器样式 */
+.options-container {
+    margin-top: 1rem;
+}
+
+/* 选项项样式 */
+.option-item {
+    border: 1px solid var(--surface-200);
+    transition: all 0.2s ease;
+    font-size: 1.05rem;
+}
+
+.option-item:hover {
+    background-color: var(--surface-100);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.option-selected {
+    border-color: var(--primary-color);
+    background-color: rgba(var(--primary-color-rgb), 0.05);
+    box-shadow: 0 2px 8px rgba(var(--primary-color-rgb), 0.15);
+}
+
 /* 确保Markdown内容的样式在此组件中正确显示 */
 :deep(.markdown-content) {
     display: inline-block;
+    font-size: 1.05rem;
 }
 
 :deep(.markdown-content p) {
-    margin-bottom: 0.5em;
+    margin-bottom: 0.3em;
     display: inline;
 }
 
@@ -196,6 +239,7 @@ const answerClass = computed(() => {
     display: flex;
     align-items: flex-start;
     gap: 8px;
+    padding: 0.1rem 0;
 }
 
 /* 选项标记样式 */
@@ -205,21 +249,41 @@ const answerClass = computed(() => {
     justify-content: center;
     min-width: 28px;
     height: 28px;
-    background-color: #f0f0f0;
-    color: #333;
+    background-color: var(--surface-200);
+    color: var(--text-color);
     font-weight: bold;
     border-radius: 50%;
     padding: 0 4px;
     margin-right: 8px;
     font-size: 14px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+}
+
+.option-selected .option-marker {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 2px 5px rgba(var(--primary-color-rgb), 0.3);
 }
 
 /* 深色模式下的选项标记 */
 @media (prefers-color-scheme: dark) {
     .option-marker {
-        background-color: #444;
-        color: #fff;
+        background-color: var(--surface-600);
+        color: var(--surface-50);
+    }
+    
+    .option-item {
+        border-color: var(--surface-600);
+    }
+    
+    .option-item:hover {
+        background-color: var(--surface-700);
+    }
+    
+    .option-selected {
+        border-color: var(--primary-color);
+        background-color: rgba(var(--primary-color-rgb), 0.15);
     }
 }
 </style>
