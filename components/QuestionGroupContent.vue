@@ -47,7 +47,7 @@
                     class="shared-stem-content p-3 bg-surface-100 dark:bg-surface-700 rounded-lg markdown-content"
                     :class="{ hidden: isStemCollapsed }"
                 >
-                    <div class="text-lg font-medium mb-2">公共题干</div>
+                    <div class="text-lg font-medium mb-2">题组题干：</div>
                     <div
                         v-html="renderMarkdown(questionGroup.shared_stem)"
                         class="markdown-content"
@@ -135,6 +135,7 @@
                                 "
                                 :exam_page_mode="exam_page_mode"
                                 :renderMarkdown="renderMarkdown"
+                                :groupMode="true"
                             />
                         </div>
                     </template>

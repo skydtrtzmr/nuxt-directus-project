@@ -74,6 +74,7 @@ const props = defineProps<{
     selectedQuestion: any | null;
     exam_page_mode: string;
     renderMarkdown: (content: string) => string;
+    groupMode: boolean;
 }>();
 
 // 监听props.selectedQuestion的变化，便于调试
@@ -85,6 +86,11 @@ watch(() => props.selectedQuestion, (newVal) => {
 const hasSharedStem = computed(() => {
     // 严格检查 selectedQuestion 是否存在
     if (!props.selectedQuestion) return false;
+
+    // 如果groupMode为true，则已经另外显示了题组题干，这里不需要再显示公共题干
+    if (props.groupMode) {
+        return false;
+    }
     
     // 检查题目是否关联了题组
     if (props.selectedQuestion.questions_id.question_group) {
