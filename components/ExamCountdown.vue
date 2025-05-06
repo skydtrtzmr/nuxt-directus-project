@@ -1,10 +1,15 @@
 <template>
     <div 
         class="countdown-container rounded-lg transition-all duration-300"
-        :class="{ 'expanded': isExpanded, 'compact-mode': isMobileView }"
+        :class="{ 
+            'expanded': isExpanded, 
+            'compact-mode': isMobileView,
+            'desktop-compact-mode': isDesktopCompactMode,
+            'mobile-compact-mode': isMobileCompactMode
+        }"
     >
-        <!-- 桌面端模式 - 始终完整显示 -->
-        <div v-if="!isMobileView" class="p-2 desktop-view">
+        <!-- 桌面完整模式 -->
+        <div v-if="!isMobileView && !isDesktopCompactMode" class="p-2 desktop-view">
             <div class="countdown-header flex justify-between items-center mb-1">
                 <h3 class="text-sm font-semibold">考试倒计时</h3>
                 <div 
@@ -19,27 +24,62 @@
                 <div class="time-row">
                     <div class="time-label">
                         <i class="pi pi-calendar-plus text-blue-500 mr-1"></i>
-                        开始
+                        开始时间
                     </div>
                     <div class="time-value">
-                        {{ isClient ? formatTime(actualStartTime) : "计算中..." }}
+                        {{ isClient ? formatTimeWithSeconds(actualStartTime) : "计算中..." }}
+                    </div>
+                </div>
+
+                <div class="time-row">
+                    <div class="time-label">
+                        <i class="pi pi-clock text-green-500 mr-1"></i>
+                        当前时间
+                    </div>
+                    <div class="time-value">
+                        {{ isClient ? currentTime : "计算中..." }}
                     </div>
                 </div>
 
                 <div class="time-row">
                     <div class="time-label">
                         <i class="pi pi-calendar-times text-red-500 mr-1"></i>
-                        结束
+                        结束时间
                     </div>
                     <div class="time-value">
-                        {{ isClient ? formatTime(examEndTime) : "计算中..." }}
+                        {{ isClient ? formatTimeWithSeconds(examEndTime) : "计算中..." }}
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- 桌面紧凑模式 -->
+        <div v-else-if="isDesktopCompactMode" class="desktop-compact bg-white dark:bg-gray-800 px-3 py-2 rounded-lg shadow-sm border border-blue-100 dark:border-blue-800">
+            <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+                <div class="flex items-center">
+                    <i class="pi pi-calendar-plus text-blue-500 dark:text-blue-400 mr-1"></i>
+                    <span class="whitespace-nowrap">开始: {{ isClient ? formatTimeWithSeconds(actualStartTime) : "计算中..." }}</span>
+                </div>
+                <div class="mx-1">-</div>
+                <div class="flex items-center">
+                    <i class="pi pi-calendar-times text-red-500 dark:text-red-400 mr-1"></i>
+                    <span class="whitespace-nowrap">结束: {{ isClient ? formatTimeWithSeconds(examEndTime) : "计算中..." }}</span>
+                </div>
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="text-xs text-gray-500 dark:text-gray-400">
+                    <i class="pi pi-clock text-green-500 dark:text-green-400 mr-1"></i>
+                    <span>当前: {{ currentTime }}</span>
+                </div>
+                <div class="countdown text-sm font-bold text-blue-700 dark:text-blue-300 ml-2">
+                    <i class="pi pi-hourglass text-orange-500 dark:text-orange-400 mr-1"></i>
+                    <span>剩余: {{ isClient ? formattedCountDown : "计算中..." }}</span>
+                </div>
+            </div>
+        </div>
+
         <!-- 移动端模式 - 可折叠 -->
-        <div v-else @click="toggleExpand">
+        <div v-else-if="isMobileView && !isMobileCompactMode" @click="toggleExpand">
             <!-- 收缩状态 - 只显示倒计时本身 -->
             <div v-if="!isExpanded" class="countdown-compact flex items-center justify-center">
                 <div 
@@ -73,17 +113,17 @@
                             开始时间
                         </div>
                         <div class="time-value">
-                            {{ dayjs(actualStartTime).format("YYYY-MM-DD HH:mm:ss") }}
+                            {{ formatTimeWithSeconds(actualStartTime) }}
                         </div>
                     </div>
 
                     <div class="time-row" v-if="isClient">
                         <div class="time-label">
-                            <i class="pi pi-clock text-orange-500 mr-1"></i>
+                            <i class="pi pi-clock text-green-500 mr-1"></i>
                             当前时间
                         </div>
                         <div class="time-value">
-                            {{ dayjs().format("YYYY-MM-DD HH:mm:ss") }}
+                            {{ currentTime }}
                         </div>
                     </div>
 
@@ -93,9 +133,25 @@
                             结束时间
                         </div>
                         <div class="time-value">
-                            {{ dayjs(examEndTime).format("YYYY-MM-DD HH:mm:ss") }}
+                            {{ formatTimeWithSeconds(examEndTime) }}
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 移动端紧凑模式 -->
+        <div v-else-if="isMobileCompactMode" class="bg-white dark:bg-gray-800 px-2 py-1 rounded-lg text-xs shadow-sm border border-blue-100 dark:border-blue-800">
+            <div class="flex flex-col">
+                <div class="flex items-center justify-between mb-0.5">
+                    <span class="text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                        <i class="pi pi-clock text-green-500 dark:text-green-400 mr-0.5 text-xs"></i>
+                        当前: {{ currentTime }}
+                    </span>
+                </div>
+                <div class="font-bold text-blue-700 dark:text-blue-300 flex items-center">
+                    <i class="pi pi-hourglass text-orange-500 dark:text-orange-400 mr-0.5 text-xs"></i>
+                    <span>剩余: {{ isClient ? formattedCountDown : "计算中..." }}</span>
                 </div>
             </div>
         </div>
@@ -104,7 +160,7 @@
 
 <script setup lang="ts">
 import dayjs from "dayjs";
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 
 const props = defineProps<{
     isClient: boolean;
@@ -112,21 +168,46 @@ const props = defineProps<{
     formattedCountDown: string;
     practiceSessionTime?: any;
     actualStartTime?: any;
+    class?: string;
 }>();
 
 // 控制展开/折叠状态
 const isExpanded = ref(false);
 const isMobileView = ref(false);
 
+// 计算属性，用于确定是否应该使用紧凑模式
+const isDesktopCompactMode = computed(() => {
+    return props.class?.includes('desktop-compact-mode') || false;
+});
+
+const isMobileCompactMode = computed(() => {
+    return props.class?.includes('mobile-compact-mode') || false;
+});
+
+// 当前时间
+const currentTime = ref("");
+const currentTimeInterval = ref<any>(null);
+
 // 切换展开/折叠状态
 const toggleExpand = () => {
     isExpanded.value = !isExpanded.value;
 };
 
-// 格式化时间
-const formatTime = (dateTime: any) => {
-    if (!dateTime) return "";
-    return dayjs(dateTime).format("HH:mm");
+// 格式化时间，精确到秒
+const formatTimeWithSeconds = (dateTime: any) => {
+    if (!dateTime) return "未设置";
+    return dayjs(dateTime).format("MM-DD HH:mm:ss");
+};
+
+// 更新当前时间
+const updateCurrentTime = () => {
+    currentTime.value = dayjs().format("MM-DD HH:mm:ss");
+};
+
+// 开始更新当前时间
+const startCurrentTimeUpdate = () => {
+    updateCurrentTime(); // 立即执行一次
+    currentTimeInterval.value = setInterval(updateCurrentTime, 1000);
 };
 
 // 根据剩余时间获取CSS类名
@@ -154,15 +235,19 @@ const checkIfMobile = () => {
     isMobileView.value = window.innerWidth < 768;
 };
 
-// 组件挂载时检测屏幕尺寸
+// 组件挂载时检测屏幕尺寸并开始更新当前时间
 onMounted(() => {
     checkIfMobile();
     window.addEventListener('resize', checkIfMobile);
+    startCurrentTimeUpdate();
 });
 
-// 组件卸载时移除事件监听
+// 组件卸载时移除事件监听和清除计时器
 onUnmounted(() => {
     window.removeEventListener('resize', checkIfMobile);
+    if (currentTimeInterval.value) {
+        clearInterval(currentTimeInterval.value);
+    }
 });
 </script>
 
@@ -173,6 +258,10 @@ onUnmounted(() => {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     width: 100%;
     min-width: 160px;
+}
+
+.desktop-compact {
+    min-width: 260px;
 }
 
 .compact-mode {
@@ -247,6 +336,11 @@ onUnmounted(() => {
     font-family: monospace;
 }
 
+.mobile-compact-mode {
+    min-width: auto;
+    width: auto;
+}
+
 @keyframes pulse {
     0% {
         transform: scale(1);
@@ -265,3 +359,4 @@ onUnmounted(() => {
     }
 }
 </style>
+
