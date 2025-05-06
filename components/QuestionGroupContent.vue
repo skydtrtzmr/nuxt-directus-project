@@ -350,6 +350,7 @@ const getQuestionScoreSeverity = (question: any) => {
 .question-group-content {
     height: 100%;
     overflow-y: auto;
+    position: relative; /* 添加相对定位以正确定位内部元素 */
 }
 
 /* 公共题干容器样式 */
@@ -360,6 +361,7 @@ const getQuestionScoreSeverity = (question: any) => {
     border-radius: 8px;
     padding: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    z-index: 2; /* 确保题干区域在滚动时位于正确层级 */
 }
 
 /* 收缩按钮样式 - 桌面端 */
@@ -368,7 +370,7 @@ const getQuestionScoreSeverity = (question: any) => {
     right: -15px;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 10;
+    z-index: 10; /* 提高z-index确保按钮始终可见 */
     background-color: #ffffff; /* 替换 var(--surface-card) */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -378,7 +380,7 @@ const getQuestionScoreSeverity = (question: any) => {
     position: absolute;
     right: 10px;
     top: 0;
-    z-index: 10;
+    z-index: 10; /* 提高z-index确保按钮始终可见 */
     background-color: #ffffff; /* 替换 var(--surface-card) */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -386,6 +388,8 @@ const getQuestionScoreSeverity = (question: any) => {
 /* 题目内容区域样式 */
 .group-questions {
     transition: all 0.3s ease;
+    position: relative; /* 确保题目内容区域有正确的定位上下文 */
+    z-index: 1; /* 确保题目内容位于正确层级 */
 }
 
 .question-item {
@@ -474,10 +478,17 @@ const getQuestionScoreSeverity = (question: any) => {
 @media screen and (max-width: 768px) {
     .shared-stem-container {
         margin-bottom: 15px;
+        position: sticky; /* 在移动端使题干区域在滚动时保持可见 */
+        top: 0;
     }
 
     .stem-toggle-btn-mobile {
         top: 5px;
+        position: sticky; /* 在移动端确保按钮固定在视口顶部 */
+    }
+    
+    .question-group-content {
+        padding-top: 10px; /* 移动端增加顶部间距，防止内容被顶部元素遮挡 */
     }
 }
 </style>

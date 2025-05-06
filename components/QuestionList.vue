@@ -412,6 +412,7 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
     transition: all 0.3s ease;
     height: 100%;
     display: flex;
+    z-index: 5; /* 提高题目列表的z-index */
 }
 
 .sidebar {
@@ -424,13 +425,14 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
     overflow: hidden;
     flex: 1;
     border: 1px solid var(--surface-border);
+    position: relative; /* 确保侧边栏有相对定位 */
 }
 
 .toggle-button-wrapper {
     position: absolute;
     right: -20px;
     top: 10px;
-    z-index: 10;
+    z-index: 10; /* 确保收缩按钮始终位于最上层 */
 }
 
 .toggle-button {
@@ -438,6 +440,7 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border: 1px solid var(--surface-border);
     transition: transform 0.3s ease;
+    position: relative; /* 为按钮添加相对定位 */
 }
 
 .question-list-container.collapsed {
@@ -456,12 +459,18 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
     align-items: center;
     padding: 0.75rem 1.25rem;
     border-bottom: 1px solid var(--surface-border);
+    position: sticky; /* 使标题栏粘性定位 */
+    top: 0;
+    background-color: var(--surface-card); /* 确保背景色 */
+    z-index: 2; /* 确保标题栏在内容上方 */
 }
 
 .sidebar-content {
     padding: 0.5rem;
     max-height: calc(100% - 50px);
     overflow-y: auto;
+    position: relative; /* 添加相对定位 */
+    z-index: 1; /* 设置合适的层级 */
 }
 
 .section-container {
@@ -479,6 +488,8 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
     background-color: var(--surface-ground);
     cursor: pointer;
     transition: background-color 0.2s;
+    position: relative; /* 添加相对定位 */
+    z-index: 1; /* 确保章节标题在适当层级 */
 }
 
 .section-header:hover {
@@ -591,7 +602,7 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
         width: 100%;
         height: auto;
         max-height: 60vh;
-        z-index: 1000;
+        z-index: 1000; /* 提高移动端z-index值 */
         padding-bottom: 20px; /* 确保最后一行题目完全可见 */
     }
     
@@ -608,6 +619,7 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
         right: 10px;
         top: 10px;
         transform: none;
+        z-index: 1001; /* 确保在移动端按钮位于最顶层 */
     }
     
     .toggle-button {
@@ -648,6 +660,12 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
         transition: max-height 0.3s ease;
         overflow: hidden;
     }
+    
+    .sidebar-header {
+        position: sticky; /* 移动端确保标题栏固定 */
+        top: 0;
+        z-index: 3; /* 移动端标题栏适当的z-index */
+    }
 }
 
 /* 添加桌面视图的题目按钮位置一致性 */
@@ -671,11 +689,18 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
         right: -20px;
         top: 10px; /* 固定在顶部 */
         transform: none;
+        z-index: 10; /* 桌面端确保按钮位于最上层 */
     }
     
     /* 保持桌面端收缩展开按钮一致 */
     .question-list-container.collapsed .toggle-button-wrapper {
         right: -20px;
+    }
+    
+    .sidebar-header {
+        position: sticky; /* 桌面端确保标题栏固定 */
+        top: 0;
+        z-index: 3; /* 桌面端标题栏适当的z-index */
     }
 }
 </style>
