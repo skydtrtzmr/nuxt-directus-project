@@ -67,3 +67,7 @@ pnpm preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+### 关于升级node版本
+
+目前不知道为什么在天选4上面升级了就是正常的，但是在玄上面升级就不对。
