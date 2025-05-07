@@ -65,6 +65,7 @@
                         :selectedQuestion="selectedQuestion"
                         :exam_page_mode="exam_page_mode"
                         :renderMarkdown="renderMarkdown"
+                        :groupMode="false"
                     />
                 </div>
             </div>
