@@ -1,111 +1,25 @@
 <!-- pages/exam/[id].vue -->
 <template>
     <div class="exam-page relative">
-        <!-- 顶部信息栏 - 组件化响应式设计 -->
-        <div class="exam-header sticky top-0 z-10 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 shadow-md transition-all duration-300">
-            <!-- 电脑视图 - 单行布局 -->
-            <div class="hidden md:flex items-center justify-between px-4 py-2">
-                <!-- 左侧：考试信息 -->
-                <div class="flex-shrink-0 w-1/3">
-                    <ExamInfo 
-                        v-if="practiceSession" 
-                        :practiceSession="practiceSession"
-                        class="border-0 shadow-none bg-transparent" 
-                    />
-                </div>
-                
-                <!-- 中间：试卷信息 -->
-                <div class="flex-shrink-0 w-1/3 flex justify-center">
-                    <PaperInfo 
-                        v-if="paper" 
-                        :paper="paper"
-                        class="border-0 shadow-none bg-transparent" 
-                    />
-                </div>
-                
-                <!-- 右侧：倒计时和提交按钮 -->
-                <div class="flex-shrink-0 w-1/3 flex items-center justify-end space-x-3" v-if="exam_page_mode !== 'review'">
-                    <!-- 倒计时组件 -->
-                    <ExamCountdown
-                        :isClient="isClient"
-                        :actualStartTime="actual_start_time"
-                        :examEndTime="examEndTime"
-                        :practiceSessionTime="practiceSessionTime"
-                        :formattedCountDown="formattedCountDown"
-                        class="desktop-compact-mode"
-                    />
-
-                    <!-- 提交按钮 -->
-                    <Button
-                        icon="pi pi-send"
-                        label="提交试卷"
-                        aria-label="Submit"
-                        @click="manualSubmit()"
-                        class="p-button font-medium"
-                        severity="warning"
-                        rounded
-                    />
-                </div>
-                
-                <!-- 评分信息(复习模式) -->
-                <div v-if="exam_page_mode === 'review'" class="flex items-center space-x-2 text-sm font-medium">
-                    <div class="text-gray-700 dark:text-gray-300">试卷总分：{{ paper.total_point_value }}</div>
-                    <div class="text-emerald-600 dark:text-emerald-400">得分：{{ examScore }}</div>
-                </div>
-            </div>
-            
-            <!-- 移动视图 - 堆叠布局 -->
-            <div class="md:hidden">
-                <!-- 第一行：考试信息和倒计时 -->
-                <div class="flex items-center justify-between px-3 py-2 border-b border-blue-100 dark:border-blue-800">
-                    <!-- 考试信息组件（移动端简化版） -->
-                    <div class="overflow-hidden flex-1">
-                        <h2 class="text-base font-semibold flex items-center truncate">
-                            <i class="pi pi-id-card text-primary mr-1 text-lg flex-shrink-0"></i>
-                            <span class="truncate">{{ getExamTitle() }}</span>
-                        </h2>
-                    </div>
-                    
-                    <!-- 倒计时或分数信息 -->
-                    <div v-if="exam_page_mode !== 'review'" class="flex-shrink-0 ml-2">
-                        <ExamCountdown
-                            :isClient="isClient"
-                            :actualStartTime="actual_start_time"
-                            :examEndTime="examEndTime"
-                            :practiceSessionTime="practiceSessionTime"
-                            :formattedCountDown="formattedCountDown"
-                            class="mobile-compact-mode"
-                        />
-                    </div>
-                    
-                    <div v-else class="text-sm font-medium text-emerald-600 dark:text-emerald-400">
-                        得分：{{ examScore }}
-                    </div>
-                </div>
-                
-                <!-- 第二行：试卷信息和提交按钮 -->
-                <div class="flex items-center justify-between px-3 py-2">
-                    <!-- 试卷信息 -->
-                    <div class="flex-1">
-                        <PaperInfo 
-                            v-if="paper" 
-                            :paper="paper"
-                            class="border-0 shadow-none bg-transparent p-0" 
-                        />
-                    </div>
-                    
-                    <!-- 提交按钮 -->
-                    <Button
-                        v-if="exam_page_mode !== 'review'"
-                        icon="pi pi-send"
-                        aria-label="Submit"
-                        @click="manualSubmit()"
-                        class="p-button-sm p-button-rounded flex-shrink-0 ml-2"
-                        severity="warning"
-                    />
-                </div>
-            </div>
-        </div>
+        <!-- 顶部信息栏 -->
+        <ExamHeader
+            :exam_page_mode="exam_page_mode"
+            :practiceSession="practiceSession"
+            :paper="paper"
+            :isClient="isClient"
+            :actual_start_time="actual_start_time"
+            :examEndTime="examEndTime"
+            :practiceSessionTime="practiceSessionTime"
+            :formattedCountDown="formattedCountDown"
+            :examScore="examScore"
+            :studentData="{
+                name: userData.name,
+                student_number: userData.student_number,
+                email: userData.email,
+                className: userData.className
+            }"
+            @submit="manualSubmit"
+        />
 
         <!-- 对话框区域 -->
         <template v-if="exam_page_mode !== 'review'">
@@ -199,6 +113,7 @@ import type {
     Questions,
     Exercises,
     QuestionResults,
+    Classes,
     PaperSectionsQuestionGroups,
     QuestionGroups,
 } from "~~/types/directus_types";
@@ -212,15 +127,7 @@ const auth = useAuth();
 const { user } = storeToRefs(auth); // 获取store里的user数据，用于根据邮箱设置延迟。
 const email = ref(user.value?.email || "");
 
-// 用户信息
-const userData = computed(() => {
-    return {
-        name: user.value?.first_name || "考生",
-        examId: user.value?.id || "", // 使用id代替external_id
-        email: user.value?.email || "",
-        studentId: (user.value as any)?.student_id || "", // 类型断言解决类型检查问题
-    };
-});
+
 
 // 获取考试标题
 const getExamTitle = () => {
@@ -312,7 +219,10 @@ const fetchSubmittedExam = async () => {
                     "id",
                     "exercises_students_id.exercises_id.paper",
                     // "title",
-                    "exercises_students_id.students_id.name",
+                    "exercises_students_id.students_id.name", // 学生姓名
+                    "exercises_students_id.students_id.number", // 学号
+                    "exercises_students_id.students_id.email", // 邮箱
+                    "exercises_students_id.students_id.class.name", // 班级 TODO暂时没生效！
                     "exercises_students_id.exercises_id.title",
                     "exercises_students_id.exercises_id.duration",
                     "score", // 获取考试分数
@@ -367,6 +277,33 @@ const afterFetchSubmittedExam = () => {
         }
     }
 };
+
+// 用户信息
+const userData = computed(() => {
+    const defaultData = {
+        name: "考生",
+        student_number: 0,
+        email: "",
+        className: "",
+    };
+
+    const esId = practiceSession.value?.exercises_students_id;
+    if (!esId || typeof esId !== "object" || !("students_id" in esId)) {
+        return defaultData;
+    }
+
+    const studentId = esId.students_id;
+    if (!studentId || typeof studentId !== "object") {
+        return defaultData;
+    }
+
+    return {
+        name: studentId.name || "考生",
+        student_number: studentId.number || 0,
+        email: studentId.email || "",
+        className: (studentId.class as Classes)?.name || "",
+    };
+});
 
 // 把获取时间数据后的操作也跟获取考试其他数据后的操作分开。
 const afterFetchSubmittedExamTime = () => {
@@ -908,7 +845,7 @@ onMounted(async () => {
     await fetchExamTimeData(); //
     await nextTick(); // 等待组件渲染完成
     isClient.value = true; // 标记当前是客户端渲染（组件已经挂载）
-    
+
     // 启动当前时间更新
     startCurrentTimeUpdate();
 
@@ -1403,10 +1340,6 @@ const handleQuestionGroupClick = async (group: any, section: PaperSections) => {
     min-height: calc(100vh - 120px);
 }
 
-.exam-header {
-    border-bottom: 2px solid var(--blue-200);
-}
-
 .question-area {
     flex: 1;
     position: relative;
@@ -1415,20 +1348,8 @@ const handleQuestionGroupClick = async (group: any, section: PaperSections) => {
 
 @media screen and (max-width: 768px) {
     .question-area {
-        margin-bottom: 40px; /* 为移动端底部题目列表留出空间 */
+        margin-bottom: 40px;
         min-height: 400px;
     }
-}
-
-:deep(.p-button) {
-    font-size: 0.875rem;
-}
-
-:deep(.p-tooltip) {
-    font-size: 0.75rem;
-}
-
-:deep(.navigation-buttons .p-button) {
-    min-width: 100px; /* 确保导航按钮足够宽 */
 }
 </style>
