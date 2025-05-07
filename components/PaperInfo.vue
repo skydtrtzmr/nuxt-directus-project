@@ -1,12 +1,14 @@
 <template>
     <div
         v-if="paper"
-        class="paper-info rounded-md bg-surface-50 dark:bg-surface-800 py-1 px-2"
+        class="paper-info py-1 px-2 bg-transparent"
     >
         <div class="flex items-center justify-between">
-            <div class="flex items-center overflow-hidden">
-                <i class="pi pi-file-pdf text-primary mr-1 text-lg flex-shrink-0"></i>
-                <h3 class="text-base font-medium truncate">{{ paper.title }}</h3>
+            <div class="flex-1 text-center flex items-center justify-center">
+                <div class="flex items-center overflow-hidden">
+                    <!-- <i class="pi pi-file-pdf text-primary mr-1 text-lg flex-shrink-0"></i> -->
+                    <h3 class="text-base font-medium truncate">{{ paper.title }}</h3>
+                </div>
             </div>
             
             <div class="flex gap-2 text-xs text-surface-600 dark:text-surface-400 flex-shrink-0">
@@ -58,13 +60,12 @@ const formatCurrentDate = () => {
 
 <style scoped>
 .paper-info {
-    border: 1px solid var(--surface-border);
     transition: all 0.3s ease;
 }
 
 @media (hover: hover) {
     .paper-info:hover {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transform: translateY(-1px);
     }
 }
 

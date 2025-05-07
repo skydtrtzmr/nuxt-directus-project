@@ -1,23 +1,23 @@
 <template>
     <div
-        class="exam-info py-1 px-2 rounded-md shadow-sm bg-surface-50 dark:bg-surface-800"
+        class="exam-info py-1 px-2 bg-transparent"
     >
-        <div class="flex items-center justify-between">
-            <div class="overflow-hidden">
-                <h2 class="text-base font-semibold flex items-center truncate">
-                    <i class="pi pi-id-card text-primary mr-1 text-lg flex-shrink-0"></i>
+        <div class="flex items-center justify-between h-full">
+            <div class="overflow-hidden flex-1 text-center flex items-center justify-center pt-2">
+                <h2 class="text-lg font-semibold flex items-center justify-center truncate">
+                    <!-- <i class="pi pi-id-card text-primary mr-1 text-lg flex-shrink-0"></i> -->
                     <span class="truncate">{{ getExamTitle() }}</span>
                 </h2>
-                <div class="flex flex-wrap gap-1 text-xs text-surface-600 dark:text-surface-400">
-                    <span class="inline-flex items-center">
-                        <i class="pi pi-clock text-blue-500 mr-1"></i>
-                        <span>{{ formattedDuration }}</span>
-                    </span>
-                </div>
             </div>
-            <Tag severity="info" class="text-xs px-1 py-0 rounded-full flex-shrink-0">
-                {{ getShortExamDate() }}
-            </Tag>
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center text-xs text-surface-600 dark:text-surface-400">
+                    <i class="pi pi-clock text-blue-500 mr-1"></i>
+                    <span>{{ formattedDuration }}</span>
+                </span>
+                <!-- <Tag severity="info" class="text-xs px-1 py-0 rounded-full flex-shrink-0">
+                    {{ getShortExamDate() }}
+                </Tag> -->
+            </div>
         </div>
     </div>
 </template>
@@ -76,6 +76,9 @@ watchEffect(() => {
 
         // 安全获取时长
         const durationValue = (exercisesId as Exercises)?.duration || 60; // 默认60分钟
+
+        console.log("durationValue", durationValue);
+        
 
         if (durationValue >= 60) {
             const hours = Math.floor(durationValue / 60);
@@ -152,14 +155,12 @@ const formatDate = (dateString?: string) => {
 
 <style scoped>
 .exam-info {
-    border: 1px solid var(--surface-border);
     transition: all 0.3s ease;
 }
 
 @media (hover: hover) {
     .exam-info:hover {
         transform: translateY(-1px);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
     }
 }
 
@@ -170,6 +171,7 @@ const formatDate = (dateString?: string) => {
     
     h2 {
         max-width: 200px;
+        font-size: 0.875rem !important;
     }
 }
 </style>

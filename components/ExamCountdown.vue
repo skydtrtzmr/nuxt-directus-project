@@ -23,10 +23,10 @@
                     <span class="text-gray-600 dark:text-gray-400">结束时间：</span>
                     <span class="font-medium">{{ formatDateTime(examEndTime) }}</span>
                 </div>
-                <div class="flex justify-between items-center">
+                <!-- <div class="flex justify-between items-center">
                     <span class="text-gray-600 dark:text-gray-400">当前时间：</span>
                     <span class="font-medium">{{ currentTime }}</span>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
