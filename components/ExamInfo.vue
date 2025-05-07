@@ -13,10 +13,6 @@
                         <i class="pi pi-clock text-blue-500 mr-1"></i>
                         <span>{{ formattedDuration }}</span>
                     </span>
-                    <span v-if="hasStudentInfo" class="inline-flex items-center">
-                        <i class="pi pi-user mr-1"></i>
-                        <span>{{ getStudentName() }}</span>
-                    </span>
                 </div>
             </div>
             <Tag severity="info" class="text-xs px-1 py-0 rounded-full flex-shrink-0">
@@ -41,22 +37,6 @@ const props = defineProps<{
 
 // 使用ref存储计算结果，使其可以在数据加载后更新
 const duration = ref("60分钟");
-
-// 判断是否有学生信息
-const hasStudentInfo = computed(() => {
-    if (!props.practiceSession) return false;
-
-    const esId = props.practiceSession.exercises_students_id;
-    if (!esId) return false;
-
-    // 判断是否为对象，并且有students_id属性
-    if (typeof esId === "object" && "students_id" in esId) {
-        const studentId = esId.students_id;
-        return typeof studentId === "object" && studentId !== null;
-    }
-
-    return false;
-});
 
 // 获取考试标题
 const getExamTitle = () => {
@@ -157,16 +137,6 @@ const getExamDate = () => {
     return "";
 };
 
-// 获取学生姓名
-const getStudentName = () => {
-    if (!hasStudentInfo.value) return "";
-
-    const esId = props.practiceSession
-        .exercises_students_id as ExercisesStudents;
-    const student = esId.students_id as Students;
-
-    return student.name || "";
-};
 
 // 格式化日期
 const formatDate = (dateString?: string) => {
