@@ -4,7 +4,7 @@
         <!-- 自适应布局容器：电脑端左右布局，手机端上下布局 -->
         <div class="flex flex-col lg:flex-row gap-4 group-container">
             <!-- 公共题干区域 - 可收缩和拖拽调整宽度 -->
-             
+
             <div
                 v-if="questionGroup && questionGroup.shared_stem"
                 class="shared-stem-container"
@@ -52,7 +52,7 @@
                     v-if="!isStemCollapsed"
                     class="shared-stem-content p-3 bg-surface-100 dark:bg-surface-700 rounded-lg flex-1"
                 >
-                    <ScrollPanel>
+                    <ScrollPanel style="width: 100%; height: 200px">
                         <div class="text-lg font-medium mb-2 stem-title">
                             题组题干：
                         </div>
@@ -85,7 +85,7 @@
                         isStemCollapsed,
                 }"
             >
-                <ScrollPanel class="custom-scrollbar">
+                <ScrollPanel style="width: 100%; height: 400px" class="custom-scrollbar">
                     <div class="questions-scroll-container">
                         <div
                             v-if="groupQuestions.length > 0"
