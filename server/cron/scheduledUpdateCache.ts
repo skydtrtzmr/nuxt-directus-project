@@ -3,11 +3,10 @@
 // 定期更新缓存
 
 import { defineCronHandler } from "#nuxt/cron";
-import { updateHashListCache } from "~~/server/utils/redisUtils";
+import { updateHashCache, updateListCache } from "~~/server/utils/redisUtils";
 import directus_client from "~~/server/lib/directus";
 import { readUsers, readItems } from "@directus/sdk";
 import { fetchAllPaginatedData } from "../utils/directusUtils";
-import { log } from "console";
 
 // TODO 目前为了方便开发，在directus中把所有权限都开放了，所以现在发起请求的时候不需要带token。
 // 后续需要把权限控制好，只允许有权限的用户访问。
@@ -17,7 +16,7 @@ import { log } from "console";
 export default defineCronHandler("everyThirtyMinutes", async () => {
     // do action
     console.log("Scheduled Update Cache");
-    // updateHashListCache(
+    // updateHashCache(
     //     "paper_prototype_chapters",
     //     () =>
     //         fetchAllPaginatedData({
@@ -29,7 +28,7 @@ export default defineCronHandler("everyThirtyMinutes", async () => {
     // TODO 暂时题目比较少，所以可以一次性把所有数据都存入redis缓存，
     // 后续如果题目多了，必须只把热点数据存入redis缓存。
 
-    updateHashListCache(
+    updateHashCache(
         "paper_sections",
         () =>
             fetchAllPaginatedData({
@@ -45,7 +44,7 @@ export default defineCronHandler("everyThirtyMinutes", async () => {
         3600 // 1 hour
     );
 
-    updateHashListCache(
+    updateHashCache(
         "paper_sections_questions",
         () =>
             fetchAllPaginatedData({
@@ -60,7 +59,7 @@ export default defineCronHandler("everyThirtyMinutes", async () => {
         3600 // 1 hour
     );
 
-    updateHashListCache(
+    updateHashCache(
         "questions",
         () =>
             fetchAllPaginatedData({
@@ -87,7 +86,7 @@ export default defineCronHandler("everyThirtyMinutes", async () => {
     // 这样可以避免列表过长、每次get redis数据量过大的问题。
 
     // 获取所有学生用户
-    updateHashListCache(
+    updateHashCache(
         "student_users",
         async () =>
             await directus_client.request(
@@ -105,6 +104,29 @@ export default defineCronHandler("everyThirtyMinutes", async () => {
                 })
             ),
         3600 // 1 hour
+    );
+
+    console.log("准备执行返回学生list");
+    // 仅测试用：返回学生用户的list
+    updateListCache(
+        "student_user_email_list",
+        async () =>
+            await directus_client.request(
+                readUsers({
+                    fields: ["email"],
+                    sort: "email",
+                    filter: {
+                        role: {
+                            name: {
+                                _eq: "学生",
+                            },
+                        },
+                    },
+                    limit: -1,
+                })
+            ),
+        "email",
+        600
     );
 });
 

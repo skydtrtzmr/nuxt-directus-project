@@ -1,5 +1,5 @@
 import { fetchAllPaginatedData } from "~/server/utils/directusUtils";
-import { getHashListItemsFromCache } from "~/server/utils/redisUtils";
+import { getHashItemsFromCache } from "~/server/utils/redisUtils";
 
 export default defineEventHandler(async (event) => {
     console.log("触发questions/list事件");
@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
     const ids = body.ids; // 获取 ID 列表
 
     // 调用缓存查询方法
-    const data = await getHashListItemsFromCache(
+    const data = await getHashItemsFromCache(
         "questions", // Redis 中的 key
         ids, // 传入的 ID 列表
         () =>

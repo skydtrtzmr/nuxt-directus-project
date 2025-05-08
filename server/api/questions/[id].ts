@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
         });
     }
 
-    const data = await getHashListItemFromCache(
+    const data = await getHashItemFromCache(
         "questions", // 这是 Redis 中存储数据的键
         id, // 题目的 id
         () =>

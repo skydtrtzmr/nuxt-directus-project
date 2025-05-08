@@ -16,7 +16,7 @@ const {
     private: { redisHost, redisPort },
 } = useRuntimeConfig();
 
-console.log("测试环境，自动脚本获取用户数据并存储到 Redis");
+console.log("获取当前学生");
 
 let usersArray: DirectusUsers[] = [];
 
@@ -28,7 +28,6 @@ export default defineEventHandler(async (event) => {
     const users: string | null = await redis.get("student_users");
 
     console.log("获取 users:", users);
-
 
     usersArray = JSON.parse(users!);
 

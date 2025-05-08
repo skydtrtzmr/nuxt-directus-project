@@ -21,7 +21,7 @@ import redis from "~~/server/lib/redis";
 // https://www.jianshu.com/p/21b488c1ede5
 
 // 读取缓存的Hash列表的指定id的项
-export async function getHashListItemFromCache<T>(
+export async function getHashItemFromCache<T>(
     key: string, // 缓存的key
     id: string, // 要获取的项的id（其实是对应Hash列表的键）
     fetchFunction: () => Promise<any[]>, // 从数据库获取列表数据的方法
@@ -47,14 +47,14 @@ export async function getHashListItemFromCache<T>(
     } else {
         console.log("cache not hit", key, id);
         // 如果缓存未命中，从数据库获取数据更新缓存，然后再返回数据
-        await updateHashListCache(key, fetchFunction, ttl);
+        await updateHashCache(key, fetchFunction, ttl);
         let data = await redis.hget(key, id);
         return JSON.parse(data!);
     }
 }
 
 // 批量读取缓存的Hash列表的指定id列表的多个项
-export async function getHashListItemsFromCache<T>(
+export async function getHashItemsFromCache<T>(
     key: string, // 缓存的key
     ids: string[], // 要获取的项的id列表
     fetchFunction: () => Promise<any[]>, // 从数据库获取列表数据的方法
@@ -77,7 +77,7 @@ export async function getHashListItemsFromCache<T>(
         );
 
         // 3. 获取缓存未命中的数据并更新缓存
-        await updateHashListCache(key, fetchFunction, ttl);
+        await updateHashCache(key, fetchFunction, ttl);
         // 注意这里不仅仅是更新redis中没有命中的项，还要更新redis中已经存在的项，因为可能有些项已经过期了
 
         // 4. 再次从缓存中获取数据，确保所有的项都有数据
@@ -120,7 +120,7 @@ export async function getHashListItemsFromCache<T>(
 // }
 
 // 更新Hash列表缓存
-export async function updateHashListCache(
+export async function updateHashCache(
     key: string,
     fetchFunction: () => Promise<any[]>, // 注意这里一定返回的是个数组，因为是 Hash 列表
     ttl: number = 3600
@@ -141,4 +141,20 @@ export async function updateHashListCache(
         // console.log("Key has an expiration time set:", didSetExpire);
     }); // 设置过期时间
     // console.log("hset");
+}
+
+export async function updateListCache(
+    key: string, // 在redis中的表名
+    fetchFunction: () => Promise<any[]>, // 注意这里一定返回的是个数组，因为是列表
+    field: string, // 需要存入列表的字段
+    ttl: number = 3600
+): Promise<void> {
+    const data = await fetchFunction();
+    const resultArray: string[] = data.map((item) => item[field]);
+    console.log("resultArray:", resultArray);
+
+    redis.rpush(key, ...resultArray);
+    redis.expire(key, ttl).then((didSetExpire) => {
+        // console.log("Key has an expiration time set:", didSetExpire);
+    }); // 设置过期时间
 }
