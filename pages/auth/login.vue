@@ -109,44 +109,6 @@ const {
     public: { isTest },
 } = useRuntimeConfig();
 
-// 注意！Vue使用 虚拟 DOM 和 响应式数据绑定 来管理表单控件的值，
-// 所以如果仅仅用js脚本直接修改输入框的值，而该输入框的值又是由 Vue 控制的，
-// Vue 可能会在下次重新渲染时覆盖该值，导致你通过脚本设置的值丢失。
-// 所以上面那样写是没用的……
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-onMounted(async () => {
-    // console.log("isTest?");
-    // console.log(isTest);
-    // 这里仅供测试用!
-    // if (isTest) {
-    //     await nextTick(); // 通过nextTick来确保页面渲染完成，然后自动填充表单
-    //     await delay(2000);
-    //     const fetchCurrentUser = await useFetch("/api/dynamic-script"); // 返回一个用户
-    //     console.log("fetchCurrentUser: ", fetchCurrentUser);
-        
-        
-    //     const currentUser = fetchCurrentUser.data.value;
-    //     if (! currentUser) {
-    //         return alert("获取当前用户失败！");
-    //     }
-        
-    //     console.log("当前用户", currentUser);
-
-    //     await nextTick(); // 通过nextTick来确保页面渲染完成，然后自动填充表单
-    //     // 在这里通过 Vue 响应式数据来设置输入框的值
-
-    //     await delay(2000);
-    //     email.value = currentUser.email!;
-
-    //     const passwordInput = currentUser.email!.split("@")[0]; // 获取密码，这里假设密码是邮箱的前缀
-    //     await delay(2000);
-    //     password.value = passwordInput;
-    //     await delay(2000);
-    //     // 不要表单验证了,直接提交
-    //     loginSubmit();
-    // }
-});
 </script>
 
 <template>

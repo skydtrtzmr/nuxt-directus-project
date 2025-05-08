@@ -54,6 +54,8 @@ export async function fillInput(
 export async function waitForNavigation(router: any, pathCondition: (path: string) => boolean, timeout = 10000): Promise<boolean> {
     const startTime = Date.now();
     while (Date.now() - startTime < timeout) {
+        console.log("router.currentRoute.value:", router.currentRoute.value);
+        
         if (pathCondition(router.currentRoute.value.path)) {
             console.log(`Automation: Navigation successful to path matching condition.`);
             await delay(500); // 给页面一点时间加载内容
