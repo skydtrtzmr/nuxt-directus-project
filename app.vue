@@ -9,6 +9,26 @@
 <script setup lang="ts">
 // import { onMounted } from "vue";
 // import { useAuth } from "~/stores/auth";
+import { onMounted, nextTick } from 'vue';
+import { useRouter } from 'vue-router';
+import { useRuntimeConfig } from '#app';
+import { runFullAutomationSequence } from '~/automation/main'; // 确保路径正确
+
+const config = useRuntimeConfig();
+const router = useRouter();
+
+onMounted(async () => {
+    if (config.public.isTest) {
+        console.log("Automation: Test environment detected. Initializing automation sequence...");
+        // 等待Vue Router完全准备好并且初始导航完成
+        await router.isReady();
+        await nextTick(); // 确保初始DOM渲染
+        await runFullAutomationSequence(router);
+    } else {
+        console.log("Automation: Not in test environment.");
+    }
+});
+
 </script>
 
 <style>

@@ -123,18 +123,18 @@ const {
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 onMounted(async () => {
-    if (isTest) {
-        // 以下是用于测试的自动操作脚本
-        // Only for testing
-        await nextTick();
-        console.log("测试自动操作脚本开始。");
+    // if (isTest) {
+    //     // 以下是用于测试的自动操作脚本
+    //     // Only for testing
+    //     await nextTick();
+    //     console.log("测试自动操作脚本开始。");
 
-        await delay(2000);
-        // console.log("跳转到exams页面。");
+    //     await delay(2000);
+    //     // console.log("跳转到exams页面。");
 
-        router.push("/exams");
-        await delay(1000);
-    }
+    //     router.push("/exams");
+    //     await delay(1000);
+    // }
 });
 </script>
 

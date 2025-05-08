@@ -119,33 +119,33 @@ onMounted(async () => {
     // console.log("isTest?");
     // console.log(isTest);
     // 这里仅供测试用!
-    if (isTest) {
-        await nextTick(); // 通过nextTick来确保页面渲染完成，然后自动填充表单
-        await delay(2000);
-        const fetchCurrentUser = await useFetch("/api/dynamic-script"); // 返回一个用户
-        console.log("fetchCurrentUser: ", fetchCurrentUser);
+    // if (isTest) {
+    //     await nextTick(); // 通过nextTick来确保页面渲染完成，然后自动填充表单
+    //     await delay(2000);
+    //     const fetchCurrentUser = await useFetch("/api/dynamic-script"); // 返回一个用户
+    //     console.log("fetchCurrentUser: ", fetchCurrentUser);
         
         
-        const currentUser = fetchCurrentUser.data.value;
-        if (! currentUser) {
-            return alert("获取当前用户失败！");
-        }
+    //     const currentUser = fetchCurrentUser.data.value;
+    //     if (! currentUser) {
+    //         return alert("获取当前用户失败！");
+    //     }
         
-        console.log("当前用户", currentUser);
+    //     console.log("当前用户", currentUser);
 
-        await nextTick(); // 通过nextTick来确保页面渲染完成，然后自动填充表单
-        // 在这里通过 Vue 响应式数据来设置输入框的值
+    //     await nextTick(); // 通过nextTick来确保页面渲染完成，然后自动填充表单
+    //     // 在这里通过 Vue 响应式数据来设置输入框的值
 
-        await delay(2000);
-        email.value = currentUser.email!;
+    //     await delay(2000);
+    //     email.value = currentUser.email!;
 
-        const passwordInput = currentUser.email!.split("@")[0]; // 获取密码，这里假设密码是邮箱的前缀
-        await delay(2000);
-        password.value = passwordInput;
-        await delay(2000);
-        // 不要表单验证了,直接提交
-        loginSubmit();
-    }
+    //     const passwordInput = currentUser.email!.split("@")[0]; // 获取密码，这里假设密码是邮箱的前缀
+    //     await delay(2000);
+    //     password.value = passwordInput;
+    //     await delay(2000);
+    //     // 不要表单验证了,直接提交
+    //     loginSubmit();
+    // }
 });
 </script>
 

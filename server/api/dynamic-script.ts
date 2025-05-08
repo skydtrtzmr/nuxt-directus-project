@@ -35,11 +35,11 @@ export default defineEventHandler(async (event) => {
             readUsers({
                 fields: ["id,email"],
                 sort: "email",
-                filter: {
-                    role: {
-                        _eq: "0fcfa6da-9e38-4d73-acf5-c5585c0770f8",
-                    },
-                },
+                // filter: {
+                //     role: {
+                //         _eq: "6a4c654e-887c-48a9-a5b4-14ea0d6a7101",
+                //     },
+                // },
                 limit: -1,
             })
         )) as DirectusUsers[];
@@ -51,16 +51,24 @@ export default defineEventHandler(async (event) => {
         redis.set("users", JSON.stringify(users));
     }
 
-    const users = await redis.get("users");
+    const users:string|null = await redis.get("users");
 
     console.log("获取 users:", users);
+    
+    // if (users) {
+    //     usersArray = JSON.parse(users);
+    //     await setUsers();
+    //     const users = await redis.get("users");
+    //     usersArray = JSON.parse(users!);
+    // }
+    
     // 把redis中的数据转换成数组
-    if (users && users.length > 0) {
-        // console.log("users is not null");
+    if (users && (users.length > 0)) {
+        console.log("users is not null");
         
         usersArray = JSON.parse(users);
     } else {
-        // console.log("users is null, set users");
+        console.log("users is null, set users");
         
         await setUsers();
         const users = await redis.get("users");

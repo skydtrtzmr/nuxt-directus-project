@@ -371,24 +371,24 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // 自动化测试部分，仍然保留
 onMounted(async () => {
-    if (isTest) {
-        if (props.exam_page_mode !== "review") {
-            // 等待所有题目准备就绪
-            await loadingStateStore.waitUntilReady("examPage");
+    // if (isTest) {
+    //     if (props.exam_page_mode !== "review") {
+    //         // 等待所有题目准备就绪
+    //         await loadingStateStore.waitUntilReady("examPage");
             
-            // 点击所有题目
-            await nextTick();
-            await delay(500);
+    //         // 点击所有题目
+    //         await nextTick();
+    //         await delay(500);
             
-            for (const item of refItems.value) {
-                item.click();
-                await delay(500);
-            }
+    //         for (const item of refItems.value) {
+    //             item.click();
+    //             await delay(500);
+    //         }
             
-            // 设置全部题目已完成
-            globalStore.setAllDone(true);
-        }
-    }
+    //         // 设置全部题目已完成
+    //         globalStore.setAllDone(true);
+    //     }
+    // }
     
     // 检查是否为移动设备，初始化时自动收起
     checkMobileView();

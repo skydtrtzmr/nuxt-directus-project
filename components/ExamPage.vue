@@ -875,24 +875,24 @@ onMounted(async () => {
     //     console.log("polling...");
     // }, 30000); // 30秒，您可以根据需要调整这个时间间隔
 
-    if (isTest && props.exam_page_mode !== "review") {
-        // 监测到全局 store 的 isAllDone 状态变为 true 时，自动提交试卷。
-        watch(
-            () => globalStore.isAllDone,
-            async (newVal) => {
-                if (newVal === true) {
-                    console.log("所有题目已做完，准备提交...");
-                    await delay(1000); // 添加延迟，模拟等待一段时间
-                    manualSubmit();
-                    await delay(1000);
-                    globalStore.setAllDone(false); // 重置全局 store 的 isAllDone 状态
-                    confirm_submit_dialog_visible.value = false; // 关闭确认提交对话框
-                    await delay(1000);
-                    confirmSubmit();
-                }
-            }
-        );
-    }
+    // if (isTest && props.exam_page_mode !== "review") {
+    //     // 监测到全局 store 的 isAllDone 状态变为 true 时，自动提交试卷。
+    //     watch(
+    //         () => globalStore.isAllDone,
+    //         async (newVal) => {
+    //             if (newVal === true) {
+    //                 console.log("所有题目已做完，准备提交...");
+    //                 await delay(1000); // 添加延迟，模拟等待一段时间
+    //                 manualSubmit();
+    //                 await delay(1000);
+    //                 globalStore.setAllDone(false); // 重置全局 store 的 isAllDone 状态
+    //                 confirm_submit_dialog_visible.value = false; // 关闭确认提交对话框
+    //                 await delay(1000);
+    //                 confirmSubmit();
+    //             }
+    //         }
+    //     );
+    // }
 });
 
 // 组件卸载时清除定时器
