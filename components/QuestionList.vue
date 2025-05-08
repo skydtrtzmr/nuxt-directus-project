@@ -470,9 +470,10 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
 
 .toggle-button-wrapper {
     position: absolute;
-    top: 1rem;
-    right: -1.5rem;
-    z-index: 10;
+    top: 50%; /* 垂直居中 */
+    right: 0; /* 调整右侧位置 */
+    transform: translateY(-50%); /* 垂直居中 */
+    z-index: 10000;
 }
 
 .toggle-button-wrapper.collapsed {
@@ -569,6 +570,7 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
 .question-card.selected {
     transform: scale(1.05);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    border: 2px solid ; /* 添加边框高亮效果 */
 }
 
 .flag-indicator {

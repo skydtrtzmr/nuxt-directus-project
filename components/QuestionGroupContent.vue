@@ -52,7 +52,18 @@
                     v-if="!isStemCollapsed"
                     class="shared-stem-content p-3 bg-surface-100 dark:bg-surface-700 rounded-lg flex-1"
                 >
-                    <ScrollPanel style="width: 100%; height: 100%;">
+                    <ScrollPanel
+                        style="width: 100%; height: 100%"
+                        :pt="{
+                            wrapper: {
+                                style: {
+                                    'border-right':
+                                        '10px solid red',
+                                },
+                            },
+                            bary: 'hover:bg-primary-400 bg-primary-300 opacity-100',
+                        }"
+                    >
                         <div class="text-lg font-medium mb-2 stem-title">
                             题组题干：
                         </div>
@@ -85,7 +96,7 @@
                         isStemCollapsed,
                 }"
             >
-                <ScrollPanel style="width: 100%;" class="custom-scrollbar">
+                <ScrollPanel style="width: 100%" class="custom-scrollbar">
                     <div class="questions-scroll-container">
                         <div
                             v-if="groupQuestions.length > 0"
