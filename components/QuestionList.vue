@@ -5,7 +5,8 @@
         :class="{'collapsed': isSidebarCollapsed}"
         v-if="submittedPaperSections.length > 0"
     >
-        <div class="toggle-button-wrapper">
+        <!-- 收缩/展开按钮 - 始终可见 -->
+        <div class="toggle-button-wrapper" :class="{'collapsed': isSidebarCollapsed}">
             <Button
                 :icon="isSidebarCollapsed ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"
                 class="p-button-rounded p-button-text toggle-button"
@@ -19,72 +20,77 @@
                 <h5>题目列表</h5>
             </div>
             <div class="sidebar-content">
-                <div v-for="(section, index) in submittedPaperSections" :key="section.id" class="section-container">
-                    <div class="section-header" @click="toggleSection(index)">
-                        <h6 class="section-title">{{ section.title }}</h6>
-                        <i :class="{'pi pi-chevron-down': !expandedSections.includes(index), 'pi pi-chevron-up': expandedSections.includes(index)}"></i>
-                    </div>
-                    <div class="section-content" v-show="expandedSections.includes(index)">
-                        <!-- 章节下的题目列表，卡片式 -->
-                        <div class="question-card-container">
-                            <!-- 单题模式 -->
-                            <template v-if="!isGroupMode(section)">
-                                <div
-                                    v-for="question in section.questions"
-                                    :key="question.id"
-                                    class="question-btn-wrapper"
-                                >
-                                    <Button
-                                        :severity="isQuestionAnswered(question) ? 'primary' : 'secondary'"
-                                        class="question-card"
-                                        :class="{
-                                            'selected': selectedQuestion && selectedQuestion.id === question.id
-                                        }"
-                                        @click="handleQuestionClick(question, false)"
-                                        ref="refItems"
+                <ScrollPanel class="custom-scrollbar">
+                    <div v-for="(section, index) in submittedPaperSections" :key="section.id" class="section-container">
+                        <div class="section-header" @click="toggleSection(index)">
+                            <h6 class="section-title">{{ section.title }}</h6>
+                            <i :class="{'pi pi-chevron-down': !expandedSections.includes(index), 'pi pi-chevron-up': expandedSections.includes(index)}"></i>
+                        </div>
+                        <div class="section-content" v-show="expandedSections.includes(index)">
+                            <!-- 章节下的题目列表，卡片式 -->
+                            <div class="question-card-container">
+                                <!-- 单题模式 -->
+                                <template v-if="!isGroupMode(section)">
+                                    <div
+                                        v-for="question in section.questions"
+                                        :key="question.id"
+                                        class="question-btn-wrapper"
                                     >
-                                        {{ question.sort_in_section }}
-                                    </Button>
-                                    <span class="flag-indicator" :class="{'visible': isQuestionFlagged(question)}">?</span>
-                                </div>
-                            </template>
-                            
-                            <!-- 题组模式 -->
-                            <template v-else>
-                                <div
-                                    v-for="group in section.question_groups"
-                                    :key="group.id"
-                                    class="question-btn-wrapper"
-                                >
-                                    <Button
-                                        :severity="isGroupAnswered(group, section) ? 'primary' : 'secondary'"
-                                        class="question-card"
-                                        :class="{
-                                            'selected': selectedQuestion && 
-                                                        selectedQuestion.isGroupMode &&
-                                                        selectedQuestion.questionGroup &&
-                                                        selectedQuestion.questionGroup.id === (typeof group.question_groups_id === 'string' 
-                                                            ? group.question_groups_id 
-                                                            : group.question_groups_id.id)
-                                        }"
-                                        @click="handleQuestionGroupClick(group, section)"
-                                        ref="refItems"
+                                        <Button
+                                            :severity="isQuestionAnswered(question) ? 'primary' : 'secondary'"
+                                            class="question-card"
+                                            :class="{
+                                                'selected': selectedQuestion && selectedQuestion.id === question.id
+                                            }"
+                                            @click="handleQuestionClick(question, false)"
+                                            ref="refItems"
+                                        >
+                                            {{ question.sort_in_section }}
+                                        </Button>
+                                        <span class="flag-indicator" :class="{'visible': isQuestionFlagged(question)}">?</span>
+                                    </div>
+                                </template>
+                                
+                                <!-- 题组模式 -->
+                                <template v-else>
+                                    <div
+                                        v-for="group in section.question_groups"
+                                        :key="group.id"
+                                        class="question-btn-wrapper"
                                     >
-                                        {{ group.sort_in_section }}
-                                    </Button>
-                                    <span class="flag-indicator" :class="{'visible': isGroupFlagged(group, section)}">?</span>
-                                </div>
-                            </template>
+                                        <Button
+                                            :severity="isGroupAnswered(group, section) ? 'primary' : 'secondary'"
+                                            class="question-card"
+                                            :class="{
+                                                'selected': selectedQuestion && 
+                                                            selectedQuestion.isGroupMode &&
+                                                            selectedQuestion.questionGroup &&
+                                                            selectedQuestion.questionGroup.id === (typeof group.question_groups_id === 'string' 
+                                                                ? group.question_groups_id 
+                                                                : group.question_groups_id.id)
+                                            }"
+                                            @click="handleQuestionGroupClick(group, section)"
+                                            ref="refItems"
+                                        >
+                                            {{ group.sort_in_section }}
+                                        </Button>
+                                        <span class="flag-indicator" :class="{'visible': isGroupFlagged(group, section)}">?</span>
+                                    </div>
+                                </template>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </ScrollPanel>
             </div>
         </div>
+
+        <!-- 侧边栏拖动调整宽度的拖动条 -->
+        <div v-if="!isSidebarCollapsed" class="resizer" @mousedown="startResize"></div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick, watch } from "vue";
+import { ref, onMounted, nextTick, watch, onUnmounted } from "vue";
 import type {
     PaperSections,
     QuestionResults,
@@ -104,7 +110,7 @@ const props = defineProps<{
     practiceSessionId: string;
 }>();
 
-const emit = defineEmits(['sidebar-toggle']);
+const emit = defineEmits(['sidebar-toggle', 'resize-sidebar']);
 
 const loadingStateStore = useLoadingStateStore();
 const globalStore = useGlobalStore(); // 创建 Pinia store 实例
@@ -112,12 +118,56 @@ const refItems = ref<HTMLButtonElement[]>([]);
 const isSidebarCollapsed = ref(false);
 const expandedSections = ref<number[]>([0]); // 默认展开第一个章节
 
+// 拖拽调整宽度相关变量
+const startX = ref(0);
+const startWidth = ref(0);
+const minWidth = 100; // 最小宽度
+const maxWidth = 600; // 最大宽度
+
 // 控制章节展开/折叠的状态和样式
 const sectionStyles = ref<{ [key: number]: any }>({});
 
 const toggleSidebar = () => {
     isSidebarCollapsed.value = !isSidebarCollapsed.value;
     emit('sidebar-toggle', isSidebarCollapsed.value);
+};
+
+// 开始调整宽度
+const startResize = (event: MouseEvent) => {
+    startX.value = event.clientX;
+    // 获取当前容器的宽度
+    const element = event.target as HTMLElement;
+    const container = element.closest('.question-list-container') as HTMLElement;
+    startWidth.value = container.offsetWidth;
+    
+    // 添加移动和松开鼠标的事件监听
+    document.addEventListener('mousemove', resizing);
+    document.addEventListener('mouseup', stopResize);
+    
+    // 添加防止选择文本的样式
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'col-resize';
+};
+
+// 调整宽度过程
+const resizing = (event: MouseEvent) => {
+    const dx = event.clientX - startX.value;
+    let newWidth = startWidth.value + dx;
+    
+    // 限制调整范围
+    if (newWidth < minWidth) newWidth = minWidth;
+    if (newWidth > maxWidth) newWidth = maxWidth;
+    
+    // 触发宽度调整事件
+    emit('resize-sidebar', newWidth);
+};
+
+// 停止调整宽度
+const stopResize = () => {
+    document.removeEventListener('mousemove', resizing);
+    document.removeEventListener('mouseup', stopResize);
+    document.body.style.userSelect = '';
+    document.body.style.cursor = '';
 };
 
 // 判断章节是否使用题组模式
@@ -409,298 +459,188 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
 <style scoped>
 .question-list-container {
     position: relative;
-    transition: all 0.3s ease;
     height: 100%;
-    display: flex;
-    z-index: 5; /* 提高题目列表的z-index */
+    transition: all 0.3s ease;
 }
 
-.sidebar {
-    background-color: var(--surface-card);
-    border-radius: 8px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-    width: 100%;
-    height: 100%;
-    transition: width 0.3s ease;
-    overflow: hidden;
-    flex: 1;
-    border: 1px solid var(--surface-border);
-    position: relative; /* 确保侧边栏有相对定位 */
+.question-list-container.collapsed {
+    width: 40px !important; /* 确保collapsed状态有一个固定的宽度，足够容纳展开按钮 */
+    min-width: 40px !important;
 }
 
 .toggle-button-wrapper {
     position: absolute;
-    right: -20px;
-    top: 10px;
-    z-index: 10; /* 确保收缩按钮始终位于最上层 */
+    top: 1rem;
+    right: -1.5rem;
+    z-index: 10;
+}
+
+.toggle-button-wrapper.collapsed {
+    right: 0.25rem; /* 当侧边栏收起时，调整按钮位置使其可见 */
+    left: auto;
 }
 
 .toggle-button {
-    background-color: var(--surface-card);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border: 1px solid var(--surface-border);
-    transition: transform 0.3s ease;
-    position: relative; /* 为按钮添加相对定位 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    background-color: var(--surface-0);
 }
 
-.question-list-container.collapsed {
-    width: 40px !important;
-    min-width: 40px !important;
-}
-
-.question-list-container.collapsed .sidebar {
-    width: 0;
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
 
+.sidebar.hidden {
+    display: none;
+}
+
 .sidebar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 1.25rem;
-    border-bottom: 1px solid var(--surface-border);
-    position: sticky; /* 使标题栏粘性定位 */
-    top: 0;
-    background-color: var(--surface-card); /* 确保背景色 */
-    z-index: 2; /* 确保标题栏在内容上方 */
+    padding: 1rem;
+    border-bottom: 1px solid var(--surface-200);
+    background-color: var(--surface-50);
 }
 
 .sidebar-content {
-    padding: 0.5rem;
-    max-height: calc(100% - 50px);
-    overflow-y: auto;
-    position: relative; /* 添加相对定位 */
-    z-index: 1; /* 设置合适的层级 */
+    flex: 1;
+    overflow: hidden;
+}
+
+.custom-scrollbar {
+    width: 100%;
+    height: 100%;
 }
 
 .section-container {
     margin-bottom: 0.5rem;
-    border: 1px solid var(--surface-border);
-    border-radius: 6px;
-    overflow: hidden;
 }
 
 .section-header {
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 1rem;
-    background-color: var(--surface-ground);
-    cursor: pointer;
-    transition: background-color 0.2s;
-    position: relative; /* 添加相对定位 */
-    z-index: 1; /* 确保章节标题在适当层级 */
+    background-color: var(--surface-100);
+    transition: all 0.2s ease;
 }
 
 .section-header:hover {
-    background-color: var(--surface-hover);
+    background-color: var(--surface-200);
 }
 
 .section-title {
     margin: 0;
-    font-size: 1rem;
     font-weight: 600;
 }
 
 .section-content {
-    padding: 0.75rem;
-    border-top: 1px solid var(--surface-border);
-    background-color: var(--surface-section);
-    transition: max-height 0.3s ease;
+    padding: 0.5rem;
     overflow: hidden;
-    max-height: none;
+    transition: max-height 0.3s ease;
 }
 
 .question-card-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin: 10px 0;
+    gap: 0.5rem;
+    padding: 0.5rem;
 }
 
 .question-btn-wrapper {
     position: relative;
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    margin: 2px;
 }
 
 .question-card {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    min-width: 40px;
-    height: 40px;
+    width: 2.5rem;
+    height: 2.5rem;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    font-weight: 600;
     border-radius: 4px;
-    transition: all 0.2s ease;
-    /* 确保边框不会改变盒子大小 */
-    box-sizing: border-box;
-    border: 2px solid transparent;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* 已答题状态 */
-.question-card.p-button-primary {
-    opacity: 0.95;
-}
-
-/* 选中状态 */
 .question-card.selected {
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* 半透明的蓝色阴影 */
-    border: 2px solid var(--primary-700, #2563EB);
-    transform: none; /* 移除缩放效果，防止影响布局 */
-    font-weight: bold;
-    z-index: 2;
-    opacity: 1;
-}
-
-/* 既是选中状态又是已答题状态 */
-.question-card.selected.p-button-primary {
-    border-color: var(--primary-800, #1D4ED8);
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.7); /* 更明显的阴影 */
+    transform: scale(1.05);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .flag-indicator {
     position: absolute;
     top: -8px;
     right: -8px;
-    background-color: rgb(246, 242, 44);
-    color: rgb(237, 19, 19);
+    background-color: rgb(246, 242, 44); /* 改回黄色背景 */
+    color: rgb(237, 19, 19); /* 改回红色文字 */
+    width: 1rem;
+    height: 1rem;
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
     display: flex;
-    align-items: center;
     justify-content: center;
-    font-size: 12px;
+    align-items: center;
+    font-size: 0.7rem;
     font-weight: bold;
-    box-shadow: 0 2px 4px rgba(231, 139, 139, 0.253);
-    /* 默认隐藏但保留空间 */
-    visibility: hidden;
     opacity: 0;
-    transition: opacity 0.2s ease;
-    z-index: 3;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(231, 139, 139, 0.253); /* 添加阴影效果 */
 }
 
 .flag-indicator.visible {
-    visibility: visible;
     opacity: 1;
+    visibility: visible;
 }
 
-/* 移动端样式适配 */
+/* 拖动调整宽度的拖动条 */
+.resizer {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 5px;
+    background-color: transparent;
+    cursor: col-resize;
+    z-index: 10;
+}
+
+.resizer:hover {
+    background-color: var(--primary-200);
+}
+
+.resizer:active {
+    background-color: var(--primary-300);
+}
+
+/* 媒体查询适配移动设备 */
 @media screen and (max-width: 768px) {
-    .question-list-container {
-        position: fixed;
-        left: 0;
-        bottom: 0;
+    .sidebar {
+        border-radius: 0;
+    }
+    
+    .toggle-button-wrapper {
         top: auto;
-        width: 100%;
-        height: auto;
-        max-height: 60vh;
-        z-index: 1000; /* 提高移动端z-index值 */
-        padding-bottom: 20px; /* 确保最后一行题目完全可见 */
+        bottom: -1.5rem;
+        right: 1rem;
+    }
+    
+    .toggle-button-wrapper.collapsed {
+        bottom: -1.5rem;
+        right: 1rem;
     }
     
     .question-list-container.collapsed {
+        max-height: 10px !important;
+        height: 10px !important;
         width: 100% !important;
-        height: 40px;
-        max-height: 40px;
-        padding-bottom: 0;
-        transition: all 0.3s ease;
     }
     
-    .toggle-button-wrapper {
-        position: absolute;
-        right: 10px;
-        top: 10px;
-        transform: none;
-        z-index: 1001; /* 确保在移动端按钮位于最顶层 */
-    }
-    
-    .toggle-button {
-        transform: rotate(90deg); /* 调整箭头方向为向下 */
-        transition: transform 0.3s ease;
-    }
-    
-    .question-list-container.collapsed .toggle-button {
-        transform: rotate(270deg); /* 折叠时箭头向上 */
-    }
-    
-    .sidebar {
-        border-radius: 12px 12px 0 0;
-        height: 100%;
-        max-height: calc(60vh - 40px);
-        overflow-y: auto;
-        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2); /* 增强阴影效果 */
-    }
-    
-    .sidebar-content {
-        max-height: calc(60vh - 90px);
-        padding-bottom: 20px; /* 底部额外填充 */
-    }
-    
-    .question-btn-wrapper {
-        width: 36px;
-        height: 36px;
-    }
-    
-    .question-card {
-        min-width: 36px;
-        height: 36px;
-        position: relative; /* 确保位置一致性 */
-    }
-
-    /* 确保展开时内容有动画效果 */
-    .section-content {
-        transition: max-height 0.3s ease;
-        overflow: hidden;
-    }
-    
-    .sidebar-header {
-        position: sticky; /* 移动端确保标题栏固定 */
-        top: 0;
-        z-index: 3; /* 移动端标题栏适当的z-index */
-    }
-}
-
-/* 添加桌面视图的题目按钮位置一致性 */
-@media screen and (min-width: 769px) {
-    .question-card {
-        position: relative;
-    }
-    
-    .question-btn-wrapper {
-        margin: 2px;
-    }
-    
-    .section-content {
-        transition: max-height 0.3s ease;
-        overflow: hidden;
-    }
-    
-    /* 桌面端收缩按钮样式 */
-    .toggle-button-wrapper {
-        position: absolute;
-        right: -20px;
-        top: 10px; /* 固定在顶部 */
-        transform: none;
-        z-index: 10; /* 桌面端确保按钮位于最上层 */
-    }
-    
-    /* 保持桌面端收缩展开按钮一致 */
-    .question-list-container.collapsed .toggle-button-wrapper {
-        right: -20px;
-    }
-    
-    .sidebar-header {
-        position: sticky; /* 桌面端确保标题栏固定 */
-        top: 0;
-        z-index: 3; /* 桌面端标题栏适当的z-index */
+    .resizer {
+        display: none; /* 移动设备上不显示拖动条 */
     }
 }
 </style>

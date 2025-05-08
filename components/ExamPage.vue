@@ -1,6 +1,6 @@
 <!-- pages/exam/[id].vue -->
 <template>
-    <div class="exam-page relative">
+    <div class="exam-page">
         <!-- 顶部信息栏 -->
         <ExamHeader
             :exam_page_mode="exam_page_mode"
@@ -68,12 +68,13 @@
             </Dialog>
         </template>
 
-        <!-- 题目区域 -->
-        <div class="question-area flex flex-col lg:flex-row gap-2">
+        <!-- 题目区域 - 使用固定高度布局 -->
+        <div class="question-area">
             <!-- 左侧：题目列表 -->
             <QuestionList
-                class="lg:w-3/12"
-                :class="{ 'lg:w-0': sidebarCollapsed }"
+                class="question-list-container"
+                :class="{ 'collapsed': sidebarCollapsed }"
+                :style="{ width: sidebarWidth + 'px' }"
                 :exam_page_mode="exam_page_mode"
                 :submittedPaperSections="submittedPaperSections"
                 :selectedQuestion="selectedQuestion"
@@ -81,14 +82,15 @@
                 :questionResults="questionResults"
                 :practiceSessionId="practice_session_id"
                 @sidebar-toggle="handleSidebarToggle"
+                @resize-sidebar="handleSidebarResize"
             ></QuestionList>
 
             <!-- 右侧：题目详情和答题区 -->
             <QuestionDetail
-                class="flex-1 transition-all duration-300"
+                class="question-detail-container"
                 :class="{
-                    'lg:ml-0': sidebarCollapsed,
-                    'lg:ml-3': !sidebarCollapsed,
+                    'with-collapsed-sidebar': sidebarCollapsed,
+                    'with-expanded-sidebar': !sidebarCollapsed,
                 }"
                 :exam_page_mode="exam_page_mode"
                 :selectedQuestion="selectedQuestion"
@@ -155,6 +157,7 @@ dayjs.extend(utc);
 const ended_dialog_visible = ref(false);
 const confirm_submit_dialog_visible = ref(false);
 const sidebarCollapsed = ref(false); // 控制侧边栏收缩状态
+const sidebarWidth = ref(300); // 侧边栏宽度，默认300px
 
 const props = defineProps<{
     // practice_session_id: string;
@@ -164,6 +167,11 @@ const props = defineProps<{
 
 const handleSidebarToggle = (collapsed: boolean) => {
     sidebarCollapsed.value = collapsed;
+};
+
+// 处理侧边栏宽度调整
+const handleSidebarResize = (width: number) => {
+    sidebarWidth.value = width;
 };
 
 const { getItemById, getItems, updateItem } = useDirectusItems();
@@ -1337,19 +1345,74 @@ const handleQuestionGroupClick = async (group: any, section: PaperSections) => {
 .exam-page {
     display: flex;
     flex-direction: column;
-    min-height: calc(100vh - 120px);
+    height: 100vh;
+    overflow: hidden;
 }
 
 .question-area {
+    display: flex;
     flex: 1;
+    overflow: hidden;
     position: relative;
-    min-height: 500px;
+    height: calc(100vh - 120px); /* 减去头部高度 */
 }
 
+.question-list-container {
+    height: 100%;
+    transition: width 0.3s ease;
+    overflow: hidden;
+}
+
+.question-list-container.collapsed {
+    width: 40px !important; /* 确保收缩状态下有足够空间显示展开按钮 */
+    min-width: 40px !important;
+}
+
+.question-detail-container {
+    flex: 1;
+    transition: all 0.3s ease;
+    padding-left: 1rem;
+    height: 100%;
+    overflow: hidden;
+}
+
+.question-detail-container.with-collapsed-sidebar {
+    margin-left: 0;
+}
+
+.question-detail-container.with-expanded-sidebar {
+    margin-left: 0.5rem;
+}
+
+/* 确保滚动条不会导致布局抖动 */
+:deep(.p-scrollpanel) {
+    padding-right: 17px; /* 为滚动条预留空间 */
+    box-sizing: content-box;
+}
+
+/* 适配移动设备 */
 @media screen and (max-width: 768px) {
     .question-area {
-        margin-bottom: 40px;
-        min-height: 400px;
+        flex-direction: column;
+        height: calc(100vh - 80px);
+    }
+
+    .question-list-container {
+        width: 100% !important;
+        height: auto;
+        max-height: 30vh;
+    }
+
+    .question-list-container.collapsed {
+        max-height: 10px !important;
+        height: 10px !important;
+    }
+
+    .question-detail-container {
+        width: 100%;
+        margin-left: 0 !important;
+        padding-left: 0;
+        height: 70vh;
     }
 }
 </style>

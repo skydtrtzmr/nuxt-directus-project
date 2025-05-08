@@ -1,7 +1,7 @@
 <!-- components/QuestionDetail.vue -->
 <!-- 题目详情页。这里是包含整个题目详情的页面，包括题目所属的章节、题目内容、答题区 -->
 <template>
-    <div class="question-detail card h-full overflow-hidden flex flex-col">
+    <div class="question-detail card h-full flex flex-col">
         <div class="question-header p-5 bg-surface-50 dark:bg-surface-700 border-b border-surface-200 dark:border-surface-600">
             <template v-if="selectedQuestion && selectedQuestion.questions_id">
                 <div class="flex justify-between items-start">
@@ -44,31 +44,33 @@
             </div>
         </div>
         
-        <div class="question-content flex-1 overflow-auto p-4">
-            <div class="h-full">
-                <!-- 题目内容和答题区 -->
-                <div class="w-full p-5 bg-surface-50 dark:bg-surface-800 rounded-lg shadow-sm">
-                    <!-- 题组模式 -->
-                    <QuestionGroupContent
-                        v-if="isGroupMode && selectedQuestion && selectedQuestion.questionGroup"
-                        :questionGroup="selectedQuestion.questionGroup"
-                        :practiceSessionId="practiceSessionId"
-                        :questionResults="questionResults"
-                        :exam_page_mode="exam_page_mode"
-                        :groupQuestions="selectedQuestion.groupQuestions || []"
-                        :renderMarkdown="renderMarkdown"
-                    />
-                    
-                    <!-- 单题模式 -->
-                    <QuestionContent
-                        v-else-if="selectedQuestion"
-                        :selectedQuestion="selectedQuestion"
-                        :exam_page_mode="exam_page_mode"
-                        :renderMarkdown="renderMarkdown"
-                        :groupMode="false"
-                    />
+        <div class="question-content flex-1 overflow-hidden">
+            <ScrollPanel class="custom-scrollbar">
+                <div class="p-4">
+                    <!-- 题目内容和答题区 -->
+                    <div class="w-full p-5 bg-surface-50 dark:bg-surface-800 rounded-lg shadow-sm">
+                        <!-- 题组模式 -->
+                        <QuestionGroupContent
+                            v-if="isGroupMode && selectedQuestion && selectedQuestion.questionGroup"
+                            :questionGroup="selectedQuestion.questionGroup"
+                            :practiceSessionId="practiceSessionId"
+                            :questionResults="questionResults"
+                            :exam_page_mode="exam_page_mode"
+                            :groupQuestions="selectedQuestion.groupQuestions || []"
+                            :renderMarkdown="renderMarkdown"
+                        />
+                        
+                        <!-- 单题模式 -->
+                        <QuestionContent
+                            v-else-if="selectedQuestion"
+                            :selectedQuestion="selectedQuestion"
+                            :exam_page_mode="exam_page_mode"
+                            :renderMarkdown="renderMarkdown"
+                            :groupMode="false"
+                        />
+                    </div>
                 </div>
-            </div>
+            </ScrollPanel>
         </div>
         
         <div v-if="selectedQuestion && exam_page_mode !== 'review'" class="question-footer p-4 bg-surface-50 dark:bg-surface-700 border-t border-surface-200 dark:border-surface-600">
@@ -226,18 +228,43 @@ const getScoreSeverity = (question: any) => {
 
 <style scoped>
 .question-detail {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     border-radius: 8px;
-    transition: all 0.3s ease;
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.question-header {
+    flex-shrink: 0;
+}
+
+.question-content {
+    flex: 1;
+    overflow: hidden;
+}
+
+.custom-scrollbar {
+    width: 100%;
+    height: 100%;
+    padding-right: 17px; /* 为滚动条预留空间 */
+    box-sizing: content-box;
+}
+
+.question-footer {
+    flex-shrink: 0;
+}
+
+@media screen and (max-width: 768px) {
+    .question-detail {
+        border-radius: 0;
+    }
 }
 
 .question-header h3 {
     line-height: 1.4;
     letter-spacing: 0.01em;
-}
-
-.question-content {
-    background-color: var(--surface-100);
 }
 
 .navigation-buttons {
@@ -257,25 +284,6 @@ const getScoreSeverity = (question: any) => {
 .navigation-buttons .p-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-@media screen and (max-width: 768px) {
-    .question-detail {
-        border-radius: 8px;
-        margin-bottom: 60px;
-    }
-    
-    .question-header {
-        padding: 0.75rem 1rem;
-    }
-    
-    .navigation-buttons {
-        max-width: 100%;
-    }
-    
-    .navigation-buttons .p-button {
-        min-width: auto;
-    }
 }
 
 /* Markdown样式 */

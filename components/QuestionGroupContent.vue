@@ -2,17 +2,17 @@
 <template>
     <div class="question-group-content">
         <!-- 自适应布局容器：电脑端左右布局，手机端上下布局 -->
-        <div class="flex flex-col lg:flex-row gap-4">
-            <!-- 公共题干区域 - 可收缩 -->
+        <div class="flex flex-col lg:flex-row gap-4 group-container">
+            <!-- 公共题干区域 - 可收缩和拖拽调整宽度 -->
             <div
                 v-if="questionGroup && questionGroup.shared_stem"
                 class="shared-stem-container"
                 :class="{
-                    'lg:w-1/3': !isStemCollapsed,
                     'lg:w-10': isStemCollapsed,
                     'h-auto': !isStemCollapsed || isMobile,
                     'h-10': isStemCollapsed && !isMobile,
                 }"
+                :style="!isStemCollapsed ? { width: stemWidth + 'px' } : {}"
             >
                 <!-- 收缩按钮 - 电脑端展开和收缩都显示按钮 -->
                 <div v-if="!isMobile" class="desktop-toggle-button-container">
@@ -45,107 +45,96 @@
                     "
                 />
 
-                <!-- 公共题干内容区域 -->
+                <!-- 公共题干内容区域 - 独立滚动 -->
                 <div
-                    class="shared-stem-content p-3 bg-surface-100 dark:bg-surface-700 rounded-lg markdown-content"
-                    :class="{ hidden: isStemCollapsed }"
+                    v-if="!isStemCollapsed"
+                    class="shared-stem-content p-3 bg-surface-100 dark:bg-surface-700 rounded-lg"
                 >
                     <div class="text-lg font-medium mb-2">题组题干：</div>
-                    <div
-                        v-html="renderMarkdown(questionGroup.shared_stem)"
-                        class="markdown-content"
-                    ></div>
+                    <ScrollPanel class="stem-scrollbar">
+                        <div
+                            v-html="renderMarkdown(questionGroup.shared_stem)"
+                            class="markdown-content"
+                        ></div>
+                    </ScrollPanel>
                 </div>
+                
+                <!-- 拖拽调整宽度的分隔线 -->
+                <div v-if="!isStemCollapsed && !isMobile" class="stem-resizer" @mousedown="startStemResize"></div>
             </div>
 
-            <!-- 题目列表区域 -->
+            <!-- 题目列表区域 - 独立滚动 -->
             <div
                 class="group-questions"
                 :class="{
-                    'lg:w-2/3':
-                        questionGroup &&
-                        questionGroup.shared_stem &&
-                        !isStemCollapsed,
                     'lg:flex-1':
                         !questionGroup ||
                         !questionGroup.shared_stem ||
                         isStemCollapsed,
                 }"
             >
-                <div v-if="groupQuestions.length > 0">
-                    <template
-                        v-for="(questionItem, index) in groupQuestions"
-                        :key="questionItem.id"
-                    >
-                        <div
-                            class="question-item mb-4 border-l-4 pl-4"
-                            :class="getQuestionBorderClass(questionItem)"
+                <ScrollPanel class="questions-scrollbar">
+                    <div v-if="groupQuestions.length > 0">
+                        <template
+                            v-for="(questionItem, index) in groupQuestions"
+                            :key="questionItem.id"
                         >
                             <div
-                                class="question-header flex justify-between items-center mb-2"
+                                class="question-item mb-4 border-l-4 pl-4"
+                                :class="getQuestionBorderClass(questionItem)"
                             >
-                                <h3 class="text-lg font-medium">
-                                    （{{ index + 1 }}）{{ questionItem.questions_id.title }}
-                                </h3>
-                                <div class="flex items-center gap-2">
-                                    <Button
-                                        :icon="
-                                            isQuestionFlagged(questionItem)
-                                                ? 'pi pi-flag-fill'
-                                                : 'pi pi-flag'
-                                        "
-                                        :class="{
-                                            'p-button-danger':
-                                                isQuestionFlagged(questionItem),
-                                        }"
-                                        class="p-button-rounded p-button-sm p-button-text"
-                                        @click="
-                                            toggleQuestionFlag(questionItem)
-                                        "
-                                        :aria-label="
-                                            isQuestionFlagged(questionItem)
-                                                ? '取消标记疑问'
-                                                : '标记疑问'
-                                        "
-                                        v-tooltip.bottom="
-                                            isQuestionFlagged(questionItem)
-                                                ? '取消标记疑问'
-                                                : '标记疑问'
-                                        "
-                                    />
-                                    <div
-                                        class="score-label"
-                                        :class="
-                                            getQuestionScoreSeverity(
-                                                questionItem
-                                            )
-                                        "
-                                    >
-                                        {{
-                                            getQuestionScoreDisplay(
-                                                questionItem
-                                            )
-                                        }}
+                                <div
+                                    class="question-header flex justify-between items-center mb-2"
+                                >
+                                    <h3 class="text-lg font-medium">
+                                        （{{ index + 1 }}）{{ questionItem.questions_id.title }}
+                                    </h3>
+                                    <div class="flex items-center gap-2">
+                                        <Button
+                                            :icon="
+                                                isQuestionFlagged(questionItem)
+                                                    ? 'pi pi-flag-fill'
+                                                    : 'pi pi-flag'
+                                            "
+                                            :class="{
+                                                'p-button-danger':
+                                                    isQuestionFlagged(questionItem),
+                                            }"
+                                            class="p-button-rounded p-button-sm p-button-text"
+                                            @click="
+                                                toggleQuestionFlag(questionItem)
+                                            "
+                                            :aria-label="
+                                                isQuestionFlagged(questionItem)
+                                                    ? '取消标记疑问'
+                                                    : '标记疑问'
+                                            "
+                                            v-tooltip.bottom="
+                                                isQuestionFlagged(questionItem)
+                                                    ? '取消标记疑问'
+                                                    : '标记疑问'
+                                            "
+                                        />
                                     </div>
                                 </div>
+                                <QuestionContent
+                                    :selectedQuestion="
+                                        enhanceQuestionWithIndex(
+                                            questionItem,
+                                            index
+                                        )
+                                    "
+                                    :exam_page_mode="exam_page_mode"
+                                    :renderMarkdown="renderMarkdown"
+                                    :groupMode="true"
+                                />
                             </div>
-                            <QuestionContent
-                                :selectedQuestion="
-                                    enhanceQuestionWithIndex(
-                                        questionItem,
-                                        index
-                                    )
-                                "
-                                :exam_page_mode="exam_page_mode"
-                                :renderMarkdown="renderMarkdown"
-                                :groupMode="true"
-                            />
-                        </div>
-                    </template>
-                </div>
-                <div v-else class="text-center p-4 text-surface-500">
-                    未找到题组内容
-                </div>
+                        </template>
+                    </div>
+                    <div v-else class="text-center p-4 text-surface-500">
+                        未找到题组内容
+                    </div>
+                </ScrollPanel>
             </div>
         </div>
     </div>
@@ -176,10 +165,55 @@ const emit = defineEmits(["flag-question"]);
 // 控制公共题干区域的收缩状态
 const isStemCollapsed = ref(false);
 const isMobile = ref(false);
+const stemWidth = ref(300); // 题干宽度，默认300px
+
+// 拖拽调整宽度相关变量
+const startX = ref(0);
+const startWidth = ref(0);
+const minStemWidth = 100; // 最小宽度
+const maxStemWidth = 600; // 最大宽度
 
 // 收缩/展开公共题干
 const toggleStem = () => {
     isStemCollapsed.value = !isStemCollapsed.value;
+};
+
+// 开始拖拽调整题干宽度
+const startStemResize = (event: MouseEvent) => {
+    startX.value = event.clientX;
+    // 获取当前容器的宽度
+    const element = event.target as HTMLElement;
+    const container = element.closest('.shared-stem-container') as HTMLElement;
+    startWidth.value = container.offsetWidth;
+    
+    // 添加移动和松开鼠标的事件监听
+    document.addEventListener('mousemove', resizingStem);
+    document.addEventListener('mouseup', stopStemResize);
+    
+    // 添加防止选择文本的样式
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'col-resize';
+};
+
+// 拖拽调整题干宽度过程
+const resizingStem = (event: MouseEvent) => {
+    const dx = event.clientX - startX.value;
+    let newWidth = startWidth.value + dx;
+    
+    // 限制调整范围
+    if (newWidth < minStemWidth) newWidth = minStemWidth;
+    if (newWidth > maxStemWidth) newWidth = maxStemWidth;
+    
+    // 更新题干宽度
+    stemWidth.value = newWidth;
+};
+
+// 停止拖拽调整题干宽度
+const stopStemResize = () => {
+    document.removeEventListener('mousemove', resizingStem);
+    document.removeEventListener('mouseup', stopStemResize);
+    document.body.style.userSelect = '';
+    document.body.style.cursor = '';
 };
 
 // 判断题目是否被标记为有疑问
@@ -351,166 +385,131 @@ const getQuestionScoreSeverity = (question: any) => {
 
 <style scoped>
 .question-group-content {
+    width: 100%;
     height: 100%;
-    overflow-y: auto;
-    position: relative; /* 添加相对定位以正确定位内部元素 */
+    overflow: hidden;
 }
 
-/* 公共题干容器样式 */
+.group-container {
+    height: 100%;
+    overflow: hidden;
+}
+
 .shared-stem-container {
     position: relative;
-    transition: all 0.3s ease;
-    background-color: #f9fafb;
+    overflow: hidden;
+    background-color: var(--surface-50);
     border-radius: 8px;
-    padding: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    z-index: 2;
-    overflow: visible; /* 修改为visible，让按钮可以显示在外部 */
+    transition: width 0.3s ease;
+    border: 1px solid var(--surface-200);
+    display: flex;
+    flex-direction: column;
 }
 
-/* 桌面端收缩按钮容器 */
+.shared-stem-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.stem-scrollbar {
+    width: 100%;
+    height: 100%;
+    padding-right: 17px; /* 为滚动条预留空间 */
+    box-sizing: content-box;
+}
+
 .desktop-toggle-button-container {
     position: absolute;
-    right: -20px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 5;
 }
 
-/* 收缩按钮样式 - 桌面端 */
-.stem-toggle-btn {
-    background-color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    font-size: 1rem;
-    border: 1px solid #e5e7eb;
+.stem-toggle-btn,
+.stem-toggle-btn-mobile {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* 收缩按钮样式 - 移动端 */
 .stem-toggle-btn-mobile {
     position: absolute;
-    right: 10px;
-    top: 10px;
-    z-index: 10;
-    background-color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 2rem;
-    height: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 5;
 }
 
-/* 题目内容区域样式 */
 .group-questions {
-    transition: all 0.3s ease;
-    position: relative; /* 确保题目内容区域有正确的定位上下文 */
-    z-index: 1; /* 确保题目内容位于正确层级 */
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.questions-scrollbar {
+    width: 100%;
+    height: 100%;
+    padding-right: 17px; /* 为滚动条预留空间 */
+    box-sizing: content-box;
 }
 
 .question-item {
-    transition: background-color 0.2s;
+    position: relative;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
 }
 
-:deep(.p-tag) {
-    font-size: 0.8rem;
+/* 拖动调整宽度的拖动条 */
+.stem-resizer {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 5px;
+    background-color: transparent;
+    cursor: col-resize;
+    z-index: 10;
 }
 
-/* 确保题目内容区域相互隔离，防止DOM事件冒泡导致的选项混淆 */
-:deep(.group-question-item) {
-    isolation: isolate;
+.stem-resizer:hover {
+    background-color: var(--primary-200);
 }
 
-/* Markdown样式 */
-:deep(.markdown-content) h1,
-:deep(.markdown-content) h2,
-:deep(.markdown-content) h3,
-:deep(.markdown-content) h4,
-:deep(.markdown-content) h5,
-:deep(.markdown-content) h6 {
-    margin-top: 1em;
-    margin-bottom: 0.5em;
-    font-weight: bold;
+.stem-resizer:active {
+    background-color: var(--primary-300);
 }
 
-:deep(.markdown-content) p {
-    margin-bottom: 1em;
-}
-
-:deep(.markdown-content) ul,
-:deep(.markdown-content) ol {
-    padding-left: 2em;
-    margin-bottom: 1em;
-}
-
-:deep(.markdown-content) code {
-    background-color: rgba(0, 0, 0, 0.05);
-    padding: 0.2em 0.4em;
-    border-radius: 3px;
-}
-
-:deep(.markdown-content) pre {
-    background-color: rgba(0, 0, 0, 0.05);
-    padding: 1em;
-    border-radius: 5px;
-    overflow-x: auto;
-    margin-bottom: 1em;
-}
-
-:deep(.markdown-content) blockquote {
-    border-left: 4px solid #ddd;
-    padding-left: 1em;
-    color: #666;
-    margin-bottom: 1em;
-}
-
-:deep(.markdown-content) img {
-    max-width: 100%;
-}
-
-:deep(.markdown-content) table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom: 1em;
-}
-
-:deep(.markdown-content) th,
-:deep(.markdown-content) td {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-:deep(.markdown-content) th {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-@media (prefers-color-scheme: dark) {
-    .shared-stem-container {
-        background-color: #1f2937; /* 替换 var(--surface-800) */
-    }
-}
-
-/* 移动端适配 */
+/* 媒体查询适配移动设备 */
 @media screen and (max-width: 768px) {
     .shared-stem-container {
-        margin-bottom: 15px;
-        position: sticky; /* 在移动端使题干区域在滚动时保持可见 */
-        top: 0;
+        width: 100% !important;
+        margin-bottom: 1rem;
+        max-height: 40vh;
     }
+    
+    .group-questions {
+        width: 100% !important;
+        max-height: 60vh;
+    }
+    
+    .stem-resizer {
+        display: none; /* 移动设备上不显示拖动条 */
+    }
+}
 
-    .stem-toggle-btn-mobile {
-        top: 5px;
-        position: sticky; /* 在移动端确保按钮固定在视口顶部 */
-    }
+/* 适应滚动容器 */
+:deep(.markdown-content img) {
+    max-width: 100%;
+    height: auto;
+}
 
-    .question-group-content {
-        padding-top: 10px; /* 移动端增加顶部间距，防止内容被顶部元素遮挡 */
-    }
+/* 题目标记样式 */
+:deep(.p-button.p-button-danger.p-button-text) {
+    color: rgb(237, 19, 19); /* 使用红色保持一致性 */
+}
+
+:deep(.p-button.p-button-danger.p-button-text:hover) {
+    background: rgba(237, 19, 19, 0.1);
+    color: rgb(200, 0, 0);
 }
 </style>

@@ -122,7 +122,7 @@ const sharedStemContent = computed(() => {
 
 <style scoped>
 .question-container {
-    padding: 0.5rem;
+    width: 100%;
 }
 
 .unknown-question-type {
@@ -161,6 +161,41 @@ const sharedStemContent = computed(() => {
 :deep(.option-item.selected) {
     border-color: var(--primary-color);
     background-color: rgba(var(--primary-color-rgb), 0.05);
+}
+
+/* 优化图片在滚动容器中的显示 */
+:deep(.markdown-content img) {
+    max-width: 100%;
+    height: auto;
+}
+
+/* 确保表格在有限宽度内正确显示 */
+:deep(.markdown-content table) {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    display: block;
+}
+
+/* 优化代码块在滚动容器中的显示 */
+:deep(.markdown-content pre) {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+/* 响应式布局调整 */
+@media screen and (max-width: 768px) {
+    .question-container {
+        padding: 0;
+    }
+    
+    :deep(.question-stem) {
+        padding: 0.75rem;
+    }
+    
+    :deep(.option-item) {
+        padding: 0.5rem 0.75rem;
+    }
 }
 
 /* Markdown样式 */
@@ -211,14 +246,6 @@ const sharedStemContent = computed(() => {
     font-family: monospace;
 }
 
-:deep(.markdown-content) pre {
-    background-color: rgba(0, 0, 0, 0.05);
-    padding: 1.2em;
-    border-radius: 6px;
-    overflow-x: auto;
-    margin-bottom: 1.2em;
-}
-
 :deep(.markdown-content) blockquote {
     border-left: 4px solid #ddd;
     padding: 0.8em 1.2em;
@@ -226,36 +253,5 @@ const sharedStemContent = computed(() => {
     margin: 1.2em 0;
     background-color: rgba(0, 0, 0, 0.02);
     border-radius: 0 6px 6px 0;
-}
-
-:deep(.markdown-content) img {
-    max-width: 100%;
-    border-radius: 4px;
-    margin: 1em 0;
-}
-
-:deep(.markdown-content) table {
-    border-collapse: collapse;
-    width: 100%;
-    margin: 1.2em 0;
-    overflow: hidden;
-    border-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-:deep(.markdown-content) th,
-:deep(.markdown-content) td {
-    border: 1px solid #ddd;
-    padding: 10px 16px;
-}
-
-:deep(.markdown-content) th {
-    background-color: rgba(0, 0, 0, 0.05);
-    text-align: left;
-    font-weight: 600;
-}
-
-:deep(.markdown-content) tr:nth-child(even) {
-    background-color: rgba(0, 0, 0, 0.02);
 }
 </style> 
