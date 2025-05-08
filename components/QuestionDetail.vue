@@ -80,10 +80,11 @@
         </div>
 
         <div class="question-content flex-1 overflow-hidden">
-            <div class="p-4">
+            <!-- 注意下面两个都要加上h-full，以确保正确继承父组件的高度，不然会高度太高，影响Scroll Panel。 -->
+            <div class="p-4 h-full">
                 <!-- 题目内容和答题区 -->
                 <div
-                    class="w-full p-5 bg-surface-50 dark:bg-surface-800 rounded-lg shadow-sm"
+                    class="w-full p-5 bg-surface-50 dark:bg-surface-800 rounded-lg shadow-sm h-full"
                 >
                     <!-- 题组模式 -->
                     <QuestionGroupContent

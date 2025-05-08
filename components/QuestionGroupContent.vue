@@ -52,7 +52,7 @@
                     v-if="!isStemCollapsed"
                     class="shared-stem-content p-3 bg-surface-100 dark:bg-surface-700 rounded-lg flex-1"
                 >
-                    <ScrollPanel style="width: 100%; height: 200px">
+                    <ScrollPanel style="width: 100%; height: 100%;">
                         <div class="text-lg font-medium mb-2 stem-title">
                             题组题干：
                         </div>
@@ -85,7 +85,7 @@
                         isStemCollapsed,
                 }"
             >
-                <ScrollPanel style="width: 100%; height: 400px" class="custom-scrollbar">
+                <ScrollPanel style="width: 100%;" class="custom-scrollbar">
                     <div class="questions-scroll-container">
                         <div
                             v-if="groupQuestions.length > 0"
@@ -454,9 +454,6 @@ const getQuestionScoreSeverity = (question: any) => {
 
 .stem-scroll-container {
     flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
-    height: calc(100% - 3rem);
     padding-right: 8px;
 }
 
@@ -492,10 +489,6 @@ const getQuestionScoreSeverity = (question: any) => {
 }
 
 .questions-scroll-container {
-    flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
-    height: 100%;
     padding: 1rem;
     padding-right: 8px;
 }
