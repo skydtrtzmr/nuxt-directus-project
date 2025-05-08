@@ -570,7 +570,8 @@ const isGroupAnswered = (group: any, section: PaperSections) => {
 .question-card.selected {
     transform: scale(1.05);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    border: 2px solid ; /* 添加边框高亮效果 */
+    /* box-shadow: 0 0 0 2px var(--primary-300); */
+    border: 2px solid; /* 添加边框高亮效果 */
 }
 
 .flag-indicator {

@@ -124,8 +124,8 @@ export default defineNuxtConfig({
             // 如果你没有配置theme switcher，就必须设置theme，否则会导致没有样式以至于显示不出来
             // 注意，主题和颜色没有关系
             theme: {
-                // preset: Aura, // 记得要先在文件开头import
-                preset: MyPreset, // 自定义主题
+                preset: Aura, // 记得要先在文件开头import
+                // preset: MyPreset, // 自定义主题
             },
         },
     },
