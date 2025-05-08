@@ -14,28 +14,31 @@
                     'h-10': isStemCollapsed && !isMobile,
                 }"
             >
-                <!-- 收缩按钮 - 桌面端显示左右按钮 -->
-                <Button
-                    :icon="
-                        isStemCollapsed
-                            ? 'pi pi-chevron-right'
-                            : 'pi pi-chevron-left'
-                    "
-                    class="p-button-rounded p-button-text stem-toggle-btn hidden lg:block"
-                    @click="toggleStem"
-                    :aria-label="
-                        isStemCollapsed ? '展开公共题干' : '收起公共题干'
-                    "
-                />
+                <!-- 收缩按钮 - 电脑端展开和收缩都显示按钮 -->
+                <div v-if="!isMobile" class="desktop-toggle-button-container">
+                    <Button
+                        :icon="
+                            isStemCollapsed
+                                ? 'pi pi-chevron-right'
+                                : 'pi pi-chevron-left'
+                        "
+                        class="p-button-rounded p-button-text stem-toggle-btn"
+                        @click="toggleStem"
+                        :aria-label="
+                            isStemCollapsed ? '展开公共题干' : '收起公共题干'
+                        "
+                    />
+                </div>
 
                 <!-- 收缩按钮 - 移动端显示上下按钮 -->
                 <Button
+                    v-if="isMobile"
                     :icon="
                         isStemCollapsed
                             ? 'pi pi-chevron-down'
                             : 'pi pi-chevron-up'
                     "
-                    class="p-button-rounded p-button-text stem-toggle-btn-mobile lg:hidden"
+                    class="p-button-rounded p-button-text stem-toggle-btn-mobile"
                     @click="toggleStem"
                     :aria-label="
                         isStemCollapsed ? '展开公共题干' : '收起公共题干'
@@ -82,7 +85,7 @@
                                 class="question-header flex justify-between items-center mb-2"
                             >
                                 <h3 class="text-lg font-medium">
-                                    {{ questionItem.questions_id.title }}
+                                    （{{ index + 1 }}）{{ questionItem.questions_id.title }}
                                 </h3>
                                 <div class="flex items-center gap-2">
                                     <Button
@@ -357,32 +360,51 @@ const getQuestionScoreSeverity = (question: any) => {
 .shared-stem-container {
     position: relative;
     transition: all 0.3s ease;
-    background-color: #f9fafb; /* 替换 var(--surface-50) */
+    background-color: #f9fafb;
     border-radius: 8px;
     padding: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    z-index: 2; /* 确保题干区域在滚动时位于正确层级 */
+    z-index: 2;
+    overflow: visible; /* 修改为visible，让按钮可以显示在外部 */
+}
+
+/* 桌面端收缩按钮容器 */
+.desktop-toggle-button-container {
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
 }
 
 /* 收缩按钮样式 - 桌面端 */
 .stem-toggle-btn {
-    position: absolute;
-    right: -15px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10; /* 提高z-index确保按钮始终可见 */
-    background-color: #ffffff; /* 替换 var(--surface-card) */
+    background-color: #ffffff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-size: 1rem;
+    border: 1px solid #e5e7eb;
 }
 
 /* 收缩按钮样式 - 移动端 */
 .stem-toggle-btn-mobile {
     position: absolute;
     right: 10px;
-    top: 0;
-    z-index: 10; /* 提高z-index确保按钮始终可见 */
-    background-color: #ffffff; /* 替换 var(--surface-card) */
+    top: 10px;
+    z-index: 10;
+    background-color: #ffffff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
 }
 
 /* 题目内容区域样式 */
@@ -486,7 +508,7 @@ const getQuestionScoreSeverity = (question: any) => {
         top: 5px;
         position: sticky; /* 在移动端确保按钮固定在视口顶部 */
     }
-    
+
     .question-group-content {
         padding-top: 10px; /* 移动端增加顶部间距，防止内容被顶部元素遮挡 */
     }
