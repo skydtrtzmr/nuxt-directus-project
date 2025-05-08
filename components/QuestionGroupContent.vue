@@ -4,6 +4,7 @@
         <!-- 自适应布局容器：电脑端左右布局，手机端上下布局 -->
         <div class="flex flex-col lg:flex-row gap-4 group-container">
             <!-- 公共题干区域 - 可收缩和拖拽调整宽度 -->
+             
             <div
                 v-if="questionGroup && questionGroup.shared_stem"
                 class="shared-stem-container"
@@ -46,21 +47,32 @@
                 />
 
                 <!-- 公共题干内容区域 - 独立滚动 -->
+
                 <div
                     v-if="!isStemCollapsed"
-                    class="shared-stem-content p-3 bg-surface-100 dark:bg-surface-700 rounded-lg"
+                    class="shared-stem-content p-3 bg-surface-100 dark:bg-surface-700 rounded-lg flex-1"
                 >
-                    <div class="text-lg font-medium mb-2">题组题干：</div>
-                    <ScrollPanel class="stem-scrollbar">
-                        <div
-                            v-html="renderMarkdown(questionGroup.shared_stem)"
-                            class="markdown-content"
-                        ></div>
+                    <ScrollPanel>
+                        <div class="text-lg font-medium mb-2 stem-title">
+                            题组题干：
+                        </div>
+                        <div class="stem-scroll-container">
+                            <div
+                                v-html="
+                                    renderMarkdown(questionGroup.shared_stem)
+                                "
+                                class="markdown-content"
+                            ></div>
+                        </div>
                     </ScrollPanel>
                 </div>
-                
+
                 <!-- 拖拽调整宽度的分隔线 -->
-                <div v-if="!isStemCollapsed && !isMobile" class="stem-resizer" @mousedown="startStemResize"></div>
+                <div
+                    v-if="!isStemCollapsed && !isMobile"
+                    class="stem-resizer"
+                    @mousedown="startStemResize"
+                ></div>
             </div>
 
             <!-- 题目列表区域 - 独立滚动 -->
@@ -73,66 +85,85 @@
                         isStemCollapsed,
                 }"
             >
-                <ScrollPanel class="questions-scrollbar">
-                    <div v-if="groupQuestions.length > 0">
-                        <template
-                            v-for="(questionItem, index) in groupQuestions"
-                            :key="questionItem.id"
+                <ScrollPanel class="custom-scrollbar">
+                    <div class="questions-scroll-container">
+                        <div
+                            v-if="groupQuestions.length > 0"
+                            class="questions-content"
                         >
-                            <div
-                                class="question-item mb-4 border-l-4 pl-4"
-                                :class="getQuestionBorderClass(questionItem)"
+                            <template
+                                v-for="(questionItem, index) in groupQuestions"
+                                :key="questionItem.id"
                             >
                                 <div
-                                    class="question-header flex justify-between items-center mb-2"
-                                >
-                                    <h3 class="text-lg font-medium">
-                                        （{{ index + 1 }}）{{ questionItem.questions_id.title }}
-                                    </h3>
-                                    <div class="flex items-center gap-2">
-                                        <Button
-                                            :icon="
-                                                isQuestionFlagged(questionItem)
-                                                    ? 'pi pi-flag-fill'
-                                                    : 'pi pi-flag'
-                                            "
-                                            :class="{
-                                                'p-button-danger':
-                                                    isQuestionFlagged(questionItem),
-                                            }"
-                                            class="p-button-rounded p-button-sm p-button-text"
-                                            @click="
-                                                toggleQuestionFlag(questionItem)
-                                            "
-                                            :aria-label="
-                                                isQuestionFlagged(questionItem)
-                                                    ? '取消标记疑问'
-                                                    : '标记疑问'
-                                            "
-                                            v-tooltip.bottom="
-                                                isQuestionFlagged(questionItem)
-                                                    ? '取消标记疑问'
-                                                    : '标记疑问'
-                                            "
-                                        />
-                                    </div>
-                                </div>
-                                <QuestionContent
-                                    :selectedQuestion="
-                                        enhanceQuestionWithIndex(
-                                            questionItem,
-                                            index
-                                        )
+                                    class="question-item mb-4 border-l-4 pl-4"
+                                    :class="
+                                        getQuestionBorderClass(questionItem)
                                     "
-                                    :exam_page_mode="exam_page_mode"
-                                    :renderMarkdown="renderMarkdown"
-                                    :groupMode="true"
-                                />
-                            </div>
-                        </template>
-                    </div>
-                    <div v-else class="text-center p-4 text-surface-500">
-                        未找到题组内容
+                                >
+                                    <div
+                                        class="question-header flex justify-between items-center mb-2"
+                                    >
+                                        <h3 class="text-lg font-medium">
+                                            （{{ index + 1 }}）{{
+                                                questionItem.questions_id.title
+                                            }}
+                                        </h3>
+                                        <div class="flex items-center gap-2">
+                                            <Button
+                                                :icon="
+                                                    isQuestionFlagged(
+                                                        questionItem
+                                                    )
+                                                        ? 'pi pi-flag-fill'
+                                                        : 'pi pi-flag'
+                                                "
+                                                :class="{
+                                                    'p-button-danger':
+                                                        isQuestionFlagged(
+                                                            questionItem
+                                                        ),
+                                                }"
+                                                class="p-button-rounded p-button-sm p-button-text"
+                                                @click="
+                                                    toggleQuestionFlag(
+                                                        questionItem
+                                                    )
+                                                "
+                                                :aria-label="
+                                                    isQuestionFlagged(
+                                                        questionItem
+                                                    )
+                                                        ? '取消标记疑问'
+                                                        : '标记疑问'
+                                                "
+                                                v-tooltip.bottom="
+                                                    isQuestionFlagged(
+                                                        questionItem
+                                                    )
+                                                        ? '取消标记疑问'
+                                                        : '标记疑问'
+                                                "
+                                            />
+                                        </div>
+                                    </div>
+                                    <QuestionContent
+                                        :selectedQuestion="
+                                            enhanceQuestionWithIndex(
+                                                questionItem,
+                                                index
+                                            )
+                                        "
+                                        :exam_page_mode="exam_page_mode"
+                                        :renderMarkdown="renderMarkdown"
+                                        :groupMode="true"
+                                    />
+                                </div>
+                            </template>
+                        </div>
+                        <div v-else class="text-center p-4 text-surface-500">
+                            未找到题组内容
+                        </div>
                     </div>
                 </ScrollPanel>
             </div>
@@ -183,37 +214,37 @@ const startStemResize = (event: MouseEvent) => {
     startX.value = event.clientX;
     // 获取当前容器的宽度
     const element = event.target as HTMLElement;
-    const container = element.closest('.shared-stem-container') as HTMLElement;
+    const container = element.closest(".shared-stem-container") as HTMLElement;
     startWidth.value = container.offsetWidth;
-    
+
     // 添加移动和松开鼠标的事件监听
-    document.addEventListener('mousemove', resizingStem);
-    document.addEventListener('mouseup', stopStemResize);
-    
+    document.addEventListener("mousemove", resizingStem);
+    document.addEventListener("mouseup", stopStemResize);
+
     // 添加防止选择文本的样式
-    document.body.style.userSelect = 'none';
-    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = "none";
+    document.body.style.cursor = "col-resize";
 };
 
 // 拖拽调整题干宽度过程
 const resizingStem = (event: MouseEvent) => {
     const dx = event.clientX - startX.value;
     let newWidth = startWidth.value + dx;
-    
+
     // 限制调整范围
     if (newWidth < minStemWidth) newWidth = minStemWidth;
     if (newWidth > maxStemWidth) newWidth = maxStemWidth;
-    
+
     // 更新题干宽度
     stemWidth.value = newWidth;
 };
 
 // 停止拖拽调整题干宽度
 const stopStemResize = () => {
-    document.removeEventListener('mousemove', resizingStem);
-    document.removeEventListener('mouseup', stopStemResize);
-    document.body.style.userSelect = '';
-    document.body.style.cursor = '';
+    document.removeEventListener("mousemove", resizingStem);
+    document.removeEventListener("mouseup", stopStemResize);
+    document.body.style.userSelect = "";
+    document.body.style.cursor = "";
 };
 
 // 判断题目是否被标记为有疑问
@@ -393,6 +424,7 @@ const getQuestionScoreSeverity = (question: any) => {
 .group-container {
     height: 100%;
     overflow: hidden;
+    display: flex;
 }
 
 .shared-stem-container {
@@ -404,6 +436,8 @@ const getQuestionScoreSeverity = (question: any) => {
     border: 1px solid var(--surface-200);
     display: flex;
     flex-direction: column;
+    height: 100%;
+    min-height: 0;
 }
 
 .shared-stem-content {
@@ -411,13 +445,19 @@ const getQuestionScoreSeverity = (question: any) => {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    height: 100%;
 }
 
-.stem-scrollbar {
-    width: 100%;
-    height: 100%;
-    padding-right: 17px; /* 为滚动条预留空间 */
-    box-sizing: content-box;
+.stem-title {
+    flex-shrink: 0;
+}
+
+.stem-scroll-container {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: calc(100% - 3rem);
+    padding-right: 8px;
 }
 
 .desktop-toggle-button-container {
@@ -444,19 +484,35 @@ const getQuestionScoreSeverity = (question: any) => {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    height: 100%;
+    background-color: var(--surface-50);
+    border-radius: 8px;
+    border: 1px solid var(--surface-200);
+    min-height: 0;
 }
 
-.questions-scrollbar {
-    width: 100%;
+.questions-scroll-container {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
     height: 100%;
-    padding-right: 17px; /* 为滚动条预留空间 */
-    box-sizing: content-box;
+    padding: 1rem;
+    padding-right: 8px;
+}
+
+.questions-content {
+    width: 100%;
 }
 
 .question-item {
     position: relative;
     border-radius: 4px;
     transition: background-color 0.2s ease;
+}
+
+.custom-scrollbar {
+    width: 100%;
+    height: 100%;
 }
 
 /* 拖动调整宽度的拖动条 */
@@ -486,14 +542,19 @@ const getQuestionScoreSeverity = (question: any) => {
         margin-bottom: 1rem;
         max-height: 40vh;
     }
-    
+
     .group-questions {
         width: 100% !important;
         max-height: 60vh;
     }
-    
+
     .stem-resizer {
         display: none; /* 移动设备上不显示拖动条 */
+    }
+
+    .stem-scroll-container,
+    .questions-scroll-container {
+        max-height: 100%;
     }
 }
 
