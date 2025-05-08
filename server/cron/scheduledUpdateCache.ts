@@ -7,6 +7,7 @@ import { updateHashListCache } from "~~/server/utils/redisUtils";
 import directus_client from "~~/server/lib/directus";
 import { readUsers, readItems } from "@directus/sdk";
 import { fetchAllPaginatedData } from "../utils/directusUtils";
+import { log } from "console";
 
 // TODO 目前为了方便开发，在directus中把所有权限都开放了，所以现在发起请求的时候不需要带token。
 // 后续需要把权限控制好，只允许有权限的用户访问。
@@ -84,6 +85,27 @@ export default defineCronHandler("everyThirtyMinutes", async () => {
 
     // 上面的写法是把整个列表存为一个值。接下来改成每个列表的每一个对象存为一个值。
     // 这样可以避免列表过长、每次get redis数据量过大的问题。
+
+    // 获取所有学生用户
+    updateHashListCache(
+        "student_users",
+        async () =>
+            await directus_client.request(
+                readUsers({
+                    fields: ["id,email"],
+                    sort: "email",
+                    filter: {
+                        role: {
+                            name: {
+                                _eq: "学生",
+                            },
+                        },
+                    },
+                    limit: -1,
+                })
+            ),
+        3600 // 1 hour
+    );
 });
 
 // 已经在nuxt.config.ts中设置了`runOnInit: true`，就不再在函数中写`{ runOnInit: true }`了。

@@ -24,62 +24,18 @@ let usersArray: DirectusUsers[] = [];
 export default defineEventHandler(async (event) => {
     // 从 Redis 获取并递增 userIndex
     let userIndex = await redis.incr("user_index");
-    
-    // 如果是第一次请求，则获取用户数据并将用户数据存储到 Redis。之后的请求都直接从 Redis 中获取用户数据。
-    async function setUsers() {
-        let users: DirectusUsers[] = [];
-        
-        // 这边要分页获取然后合并列表，因为一次请求只能获取 200 条数据
-        // TODO 现在是手动获取多页的，但是应该自动获取多页
-        const result = (await directus_client.request(
-            readUsers({
-                fields: ["id,email"],
-                sort: "email",
-                // filter: {
-                //     role: {
-                //         _eq: "6a4c654e-887c-48a9-a5b4-14ea0d6a7101",
-                //     },
-                // },
-                limit: -1,
-            })
-        )) as DirectusUsers[];
 
-        console.log("users: ", result);
-        users = result;
-
-        // 将用户数据存储到 Redis（使用 JSON.stringify 进行序列化）
-        redis.set("users", JSON.stringify(users));
-    }
-
-    const users:string|null = await redis.get("users");
+    const users: string | null = await redis.get("student_users");
 
     console.log("获取 users:", users);
-    
-    // if (users) {
-    //     usersArray = JSON.parse(users);
-    //     await setUsers();
-    //     const users = await redis.get("users");
-    //     usersArray = JSON.parse(users!);
-    // }
-    
-    // 把redis中的数据转换成数组
-    if (users && (users.length > 0)) {
-        console.log("users is not null");
-        
-        usersArray = JSON.parse(users);
-    } else {
-        console.log("users is null, set users");
-        
-        await setUsers();
-        const users = await redis.get("users");
-        usersArray = JSON.parse(users!);
-    }
+
+
+    usersArray = JSON.parse(users!);
 
     console.log("userIndex: ", userIndex);
     let currentUser = usersArray[userIndex - 1] as DirectusUsers;
     return currentUser;
 });
-
 
 // let userIndex = 0; // 计数器
 
