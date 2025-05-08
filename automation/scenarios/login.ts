@@ -19,10 +19,10 @@ export async function runLoginScenario(router: Router): Promise<boolean> {
     }
 
     // 从 login.vue 的 onMounted 获取逻辑
-    const { data: fetchCurrentUserResponse, error } = await useFetch(
-        "/api/dynamic-script"
+    const { data: fetchCurrentUserEmailResponse, error } = await useFetch(
+        "/api/fetch_test_user"
     );
-    if (error.value || !fetchCurrentUserResponse.value) {
+    if (error.value || !fetchCurrentUserEmailResponse.value) {
         console.error(
             "Automation: Failed to fetch current user for login.",
             error.value
@@ -30,16 +30,16 @@ export async function runLoginScenario(router: Router): Promise<boolean> {
         alert("自动化测试获取用户信息失败！");
         return false;
     }
-    const currentUser = fetchCurrentUserResponse.value as any; // 假设API返回结构
-    console.log("Automation: Test user fetched:", currentUser.email);
+    const currentUserEmail = fetchCurrentUserEmailResponse.value as any; // 假设API返回结构
+    console.log("Automation: Test user fetched:", currentUserEmail);
 
     await delay(1000); // 等待页面元素渲染
 
-    if (!(await fillInput('input[name="email"]', currentUser.email!)))
+    if (!(await fillInput('input[name="email"]', currentUserEmail)))
         return false;
     await delay(500);
 
-    const passwordInput = currentUser.email!.split("@")[0];
+    const passwordInput = currentUserEmail.split("@")[0];
     // PrimeVue Password 组件可能需要特殊处理其内部 input
     const passwordComponentInput = document.querySelector(
         "#password1 input"

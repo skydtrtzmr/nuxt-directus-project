@@ -126,7 +126,7 @@ export default defineCronHandler("everyThirtyMinutes", async () => {
                 })
             ),
         "email",
-        600
+        3600
     );
 });
 
