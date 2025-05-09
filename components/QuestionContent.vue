@@ -3,8 +3,13 @@
 <template>
     <div class="question-container">
         <template v-if="selectedQuestion && selectedQuestion.questions_id">
-            <div class="question-type-indicator mb-3 text-sm font-medium text-surface-600 dark:text-surface-300">
-                题型：{{ getQuestionTypeLabel(selectedQuestion.questions_id.type) }}
+            <div class="question-type-tag-container mb-3">
+                <span 
+                    class="question-type-tag text-sm font-medium"
+                    :class="getQuestionTypeTagClass(selectedQuestion.questions_id.type)"
+                >
+                    {{ getQuestionTypeLabel(selectedQuestion.questions_id.type) }}
+                </span>
             </div>
             <!-- 显示公共题干（如果有） -->
             <div v-if="hasSharedStem" class="shared-stem mb-6 p-4 bg-surface-100 dark:bg-surface-700 rounded-lg shadow-sm">
@@ -96,6 +101,22 @@ const getQuestionTypeLabel = (type: string): string => {
     }
 };
 
+// Helper function to get question type tag class
+const getQuestionTypeTagClass = (type: string): string => {
+    switch (type) {
+        case "q_mc_single":
+            return "tag-blue";
+        case "q_mc_multi":
+            return "tag-green";
+        case "q_mc_binary":
+            return "tag-orange";
+        case "q_mc_flexible":
+            return "tag-purple";
+        default:
+            return "tag-gray";
+    }
+};
+
 // 监听props.selectedQuestion的变化，便于调试
 watch(() => props.selectedQuestion, (newVal) => {
     console.log("selectedQuestion in QuestionContent changed:", newVal);
@@ -150,6 +171,33 @@ const sharedStemContent = computed(() => {
     border-radius: 8px;
     margin-top: 20px;
     background-color: rgba(255, 82, 82, 0.05);
+}
+
+/* 题型标签通用样式 */
+.question-type-tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem; /* 稍微增大一点内边距，使其更像标签 */
+    border-radius: 0.375rem; /* PrimeVue的 rounded-md */
+    color: white;
+    font-size: 0.875rem; /* text-sm */
+    line-height: 1.25rem;
+}
+
+/* 不同题型的颜色 */
+.tag-blue {
+    background-color: var(--p-blue-500); /* PrimeVue Blue */
+}
+.tag-green {
+    background-color: var(--p-green-500); /* PrimeVue Green */
+}
+.tag-orange {
+    background-color: var(--p-orange-500); /* PrimeVue Orange */
+}
+.tag-purple {
+    background-color: var(--p-purple-500); /* PrimeVue Purple */
+}
+.tag-gray {
+    background-color: var(--p-surface-400); /* PrimeVue Surface/Gray */
 }
 
 /* 题干和选项的通用样式 */
