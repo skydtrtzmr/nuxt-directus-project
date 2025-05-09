@@ -83,11 +83,7 @@ export default defineNuxtConfig({
                 // 所以，不要尝试直接用.env文件配置*生产环境*下的directus的url。
                 // 必须通过执行命令时给命令行传参(.env文件中配置NUXT_PUBLIC_DIRECTUS_URL="http://127.0.0.1:8056/")的方式来配置。
             },
-            // isTest: process.env.NUXT_TEST === 'true', // 默认为false，如果是测试环境，则设置为true
             isTest: false, // 默认为false，如果是测试环境，则设置为true
-            // 这个NUXT_TEST我是直接在build时通过命令行传给环境变量的，所以可以通过process.env.NUXT_TEST来获取。
-            // 但是最好不要在nuxt.config.ts文件中直接使用process.env.NUXT_TEST，因为这样会导致build后无法获取到环境变量。
-            // 最好通过命令行传参的方式来配置。
             // 以下是AnythingLLM的配置，用于嵌入式聊天机器人
             anythingllm: {
                 embedId: "72e40eec-a5b4-4a5b-9106-6ed6c7f51aef",
@@ -98,7 +94,7 @@ export default defineNuxtConfig({
         },
         private: {
             // private意味着这些配置只能在服务器端代码中访问，不能在客户端代码中访问。
-            directus_token: "PrYwYIRXYHnfyWmr0ZxWd75ZmVI2LFeL",
+            directus_token: "token", //  这里会被.env文件中的NUXT_PRIVATE_DIRECTUS_TOKEN覆盖。
             redisHost: "127.0.0.1",
             redisPort: 6279,
         },

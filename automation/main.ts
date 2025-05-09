@@ -3,7 +3,7 @@ import type { Router } from "vue-router";
 import { runLoginScenario } from "./scenarios/login";
 import { runNavigateToExamsFromHomepageScenario } from "./scenarios/navigateToExamsFromHomepage";
 import { runSelectAndStartExamScenario } from "./scenarios/selectAndStartExam";
-// import { runCompleteExamScenario } from "./scenarios/completeExam";
+import { runCompleteExamScenario } from "./scenarios/completeExam";
 import { delay } from "./utils/domHelpers";
 
 let hasAutomationRun = false; // 防止重复执行
@@ -60,12 +60,12 @@ export async function runFullAutomationSequence(router: Router): Promise<void> {
     await delay(1000);
 
     // // 序列 4: 完成并提交考试
-    // const completeExamSuccess = await runCompleteExamScenario(router, examId);
-    // if (!completeExamSuccess) {
-    //     console.error("Automation: Complete Exam scenario failed.");
-    // } else {
-    //     console.log("Automation: Complete Exam Scenario Completed.");
-    // }
+    const completeExamSuccess = await runCompleteExamScenario(router, examId);
+    if (!completeExamSuccess) {
+        console.error("Automation: Complete Exam scenario failed.");
+    } else {
+        console.log("Automation: Complete Exam Scenario Completed.");
+    }
 
     console.log("Automation: Full Automation Sequence Finished.");
     alert("自动化测试脚本执行完毕！");
