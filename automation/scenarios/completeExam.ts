@@ -178,11 +178,11 @@ export async function runCompleteExamScenario(
         q_mc_flexible: 0 
     };
 
-    let mainQuestionLoopIndex = 1; 
+    let mainQuestionLoopIndex = 1; // 主题目循环索引
     while (true) {
         console.log(`自动化测试：正在查找主题目/题组区域 ${mainQuestionLoopIndex}...`);
         const mainQuestionArea = await waitForElement(
-            "div.question-detail", 
+            "div.question-detail", // 目标为 QuestionDetail.vue 的根元素
             12000 
         );
 
@@ -194,7 +194,7 @@ export async function runCompleteExamScenario(
         }
         console.log(`自动化测试：找到主题目区域 ${mainQuestionLoopIndex}。`);
         mainQuestionArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        await delay(600); 
+        await delay(600); // 等待滚动和潜在的内容渲染
 
         const groupContentElement = mainQuestionArea.querySelector(".question-group-content");
 
@@ -210,6 +210,8 @@ export async function runCompleteExamScenario(
                     console.log(`自动化测试：正在处理题组中的第 ${i + 1} / ${groupQuestionItems.length} 个子题目。`);
                     subQuestionElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     await delay(500);
+                    // QuestionContent 组件嵌套在 div.question-item 内部
+                    // .question-type-tag 将位于此 subQuestionElement 的 QuestionContent 部分
                     
                     const questionType = getQuestionType(subQuestionElement); 
                     if (!questionType) {
@@ -218,6 +220,7 @@ export async function runCompleteExamScenario(
                         );
                     } else {
                         console.log(`自动化测试：子题目 ${i + 1} 的类型确定为: ${questionType}`);
+                        // 传递 subQuestionElement，因为它包含此特定子题目的选项
                         await selectDeterministicOptions(subQuestionElement, questionType, answerCounters);
                     }
                     await delay(300); 
@@ -232,15 +235,19 @@ export async function runCompleteExamScenario(
                 );
             } else {
                 console.log(`自动化测试：单题 ${mainQuestionLoopIndex} 的类型确定为: ${questionType}`);
+                // 在单题模式下，mainQuestionArea 本身 (或其子组件 QuestionContent) 是上下文
+            // .question-type-tag 应位于 mainQuestionArea 内部，由 QuestionContent 渲染
                 await selectDeterministicOptions(mainQuestionArea as HTMLElement, questionType, answerCounters);
             }
         }
         
         await delay(700); 
-
+// “下一题”按钮位于 QuestionDetail.vue 的页脚
+        // 根据 QuestionDetail.vue, 下一题按钮有 label "下一题" 和 icon "pi pi-arrow-right"
         const nextQuestionButton = document.querySelector(
-            ".question-footer button[label='下一题']" 
+            ".question-footer button[aria-label='下一题']" 
         ) as HTMLButtonElement | null;
+        // 可以添加对 icon 的检查以增加特异性: ".question-footer button[label='下一题'][icon='pi pi-arrow-right']"
 
         if (nextQuestionButton && nextQuestionButton.offsetParent !== null && !nextQuestionButton.disabled) {
             console.log(
@@ -266,7 +273,7 @@ export async function runCompleteExamScenario(
                 }
             }
             mainQuestionLoopIndex++;
-            await delay(2000); 
+            await delay(2000);  // 等待下一个题目/题组加载
         } else {
             console.log(
                 `自动化测试：主题目/题组 ${mainQuestionLoopIndex} 后未找到"下一题"按钮或按钮不可交互。假设考试结束。`
