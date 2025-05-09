@@ -66,6 +66,23 @@
                     ></Button>
                 </div>
             </Dialog>
+
+            <!-- 新增：导航边界提示对话框 -->
+            <Dialog
+                v-model:visible="nav_boundary_dialog_visible"
+                modal
+                header="提示"
+                :style="{ width: '25rem' }"
+            >
+                <span class="text-surface-500 dark:text-surface-400 block mb-8">{{ nav_boundary_dialog_message }}</span>
+                <div class="flex justify-end gap-2">
+                    <Button
+                        type="button"
+                        label="确定"
+                        @click="nav_boundary_dialog_visible = false"
+                    ></Button>
+                </div>
+            </Dialog>
         </template>
 
         <!-- 题目区域 - 使用固定高度布局 -->
@@ -156,6 +173,8 @@ dayjs.extend(utc);
 
 const ended_dialog_visible = ref(false);
 const confirm_submit_dialog_visible = ref(false);
+const nav_boundary_dialog_visible = ref(false); // 新增：导航边界提示对话框可见性
+const nav_boundary_dialog_message = ref(""); // 新增：导航边界提示对话框消息
 const sidebarCollapsed = ref(false); // 控制侧边栏收缩状态
 const sidebarWidth = ref(300); // 侧边栏宽度，默认300px
 
@@ -1063,8 +1082,9 @@ const navigateInSingleMode = (
             return selectQuestion(sortedSectionQuestions[nextQuestionIndex]);
         }
 
-        // 如果当前是章节的最后一题，且有下一章节，则跳转到下一章节的第一题
+        // 如果当前是章节的最后一题
         if (currentSectionIndex < sortedSections.length - 1) {
+            // 且有下一章节，则跳转到下一章节的第一题/题组
             const nextSection = sortedSections[currentSectionIndex + 1];
 
             // 根据下一章节的模式决定跳转到题目或题组
@@ -1099,6 +1119,11 @@ const navigateInSingleMode = (
                     return selectQuestion(sortedNextQuestions[0]);
                 }
             }
+        } else {
+            // 当前是最后一题且没有下一章节了
+            nav_boundary_dialog_message.value = "当前已经是最后一题！";
+            nav_boundary_dialog_visible.value = true;
+            return;
         }
     } else if (direction === -1) {
         // 上一题
@@ -1112,8 +1137,9 @@ const navigateInSingleMode = (
             return selectQuestion(prevQuestion);
         }
 
-        // 如果当前是章节的第一题，且有上一章节，则跳转到上一章节的最后一题/题组
+        // 如果当前是章节的第一题
         if (currentSectionIndex > 0) {
+            // 且有上一章节，则跳转到上一章节的最后一题/题组
             const prevSection = sortedSections[currentSectionIndex - 1];
 
             // 根据上一章节的模式决定跳转到题目或题组
@@ -1204,7 +1230,7 @@ const navigateInGroupMode = (
             const nextGroup = sortedGroups[currentGroupIndex + 1];
             return handleQuestionGroupClick(nextGroup, currentSection);
         } else if (currentSectionIndex < sortedSections.length - 1) {
-            // 跳转到下一章节的第一个题目/题组
+            // 当前章节的最后一个题组，跳转到下一章节的第一个题目/题组
             const nextSection = sortedSections[currentSectionIndex + 1];
 
             if (
@@ -1236,6 +1262,11 @@ const navigateInGroupMode = (
                     return selectQuestion(sortedNextQuestions[0]);
                 }
             }
+        } else {
+            // 当前是最后一个题组且是最后一个章节
+            nav_boundary_dialog_message.value = "当前已经是最后一题！";
+            nav_boundary_dialog_visible.value = true;
+            return;
         }
     } else if (direction === -1) {
         // 上一题组
@@ -1244,7 +1275,7 @@ const navigateInGroupMode = (
             const prevGroup = sortedGroups[currentGroupIndex - 1];
             return handleQuestionGroupClick(prevGroup, currentSection);
         } else if (currentSectionIndex > 0) {
-            // 跳转到上一章节的最后一个题目/题组
+            // 当前章节的第一个题组，跳转到上一章节的最后一个题目/题组
             const prevSection = sortedSections[currentSectionIndex - 1];
 
             if (
