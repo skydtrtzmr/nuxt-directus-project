@@ -243,7 +243,7 @@ export async function runCompleteExamScenario(
         // “下一题”按钮位于 QuestionDetail.vue 的页脚
         // 根据 QuestionDetail.vue, 下一题按钮有 label "下一题" 和 icon "pi pi-arrow-right"
         const nextQuestionButton = document.querySelector(
-            ".question-footer button[label='下一题']" 
+            ".question-footer button[aria-label='下一题']" 
         ) as HTMLButtonElement | null;
         // 可以添加对 icon 的检查以增加特异性: ".question-footer button[label='下一题'][icon='pi pi-arrow-right']"
 
