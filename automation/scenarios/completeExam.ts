@@ -377,31 +377,28 @@ export async function runCompleteExamScenario(
     console.log("自动化测试：已点击最终的提交考试按钮。");
 
     await delay(1000);
-    const confirmSubmitDialog = Array.from(
-        document.querySelectorAll(".p-dialog-header-title")
-    )
-        .find((header) => header.textContent?.trim() === "警告")
-        ?.closest(".p-dialog");
+    
+    const confirmSubmitButton = document.querySelector(
+        "button[aria-label='确定交卷']"
+    ) as HTMLButtonElement | null;
 
-    if (confirmSubmitDialog) {
-        const confirmSubmitButton = confirmSubmitDialog.querySelector(
-            "button[label='确定'][severity='danger']"
-        ) as HTMLButtonElement | null;
-        if (confirmSubmitButton) {
-            console.log("自动化测试：检测到确认提交试卷对话框，点击确定。");
-            confirmSubmitButton.click();
-        } else {
-            console.warn("自动化测试：确认提交试卷对话框中的确定按钮未找到。");
-        }
-    } else {
+    if (
+        confirmSubmitButton &&
+        !confirmSubmitButton.disabled
+    ) {
         console.log(
-            "自动化测试：未检测到确认提交试卷对话框，可能直接提交或无需确认。"
+            "自动化测试：检测到确认提交试卷对话框，点击确定。"
         );
+        confirmSubmitButton.click();
+        await delay(500);
+    }else {
+        console.warn("自动化测试：确认提交试卷对话框中的确定按钮未找到。");
     }
 
     const navigatedAfterSubmit = await waitForNavigation(
         router,
         (path) => !path.includes(`/exam/${examId}`),
+        // 跳转到其他页面，等待 20 秒
         20000
     );
 

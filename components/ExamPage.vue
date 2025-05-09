@@ -53,14 +53,14 @@
                 <div class="flex justify-end gap-2">
                     <Button
                         type="button"
-                        label="取消"
+                        label="取消交卷"
                         severity="secondary"
                         @click="confirm_submit_dialog_visible = false"
                         class="mr-2"
                     ></Button>
                     <Button
                         type="button"
-                        label="确定"
+                        label="确定交卷"
                         severity="danger"
                         @click="confirmSubmit()"
                     ></Button>
