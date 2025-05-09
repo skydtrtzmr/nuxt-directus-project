@@ -22,19 +22,6 @@ let usersArray: DirectusUsers[] = [];
 
 // 在 Redis 中设置一个计数器并通过 Redis 的 INCR 命令来确保每次请求都会自动递增：
 export default defineEventHandler(async (event) => {
-    // 从 Redis 获取并递增 userIndex
-    // let userIndex = await redis.incr("user_index");
-
-    // const users: string | null = await redis.get("student_users");
-
-    // console.log("获取 users:", users);
-
-    // usersArray = JSON.parse(users!);
-
-    // console.log("userIndex: ", userIndex);
-    // let currentUser = usersArray[userIndex - 1] as DirectusUsers;
-    // return currentUser;
-
     // [2025-05-08]直接pop出来。
     const user_email = await redis.lpop("student_user_email_list");
     console.log("user_email:", user_email);

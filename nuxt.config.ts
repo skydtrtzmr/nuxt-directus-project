@@ -94,7 +94,7 @@ export default defineNuxtConfig({
         },
         private: {
             // private意味着这些配置只能在服务器端代码中访问，不能在客户端代码中访问。
-            directus_token: "token", //  这里会被.env文件中的NUXT_PRIVATE_DIRECTUS_TOKEN覆盖。
+            directus_token: "OdqbzYH-7GcejOtlTiqSD85fwP16YteV", //  这里会被.env文件中的NUXT_PRIVATE_DIRECTUS_TOKEN覆盖。
             redisHost: "127.0.0.1",
             redisPort: 6279,
         },
