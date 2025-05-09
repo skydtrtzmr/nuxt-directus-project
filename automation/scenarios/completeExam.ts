@@ -6,301 +6,308 @@ import {
     waitForNavigation,
 } from "../utils/domHelpers";
 
+// 从题型标签获取题目类型
 function getQuestionTypeFromTag(questionElement: HTMLElement): string | null {
     const tagElement = questionElement.querySelector(".question-type-tag");
     if (tagElement && tagElement.textContent) {
         const tagText = tagElement.textContent.trim();
         switch (tagText) {
             case "单选题":
-                return "single";
+                return "q_mc_single";
             case "多选题":
-                return "multiple";
+                return "q_mc_multi";
             case "判断题":
-                return "true-false";
+                return "q_mc_binary";
             case "不定项选择题":
-                 // Current strategy for indefinite is same as multiple
-                return "indefinite"; // Or map to "multiple" if selection logic is identical and simpler
+                // 当前不定项选择题的策略与多选题相同
+                return "q_mc_flexible"; // 或者如果选择逻辑完全相同，可以映射到 "q_mc_multi" 以简化处理
             default:
-                console.warn(`Automation: Unknown question type from tag: ${tagText}`);
+                console.warn(`自动化测试：从标签识别出未知题型: ${tagText}`);
                 return null;
         }
     }
     return null;
 }
 
+// 题型识别的备选方案
 function getQuestionTypeFallback(questionElement: HTMLElement): string | null {
-    // Fallback: Infer from input types if no explicit type found
+    // 备选方案：如果没有明确的类型信息，则根据 input 类型推断
     const radioButtons = questionElement.querySelectorAll("input[type='radio']").length;
     const checkBoxes = questionElement.querySelectorAll("input[type='checkbox']").length;
     const optionItems = questionElement.querySelectorAll(".option-item").length;
 
     if (radioButtons > 0 && checkBoxes === 0) {
         if (optionItems === 2) {
-            return "true-false"; // Likely QMcBinary
+            return "q_mc_binary"; // 可能是判断题 (QMcBinary)
         }
-        return "single"; // Likely QMcSingle
+        return "q_mc_single"; // 可能是单选题 (QMcSingle)
     }
     if (checkBoxes > 0 && radioButtons === 0) {
-         // For the purpose of selection strategy, QMcMulti and QMcFlexible are treated as "multiple"
-        return "multiple"; 
+         // 就选择策略而言，多选题 (QMcMulti) 和不定项选择题 (QMcFlexible) 都按 "q_mc_multi" 处理
+        return "q_mc_multi"; 
     }
     return null;
 }
 
+// 获取题目类型的主要函数
 function getQuestionType(questionElement: HTMLElement): string | null {
-    // Priority 1: Check for a specific data-attribute on the question container itself or its direct child (e.g., the specific question type component root)
-    // Example: <div data-question-actual-type="q_mc_single">...</div> in QMcSingle.vue root
+    // 优先级 1: 检查题目容器自身或其直接子元素（例如，特定题型组件的根元素）上是否有特定的 data-attribute
+    // 示例: <div data-question-actual-type="q_mc_q_mc_single">...</div> (在 QMcSingle.vue 的根元素上)
     if (questionElement.dataset.questionActualType) {
-        // Map from directus type to simplified type if necessary
-        // e.g., if (questionElement.dataset.questionActualType === 'q_mc_single') return 'single';
-        // For now, assuming a direct mapping or that the value is already simplified
+        // 如果需要，这里可以进行从 directus 类型到简化类型的映射
+        // 例如: if (questionElement.dataset.questionActualType === 'q_mc_q_mc_single') return 'q_mc_single';
+        // 目前假设是直接映射，或者该值已经是简化类型
         return questionElement.dataset.questionActualType;
     }
     
-    // Priority 2: Try to get type from the .question-type-tag text, if QuestionContent.vue is a child
+    // 优先级 2: 如果 QuestionContent.vue 是子组件，尝试从 .question-type-tag 的文本中获取类型
     const typeFromTag = getQuestionTypeFromTag(questionElement);
     if (typeFromTag) return typeFromTag;
 
-    // Priority 3: Fallback to inferring from input types and option counts
+    // 优先级 3: 最后的备选方案，根据 input 类型和选项数量推断
     const typeFromInputs = getQuestionTypeFallback(questionElement);
     if (typeFromInputs) return typeFromInputs;
 
-    console.warn("Automation: Could not determine question type from any method.");
+    console.warn("自动化测试：无法通过任何方法确定题目类型。");
     return null;
 }
 
-// Counters for deterministic selection
+// 用于确定性选择的计数器
 interface IAnswerCounters {
-    single: number;
-    trueFalse: number;
-    multiIndefinite: number; // Shared counter for multiple and indefinite
+    q_mc_single: number;          // 单选题计数器
+    trueFalse: number;       // 判断题计数器
+    multiIndefinite: number; // 多选题和不定项选择题共享的计数器
 }
 
+// 根据确定性策略选择选项
 async function selectDeterministicOptions(
-    questionElement: HTMLElement, // This should be the container for a single question's options
+    questionElement: HTMLElement, // 这应该是包含单个题目选项的容器
     questionType: string,
     counters: IAnswerCounters
 ): Promise<void> {
+    // 获取选项标签的辅助函数
     const getOptionLabel = (char: string): HTMLElement | null => {
         const selector = `label.option-label[for^='option_${char.toLowerCase()}_']`;
-        // Ensure search is within the specific questionElement context
+        // 确保在特定的 questionElement 上下文内查找
         return questionElement.querySelector(selector) as HTMLElement | null;
     };
 
     switch (questionType) {
-        case "single": {
+        case "q_mc_single": {
             const choices = ['A', 'B', 'C', 'D'];
-            const targetChar = choices[counters.single % choices.length];
+            const targetChar = choices[counters.q_mc_single % choices.length];
             const optionLabel = getOptionLabel(targetChar);
             if (optionLabel) {
-                console.log(`Automation: [Single] Selecting: ${targetChar} in question element:`, questionElement);
+                console.log(`自动化测试：[单选题] 在题目元素中选择: ${targetChar}`, questionElement);
                 optionLabel.click();
                 await delay(200); 
             } else {
-                console.warn(`Automation: [Single] Could not find option ${targetChar} in:`, questionElement);
+                console.warn(`自动化测试：[单选题] 未在以下元素中找到选项 ${targetChar}:`, questionElement);
             }
-            counters.single++;
+            counters.q_mc_single++;
             break;
         }
-        case "true-false": {
+        case "q_mc_binary": {
             const choices = ['A', 'B']; 
             const targetChar = choices[counters.trueFalse % choices.length];
             const optionLabel = getOptionLabel(targetChar);
             if (optionLabel) {
-                console.log(`Automation: [True/False] Selecting: ${targetChar} in:`, questionElement);
+                console.log(`自动化测试：[判断题] 在题目元素中选择: ${targetChar}`, questionElement);
                 optionLabel.click();
                 await delay(200);
             } else {
-                console.warn(`Automation: [True/False] Could not find option ${targetChar} in:`, questionElement);
+                console.warn(`自动化测试：[判断题] 未在以下元素中找到选项 ${targetChar}:`, questionElement);
             }
             counters.trueFalse++;
             break;
         }
-        case "multiple": 
-        case "indefinite": { 
+        case "q_mc_multi": 
+        case "q_mc_flexible": { 
             const patterns = [['A', 'B'], ['B', 'C'], ['C', 'D'], ['D', 'A']];
             const currentPattern = patterns[counters.multiIndefinite % patterns.length];
-            console.log(`Automation: [Multi/Indefinite] Selecting pattern: ${currentPattern.join(', ')} in:`, questionElement);
+            console.log(`自动化测试：[多选/不定项] 在题目元素中选择模式: ${currentPattern.join(', ')}`, questionElement);
             for (const char of currentPattern) {
                 const optionLabel = getOptionLabel(char);
                 if (optionLabel) {
-                    console.log(`Automation: [Multi/Indefinite] Clicking option: ${char}`);
+                    console.log(`自动化测试：[多选/不定项] 点击选项: ${char}`);
                     optionLabel.click();
                     await delay(200); 
                 } else {
-                    console.warn(`Automation: [Multi/Indefinite] Could not find option ${char} in:`, questionElement);
+                    console.warn(`自动化测试：[多选/不定项] 未在以下元素中找到选项 ${char}:`, questionElement);
                 }
             }
             counters.multiIndefinite++;
             break;
         }
         default:
-            console.warn(`Automation: Unknown or unhandled question type "${questionType}" for deterministic selection.`);
+            console.warn(`自动化测试：确定性选择遇到未知或未处理的题型 "${questionType}"`);
     }
 }
 
+// 运行完成考试的自动化场景
 export async function runCompleteExamScenario(
     router: Router,
     examId: string
 ): Promise<boolean> {
     console.log(
-        `Automation: Starting Complete Exam Scenario for exam ID "${examId}"...`
+        `自动化测试：开始执行完成考试场景，考试ID "${examId}"...`
     );
 
     if (!router.currentRoute.value.path.includes(`/exam/${examId}`)) {
         console.warn(
-            `Automation: Not on the correct exam page. Expected /exam/${examId}, got ${router.currentRoute.value.path}`
+            `自动化测试：当前不在正确的考试页面。期望路径包含 /exam/${examId}, 实际为 ${router.currentRoute.value.path}`
         );
         return false;
     }
-    console.log("Automation: Confirmed on exam page.");
-    await delay(3000); // Wait for initial page elements and potential redirects
+    console.log("自动化测试：已确认在考试页面。");
+    await delay(3000); // 等待初始页面元素加载和可能的重定向
 
     const answerCounters: IAnswerCounters = {
-        single: 0,
+        q_mc_single: 0,
         trueFalse: 0,
         multiIndefinite: 0,
     };
 
-    let mainQuestionLoopIndex = 1;
+    let mainQuestionLoopIndex = 1; // 主题目循环索引
     // eslint-disable-next-line no-constant-condition
     while (true) {
-        console.log(`Automation: Looking for main question/group area ${mainQuestionLoopIndex}...`);
+        console.log(`自动化测试：正在查找主题目/题组区域 ${mainQuestionLoopIndex}...`);
 
-        // This selector targets the overall container for the current question view (likely QuestionDetail)
-        // Based on QuestionDetail.vue, the root is div.question-detail
-        // Or, if there's a more specific wrapper for active question content within ExamPage.vue, use that.
+        // 此选择器用于定位当前题目视图的整体容器 (通常是 QuestionDetail)
+        // 根据 QuestionDetail.vue, 其根元素是 div.question-detail
+        // 如果 ExamPage.vue 中有更特定的包裹活动题目内容的元素，应使用那个选择器
         const mainQuestionArea = await waitForElement(
-            "div.question-detail", // Targets the root of QuestionDetail.vue
+            "div.question-detail", // 目标为 QuestionDetail.vue 的根元素
             12000 
         );
 
         if (!mainQuestionArea) {
             console.log(
-                `Automation: Could not find main question area ${mainQuestionLoopIndex}. Assuming end of questions or an issue.`
+                `自动化测试：未能找到主题目区域 ${mainQuestionLoopIndex}。可能已到题目末尾或出现问题。`
             );
             break; 
         }
-        console.log(`Automation: Found main question area ${mainQuestionLoopIndex}.`);
+        console.log(`自动化测试：找到主题目区域 ${mainQuestionLoopIndex}。`);
         mainQuestionArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        await delay(600); // Wait for scroll and potential content rendering
+        await delay(600); // 等待滚动和潜在的内容渲染
 
-        // Check if it's a group question by looking for QuestionGroupContent.vue's structure
+        // 通过查找 QuestionGroupContent.vue 的结构来判断是否为题组
         const groupContentElement = mainQuestionArea.querySelector(".question-group-content");
 
         if (groupContentElement) {
-            console.log("Automation: Detected Question Group Mode.");
+            console.log("自动化测试：检测到题组模式。");
             const groupQuestionItems = groupContentElement.querySelectorAll("div.question-item");
             if (groupQuestionItems.length === 0) {
-                console.warn("Automation: In group mode, but no sub-questions (div.question-item) found.");
+                console.warn("自动化测试：处于题组模式，但未找到子题目 (div.question-item)。");
             } else {
-                console.log(`Automation: Found ${groupQuestionItems.length} sub-questions in the group.`);
+                console.log(`自动化测试：在题组中找到 ${groupQuestionItems.length} 个子题目。`);
                 for (let i = 0; i < groupQuestionItems.length; i++) {
                     const subQuestionElement = groupQuestionItems[i] as HTMLElement;
-                    console.log(`Automation: Processing sub-question ${i + 1} of ${groupQuestionItems.length}.`);
+                    console.log(`自动化测试：正在处理题组中的第 ${i + 1} / ${groupQuestionItems.length} 个子题目。`);
                     subQuestionElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     await delay(500);
                     
-                    // The QuestionContent component is nested inside div.question-item
-                    // The .question-type-tag will be inside the QuestionContent part of this subQuestionElement
+                    // QuestionContent 组件嵌套在 div.question-item 内部
+                    // .question-type-tag 将位于此 subQuestionElement 的 QuestionContent 部分
                     const questionType = getQuestionType(subQuestionElement); 
                     if (!questionType) {
                         console.warn(
-                            `Automation: Could not determine type for sub-question ${i + 1}. Skipping selection.`
+                            `自动化测试：无法确定子题目 ${i + 1} 的类型。将跳过选择。`
                         );
                     } else {
-                        console.log(`Automation: Sub-question ${i + 1} type determined as: ${questionType}`);
-                        // Pass subQuestionElement as it contains the options for this specific sub-question
+                        console.log(`自动化测试：子题目 ${i + 1} 的类型确定为: ${questionType}`);
+                        // 传递 subQuestionElement，因为它包含此特定子题目的选项
                         await selectDeterministicOptions(subQuestionElement, questionType, answerCounters);
                     }
-                    await delay(300); // Delay after answering a sub-question
+                    await delay(300); // 回答一个子题目后的延迟
                 }
             }
         } else {
-            console.log("Automation: Detected Single Question Mode (or non-group structure).");
-            // In single question mode, mainQuestionArea itself (or a child QuestionContent) is the context
-            // The .question-type-tag should be within mainQuestionArea, rendered by QuestionContent
+            console.log("自动化测试：检测到单题模式 (或非题组结构)。");
+            // 在单题模式下，mainQuestionArea 本身 (或其子组件 QuestionContent) 是上下文
+            // .question-type-tag 应位于 mainQuestionArea 内部，由 QuestionContent 渲染
             const questionType = getQuestionType(mainQuestionArea as HTMLElement);
             if (!questionType) {
                 console.warn(
-                    `Automation: Could not determine type for single question ${mainQuestionLoopIndex}. Skipping selection.`
+                    `自动化测试：无法确定单题 ${mainQuestionLoopIndex} 的类型。将跳过选择。`
                 );
             } else {
-                console.log(`Automation: Single question ${mainQuestionLoopIndex} type determined as: ${questionType}`);
-                 // Pass mainQuestionArea as it contains the options
+                console.log(`自动化测试：单题 ${mainQuestionLoopIndex} 的类型确定为: ${questionType}`);
+                 // 传递 mainQuestionArea，因为它包含选项
                 await selectDeterministicOptions(mainQuestionArea as HTMLElement, questionType, answerCounters);
             }
         }
         
-        await delay(700); // Delay after answering question/group before clicking next
+        await delay(700); // 回答题目/题组后，点击下一题前的延迟
 
-        // "Next Question" button is in QuestionDetail.vue footer
+        // “下一题”按钮位于 QuestionDetail.vue 的页脚
+        // 根据 QuestionDetail.vue, 下一题按钮有 label "下一题" 和 icon "pi pi-arrow-right"
         const nextQuestionButton = document.querySelector(
-            ".question-footer button[icon='pi pi-arrow-right']" // More specific selector for next button
+            ".question-footer button[label='下一题']" 
         ) as HTMLButtonElement | null;
+        // 可以添加对 icon 的检查以增加特异性: ".question-footer button[label='下一题'][icon='pi pi-arrow-right']"
 
         if (nextQuestionButton && nextQuestionButton.offsetParent !== null && !nextQuestionButton.disabled) {
             console.log(
-                `Automation: Clicking "Next Question" button after main question/group ${mainQuestionLoopIndex}.`
+                `自动化测试：点击主题目/题组 ${mainQuestionLoopIndex} 后的“下一题”按钮。`
             );
             nextQuestionButton.click();
             mainQuestionLoopIndex++;
-            await delay(3000); // Wait for next question/group to load
+            await delay(3000); // 等待下一个题目/题组加载
         } else {
             console.log(
-                `Automation: "Next Question" button not found or not interactable after main question/group ${mainQuestionLoopIndex}. Assuming end of exam.`
+                `自动化测试：主题目/题组 ${mainQuestionLoopIndex} 后未找到“下一题”按钮或按钮不可交互。假设考试结束。`
             );
             break; 
         }
     }
 
     console.log(
-        "Automation: Question loop finished. Attempting to submit exam."
+        "自动化测试：题目循环完成。正在尝试提交考试。"
     );
-    // Submit button is likely outside QuestionDetail, in the main ExamPage layout (e.g., top-right corner)
+    // 提交按钮可能在 QuestionDetail 之外，位于主 ExamPage 布局中 (例如，右上角)
     const submitExamButton = await waitForElement(
-        "button[aria-label*='Submit Exam'], button[aria-label*='交卷']", // More generic based on common patterns
+        "button[aria-label*='Submit Exam'], button[aria-label*='交卷']", // 基于通用模式的更通用的选择器
         7000
     ) as HTMLButtonElement | null; 
 
     if (!submitExamButton) {
         console.warn(
-            "Automation: Could not find the final 'Submit Exam' button. Trying a more generic selector for top-right actions."
+            "自动化测试：未能找到最终的“提交考试”按钮。"
         );
-        // Fallback for a generic top-right submit button if specific labels fail
-        // This is highly speculative and needs to match actual DOM
+        // 如果特定标签选择器失败，可以尝试更通用的右上角操作按钮选择器（非常规，需匹配实际DOM）
         // const genericSubmit = await waitForElement(".exam-actions .submit-button", 3000) as HTMLButtonElement | null;
         // if (!genericSubmit) {
-        //    console.error("Automation: Final 'Submit Exam' button DEFINITELY not found.");
+        //    console.error("自动化测试：确定未找到最终的“提交考试”按钮。");
         //    return false;
         // }
-        // submitExamButton = genericSubmit; // This line would cause error as submitExamButton is const
-        // TODO: Re-evaluate submit button strategy if above fails consistently
-        return false; // For now, fail if specific selectors don't work
+        // submitExamButton = genericSubmit; // 此行会因 submitExamButton 是 const 而导致错误
+        // TODO: 如果上述选择器持续失败，需重新评估提交按钮策略
+        return false; // 当前，如果特定选择器无效，则失败
     }
     
     submitExamButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
     await delay(400);
     submitExamButton.click(); 
-    console.log("Automation: Clicked final 'Submit Exam' button.");
+    console.log("自动化测试：已点击最终的“提交考试”按钮。");
 
     const navigatedAfterSubmit = await waitForNavigation(
         router,
-        (path) => !path.includes(`/exam/${examId}`), 
+        (path) => !path.includes(`/exam/${examId}`), // 导航离开考试页面
         20000 
     );
 
     if (navigatedAfterSubmit) {
         console.log(
-            `Automation: Exam submitted successfully. Navigated to: ${router.currentRoute.value.path}`
+            `自动化测试：考试提交成功。已导航到: ${router.currentRoute.value.path}`
         );
         return true;
     } else {
         console.warn(
-            "Automation: Exam submission may have failed or navigation timed out post-submit."
+            "自动化测试：考试提交可能失败或提交后导航超时。"
         );
         if (router.currentRoute.value.path.includes(`/exam/${examId}`)) {
-            console.warn("Automation: Still on the exam page. Submission might have failed or requires further interaction.");
+            console.warn("自动化测试：当前仍在考试页面。提交可能失败或需要未处理的进一步交互。");
         }
         return false;
     }
