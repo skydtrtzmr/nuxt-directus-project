@@ -3,6 +3,9 @@
 <template>
     <div class="question-container">
         <template v-if="selectedQuestion && selectedQuestion.questions_id">
+            <div class="question-type-indicator mb-3 text-sm font-medium text-surface-600 dark:text-surface-300">
+                题型：{{ getQuestionTypeLabel(selectedQuestion.questions_id.type) }}
+            </div>
             <!-- 显示公共题干（如果有） -->
             <div v-if="hasSharedStem" class="shared-stem mb-6 p-4 bg-surface-100 dark:bg-surface-700 rounded-lg shadow-sm">
                 <div class="text-lg font-medium mb-3">公共题干</div>
@@ -76,6 +79,22 @@ const props = defineProps<{
     renderMarkdown: (content: string) => string;
     groupMode: boolean;
 }>();
+
+// Helper function to get question type label
+const getQuestionTypeLabel = (type: string): string => {
+    switch (type) {
+        case "q_mc_single":
+            return "单选题";
+        case "q_mc_multi":
+            return "多选题";
+        case "q_mc_binary":
+            return "判断题";
+        case "q_mc_flexible":
+            return "不定项选择题";
+        default:
+            return "未知题型";
+    }
+};
 
 // 监听props.selectedQuestion的变化，便于调试
 watch(() => props.selectedQuestion, (newVal) => {

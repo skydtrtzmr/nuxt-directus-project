@@ -116,7 +116,7 @@
                                         class="question-header flex justify-between items-center mb-2"
                                     >
                                         <h3 class="text-lg font-medium">
-                                            （{{ index + 1 }}）{{
+                                            （{{ index + 1 }}）<span class="text-sm font-normal text-gray-500 dark:text-gray-400 mr-1">[{{ getQuestionTypeLabel(questionItem.questions_id.type) }}]</span> {{
                                                 questionItem.questions_id.title
                                             }}
                                         </h3>
@@ -199,6 +199,22 @@ const props = defineProps<{
     groupQuestions?: any[]; // 接收从父组件传递的题组内题目列表
     renderMarkdown: (content: string) => string;
 }>();
+
+// Helper function to get question type label
+const getQuestionTypeLabel = (type: string): string => {
+    switch (type) {
+        case "q_mc_single":
+            return "单选题";
+        case "q_mc_multi":
+            return "多选题";
+        case "q_mc_binary":
+            return "判断题";
+        case "q_mc_flexible":
+            return "不定项选择题";
+        default:
+            return "未知题型";
+    }
+};
 
 console.log("questionGroup in QuestionGroupContent", props.questionGroup);
 
