@@ -335,28 +335,20 @@ export async function runCompleteExamScenario(
             nextQuestionButton.click();
             await delay(1000);
 
-            const endDialogMessageElement = Array.from(
-                document.querySelectorAll(".p-dialog-content span")
-            ).find(
-                (span) => span.textContent?.trim() === "当前已经是最后一题！"
-            );
+            const endDialogMessageElementButton = document.querySelector(
+                ".p-dialog-content button[aria-label='确定']"
+            ) as HTMLButtonElement | null;
 
-            if (endDialogMessageElement) {
-                const dialogElement =
-                    endDialogMessageElement.closest(".p-dialog");
-                if (dialogElement) {
-                    const confirmButton = dialogElement.querySelector(
-                        "button[label='确定']"
-                    ) as HTMLButtonElement | null;
-                    if (confirmButton) {
-                        console.log(
-                            "自动化测试：检测到'已经是最后一题'提示框，点击确定并准备交卷。"
-                        );
-                        confirmButton.click();
-                        await delay(500);
-                        break;
-                    }
-                }
+            if (
+                endDialogMessageElementButton &&
+                !endDialogMessageElementButton.disabled
+            ) {
+                console.log(
+                    "自动化测试：检测到'已经是最后一题'提示框，点击确定并准备交卷。"
+                );
+                endDialogMessageElementButton.click();
+                await delay(500);
+                break;
             }
             mainQuestionLoopIndex++;
             await delay(2000); // 等待下一个题目/题组加载
@@ -370,7 +362,7 @@ export async function runCompleteExamScenario(
 
     console.log("自动化测试：题目循环完成。正在尝试提交考试。");
     const submitExamButton = (await waitForElement(
-        "button[aria-label*='Submit Exam'], button[aria-label*='交卷']",
+        "button[aria-label*='Submit'], button[aria-label*='交卷']",
         7000
     )) as HTMLButtonElement | null;
 
