@@ -23,7 +23,8 @@ const model = ref([
             { label: "考试", icon: "pi pi-fw pi-file", to: "/exams" },
             { label: "练习", icon: "pi pi-fw pi-file", to: "/practices" },
             { label: "在线表格", icon: "pi pi-fw pi-table", to: "/sheet" },
-            { label: "test", icon: "pi pi-fw pi-id-card", to: "/test" },
+            // { label: "test", icon: "pi pi-fw pi-id-card", to: "/test" },
+            { label: "聊天", icon: "pi pi-fw pi-id-card", to: "/chat" },
         ],
     },
 ]);
@@ -59,9 +60,12 @@ const logout = () => {
             ></app-menu-item>
             <li v-if="item.separator" class="menu-separator"></li>
         </template>
-        
+
         <li class="logout-button-container">
-            <Button @click="logout" class="p-button-outlined p-button-danger logout-button">
+            <Button
+                @click="logout"
+                class="p-button-outlined p-button-danger logout-button"
+            >
                 <i class="pi pi-sign-out mr-2"></i>
                 退出登录
             </Button>

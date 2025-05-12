@@ -25,7 +25,7 @@ const model = ref([
                 to: "/exams",
             },
             { label: "登录", icon: "pi pi-fw pi-id-card", to: "/auth/login" },
-            { label: "test", icon: "pi pi-fw pi-id-card", to: "/test" },
+            { label: "聊天", icon: "pi pi-fw pi-id-card", to: "/chat" },
             // { label: 'Input', icon: 'pi pi-fw pi-check-square', to: '/uikit/input' },
             // { label: 'Button', icon: 'pi pi-fw pi-mobile', to: '/uikit/button', class: 'rotated-icon' },
             // { label: 'Table', icon: 'pi pi-fw pi-table', to: '/uikit/table' },
