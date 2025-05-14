@@ -241,7 +241,7 @@ const toggleSection = (index: number) => {
 // 处理题目点击（单题模式）
 const handleQuestionClick = (question: any | undefined, isGroupMode: boolean) => {
     if (question) {
-        console.log("handleQuestionClick", question);
+        // console.log("handleQuestionClick", question);
         props.selectQuestion(question); // 调用父组件传递的选择方法
         
         // 在移动设备上，选中题目后自动收起题目列表

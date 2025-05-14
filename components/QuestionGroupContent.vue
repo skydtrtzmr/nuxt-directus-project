@@ -199,7 +199,7 @@ const props = defineProps<{
     renderMarkdown: (content: string) => string;
 }>();
 
-console.log("questionGroup in QuestionGroupContent", props.questionGroup);
+// console.log("questionGroup in QuestionGroupContent", props.questionGroup);
 
 const emit = defineEmits(["flag-question"]);
 

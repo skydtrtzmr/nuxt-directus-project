@@ -55,7 +55,7 @@ export async function runSelectAndStartExamScenario(
     }
 
     joinButton.click();
-    console.log(`Automation: Clicked join button for "${examTitle}".`);
+    // console.log(`Automation: Clicked join button for "${examTitle}".`);
 
     // 等待导航到 /exam/:id 页面
     let examId: string | null = null;

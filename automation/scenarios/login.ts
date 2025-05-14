@@ -8,7 +8,7 @@ import {
 } from "../utils/domHelpers";
 
 export async function runLoginScenario(router: Router): Promise<boolean> {
-    console.log("Automation: Starting Login Scenario...");
+    // console.log("Automation: Starting Login Scenario...");
     if (router.currentRoute.value.path !== "/auth/login") {
         console.log("Automation: Not on login page, navigating...");
         router.push("/auth/login");

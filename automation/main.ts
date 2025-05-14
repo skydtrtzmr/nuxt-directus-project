@@ -10,14 +10,14 @@ let hasAutomationRun = false; // 防止重复执行
 
 export async function runFullAutomationSequence(router: Router): Promise<void> {
     if (hasAutomationRun) {
-        console.log(
-            "Automation: Full sequence has already been attempted or run."
-        );
+        // console.log(
+        //     "Automation: Full sequence has already been attempted or run."
+        // );
         return;
     }
     hasAutomationRun = true; // 标记已运行，避免重复触发
 
-    console.log("Automation: Starting Full Automation Sequence...");
+    // console.log("Automation: Starting Full Automation Sequence...");
     await delay(2000); // 初始延迟，等待应用完全初始化
 
     // 序列 1: 登录
@@ -26,7 +26,7 @@ export async function runFullAutomationSequence(router: Router): Promise<void> {
         console.error("Automation: Login scenario failed. Aborting sequence.");
         return;
     }
-    console.log("Automation: Login Scenario Completed.");
+    // console.log("Automation: Login Scenario Completed.");
     await delay(1000);
 
     // // 序列 2: 从主页（或登录后自动跳转到的页面）导航到考试列表

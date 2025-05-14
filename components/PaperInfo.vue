@@ -36,7 +36,7 @@ const props = defineProps<{
     paper: Papers;
 }>();
 
-console.log("paperinfo:", props.paper);
+// console.log("paperinfo:", props.paper);
 
 // 格式化当前日期 (简短版本)
 const formatShortDate = () => {

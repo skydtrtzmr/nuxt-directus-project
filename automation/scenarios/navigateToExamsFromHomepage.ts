@@ -4,7 +4,7 @@ import { delay, waitForNavigation } from '../utils/domHelpers';
 
 export async function runNavigateToExamsFromHomepageScenario(router: Router): Promise<boolean> {
     // console.log("Automation: Starting Navigate to Exams from Homepage Scenario...");
-    console.log("router.currentRoute.value.path:", router.currentRoute.value.path);
+    // console.log("router.currentRoute.value.path:", router.currentRoute.value.path);
     
     // 如果当前不是首页，先尝试导航到首页
     if (router.currentRoute.value.path !== '/dashboard') {

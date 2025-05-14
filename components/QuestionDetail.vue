@@ -164,7 +164,7 @@ const props = defineProps<{
     questionResults: QuestionResults[];
 }>();
 
-console.log("selectedQuestion in QuestionDetail", props.selectedQuestion.value);
+// console.log("selectedQuestion in QuestionDetail", props.selectedQuestion.value);
 
 const emit = defineEmits(["navigate-question"]);
 
