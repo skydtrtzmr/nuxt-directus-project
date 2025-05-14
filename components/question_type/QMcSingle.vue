@@ -200,7 +200,7 @@ const updateAnswer = async () => {
             }
         }
         
-        console.log("答案已成功更新:", response);
+        // console.log("答案已成功更新:", response);
     } catch (error) {
         console.error("更新答案时出错:", error);
     }

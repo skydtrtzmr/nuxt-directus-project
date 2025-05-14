@@ -89,7 +89,7 @@ export async function getHashItemsFromCache<T>(
         );
     } else {
         // 如果缓存命中所有请求项，直接返回数据
-        console.log("cache hit", key);
+        // console.log("cache hit", key);
         return hitData.map((data) => JSON.parse(data));
     }
 }

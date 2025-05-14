@@ -231,12 +231,12 @@ const toggleQuestionFlag = async () => {
 };
 
 // 监听选中题目变化
-watch(
-    () => props.selectedQuestion,
-    (newQuestion) => {
-        console.log("QuestionDetail - 选中题目更新为:", newQuestion);
-    }
-);
+// watch(
+//     () => props.selectedQuestion,
+//     (newQuestion) => {
+//         console.log("QuestionDetail - 选中题目更新为:", newQuestion);
+//     }
+// );
 
 // 导航到上一题或下一题
 const navigateQuestion = (direction: number) => {

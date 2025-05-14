@@ -48,7 +48,7 @@ export const useAuth = defineStore("auth", {
     actions: {
         // 刷新 token 的逻辑
         async refreshToken() {
-            console.log("auth store refreshToken");
+            // console.log("auth store refreshToken");
             try {
                 const { refreshTokens } = useDirectusToken();
                 const newToken = await refreshTokens();
@@ -73,8 +73,8 @@ export const useAuth = defineStore("auth", {
             // 仅在客户端执行
             if (import.meta.client) {
                 try {
-                    console.log("验证会话");
-                    console.log("当前时间：", new Date().toLocaleString());
+                    // console.log("验证会话");
+                    // console.log("当前时间：", new Date().toLocaleString());
 
                     // 检查用户是否仍然认证
                     const directusUser = useDirectusUser();
@@ -87,16 +87,16 @@ export const useAuth = defineStore("auth", {
                     // 如果directusUser.value不存在，说明token无效
                     if (!directusUser.value) {
                         //  this.$reset(); // 无效的token，重置状态
-                        console.log("token 无效");
+                        // console.log("token 无效");
                         return false; // 用户未登录或 token 已过期
                     } else {
-                        console.log("token 有效，验证用户信息");
+                        // console.log("token 有效，验证用户信息");
                         // 如果 token 即将过期，尝试刷新 token
                         // console.log("token2:", this.access_token, this.refresh_token);
 
                         if (this.access_token && this.refresh_token) {
                             // TODO 这里应该判断 token 是否即将过期，如果即将过期，则刷新 token
-                            console.log("token 即将过期，尝试刷新 token");
+                            // console.log("token 即将过期，尝试刷新 token");
                             await this.refreshToken();
                         }
                         return true; // 会话有效
@@ -120,7 +120,7 @@ export const useAuth = defineStore("auth", {
         }) {
             const { login } = useDirectusAuth();
             const router = useRouter();
-            console.log("auth store login");
+            // console.log("auth store login");
 
             try {
                 // Try to login
@@ -150,9 +150,9 @@ export const useAuth = defineStore("auth", {
                     if (redirect) {
                         router.push(redirect);
                     }
-                    console.log("auth store login success");
+                    // console.log("auth store login success");
                 } else {
-                    console.error("auth store login failed");
+                    // console.error("auth store login failed");
                     this.logout();
                 }
             } catch (e) {
@@ -163,7 +163,7 @@ export const useAuth = defineStore("auth", {
             }
         },
         async logout() {
-            console.log("auth store logout");
+            // console.log("auth store logout");
             const router = useRouter();
             const { logout } = useDirectusAuth();
 
@@ -187,7 +187,7 @@ export const useAuth = defineStore("auth", {
             }
         },
         async updateUser() {
-            console.log("auth store updateUser");
+            // console.log("auth store updateUser");
 
             try {
                 // Try to fetch the user data

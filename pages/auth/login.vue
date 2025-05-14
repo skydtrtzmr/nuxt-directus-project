@@ -89,7 +89,7 @@ const loginSubmit = async () => {
     }
 
     const delayTime = generateDelayFromEmail(email.value); // 根据学生ID计算延迟时间
-    console.log(`延迟登录 ${email.value}: ${delayTime}ms`);
+    // console.log(`延迟登录 ${email.value}: ${delayTime}ms`);
 
     setTimeout(async () => {
         try {

@@ -118,9 +118,9 @@ const getQuestionTypeTagClass = (type: string): string => {
 };
 
 // 监听props.selectedQuestion的变化，便于调试
-watch(() => props.selectedQuestion, (newVal) => {
-    console.log("selectedQuestion in QuestionContent changed:", newVal);
-}, { immediate: true, deep: true });
+// watch(() => props.selectedQuestion, (newVal) => {
+//     console.log("selectedQuestion in QuestionContent changed:", newVal);
+// }, { immediate: true, deep: true });
 
 // 判断是否有公共题干需要显示
 const hasSharedStem = computed(() => {

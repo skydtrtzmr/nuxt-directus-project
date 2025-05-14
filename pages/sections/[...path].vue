@@ -40,7 +40,7 @@ const fetchSections = async () => {
         console.log("sections:");
         console.log(sections);
         parentId = sections[0].id;
-        currentContent = sections[0].content || "";
+        // currentContent = sections[0].content || "";
     }
     return currentContent;
 };

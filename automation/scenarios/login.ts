@@ -61,7 +61,7 @@ export async function runLoginScenario(router: Router): Promise<boolean> {
     await delay(500);
 
     if (!(await clickElement('button#login-form[type="submit"]'))) return false; // 登录按钮
-    console.log("Automation: Login form submitted.");
+    // console.log("Automation: Login form submitted.");
 
     // 登录后，应用会跳转到 /dashboard
     // index.vue 的 onMounted 会再从 /dashboard (如果auth.login配置了redirect) 或直接从 / 跳转到 /exams
@@ -75,7 +75,7 @@ export async function runLoginScenario(router: Router): Promise<boolean> {
         20000
     );
     if (navigated) {
-        console.log("Automation: Login successful, navigation detected.");
+        // console.log("Automation: Login successful, navigation detected.");
     } else {
         console.warn(
             "Automation: Login might have failed or navigation timed out after submit."

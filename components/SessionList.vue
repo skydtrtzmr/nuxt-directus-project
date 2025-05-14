@@ -325,7 +325,7 @@ const props = defineProps({
     },
 });
 
-console.log("props.mode:", props.mode);
+// console.log("props.mode:", props.mode);
 
 
 
@@ -436,8 +436,8 @@ const formatDateTime = (dateTime: any) => {
 
 const joinSession = async (sessionId: string) => {
     // 首先判断考试/练习时间
-    console.log("当前时间：");
-    console.log(dayjs(Date.now()));
+    // console.log("当前时间：");
+    // console.log(dayjs(Date.now()));
     const now_time = dayjs(Date.now());
 
     const session_info: PracticeSessions = practice_sessions_ref.value.find(
@@ -445,41 +445,41 @@ const joinSession = async (sessionId: string) => {
     )!;
 
     // 注意因为session可能是字符串或对象，要用"as"来断言类型
-    console.log("开始时间：");
+    // console.log("开始时间：");
     const session_start_time = dayjs(
         (
             (session_info.exercises_students_id! as ExercisesStudents)
                 .exercises_id as Exercises
         ).start_time
     );
-    console.log(session_start_time);
+    // console.log(session_start_time);
 
-    console.log("结束时间：");
+    // console.log("结束时间：");
     const session_end_time = dayjs(
         (
             (session_info.exercises_students_id! as ExercisesStudents)
                 .exercises_id as Exercises
         ).end_time
     );
-    console.log(
-        dayjs(
-            (
-                (session_info.exercises_students_id! as ExercisesStudents)
-                    .exercises_id as Exercises
-            ).end_time
-        )
-    );
+    // console.log(
+    //     dayjs(
+    //         (
+    //             (session_info.exercises_students_id! as ExercisesStudents)
+    //                 .exercises_id as Exercises
+    //         ).end_time
+    //     )
+    // );
 
     if (now_time.isBefore(session_start_time)) {
         not_started_dialog_visible.value = true;
-        console.log("未到开始时间！");
+        // console.log("未到开始时间！");
 
         return;
     }
 
     if (now_time.isAfter(session_end_time)) {
         have_ended_dialog_visible.value = true;
-        console.log("已过结束时间！");
+        // console.log("已过结束时间！");
 
         return;
     }

@@ -298,7 +298,7 @@ const afterFetchSubmittedExam = () => {
             const exercisesId = esId.exercises_id;
             if (typeof exercisesId === "object" && "paper" in exercisesId) {
                 const paperId = exercisesId.paper as string;
-                console.log("paperId", paperId);
+                // console.log("paperId", paperId);
                 fetchSubmittedPaper(paperId);
             }
         }
@@ -367,15 +367,15 @@ const afterFetchSubmittedExamTime = () => {
     examEndTime.value = dayjs(expected_end_time_str.value);
     // CAUTION: 这里dayjs里面的值如果是空的（例如undefined），就会返回当前时间。
 
-    console.log("examEndTime:");
-    console.log(examEndTime.value);
+    // console.log("examEndTime:");
+    // console.log(examEndTime.value);
 
     startCountdown(examEndTime.value);
 };
 
 // 获取提交的试卷
 const fetchSubmittedPaper = async (paperId: string) => {
-    console.log("fetchSubmittedPaper", paperId);
+    // console.log("fetchSubmittedPaper", paperId);
 
     const paperResponse = await getItemById<Papers>({
         collection: "papers",
@@ -398,7 +398,7 @@ const fetchSubmittedPaper = async (paperId: string) => {
 
 // 获取试卷的章节，修改为使用paper_sections
 const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
-    console.log("fetchSubmittedSectionsList", sections);
+    // console.log("fetchSubmittedSectionsList", sections);
 
     // 获取章节的基本信息
     const submittedSectionsResponse = await getItems<PaperSections>({
@@ -521,7 +521,7 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
 
     // 从Redis获取所有问题数据
     const questionIds = Array.from(new Set(question_id_list.value)); // 去重
-    console.log("questionIds", questionIds);
+    // console.log("questionIds", questionIds);
     const questionsData = (await useFetch("/api/questions/list", {
         method: "POST",
         body: {
@@ -529,7 +529,7 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
         },
     })) as any;
 
-    console.log("questionsData", questionsData);
+    // console.log("questionsData", questionsData);
 
     // 获取所有题组数据
     const questionGroupIds = Array.from(new Set(question_groups_id_list.value)); // 去重
@@ -684,10 +684,10 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
 
     if (submittedSectionsResponse) {
         submittedPaperSections.value = sectionList;
-        console.log(
-            "submittedPaperSections.value:",
-            submittedPaperSections.value
-        );
+        // console.log(
+        //     "submittedPaperSections.value:",
+        //     submittedPaperSections.value
+        // );
 
         // 根据章节的question_mode判断是选择题目还是题组
         if (
@@ -735,7 +735,7 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
         ) {
             selectedQuestion.value = sectionList[0].questions[0];
         }
-        console.log("selectedQuestion.value:", selectedQuestion.value);
+        // console.log("selectedQuestion.value:", selectedQuestion.value);
     }
 };
 
@@ -822,7 +822,7 @@ const stopCountdown = () => {
 
 const handleTimeOut = () => {
     // 在这里可以添加倒计时结束后的操作，例如自动提交试卷
-    console.log("时间结束！自动提交考试试卷。");
+    // console.log("时间结束！自动提交考试试卷。");
     ended_dialog_visible.value = true;
     submitExam(practice_session_id); // 调用提交试卷的函数
 };
@@ -866,7 +866,7 @@ onMounted(async () => {
     }
 
     const delayTime = generateDelayFromEmail(email.value); // 根据学生ID计算延迟时间
-    console.log(`延迟加载考试数据 ${email.value}: ${delayTime}ms`);
+    // console.log(`延迟加载考试数据 ${email.value}: ${delayTime}ms`);
 
     await fetchSubmittedExam(); // 注意一定要加await，否则会导致后面的代码先执行。
     await fetchExamTimeData(); //
@@ -883,8 +883,8 @@ onMounted(async () => {
     // 如果有效，调用方法进行后续处理
     afterFetchSubmittedExamTime();
 
-    console.log("practiceSessionTime.value.expected_end_time：");
-    console.log(practiceSessionTime.value.expected_end_time);
+    // console.log("practiceSessionTime.value.expected_end_time：");
+    // console.log(practiceSessionTime.value.expected_end_time);
 
     // 目前加上poll会有问题，暂时不用。
 
@@ -991,7 +991,7 @@ const navigateToQuestion = (direction: number) => {
 
     // 获取当前选中题目的信息
     const currentQuestion = selectedQuestion.value;
-    console.log("当前题目:", currentQuestion);
+    // console.log("当前题目:", currentQuestion);
 
     // 获取当前章节ID
     let currentSectionId;
@@ -1075,10 +1075,10 @@ const navigateInSingleMode = (
             (q) => q.sort_in_section > currentSortInSection
         );
         if (nextQuestionIndex !== -1) {
-            console.log(
-                "找到章节内下一题",
-                sortedSectionQuestions[nextQuestionIndex]
-            );
+            // console.log(
+            //     "找到章节内下一题",
+            //     sortedSectionQuestions[nextQuestionIndex]
+            // );
             return selectQuestion(sortedSectionQuestions[nextQuestionIndex]);
         }
 
@@ -1112,10 +1112,10 @@ const navigateInSingleMode = (
                         (a.sort_in_section || 0) - (b.sort_in_section || 0)
                 );
                 if (sortedNextQuestions.length > 0) {
-                    console.log(
-                        "跳转到下一章节的第一题",
-                        sortedNextQuestions[0]
-                    );
+                    // console.log(
+                    //     "跳转到下一章节的第一题",
+                    //     sortedNextQuestions[0]
+                    // );
                     return selectQuestion(sortedNextQuestions[0]);
                 }
             }
@@ -1133,7 +1133,7 @@ const navigateInSingleMode = (
         );
         if (prevQuestions.length > 0) {
             const prevQuestion = prevQuestions[prevQuestions.length - 1];
-            console.log("找到章节内上一题", prevQuestion);
+            // console.log("找到章节内上一题", prevQuestion);
             return selectQuestion(prevQuestion);
         }
 
@@ -1169,7 +1169,7 @@ const navigateInSingleMode = (
                 if (sortedPrevQuestions.length > 0) {
                     const lastQuestion =
                         sortedPrevQuestions[sortedPrevQuestions.length - 1];
-                    console.log("跳转到上一章节的最后一题", lastQuestion);
+                    // console.log("跳转到上一章节的最后一题", lastQuestion);
                     return selectQuestion(lastQuestion);
                 }
             }

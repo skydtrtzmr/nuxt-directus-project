@@ -204,7 +204,7 @@ export async function runCompleteExamScenario(
         );
         return false;
     }
-    console.log("自动化测试：已确认在考试页面。");
+    // console.log("自动化测试：已确认在考试页面。");
     await delay(3000);
 
     const answerCounters: IAnswerCounters = {
@@ -230,7 +230,7 @@ export async function runCompleteExamScenario(
             );
             break;
         }
-        console.log(`自动化测试：找到主题目区域 ${mainQuestionLoopIndex}。`);
+        // console.log(`自动化测试：找到主题目区域 ${mainQuestionLoopIndex}。`);
         mainQuestionArea.scrollIntoView({
             behavior: "smooth",
             block: "center",
@@ -242,7 +242,7 @@ export async function runCompleteExamScenario(
         );
 
         if (groupContentElement) {
-            console.log("自动化测试：检测到题组模式。");
+            // console.log("自动化测试：检测到题组模式。");
             const groupQuestionItems =
                 groupContentElement.querySelectorAll("div.question-item");
             if (groupQuestionItems.length === 0) {
@@ -257,11 +257,11 @@ export async function runCompleteExamScenario(
                     const subQuestionElement = groupQuestionItems[
                         i
                     ] as HTMLElement;
-                    console.log(
-                        `自动化测试：正在处理题组中的第 ${i + 1} / ${
-                            groupQuestionItems.length
-                        } 个子题目。`
-                    );
+                    // console.log(
+                    //     `自动化测试：正在处理题组中的第 ${i + 1} / ${
+                    //         groupQuestionItems.length
+                    //     } 个子题目。`
+                    // );
                     subQuestionElement.scrollIntoView({
                         behavior: "smooth",
                         block: "nearest",
@@ -278,11 +278,11 @@ export async function runCompleteExamScenario(
                             } 的类型。将跳过选择。`
                         );
                     } else {
-                        console.log(
-                            `自动化测试：子题目 ${
-                                i + 1
-                            } 的类型确定为: ${questionType}`
-                        );
+                        // console.log(
+                        //     `自动化测试：子题目 ${
+                        //         i + 1
+                        //     } 的类型确定为: ${questionType}`
+                        // );
                         // 传递 subQuestionElement，因为它包含此特定子题目的选项
                         await selectDeterministicOptions(
                             subQuestionElement,
@@ -294,7 +294,7 @@ export async function runCompleteExamScenario(
                 }
             }
         } else {
-            console.log("自动化测试：检测到单题模式 (或非题组结构)。");
+            // console.log("自动化测试：检测到单题模式 (或非题组结构)。");
             const questionType = getQuestionType(
                 mainQuestionArea as HTMLElement
             );

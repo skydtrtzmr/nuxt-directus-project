@@ -27,7 +27,7 @@ export default defineNuxtRouteMiddleware(async (to, _from) => {
                     router.push("/auth/login");
                 }
             } else {
-                console.log("fetch user success, setting user");
+                // console.log("fetch user success, setting user");
                 setUser(user.value);
                 authStore.updateUser();
             }

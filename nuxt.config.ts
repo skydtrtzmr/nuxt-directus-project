@@ -64,13 +64,13 @@ export default defineNuxtConfig({
     // 如果报错：'legacy' does not exist in type 'InputConfig<NuxtConfig, ConfigLayerMeta>' 的话，
     // 运行nuxt build，这个参数就不会报错了。
 
-    hooks: {
-        // Nuxt Hooks (build time)写在nuxt.config.ts中或nuxt modules中
-        // 仅在构建时执行，所以不存在服务器启动时执行的情况。
-        ready: () => {
-            console.log("ready");
-        },
-    },
+    // hooks: {
+    //     // Nuxt Hooks (build time)写在nuxt.config.ts中或nuxt modules中
+    //     // 仅在构建时执行，所以不存在服务器启动时执行的情况。
+    //     ready: () => {
+    //         console.log("ready");
+    //     },
+    // },
 
     runtimeConfig: {
         public: {

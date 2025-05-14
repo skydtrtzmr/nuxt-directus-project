@@ -178,7 +178,7 @@ const updateAnswer = async () => {
             id: props.questionData.result.id,
             item: submitted_question,
         });
-        console.log("Answer updated successfully:", response);
+        // console.log("Answer updated successfully:", response);
     } catch (error) {
         console.error("Error updating answer:", error);
     }
