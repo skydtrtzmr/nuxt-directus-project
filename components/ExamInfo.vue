@@ -77,7 +77,7 @@ watchEffect(() => {
         // 安全获取时长
         const durationValue = (exercisesId as Exercises)?.duration || 60; // 默认60分钟
 
-        console.log("durationValue", durationValue);
+        // console.log("durationValue", durationValue);
         
 
         if (durationValue >= 60) {

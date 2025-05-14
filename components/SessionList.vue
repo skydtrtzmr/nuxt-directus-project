@@ -484,7 +484,7 @@ const joinSession = async (sessionId: string) => {
         return;
     }
 
-    console.log(`参加${sessionTypeText.value}：${sessionId}`);
+    // console.log(`参加${sessionTypeText.value}：${sessionId}`);
     // 参加考试/练习之后，需要修改submit_status为doing。
     updateSubmitStatus(
         practice_sessions_ref.value.find((item) => item.id === sessionId)!

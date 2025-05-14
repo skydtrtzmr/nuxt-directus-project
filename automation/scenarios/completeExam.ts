@@ -92,9 +92,9 @@ async function selectDeterministicOptions(
             const targetChar = choices[counters.q_mc_single % choices.length];
             const optionLabel = getOptionLabel(targetChar);
             if (optionLabel) {
-                console.log(
-                    `自动化测试：[单选题] 在题目元素中选择: ${targetChar}`
-                );
+                // console.log(
+                //     `自动化测试：[单选题] 在题目元素中选择: ${targetChar}`
+                // );
                 optionLabel.click();
                 await delay(200);
             } else {
@@ -111,9 +111,9 @@ async function selectDeterministicOptions(
             const targetChar = choices[counters.q_mc_binary % choices.length];
             const optionLabel = getOptionLabel(targetChar);
             if (optionLabel) {
-                console.log(
-                    `自动化测试：[判断题] 在题目元素中选择: ${targetChar}`
-                );
+                // console.log(
+                //     `自动化测试：[判断题] 在题目元素中选择: ${targetChar}`
+                // );
                 optionLabel.click();
                 await delay(200);
             } else {
@@ -134,15 +134,15 @@ async function selectDeterministicOptions(
             ];
             const currentPattern =
                 patterns[counters.q_mc_multi % patterns.length];
-            console.log(
-                `自动化测试：[多选题] 在题目元素中选择模式: ${currentPattern.join(
-                    ", "
-                )}`
-            );
+            // console.log(
+            //     `自动化测试：[多选题] 在题目元素中选择模式: ${currentPattern.join(
+            //         ", "
+            //     )}`
+            // );
             for (const char of currentPattern) {
                 const optionLabel = getOptionLabel(char);
                 if (optionLabel) {
-                    console.log(`自动化测试：[多选题] 点击选项: ${char}`);
+                    // console.log(`自动化测试：[多选题] 点击选项: ${char}`);
                     optionLabel.click();
                     await delay(200);
                 } else {
@@ -164,15 +164,15 @@ async function selectDeterministicOptions(
             ];
             const currentPattern =
                 patterns[counters.q_mc_flexible % patterns.length];
-            console.log(
-                `自动化测试：[不定项选择题] 在题目元素中选择模式: ${currentPattern.join(
-                    ", "
-                )}`
-            );
+            // console.log(
+            //     `自动化测试：[不定项选择题] 在题目元素中选择模式: ${currentPattern.join(
+            //         ", "
+            //     )}`
+            // );
             for (const char of currentPattern) {
                 const optionLabel = getOptionLabel(char);
                 if (optionLabel) {
-                    console.log(`自动化测试：[不定项选择题] 点击选项: ${char}`);
+                    // console.log(`自动化测试：[不定项选择题] 点击选项: ${char}`);
                     optionLabel.click();
                     await delay(200);
                 } else {
@@ -196,7 +196,7 @@ export async function runCompleteExamScenario(
     router: Router,
     examId: string
 ): Promise<boolean> {
-    console.log(`自动化测试：开始执行完成考试场景，考试ID "${examId}"...`);
+    // console.log(`自动化测试：开始执行完成考试场景，考试ID "${examId}"...`);
 
     if (!router.currentRoute.value.path.includes(`/exam/${examId}`)) {
         console.warn(
@@ -216,18 +216,18 @@ export async function runCompleteExamScenario(
 
     let mainQuestionLoopIndex = 1; // 主题目循环索引
     while (true) {
-        console.log(
-            `自动化测试：正在查找主题目/题组区域 ${mainQuestionLoopIndex}...`
-        );
+        // console.log(
+        //     `自动化测试：正在查找主题目/题组区域 ${mainQuestionLoopIndex}...`
+        // );
         const mainQuestionArea = await waitForElement(
             "div.question-detail", // 目标为 QuestionDetail.vue 的根元素
             12000
         );
 
         if (!mainQuestionArea) {
-            console.log(
-                `自动化测试：未能找到主题目区域 ${mainQuestionLoopIndex}。可能已到题目末尾或出现问题。`
-            );
+            // console.log(
+            //     `自动化测试：未能找到主题目区域 ${mainQuestionLoopIndex}。可能已到题目末尾或出现问题。`
+            // );
             break;
         }
         // console.log(`自动化测试：找到主题目区域 ${mainQuestionLoopIndex}。`);
@@ -250,9 +250,9 @@ export async function runCompleteExamScenario(
                     "自动化测试：处于题组模式，但未找到子题目 (div.question-item)。"
                 );
             } else {
-                console.log(
-                    `自动化测试：在题组中找到 ${groupQuestionItems.length} 个子题目。`
-                );
+                // console.log(
+                //     `自动化测试：在题组中找到 ${groupQuestionItems.length} 个子题目。`
+                // );
                 for (let i = 0; i < groupQuestionItems.length; i++) {
                     const subQuestionElement = groupQuestionItems[
                         i
@@ -303,9 +303,9 @@ export async function runCompleteExamScenario(
                     `自动化测试：无法确定单题 ${mainQuestionLoopIndex} 的类型。将跳过选择。`
                 );
             } else {
-                console.log(
-                    `自动化测试：单题 ${mainQuestionLoopIndex} 的类型确定为: ${questionType}`
-                );
+                // console.log(
+                //     `自动化测试：单题 ${mainQuestionLoopIndex} 的类型确定为: ${questionType}`
+                // );
                 // 在单题模式下，mainQuestionArea 本身 (或其子组件 QuestionContent) 是上下文
                 // .question-type-tag 应位于 mainQuestionArea 内部，由 QuestionContent 渲染
                 await selectDeterministicOptions(
@@ -329,9 +329,9 @@ export async function runCompleteExamScenario(
             nextQuestionButton.offsetParent !== null &&
             !nextQuestionButton.disabled
         ) {
-            console.log(
-                `自动化测试：点击主题目/题组 ${mainQuestionLoopIndex} 后的"下一题"按钮。`
-            );
+            // console.log(
+            //     `自动化测试：点击主题目/题组 ${mainQuestionLoopIndex} 后的"下一题"按钮。`
+            // );
             nextQuestionButton.click();
             await delay(1000);
 
@@ -343,9 +343,9 @@ export async function runCompleteExamScenario(
                 endDialogMessageElementButton &&
                 !endDialogMessageElementButton.disabled
             ) {
-                console.log(
-                    "自动化测试：检测到'已经是最后一题'提示框，点击确定并准备交卷。"
-                );
+                // console.log(
+                //     "自动化测试：检测到'已经是最后一题'提示框，点击确定并准备交卷。"
+                // );
                 endDialogMessageElementButton.click();
                 await delay(500);
                 break;
@@ -353,14 +353,14 @@ export async function runCompleteExamScenario(
             mainQuestionLoopIndex++;
             await delay(2000); // 等待下一个题目/题组加载
         } else {
-            console.log(
-                `自动化测试：主题目/题组 ${mainQuestionLoopIndex} 后未找到"下一题"按钮或按钮不可交互。假设考试结束。`
-            );
+            // console.log(
+            //     `自动化测试：主题目/题组 ${mainQuestionLoopIndex} 后未找到"下一题"按钮或按钮不可交互。假设考试结束。`
+            // );
             break;
         }
     }
 
-    console.log("自动化测试：题目循环完成。正在尝试提交考试。");
+    // console.log("自动化测试：题目循环完成。正在尝试提交考试。");
     const submitExamButton = (await waitForElement(
         "button[aria-label*='Submit'], button[aria-label*='交卷']",
         7000
@@ -374,7 +374,7 @@ export async function runCompleteExamScenario(
     submitExamButton.scrollIntoView({ behavior: "smooth", block: "center" });
     await delay(400);
     submitExamButton.click();
-    console.log("自动化测试：已点击最终的提交考试按钮。");
+    // console.log("自动化测试：已点击最终的提交考试按钮。");
 
     await delay(1000);
     
@@ -386,9 +386,9 @@ export async function runCompleteExamScenario(
         confirmSubmitButton &&
         !confirmSubmitButton.disabled
     ) {
-        console.log(
-            "自动化测试：检测到确认提交试卷对话框，点击确定。"
-        );
+        // console.log(
+        //     "自动化测试：检测到确认提交试卷对话框，点击确定。"
+        // );
         confirmSubmitButton.click();
         await delay(500);
     }else {
@@ -403,9 +403,9 @@ export async function runCompleteExamScenario(
     );
 
     if (navigatedAfterSubmit) {
-        console.log(
-            `自动化测试：考试提交成功。已导航到: ${router.currentRoute.value.path}`
-        );
+        // console.log(
+        //     `自动化测试：考试提交成功。已导航到: ${router.currentRoute.value.path}`
+        // );
         return true;
     } else {
         console.warn("自动化测试：考试提交可能失败或提交后导航超时。");

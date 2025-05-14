@@ -44,7 +44,7 @@ export async function fillInput(
         element.value = value;
         element.dispatchEvent(new Event('input', { bubbles: true }));
         element.dispatchEvent(new Event('blur', { bubbles: true }));
-        console.log(`Automation: Filled input ${selector} with "${value}"`);
+        // console.log(`Automation: Filled input ${selector} with "${value}"`);
         return true;
     }
     console.warn(`Automation: Input element not found: ${selector}`);

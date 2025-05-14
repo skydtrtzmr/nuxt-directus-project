@@ -40,7 +40,7 @@ export async function runFullAutomationSequence(router: Router): Promise<void> {
         );
         return;
     }
-    console.log("Automation: Navigate to Exams Scenario Completed.");
+    // console.log("Automation: Navigate to Exams Scenario Completed.");
     await delay(1000);
 
     // // 序列 3: 选择特定考试并开始
@@ -54,9 +54,9 @@ export async function runFullAutomationSequence(router: Router): Promise<void> {
         );
         return;
     }
-    console.log(
-        `Automation: Select and Start Exam Scenario Completed. Exam ID: ${examId}`
-    );
+    // console.log(
+    //     `Automation: Select and Start Exam Scenario Completed. Exam ID: ${examId}`
+    // );
     await delay(1000);
 
     // // 序列 4: 完成并提交考试
@@ -67,6 +67,6 @@ export async function runFullAutomationSequence(router: Router): Promise<void> {
         console.log("Automation: Complete Exam Scenario Completed.");
     }
 
-    console.log("Automation: Full Automation Sequence Finished.");
+    // console.log("Automation: Full Automation Sequence Finished.");
     alert("自动化测试脚本执行完毕！");
 }

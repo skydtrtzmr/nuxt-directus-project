@@ -19,7 +19,7 @@ const router = useRouter();
 
 onMounted(async () => {
     if (config.public.isTest) {
-        console.log("Automation: Test environment detected. Initializing automation sequence...");
+        // console.log("Automation: Test environment detected. Initializing automation sequence...");
         // 等待Vue Router完全准备好并且初始导航完成
         await router.isReady();
         await nextTick(); // 确保初始DOM渲染

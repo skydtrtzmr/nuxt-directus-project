@@ -31,7 +31,7 @@ export async function runLoginScenario(router: Router): Promise<boolean> {
         return false;
     }
     const currentUserEmail = fetchCurrentUserEmailResponse.value as any; // 假设API返回结构
-    console.log("Automation: Test user fetched:", currentUserEmail);
+    // console.log("Automation: Test user fetched:", currentUserEmail);
 
     await delay(1000); // 等待页面元素渲染
 
@@ -52,7 +52,7 @@ export async function runLoginScenario(router: Router): Promise<boolean> {
         passwordComponentInput.dispatchEvent(
             new Event("blur", { bubbles: true })
         );
-        console.log(`Automation: Filled password component input`);
+        // console.log(`Automation: Filled password component input`);
     } else {
         // Fallback if direct input selection above fails
         if (!(await fillInput('input[type="password"]', passwordInput)))

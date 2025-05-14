@@ -11,9 +11,9 @@ export async function runSelectAndStartExamScenario(
     router: Router,
     examTitle: string
 ): Promise<string | null> {
-    console.log(
-        `Automation: Starting Select and Start Exam Scenario for "${examTitle}"...`
-    );
+    // console.log(
+    //     `Automation: Starting Select and Start Exam Scenario for "${examTitle}"...`
+    // );
     if (router.currentRoute.value.path !== "/exams") {
         console.log("Automation: Not on exams page, navigating...");
         router.push("/exams");
