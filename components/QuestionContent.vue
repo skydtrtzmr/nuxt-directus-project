@@ -46,11 +46,6 @@
 
 <script setup lang="ts">
 import { computed, watch } from "vue";
-import type { QuestionResults, QuestionGroups } from "~/types/directus_types";
-import QMcSingle from "~/components/question_type/QMcSingle.vue";
-import QMcMulti from "~/components/question_type/QMcMulti.vue";
-import QMcBinary from "~/components/question_type/QMcBinary.vue";
-import QMcFlexible from "~/components/question_type/QMcFlexible.vue";
 import QMcBase from "~/components/question_type/QMcBase.vue";
 
 const props = defineProps<{
