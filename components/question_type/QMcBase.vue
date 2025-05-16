@@ -1,10 +1,10 @@
-<!-- components/QMcSingle.vue -->
-<!-- 这里是单选题内容组件 -->
+<!-- components/QMcBase.vue -->
+<!-- 这里是通用选择题内容组件 -->
 <template>
     <div
         v-if="questionData && questionData.questions_id && questionData.result"
     >
-        <!-- 单选题 -->
+        <!-- 题干 -->
         <div
             v-html="renderMarkdown(questionData.questions_id.stem)"
             class="markdown-content question-stem"
@@ -25,116 +25,42 @@
         >
             <!-- 选项列表 -->
             <div class="flex flex-col gap-3">
-                <!-- 每个选项容器使用唯一ID，防止在题组模式下ID冲突 -->
                 <div
+                    v-for="option in options"
+                    :key="option.key"
                     class="flex items-start gap-3 option-item p-2 rounded-lg transition-all"
-                    :id="`div_option_a_${uniqueId}`"
-                    :class="{ 'option-selected': userAnswer === 'A' }"
+                    :id="`div_option_${option.key.toLowerCase()}_${uniqueId}`"
+                    :class="{ 'option-selected': isOptionSelected(option.key) }"
                 >
                     <RadioButton
-                        v-model="userAnswer"
-                        :inputId="`option_a_${uniqueId}`"
+                        v-if="
+                            questionType === 'q_mc_single' ||
+                            questionType === 'q_mc_binary'
+                        "
+                        v-model="localAnswer"
+                        :inputId="`option_${option.key.toLowerCase()}_${uniqueId}`"
                         name="option"
-                        value="A"
+                        :value="option.key"
                         @change="updateAnswer"
                     />
-                    <!-- 标签的for属性使用唯一ID，确保点击文字时正确关联到对应选项 -->
-                    <label
-                        :for="`option_a_${uniqueId}`"
-                        class="option-label flex-1 cursor-pointer"
-                    >
-                        <span class="option-marker">A</span>
-                        <span
-                            v-html="
-                                renderMarkdown(
-                                    questionData.questions_id.q_mc_single
-                                        ?.option_a
-                                )
-                            "
-                            class="markdown-content"
-                        ></span>
-                    </label>
-                </div>
-                <div
-                    class="flex items-start gap-3 option-item p-2 rounded-lg transition-all"
-                    :id="`div_option_b_${uniqueId}`"
-                    :class="{ 'option-selected': userAnswer === 'B' }"
-                >
-                    <RadioButton
-                        v-model="userAnswer"
-                        :inputId="`option_b_${uniqueId}`"
-                        name="option"
-                        value="B"
+                    <Checkbox
+                        v-if="
+                            questionType === 'q_mc_multi' ||
+                            questionType === 'q_mc_flexible'
+                        "
+                        v-model="localAnswer"
+                        :inputId="`option_${option.key.toLowerCase()}_${uniqueId}`"
+                        :name="`option_${option.key.toLowerCase()}`"
+                        :value="option.key"
                         @change="updateAnswer"
                     />
                     <label
-                        :for="`option_b_${uniqueId}`"
+                        :for="`option_${option.key.toLowerCase()}_${uniqueId}`"
                         class="option-label flex-1 cursor-pointer"
                     >
-                        <span class="option-marker">B</span>
+                        <span class="option-marker">{{ option.key }}</span>
                         <span
-                            v-html="
-                                renderMarkdown(
-                                    questionData.questions_id.q_mc_single
-                                        ?.option_b
-                                )
-                            "
-                            class="markdown-content"
-                        ></span>
-                    </label>
-                </div>
-                <div
-                    class="flex items-start gap-3 option-item p-2 rounded-lg transition-all"
-                    :id="`div_option_c_${uniqueId}`"
-                    :class="{ 'option-selected': userAnswer === 'C' }"
-                >
-                    <RadioButton
-                        v-model="userAnswer"
-                        :inputId="`option_c_${uniqueId}`"
-                        name="option"
-                        value="C"
-                        @change="updateAnswer"
-                    />
-                    <label
-                        :for="`option_c_${uniqueId}`"
-                        class="option-label flex-1 cursor-pointer"
-                    >
-                        <span class="option-marker">C</span>
-                        <span
-                            v-html="
-                                renderMarkdown(
-                                    questionData.questions_id.q_mc_single
-                                        ?.option_c
-                                )
-                            "
-                            class="markdown-content"
-                        ></span>
-                    </label>
-                </div>
-                <div
-                    class="flex items-start gap-3 option-item p-2 rounded-lg transition-all"
-                    :id="`div_option_d_${uniqueId}`"
-                    :class="{ 'option-selected': userAnswer === 'D' }"
-                >
-                    <RadioButton
-                        v-model="userAnswer"
-                        :inputId="`option_d_${uniqueId}`"
-                        name="option"
-                        value="D"
-                        @change="updateAnswer"
-                    />
-                    <label
-                        :for="`option_d_${uniqueId}`"
-                        class="option-label flex-1 cursor-pointer"
-                    >
-                        <span class="option-marker">D</span>
-                        <span
-                            v-html="
-                                renderMarkdown(
-                                    questionData.questions_id.q_mc_single
-                                        ?.option_d
-                                )
-                            "
+                            v-html="renderMarkdown(option.text)"
                             class="markdown-content"
                         ></span>
                     </label>
@@ -148,7 +74,7 @@
         <QuestionResult
             :questionResult="questionData.result"
             :questionData="questionData"
-            :question_type="question_type"
+            :question_type="dynamicQuestionTypeForQuestionResult"
             :renderMarkdown="renderMarkdown"
         ></QuestionResult>
     </template>
@@ -158,15 +84,23 @@
 import { ref, computed, watch } from "vue";
 import type { QuestionResults } from "~/types/directus_types";
 
+type QuestionType = "binary" | "single" | "multi" | "flexible";
+
+interface Option {
+    key: string;
+    text: string;
+}
+
 const props = defineProps<{
     questionData: any;
     exam_page_mode: string;
     renderMarkdown: (content: string) => string;
+    questionType: QuestionType;
 }>();
 
-console.log("props.questionData", props.questionData);
-
-const question_type = "q_mc_single";
+const dynamicQuestionTypeForQuestionResult = computed(() => {
+    return props.questionType;
+});
 
 /**
  * 生成唯一ID用于区分不同题目实例的选项
@@ -184,7 +118,11 @@ const uniqueId = computed(() => {
 });
 
 // 创建一个本地的响应式变量用于绑定UI
-const userAnswer = ref<string>("");
+const localAnswer = ref<string | string[]>(
+    props.questionType === "multi" || props.questionType === "flexible"
+        ? []
+        : ""
+);
 
 /**
  * 监听整个questionData对象的变化，确保在题目切换时重置答案
@@ -193,10 +131,29 @@ const userAnswer = ref<string>("");
 watch(
     () => props.questionData,
     (newQuestionData) => {
-        if (newQuestionData?.result?.submit_ans_select_radio) {
-            userAnswer.value = newQuestionData.result.submit_ans_select_radio;
+        if (
+            props.questionType === "multi" ||
+            props.questionType === "flexible"
+        ) {
+            if (newQuestionData?.result?.submit_ans_select_multiple_checkbox) {
+                localAnswer.value = Array.isArray(
+                    newQuestionData.result.submit_ans_select_multiple_checkbox
+                )
+                    ? [
+                          ...newQuestionData.result
+                              .submit_ans_select_multiple_checkbox,
+                      ]
+                    : [];
+            } else {
+                localAnswer.value = [];
+            }
         } else {
-            userAnswer.value = "";
+            if (newQuestionData?.result?.submit_ans_select_radio) {
+                localAnswer.value =
+                    newQuestionData.result.submit_ans_select_radio;
+            } else {
+                localAnswer.value = "";
+            }
         }
     },
     { immediate: true, deep: true }
@@ -228,9 +185,16 @@ const updateAnswer = async () => {
     if (!props.questionData?.result?.id) return;
 
     try {
-        const submitted_question = {
-            submit_ans_select_radio: userAnswer.value,
-        };
+        let submitted_question: any = {};
+        if (
+            props.questionType === "multi" ||
+            props.questionType === "flexible"
+        ) {
+            submitted_question.submit_ans_select_multiple_checkbox =
+                localAnswer.value;
+        } else {
+            submitted_question.submit_ans_select_radio = localAnswer.value;
+        }
 
         const response = await updateItem<QuestionResults>({
             collection: "question_results",
@@ -242,12 +206,21 @@ const updateAnswer = async () => {
         if (response) {
             // 更新本地props中的数据，这样在下次渲染时能够显示正确的答案
             if (props.questionData && props.questionData.result) {
-                props.questionData.result.submit_ans_select_radio =
-                    userAnswer.value;
+                if (
+                    props.questionType === "multi" ||
+                    props.questionType === "flexible"
+                ) {
+                    props.questionData.result.submit_ans_select_multiple_checkbox =
+                        Array.isArray(localAnswer.value)
+                            ? [...localAnswer.value]
+                            : [];
+                } else {
+                    props.questionData.result.submit_ans_select_radio =
+                        localAnswer.value;
+                }
             }
         }
-
-        // console.log("答案已成功更新:", response);
+        console.log("答案已成功更新:", response);
     } catch (error) {
         console.error("更新答案时出错:", error);
     }
@@ -271,6 +244,44 @@ const isCorrectAnswer = computed(() => {
 const answerClass = computed(() => {
     return isCorrectAnswer.value ? "text-green-600" : "text-red-600";
 });
+
+const getOptionText = (optionKey: string): string => {
+    const questionDetails =
+        props.questionData?.questions_id?.[`${props.questionType}`];
+    if (questionDetails) {
+        const text = questionDetails[`option_${optionKey.toLowerCase()}`];
+        return text || ""; // 返回空字符串如果选项文本未定义
+    }
+    return "";
+};
+
+const options = computed<Option[]>(() => {
+    const allPossibleOptionKeys = ["A", "B", "C", "D", "E", "F"];
+    const questionDetails =
+        props.questionData?.questions_id?.[`${props.questionType}`];
+
+    console.log("questionDetails", questionDetails);
+    
+    if (!questionDetails) return [];
+
+    return allPossibleOptionKeys
+        .map((key) => ({
+            key: key,
+            text: getOptionText(key),
+        }))
+        .filter((option) => option.text !== "");
+});
+
+const isOptionSelected = (optionKey: string): boolean => {
+    if (props.questionType === "multi" || props.questionType === "flexible") {
+        return (
+            Array.isArray(localAnswer.value) &&
+            localAnswer.value.includes(optionKey)
+        );
+    } else {
+        return localAnswer.value === optionKey;
+    }
+};
 </script>
 
 <style scoped>

@@ -17,39 +17,13 @@
                 <div v-html="renderMarkdown(sharedStemContent)" class="markdown-content"></div>
             </div>
             
-            <!-- 单选题 -->
-            <template v-if="selectedQuestion.questions_id.type === 'q_mc_single'">
-                <QMcSingle 
-                    :questionData="selectedQuestion" 
+            <!-- 选择题 -->
+            <template v-if="selectedQuestion.questions_id.type">
+                <QMcBase
+                    :questionData="selectedQuestion"
                     :exam_page_mode="exam_page_mode"
-                    :renderMarkdown="renderMarkdown" 
-                />
-            </template>
-            
-            <!-- 多选题 -->
-            <template v-else-if="selectedQuestion.questions_id.type === 'q_mc_multi'">
-                <QMcMulti 
-                    :questionData="selectedQuestion" 
-                    :exam_page_mode="exam_page_mode"
-                    :renderMarkdown="renderMarkdown" 
-                />
-            </template>
-            
-            <!-- 判断题 (二元选择) -->
-            <template v-else-if="selectedQuestion.questions_id.type === 'q_mc_binary'">
-                <QMcBinary 
-                    :questionData="selectedQuestion" 
-                    :exam_page_mode="exam_page_mode"
-                    :renderMarkdown="renderMarkdown" 
-                />
-            </template>
-            
-            <!-- 灵活选择题 -->
-            <template v-else-if="selectedQuestion.questions_id.type === 'q_mc_flexible'">
-                <QMcFlexible 
-                    :questionData="selectedQuestion" 
-                    :exam_page_mode="exam_page_mode"
-                    :renderMarkdown="renderMarkdown" 
+                    :renderMarkdown="renderMarkdown"
+                    :questionType="selectedQuestion.questions_id.type"
                 />
             </template>
             
@@ -77,6 +51,7 @@ import QMcSingle from "~/components/question_type/QMcSingle.vue";
 import QMcMulti from "~/components/question_type/QMcMulti.vue";
 import QMcBinary from "~/components/question_type/QMcBinary.vue";
 import QMcFlexible from "~/components/question_type/QMcFlexible.vue";
+import QMcBase from "~/components/question_type/QMcBase.vue";
 
 const props = defineProps<{
     selectedQuestion: any | null;
