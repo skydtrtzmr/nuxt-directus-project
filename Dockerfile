@@ -2,10 +2,10 @@
 
 # 打包客户端（client）：
 # pnpm build
-# docker build -t skydtrtzmr/my-directus-client ./
+# docker build -t skydtrtzmr/my-directus-client:1.2.2 ./
 
 # 指定最新版本：
-# docker tag skydtrtzmr/my-directus-client:1.1.0 skydtrtzmr/my-directus-client:latest
+# docker tag skydtrtzmr/my-directus-client:1.2.2 skydtrtzmr/my-directus-client:latest
 # （注意替换为自己的镜像版本）
 
 

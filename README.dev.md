@@ -27,3 +27,19 @@
 所以，noExternal: ['@univerjs/presets', 'rxjs'] 的意思就是：
 "这些包不要作为外部依赖，请将它们打包进 SSR bundle 中"。
 这就是为什么这个配置对于在开发模式（pnpm dev）下正确运行 Univer 是必要的。
+
+### 关于消息队列
+
+目前考试直接把提交的答案写入到了数据库中，需要改成消息队列，不然大并发下会出现问题。
+
+nodejs的消息队列相关库：
+
+- bullmq ✔️
+- kue  ❌（太旧了）
+- agenda
+- node-resque
+- node-worker-farm
+- kafkajs ❌（两年没更新了）
+- amqplib ❌（太旧了）
+
+

@@ -1,6 +1,7 @@
 // automation/scenarios/navigateToExamsFromHomepage.ts
 import type { Router } from 'vue-router';
 import { delay, waitForNavigation } from '../utils/domHelpers';
+import { log } from 'console';
 
 export async function runNavigateToExamsFromHomepageScenario(router: Router): Promise<boolean> {
     // console.log("Automation: Starting Navigate to Exams from Homepage Scenario...");
@@ -22,6 +23,8 @@ export async function runNavigateToExamsFromHomepageScenario(router: Router): Pr
     if (navigated) {
         console.log("Automation: Successfully navigated to /exams.");
     } else {
+        console.log("path:", router.currentRoute.value.path);
+        
         console.warn("Automation: Failed to navigate to /exams from homepage.");
         // 尝试强制导航以防万一
         router.push('/exams');
