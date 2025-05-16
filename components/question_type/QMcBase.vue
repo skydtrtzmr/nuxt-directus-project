@@ -84,7 +84,7 @@
 import { ref, computed, watch } from "vue";
 import type { QuestionResults } from "~/types/directus_types";
 
-type QuestionType = "binary" | "single" | "multi" | "flexible";
+type QuestionType = 'q_mc_binary' | 'q_mc_single' | 'q_mc_multi' | 'q_mc_flexible';
 
 interface Option {
     key: string;
@@ -119,7 +119,7 @@ const uniqueId = computed(() => {
 
 // 创建一个本地的响应式变量用于绑定UI
 const localAnswer = ref<string | string[]>(
-    props.questionType === "multi" || props.questionType === "flexible"
+    props.questionType === 'q_mc_multi' || props.questionType === 'q_mc_flexible'
         ? []
         : ""
 );
@@ -132,8 +132,8 @@ watch(
     () => props.questionData,
     (newQuestionData) => {
         if (
-            props.questionType === "multi" ||
-            props.questionType === "flexible"
+            props.questionType === 'q_mc_multi' ||
+            props.questionType === 'q_mc_flexible'
         ) {
             if (newQuestionData?.result?.submit_ans_select_multiple_checkbox) {
                 localAnswer.value = Array.isArray(
@@ -187,8 +187,8 @@ const updateAnswer = async () => {
     try {
         let submitted_question: any = {};
         if (
-            props.questionType === "multi" ||
-            props.questionType === "flexible"
+            props.questionType === 'q_mc_multi' ||
+            props.questionType === 'q_mc_flexible'
         ) {
             submitted_question.submit_ans_select_multiple_checkbox =
                 localAnswer.value;
@@ -207,8 +207,8 @@ const updateAnswer = async () => {
             // 更新本地props中的数据，这样在下次渲染时能够显示正确的答案
             if (props.questionData && props.questionData.result) {
                 if (
-                    props.questionType === "multi" ||
-                    props.questionType === "flexible"
+                    props.questionType === 'q_mc_multi' ||
+                    props.questionType === 'q_mc_flexible'
                 ) {
                     props.questionData.result.submit_ans_select_multiple_checkbox =
                         Array.isArray(localAnswer.value)
@@ -273,7 +273,7 @@ const options = computed<Option[]>(() => {
 });
 
 const isOptionSelected = (optionKey: string): boolean => {
-    if (props.questionType === "multi" || props.questionType === "flexible") {
+    if (props.questionType === 'q_mc_multi' || props.questionType === 'q_mc_flexible') {
         return (
             Array.isArray(localAnswer.value) &&
             localAnswer.value.includes(optionKey)
