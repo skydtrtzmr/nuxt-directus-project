@@ -83,8 +83,13 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import type { QuestionResults } from "~/types/directus_types";
+import axiosClient from "~/server/lib/axios";
 
-type QuestionType = 'q_mc_binary' | 'q_mc_single' | 'q_mc_multi' | 'q_mc_flexible';
+type QuestionType =
+    | "q_mc_binary"
+    | "q_mc_single"
+    | "q_mc_multi"
+    | "q_mc_flexible";
 
 interface Option {
     key: string;
@@ -119,7 +124,8 @@ const uniqueId = computed(() => {
 
 // 创建一个本地的响应式变量用于绑定UI
 const localAnswer = ref<string | string[]>(
-    props.questionType === 'q_mc_multi' || props.questionType === 'q_mc_flexible'
+    props.questionType === "q_mc_multi" ||
+        props.questionType === "q_mc_flexible"
         ? []
         : ""
 );
@@ -132,8 +138,8 @@ watch(
     () => props.questionData,
     (newQuestionData) => {
         if (
-            props.questionType === 'q_mc_multi' ||
-            props.questionType === 'q_mc_flexible'
+            props.questionType === "q_mc_multi" ||
+            props.questionType === "q_mc_flexible"
         ) {
             if (newQuestionData?.result?.submit_ans_select_multiple_checkbox) {
                 localAnswer.value = Array.isArray(
@@ -187,8 +193,8 @@ const updateAnswer = async () => {
     try {
         let submitted_question: any = {};
         if (
-            props.questionType === 'q_mc_multi' ||
-            props.questionType === 'q_mc_flexible'
+            props.questionType === "q_mc_multi" ||
+            props.questionType === "q_mc_flexible"
         ) {
             submitted_question.submit_ans_select_multiple_checkbox =
                 localAnswer.value;
@@ -196,19 +202,30 @@ const updateAnswer = async () => {
             submitted_question.submit_ans_select_radio = localAnswer.value;
         }
 
-        const response = await updateItem<QuestionResults>({
-            collection: "question_results",
-            id: props.questionData.result.id,
-            item: submitted_question,
-        });
+        // 更新答案到数据库
+        // const response = await updateItem<QuestionResults>({
+        //     collection: "question_results",
+        //     id: props.questionData.result.id,
+        //     item: submitted_question,
+        // });
+
+        // [2025-05-16] 不再直接更新数据库，而是通过消息队列更新
+        const response = await axiosClient.post(
+            `/greet/question_result`,
+            {
+                collection: "question_results",
+                id: props.questionData.result.id,
+                item: submitted_question,
+            }
+        );
 
         // 确保更新本地状态以反映在UI上
         if (response) {
             // 更新本地props中的数据，这样在下次渲染时能够显示正确的答案
             if (props.questionData && props.questionData.result) {
                 if (
-                    props.questionType === 'q_mc_multi' ||
-                    props.questionType === 'q_mc_flexible'
+                    props.questionType === "q_mc_multi" ||
+                    props.questionType === "q_mc_flexible"
                 ) {
                     props.questionData.result.submit_ans_select_multiple_checkbox =
                         Array.isArray(localAnswer.value)
@@ -261,7 +278,7 @@ const options = computed<Option[]>(() => {
         props.questionData?.questions_id?.[`${props.questionType}`];
 
     console.log("questionDetails", questionDetails);
-    
+
     if (!questionDetails) return [];
 
     return allPossibleOptionKeys
@@ -273,7 +290,10 @@ const options = computed<Option[]>(() => {
 });
 
 const isOptionSelected = (optionKey: string): boolean => {
-    if (props.questionType === 'q_mc_multi' || props.questionType === 'q_mc_flexible') {
+    if (
+        props.questionType === "q_mc_multi" ||
+        props.questionType === "q_mc_flexible"
+    ) {
         return (
             Array.isArray(localAnswer.value) &&
             localAnswer.value.includes(optionKey)
