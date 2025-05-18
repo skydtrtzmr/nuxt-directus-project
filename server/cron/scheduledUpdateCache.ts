@@ -39,13 +39,7 @@ export default defineCronHandler("everyThirtyMinutes", async () => {
                     "sort_in_paper",
                     "title",
                     "description",
-                    "question_type",
-                    "question_mode", // 添加question_mode字段
-                    "total_question_points",
-                    "questions",
-                    "question_groups", // 添加question_groups字段
                 ],
-                sort: "sort_in_paper", // 排序方式
             }),
         3600 // 1 hour
     );
