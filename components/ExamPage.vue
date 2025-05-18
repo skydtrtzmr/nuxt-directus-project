@@ -383,28 +383,13 @@ const fetchSubmittedPaper = async (paperId: string) => {
 
 // 获取试卷的章节，修改为使用paper_sections
 const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
-    // console.log("fetchSubmittedSectionsList", sections);
-
     // 获取章节的基本信息
-    const submittedSectionsResponse = await getItems<PaperSections>({
-        collection: "paper_sections",
-        params: {
-            filter: {
-                id: { _in: sections }, // 获取章节ID列表
-            },
-            fields: [
-                "id",
-                "sort_in_paper",
-                "title",
-                "question_type",
-                "question_mode", // 添加question_mode字段
-                "total_question_points",
-                "questions",
-                "question_groups", // 添加question_groups字段
-            ],
-            sort: "sort_in_paper", // 排序方式
+    const submittedSectionsResponse = (await $fetch("/api/paper_sections/list", {
+        method: "POST",
+        body: {
+            ids: sections,
         },
-    });
+    })) as PaperSections[];
 
     // 获取所有题目的结果
     const questionResultsPromise = getItems<QuestionResults>({

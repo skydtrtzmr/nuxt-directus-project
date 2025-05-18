@@ -6,12 +6,14 @@ interface FetchPaginatedParams {
     collection: string; // 表名
     fields: string[]; // 查询的字段
     // pageSize: number; // 每页的数据条数
+    sort?: string | null; // 排序方式
 }
 
 // TODO 这里后面其实可以改一下。其实只要加上limit=-1，就会返回所有数据了，不需要手动拼凑页数。
 export async function fetchAllPaginatedData({
     collection,
     fields,
+    sort,
 }: // pageSize,
 FetchPaginatedParams): Promise<any[]> {
     let allData: any[] = [];
@@ -26,6 +28,7 @@ FetchPaginatedParams): Promise<any[]> {
                 fields,
                 page,
                 limit: pageSize, // 根据每页大小调整
+                sort: sort ?? undefined,
             })
         );
 
