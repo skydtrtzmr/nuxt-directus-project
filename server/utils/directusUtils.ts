@@ -5,6 +5,7 @@ import { readUsers, readItems } from "@directus/sdk";
 interface FetchPaginatedParams {
     collection: string; // 表名
     fields: string[]; // 查询的字段
+    // sort?: string[] | null; // 排序方式
     // pageSize: number; // 每页的数据条数
 }
 
@@ -12,6 +13,7 @@ interface FetchPaginatedParams {
 export async function fetchAllPaginatedData({
     collection,
     fields,
+    // sort,
 }: // pageSize,
 FetchPaginatedParams): Promise<any[]> {
     let allData: any[] = [];
