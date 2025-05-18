@@ -249,39 +249,23 @@ const fetchSubmittedExam = async () => {
                     "exercises_students_id.students_id.name", // 学生姓名
                     "exercises_students_id.students_id.number", // 学号
                     "exercises_students_id.students_id.email", // 邮箱
-                    "exercises_students_id.students_id.class.name", // 班级 TODO暂时没生效！
+                    "exercises_students_id.students_id.class.name", // 班级
                     "exercises_students_id.exercises_id.title",
                     "exercises_students_id.exercises_id.duration",
                     "score", // 获取考试分数
-                ], // 获取考试的状态和关联的试卷
+                    // 合并了原 fetchExamTimeData 请求的字段
+                    "actual_start_time",
+                    "actual_end_time",
+                    "extra_time",
+                    "expected_end_time",
+                ], // 获取考试的状态和关联的试卷以及时间信息
             },
         });
     if (practiceSessionResponse) {
         practiceSession.value = practiceSessionResponse;
+        practiceSessionTime.value = practiceSessionResponse; // 同时更新 practiceSessionTime
         examScore.value = Number(practiceSessionResponse.score) || null; // 确保为null而不是undefined
         afterFetchSubmittedExam();
-    }
-};
-
-const fetchExamTimeData = async () => {
-    const practiceSessionTimeResponse = await getItemById<PracticeSessions>({
-        collection: "practice_sessions",
-        id: practice_session_id,
-        params: {
-            fields: [
-                "id",
-                "actual_start_time", // 获取考试开始时间，客户端根据此时间计算倒计时。
-                "actual_end_time",
-                "extra_time", // 考试时长补偿，客户端根据此时间计算倒计时。
-                "expected_end_time",
-                "exercises_students_id.exercises_id.duration", // 获取考试时长，直接在客户端进行计算
-                "exercises_students_id.exercises_id.paper", // 获取考试试卷ID，客户端根据此ID获取试卷详情。
-            ],
-        },
-    });
-
-    if (practiceSessionTimeResponse) {
-        practiceSessionTime.value = practiceSessionTimeResponse;
     }
 };
 
@@ -865,7 +849,6 @@ onMounted(async () => {
     // console.log(`延迟加载考试数据 ${email.value}: ${delayTime}ms`);
 
     await fetchSubmittedExam(); // 注意一定要加await，否则会导致后面的代码先执行。
-    await fetchExamTimeData(); //
     await nextTick(); // 等待组件渲染完成
     isClient.value = true; // 标记当前是客户端渲染（组件已经挂载）
 
