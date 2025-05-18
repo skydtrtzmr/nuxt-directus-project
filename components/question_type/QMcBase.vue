@@ -83,7 +83,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import type { QuestionResults } from "~/types/directus_types";
-import axiosClient from "~/server/lib/axios";
 
 const {
     public: {

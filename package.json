@@ -31,7 +31,6 @@
     "@univerjs/sheets-numfmt": "^0.5.5",
     "@univerjs/sheets-ui": "^0.5.5",
     "@univerjs/ui": "^0.5.5",
-    "axios": "^1.7.9",
     "chart.js": "3.3.2",
     "dayjs": "^1.11.13",
     "exceljs": "^4.4.0",
