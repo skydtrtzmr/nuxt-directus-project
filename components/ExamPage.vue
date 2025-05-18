@@ -396,6 +396,12 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
         }
     )) as PaperSections[];
 
+    // 新增：对获取到的章节进行排序
+    submittedSectionsResponse.sort((a, b) => (a.sort_in_paper || 0) - (b.sort_in_paper || 0));
+
+    // 处理章节和题目数据
+    const sectionList = submittedSectionsResponse;
+
     // 获取所有题目的结果
     const questionResultsPromise = getItems<QuestionResults>({
         collection: "question_results",
@@ -421,9 +427,6 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
     const questionResultsData = await questionResultsPromise;
     // 保存问题结果到全局变量
     questionResults.value = questionResultsData;
-
-    // 处理章节和题目数据
-    const sectionList = submittedSectionsResponse;
 
     // 收集所有章节 ID，用于批量查询
     const allSectionIds = sectionList.map((section) => section.id);

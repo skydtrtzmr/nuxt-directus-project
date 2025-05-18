@@ -31,6 +31,7 @@ const model = ref([
 
 const logout = () => {
     auth.logout();
+    navigateTo("/login");
 };
 </script>
 
