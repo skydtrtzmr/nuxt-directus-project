@@ -571,43 +571,6 @@ const {
 
 onMounted(async () => {
     await fetchPracticeSessions(); // 注意要await！确保PracticeSessions.value已经被赋值
-    // if (isTest) {
-    //     await nextTick(); // 确保 DOM 渲染完成
-    //     await delay(1000);
-
-    //     // 筛选出标题为特定内容的循环项
-    //     const targetItemTitle = "自动化测试专用考试"; // 需要筛选的标题
-    //     console.log("practice_sessions_ref.value");
-    //     console.log(practice_sessions_ref.value);
-    //     console.log("gridItems.value in onMounted");
-    //     console.log(gridItems.value);
-    //     await delay(2000);
-    //     // 注意，下面获得的并不直接是Button，而是其父级div。
-    //     const targetGirdDiv: HTMLElement | null =
-    //         gridItems.value.find((button, index) => {
-    //             const item = practice_sessions_ref.value[index]; // 获取对应的项
-    //             return item.title === targetItemTitle;
-    //         }) || null;
-
-    //     // 注意，现在这种写法，如果没有找到目标项，targetGirdDiv会是null。
-
-    //     await delay(2000);
-
-    //     console.log("targetGirdDiv");
-    //     console.log(targetGirdDiv);
-
-    //     // 模拟点击目标按钮
-    //     if (targetGirdDiv && typeof targetGirdDiv == "object") {
-    //         const firstButton = (targetGirdDiv as HTMLElement).querySelector(
-    //             "button"
-    //         );
-    //         console.log("firstButton");
-    //         console.log(firstButton);
-    //         firstButton!.click();
-    //     } else {
-    //         console.log("没有找到目标按钮");
-    //     }
-    // }
 });
 </script>
 

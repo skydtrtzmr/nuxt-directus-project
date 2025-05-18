@@ -211,7 +211,7 @@ const updateAnswer = async () => {
 
         // [2025-05-16] 不再直接更新数据库，而是通过消息队列更新
         const response = await axiosClient.post(
-            `/greet/question_result`,
+            `/question-results-mq/question_result`,
             {
                 collection: "question_results",
                 id: props.questionData.result.id,

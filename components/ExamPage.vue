@@ -258,7 +258,7 @@ const fetchSubmittedExam = async () => {
         });
     if (practiceSessionResponse) {
         practiceSession.value = practiceSessionResponse;
-        examScore.value = practiceSessionResponse.score || null; // 确保为null而不是undefined
+        examScore.value = Number(practiceSessionResponse.score) || null; // 确保为null而不是undefined
         afterFetchSubmittedExam();
     }
 };
