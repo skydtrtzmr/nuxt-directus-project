@@ -85,6 +85,12 @@ import { ref, computed, watch } from "vue";
 import type { QuestionResults } from "~/types/directus_types";
 import axiosClient from "~/server/lib/axios";
 
+const {
+    public: {
+        directus: { url },
+    },
+} = useRuntimeConfig();
+
 type QuestionType =
     | "q_mc_binary"
     | "q_mc_single"
@@ -210,12 +216,16 @@ const updateAnswer = async () => {
         // });
 
         // [2025-05-16] 不再直接更新数据库，而是通过消息队列更新
-        const response = await axiosClient.post(
+        const response = await $fetch(
             `/question-results-mq/question_result`,
             {
-                collection: "question_results",
-                id: props.questionData.result.id,
-                item: submitted_question,
+                baseURL: url,
+                method: "POST",
+                body: {
+                    collection: "question_results",
+                    id: props.questionData.result.id,
+                    item: submitted_question,
+                },
             }
         );
 

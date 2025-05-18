@@ -522,7 +522,7 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
     // 从Redis获取所有问题数据
     const questionIds = Array.from(new Set(question_id_list.value)); // 去重
     // console.log("questionIds", questionIds);
-    const questionsData = (await useFetch("/api/questions/list", {
+    const questionsData = (await $fetch("/api/questions/list", {
         method: "POST",
         body: {
             ids: questionIds,
@@ -601,7 +601,7 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
         const sectionQuestionsWithData = questionsResponses[index].map(
             (sectionQuestion) => {
                 const questionId = sectionQuestion.questions_id as string;
-                const questionData = questionsData.data.value.find(
+                const questionData = questionsData.find(
                     (item: any) => item.id === questionId
                 );
 
