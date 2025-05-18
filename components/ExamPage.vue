@@ -529,7 +529,7 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
         },
     })) as any;
 
-    // console.log("questionsData", questionsData);
+    console.log("questionsData", questionsData);
 
     // 获取所有题组数据
     const questionGroupIds = Array.from(new Set(question_groups_id_list.value)); // 去重
@@ -807,10 +807,6 @@ const startCountdown = (endTime: dayjs.Dayjs) => {
 
     countdownInterval.value = interval; // 保存定时器引用，方便清除
 
-    // 在组件销毁时清除定时器
-    onUnmounted(() => {
-        clearInterval(interval);
-    });
 };
 
 const stopCountdown = () => {
