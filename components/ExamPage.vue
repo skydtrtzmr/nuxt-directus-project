@@ -433,20 +433,42 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
 
     // 批量获取所有章节中的题目信息
     let allSectionQuestions: PaperSectionsQuestions[] = [];
+
+    // 先根据sectionList里各个对象的questions字段（是个列表），拼接起来获取到全部题目id，再根据题目id来获取题目数据。
+    const paper_sections_question_ids = sectionList.flatMap((section) => section.questions);
+    console.log("paper_sections_question_ids", paper_sections_question_ids);
+    
+
+    const paper_section_question_group_ids = sectionList.flatMap((section) => section.question_groups);
+
     if (allSectionIds.length > 0) {
-        allSectionQuestions = await getItems<PaperSectionsQuestions>({
-            collection: "paper_sections_questions",
-            params: {
-                filter: { paper_sections_id: { _in: allSectionIds } },
-                fields: [
-                    "id",
-                    "sort_in_section",
-                    "questions_id",
-                    "paper_sections_id",
-                ],
-                // sort: "sort_in_section", // 排序在后续处理中进行
+        // allSectionQuestions = await getItems<PaperSectionsQuestions>({
+        //     collection: "paper_sections_questions",
+        //     params: {
+        //         filter: { paper_sections_id: { _in: allSectionIds } },
+        //         fields: [
+        //             "id",
+        //             "sort_in_section",
+        //             "questions_id",
+        //             "paper_sections_id",
+        //         ],
+        //         // sort: "sort_in_section", // 排序在后续处理中进行
+        //     },
+        // });
+
+        // 使用新的API端点，从redis获取题目数据。
+        // 【注意】这里不能直接获取，因为我是要根据paper_sections_id字段来筛选的，但是redis的key是根据id来获取的。所以需要先根据前面的paper_sections获取questions的id，再根据id来获取题目数据。
+        // 所以先。
+        allSectionQuestions = (await $fetch("/api/paper_sections_questions/list", {
+            method: "POST",
+            body: {
+                ids: paper_sections_question_ids,
             },
-        });
+        })) as PaperSectionsQuestions[];
+
+        console.log("allSectionQuestions", allSectionQuestions);
+        
+
         // 将所有问题ID添加到 question_id_list 中
         const allQuestionIds = allSectionQuestions.map(
             (sq) => sq.questions_id as string
@@ -465,22 +487,31 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
             .map((section) => section.id);
 
         if (groupModeSectionIds.length > 0) {
-            allSectionQuestionGroups =
-                await getItems<PaperSectionsQuestionGroups>({
-                    collection: "paper_sections_question_groups",
-                    params: {
-                        filter: {
-                            paper_sections_id: { _in: groupModeSectionIds },
-                        },
-                        fields: [
-                            "id",
-                            "sort_in_section",
-                            "question_groups_id",
-                            "paper_sections_id",
-                        ],
-                        // sort: "sort_in_section", // 排序在后续处理中进行
-                    },
-                });
+            // allSectionQuestionGroups =
+            //     await getItems<PaperSectionsQuestionGroups>({
+            //         collection: "paper_sections_question_groups",
+            //         params: {
+            //             filter: {
+            //                 paper_sections_id: { _in: groupModeSectionIds },
+            //             },
+            //             fields: [
+            //                 "id",
+            //                 "sort_in_section",
+            //                 "question_groups_id",
+            //                 "paper_sections_id",
+            //             ],
+            //             // sort: "sort_in_section", // 排序在后续处理中进行
+            //         },
+            //     });
+
+            // 使用新的API端点，从redis获取题组数据。
+            allSectionQuestionGroups = (await $fetch("/api/paper_sections_question_groups/list", {
+                method: "POST",
+                body: {
+                    ids: paper_section_question_group_ids,
+                },
+            })) as PaperSectionsQuestionGroups[];
+
             // 将所有题组ID添加到 question_groups_id_list 中
             const allGroupIds = allSectionQuestionGroups.map(
                 (sgq) => sgq.question_groups_id as string
@@ -499,7 +530,7 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
         body: {
             ids: questionIds,
         },
-    })) as any;
+    })) as Questions[];
 
     console.log("questionsData", questionsData);
 
@@ -573,7 +604,7 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
             body: {
                 ids: questionGroupIds,
             },
-        })) as any;
+        })) as QuestionGroups[];
     }
 
     // 将问题数据与章节数据关联
