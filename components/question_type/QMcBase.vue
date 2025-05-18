@@ -286,7 +286,7 @@ const options = computed<Option[]>(() => {
     const questionDetails =
         props.questionData?.questions_id?.[`${props.questionType}`];
 
-    console.log("questionDetails", questionDetails);
+    // console.log("questionDetails", questionDetails);
 
     if (!questionDetails) return [];
 
