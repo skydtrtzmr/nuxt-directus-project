@@ -435,74 +435,57 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
     // 处理章节和题目数据
     const sectionList = submittedSectionsResponse;
 
-    // 获取所有章节中的题目信息
-    const questionsPromises = sectionList.map(async (section) => {
-        // 查询章节中的所有问题
-        const sectionQuestions = await getItems<PaperSectionsQuestions>({
+    // 收集所有章节 ID，用于批量查询
+    const allSectionIds = sectionList.map(section => section.id);
+
+    // 批量获取所有章节中的题目信息
+    let allSectionQuestions: PaperSectionsQuestions[] = [];
+    if (allSectionIds.length > 0) {
+        allSectionQuestions = await getItems<PaperSectionsQuestions>({
             collection: "paper_sections_questions",
             params: {
-                filter: { paper_sections_id: section.id },
+                filter: { paper_sections_id: { _in: allSectionIds } },
                 fields: [
                     "id",
                     "sort_in_section",
                     "questions_id",
                     "paper_sections_id",
                 ],
-                sort: "sort_in_section",
+                // sort: "sort_in_section", // 排序在后续处理中进行
             },
         });
+        // 将所有问题ID添加到 question_id_list 中
+        const allQuestionIds = allSectionQuestions.map(sq => sq.questions_id as string);
+        question_id_list.value = Array.from(new Set(question_id_list.value.concat(allQuestionIds)));
+    }
 
-        // 获取所有问题的ID列表
-        const questionIds = sectionQuestions.map((sectionQuestion) => {
-            return sectionQuestion.questions_id as string;
-        });
+    // 批量获取所有章节中的题组信息
+    let allSectionQuestionGroups: PaperSectionsQuestionGroups[] = [];
+    if (allSectionIds.length > 0) {
+        // 仅当存在题组模式的章节时才查询
+        const groupModeSectionIds = sectionList
+            .filter(section => section.question_mode === "group")
+            .map(section => section.id);
 
-        // 将这些ID添加到question_id_list中以在Redis中查询
-        question_id_list.value = question_id_list.value.concat(questionIds);
-
-        return sectionQuestions;
-    });
-
-    // 获取所有章节中的题组信息（如果是题组模式）
-    const questionGroupsPromises = sectionList.map(async (section) => {
-        // 如果不是题组模式，返回空数组
-        if (section.question_mode !== "group") {
-            return [];
-        }
-
-        // 查询章节中的所有题组
-        const sectionQuestionGroups =
-            await getItems<PaperSectionsQuestionGroups>({
+        if (groupModeSectionIds.length > 0) {
+            allSectionQuestionGroups = await getItems<PaperSectionsQuestionGroups>({
                 collection: "paper_sections_question_groups",
                 params: {
-                    filter: { paper_sections_id: section.id },
+                    filter: { paper_sections_id: { _in: groupModeSectionIds } },
                     fields: [
                         "id",
                         "sort_in_section",
                         "question_groups_id",
                         "paper_sections_id",
                     ],
-                    sort: "sort_in_section",
+                    // sort: "sort_in_section", // 排序在后续处理中进行
                 },
             });
-
-        // 获取所有题组的ID列表
-        const questionGroupIds = sectionQuestionGroups.map(
-            (sectionQuestionGroup) => {
-                return sectionQuestionGroup.question_groups_id as string;
-            }
-        );
-
-        // 将这些ID添加到question_groups_id_list中
-        question_groups_id_list.value =
-            question_groups_id_list.value.concat(questionGroupIds);
-
-        return sectionQuestionGroups;
-    });
-
-    // 等待所有问题和题组数据
-    const questionsResponses = await Promise.all(questionsPromises);
-    const questionGroupsResponses = await Promise.all(questionGroupsPromises);
+            // 将所有题组ID添加到 question_groups_id_list 中
+            const allGroupIds = allSectionQuestionGroups.map(sgq => sgq.question_groups_id as string);
+            question_groups_id_list.value = Array.from(new Set(question_groups_id_list.value.concat(allGroupIds)));
+        }
+    }
 
     // 从Redis获取所有问题数据
     const questionIds = Array.from(new Set(question_id_list.value)); // 去重
@@ -591,8 +574,12 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
 
     // 将问题数据与章节数据关联
     sectionList.forEach((section, index) => {
-        // 处理普通问题
-        const sectionQuestionsWithData = questionsResponses[index].map(
+        // 分配题目到对应章节
+        const currentSectionQuestions = allSectionQuestions
+            .filter(sq => sq.paper_sections_id === section.id)
+            .sort((a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)); // 按章节内排序
+
+        const sectionQuestionsWithData = currentSectionQuestions.map(
             (sectionQuestion) => {
                 const questionId = sectionQuestion.questions_id as string;
                 const questionData = questionsData.find(
@@ -617,9 +604,12 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
 
         // 处理题组问题（如果是题组模式）
         if (section.question_mode === "group") {
-            const sectionQuestionGroupsWithData = questionGroupsResponses[
-                index
-            ].map((sectionQuestionGroup) => {
+            // 分配题组到对应章节
+            const currentSectionGroups = allSectionQuestionGroups
+                .filter(sgq => sgq.paper_sections_id === section.id)
+                .sort((a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)); // 按章节内排序
+
+            const sectionQuestionGroupsWithData = currentSectionGroups.map((sectionQuestionGroup) => {
                 const questionGroupId =
                     sectionQuestionGroup.question_groups_id as string;
                 const questionGroupData = questionGroupsData.find(
