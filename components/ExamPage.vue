@@ -16,7 +16,7 @@
                 name: userData.name,
                 student_number: userData.student_number,
                 email: userData.email,
-                className: userData.className
+                className: userData.className,
             }"
             @submit="manualSubmit"
         />
@@ -74,7 +74,10 @@
                 header="提示"
                 :style="{ width: '25rem' }"
             >
-                <span class="text-surface-500 dark:text-surface-400 block mb-8">{{ nav_boundary_dialog_message }}</span>
+                <span
+                    class="text-surface-500 dark:text-surface-400 block mb-8"
+                    >{{ nav_boundary_dialog_message }}</span
+                >
                 <div class="flex justify-end gap-2">
                     <Button
                         type="button"
@@ -90,7 +93,7 @@
             <!-- 左侧：题目列表 -->
             <QuestionList
                 class="question-list-container"
-                :class="{ 'collapsed': sidebarCollapsed }"
+                :class="{ collapsed: sidebarCollapsed }"
                 :style="{ width: sidebarWidth + 'px' }"
                 :exam_page_mode="exam_page_mode"
                 :submittedPaperSections="submittedPaperSections"
@@ -145,8 +148,6 @@ import { useLoadingStateStore } from "@/stores/loadingState"; // 引入 Pinia st
 const auth = useAuth();
 const { user } = storeToRefs(auth); // 获取store里的user数据，用于根据邮箱设置延迟。
 const email = ref(user.value?.email || "");
-
-
 
 // 获取考试标题
 const getExamTitle = () => {
@@ -521,62 +522,71 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
 
     if (questionGroupIds.length > 0) {
         // 获取题组数据
-        const questionGroupsResponse = await getItems<QuestionGroups>({
-            collection: "question_groups",
-            params: {
-                filter: {
-                    id: { _in: questionGroupIds },
-                },
-                fields: [
-                    "id",
-                    "title",
-                    "shared_stem",
-                    "questions.id",
-                    "questions.title",
-                    "questions.type",
-                    "questions.stem",
-                    "questions.sort_in_group",
-                    // 单选题字段
-                    "questions.q_mc_single.id",
-                    "questions.q_mc_single.stem",
-                    "questions.q_mc_single.option_a",
-                    "questions.q_mc_single.option_b",
-                    "questions.q_mc_single.option_c",
-                    "questions.q_mc_single.option_d",
-                    "questions.q_mc_single.option_e",
-                    "questions.q_mc_single.option_f",
-                    "questions.q_mc_single.correct_option",
-                    // 多选题字段
-                    "questions.q_mc_multi.id",
-                    "questions.q_mc_multi.stem",
-                    "questions.q_mc_multi.option_a",
-                    "questions.q_mc_multi.option_b",
-                    "questions.q_mc_multi.option_c",
-                    "questions.q_mc_multi.option_d",
-                    "questions.q_mc_multi.option_e",
-                    "questions.q_mc_multi.option_f",
-                    "questions.q_mc_multi.correct_options",
-                    // 二元选择题字段
-                    "questions.q_mc_binary.id",
-                    "questions.q_mc_binary.stem",
-                    "questions.q_mc_binary.option_a",
-                    "questions.q_mc_binary.option_b",
-                    "questions.q_mc_binary.correct_option",
-                    // 灵活选择题字段
-                    "questions.q_mc_flexible.id",
-                    "questions.q_mc_flexible.stem",
-                    "questions.q_mc_flexible.option_a",
-                    "questions.q_mc_flexible.option_b",
-                    "questions.q_mc_flexible.option_c",
-                    "questions.q_mc_flexible.option_d",
-                    "questions.q_mc_flexible.option_e",
-                    "questions.q_mc_flexible.option_f",
-                    "questions.q_mc_flexible.correct_options",
-                ],
-            },
-        });
+        // const questionGroupsResponse = await getItems<QuestionGroups>({
+        //     collection: "question_groups",
+        //     params: {
+        //         filter: {
+        //             id: { _in: questionGroupIds },
+        //         },
+        //         fields: [
+        //             "id",
+        //             "title",
+        //             "shared_stem",
+        //             "questions.id",
+        //             "questions.title",
+        //             "questions.type",
+        //             "questions.stem",
+        //             "questions.sort_in_group",
+        //             // 单选题字段
+        //             "questions.q_mc_single.id",
+        //             "questions.q_mc_single.stem",
+        //             "questions.q_mc_single.option_a",
+        //             "questions.q_mc_single.option_b",
+        //             "questions.q_mc_single.option_c",
+        //             "questions.q_mc_single.option_d",
+        //             "questions.q_mc_single.option_e",
+        //             "questions.q_mc_single.option_f",
+        //             "questions.q_mc_single.correct_option",
+        //             // 多选题字段
+        //             "questions.q_mc_multi.id",
+        //             "questions.q_mc_multi.stem",
+        //             "questions.q_mc_multi.option_a",
+        //             "questions.q_mc_multi.option_b",
+        //             "questions.q_mc_multi.option_c",
+        //             "questions.q_mc_multi.option_d",
+        //             "questions.q_mc_multi.option_e",
+        //             "questions.q_mc_multi.option_f",
+        //             "questions.q_mc_multi.correct_options",
+        //             // 二元选择题字段
+        //             "questions.q_mc_binary.id",
+        //             "questions.q_mc_binary.stem",
+        //             "questions.q_mc_binary.option_a",
+        //             "questions.q_mc_binary.option_b",
+        //             "questions.q_mc_binary.correct_option",
+        //             // 灵活选择题字段
+        //             "questions.q_mc_flexible.id",
+        //             "questions.q_mc_flexible.stem",
+        //             "questions.q_mc_flexible.option_a",
+        //             "questions.q_mc_flexible.option_b",
+        //             "questions.q_mc_flexible.option_c",
+        //             "questions.q_mc_flexible.option_d",
+        //             "questions.q_mc_flexible.option_e",
+        //             "questions.q_mc_flexible.option_f",
+        //             "questions.q_mc_flexible.correct_options",
+        //         ],
+        //     },
+        // });
 
-        questionGroupsData = questionGroupsResponse;
+        // questionGroupsData = questionGroupsResponse;
+
+        // [2025-05-18] 使用新的API端点，从redis获取题组数据。
+
+        questionGroupsData = (await $fetch("/api/question_groups/list", {
+            method: "POST",
+            body: {
+                ids: questionGroupIds,
+            },
+        })) as any;
     }
 
     // 将问题数据与章节数据关联
@@ -790,7 +800,6 @@ const startCountdown = (endTime: dayjs.Dayjs) => {
     const interval = setInterval(updateInterval, 1000);
 
     countdownInterval.value = interval; // 保存定时器引用，方便清除
-
 };
 
 const stopCountdown = () => {

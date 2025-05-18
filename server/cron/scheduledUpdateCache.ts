@@ -82,6 +82,61 @@ export default defineCronHandler("everyThirtyMinutes", async () => {
         3600 // 1 hour
     );
 
+    updateHashCache(
+        "question_groups",
+        () =>
+            fetchAllPaginatedData({
+                collection: "question_groups",
+                fields: [
+                    "id",
+                    "title",
+                    "shared_stem",
+                    "questions.id",
+                    "questions.title",
+                    "questions.type",
+                    "questions.stem",
+                    "questions.sort_in_group",
+                    // 单选题字段
+                    "questions.q_mc_single.id",
+                    "questions.q_mc_single.stem",
+                    "questions.q_mc_single.option_a",
+                    "questions.q_mc_single.option_b",
+                    "questions.q_mc_single.option_c",
+                    "questions.q_mc_single.option_d",
+                    "questions.q_mc_single.option_e",
+                    "questions.q_mc_single.option_f",
+                    "questions.q_mc_single.correct_option",
+                    // 多选题字段
+                    "questions.q_mc_multi.id",
+                    "questions.q_mc_multi.stem",
+                    "questions.q_mc_multi.option_a",
+                    "questions.q_mc_multi.option_b",
+                    "questions.q_mc_multi.option_c",
+                    "questions.q_mc_multi.option_d",
+                    "questions.q_mc_multi.option_e",
+                    "questions.q_mc_multi.option_f",
+                    "questions.q_mc_multi.correct_options",
+                    // 二元选择题字段
+                    "questions.q_mc_binary.id",
+                    "questions.q_mc_binary.stem",
+                    "questions.q_mc_binary.option_a",
+                    "questions.q_mc_binary.option_b",
+                    "questions.q_mc_binary.correct_option",
+                    // 灵活选择题字段
+                    "questions.q_mc_flexible.id",
+                    "questions.q_mc_flexible.stem",
+                    "questions.q_mc_flexible.option_a",
+                    "questions.q_mc_flexible.option_b",
+                    "questions.q_mc_flexible.option_c",
+                    "questions.q_mc_flexible.option_d",
+                    "questions.q_mc_flexible.option_e",
+                    "questions.q_mc_flexible.option_f",
+                    "questions.q_mc_flexible.correct_options",
+                ],
+            }),
+        3600 // 1 hour
+    );
+
     // 上面的写法是把整个列表存为一个值。接下来改成每个列表的每一个对象存为一个值。
     // 这样可以避免列表过长、每次get redis数据量过大的问题。
 
