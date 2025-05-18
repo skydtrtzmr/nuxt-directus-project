@@ -39,6 +39,12 @@ export default defineCronHandler("everyThirtyMinutes", async () => {
                     "sort_in_paper",
                     "title",
                     "description",
+                    "points_per_question",
+                    "question_type",
+                    "question_mode",
+                    "total_question_points",
+                    "questions",
+                    "question_groups",
                 ],
             }),
         3600 // 1 hour

@@ -386,25 +386,15 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
     // console.log("fetchSubmittedSectionsList", sections);
 
     // 获取章节的基本信息
-    const submittedSectionsResponse = await getItems<PaperSections>({
-        collection: "paper_sections",
-        params: {
-            filter: {
-                id: { _in: sections }, // 获取章节ID列表
+    const submittedSectionsResponse = (await $fetch(
+        "/api/paper_sections/list",
+        {
+            method: "POST",
+            body: {
+                ids: sections,
             },
-            fields: [
-                "id",
-                "sort_in_paper",
-                "title",
-                "question_type",
-                "question_mode", // 添加question_mode字段
-                "total_question_points",
-                "questions",
-                "question_groups", // 添加question_groups字段
-            ],
-            sort: "sort_in_paper", // 排序方式
-        },
-    });
+        }
+    )) as PaperSections[];
 
     // 获取所有题目的结果
     const questionResultsPromise = getItems<QuestionResults>({
@@ -436,7 +426,7 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
     const sectionList = submittedSectionsResponse;
 
     // 收集所有章节 ID，用于批量查询
-    const allSectionIds = sectionList.map(section => section.id);
+    const allSectionIds = sectionList.map((section) => section.id);
 
     // 批量获取所有章节中的题目信息
     let allSectionQuestions: PaperSectionsQuestions[] = [];
@@ -455,8 +445,12 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
             },
         });
         // 将所有问题ID添加到 question_id_list 中
-        const allQuestionIds = allSectionQuestions.map(sq => sq.questions_id as string);
-        question_id_list.value = Array.from(new Set(question_id_list.value.concat(allQuestionIds)));
+        const allQuestionIds = allSectionQuestions.map(
+            (sq) => sq.questions_id as string
+        );
+        question_id_list.value = Array.from(
+            new Set(question_id_list.value.concat(allQuestionIds))
+        );
     }
 
     // 批量获取所有章节中的题组信息
@@ -464,26 +458,33 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
     if (allSectionIds.length > 0) {
         // 仅当存在题组模式的章节时才查询
         const groupModeSectionIds = sectionList
-            .filter(section => section.question_mode === "group")
-            .map(section => section.id);
+            .filter((section) => section.question_mode === "group")
+            .map((section) => section.id);
 
         if (groupModeSectionIds.length > 0) {
-            allSectionQuestionGroups = await getItems<PaperSectionsQuestionGroups>({
-                collection: "paper_sections_question_groups",
-                params: {
-                    filter: { paper_sections_id: { _in: groupModeSectionIds } },
-                    fields: [
-                        "id",
-                        "sort_in_section",
-                        "question_groups_id",
-                        "paper_sections_id",
-                    ],
-                    // sort: "sort_in_section", // 排序在后续处理中进行
-                },
-            });
+            allSectionQuestionGroups =
+                await getItems<PaperSectionsQuestionGroups>({
+                    collection: "paper_sections_question_groups",
+                    params: {
+                        filter: {
+                            paper_sections_id: { _in: groupModeSectionIds },
+                        },
+                        fields: [
+                            "id",
+                            "sort_in_section",
+                            "question_groups_id",
+                            "paper_sections_id",
+                        ],
+                        // sort: "sort_in_section", // 排序在后续处理中进行
+                    },
+                });
             // 将所有题组ID添加到 question_groups_id_list 中
-            const allGroupIds = allSectionQuestionGroups.map(sgq => sgq.question_groups_id as string);
-            question_groups_id_list.value = Array.from(new Set(question_groups_id_list.value.concat(allGroupIds)));
+            const allGroupIds = allSectionQuestionGroups.map(
+                (sgq) => sgq.question_groups_id as string
+            );
+            question_groups_id_list.value = Array.from(
+                new Set(question_groups_id_list.value.concat(allGroupIds))
+            );
         }
     }
 
@@ -576,8 +577,10 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
     sectionList.forEach((section, index) => {
         // 分配题目到对应章节
         const currentSectionQuestions = allSectionQuestions
-            .filter(sq => sq.paper_sections_id === section.id)
-            .sort((a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)); // 按章节内排序
+            .filter((sq) => sq.paper_sections_id === section.id)
+            .sort(
+                (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
+            ); // 按章节内排序
 
         const sectionQuestionsWithData = currentSectionQuestions.map(
             (sectionQuestion) => {
@@ -606,61 +609,66 @@ const fetchSubmittedSectionsList = async (sections: PaperSections[]) => {
         if (section.question_mode === "group") {
             // 分配题组到对应章节
             const currentSectionGroups = allSectionQuestionGroups
-                .filter(sgq => sgq.paper_sections_id === section.id)
-                .sort((a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)); // 按章节内排序
+                .filter((sgq) => sgq.paper_sections_id === section.id)
+                .sort(
+                    (a, b) =>
+                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
+                ); // 按章节内排序
 
-            const sectionQuestionGroupsWithData = currentSectionGroups.map((sectionQuestionGroup) => {
-                const questionGroupId =
-                    sectionQuestionGroup.question_groups_id as string;
-                const questionGroupData = questionGroupsData.find(
-                    (item: any) => item.id === questionGroupId
-                );
-
-                // 找出该章节中属于这个题组的所有题目
-                if (questionGroupData) {
-                    // 获取题组ID
-                    const groupId = questionGroupData.id;
-
-                    // 在section.questions中找出所有question_group等于该题组ID的题目
-                    const groupQuestions = section.questions.filter(
-                        (questionItem) => {
-                            // 处理question_group可能是字符串或对象的情况
-                            if (
-                                !questionItem.questions_id ||
-                                !questionItem.questions_id.question_group
-                            ) {
-                                return false;
-                            }
-
-                            const qGroup =
-                                questionItem.questions_id.question_group;
-
-                            if (typeof qGroup === "string") {
-                                return qGroup === groupId;
-                            } else if (
-                                typeof qGroup === "object" &&
-                                qGroup !== null
-                            ) {
-                                return qGroup.id === groupId;
-                            }
-
-                            return false;
-                        }
+            const sectionQuestionGroupsWithData = currentSectionGroups.map(
+                (sectionQuestionGroup) => {
+                    const questionGroupId =
+                        sectionQuestionGroup.question_groups_id as string;
+                    const questionGroupData = questionGroupsData.find(
+                        (item: any) => item.id === questionGroupId
                     );
 
-                    // 将找到的题目IDs保存到题组数据中，方便后续渲染
+                    // 找出该章节中属于这个题组的所有题目
+                    if (questionGroupData) {
+                        // 获取题组ID
+                        const groupId = questionGroupData.id;
+
+                        // 在section.questions中找出所有question_group等于该题组ID的题目
+                        const groupQuestions = section.questions.filter(
+                            (questionItem) => {
+                                // 处理question_group可能是字符串或对象的情况
+                                if (
+                                    !questionItem.questions_id ||
+                                    !questionItem.questions_id.question_group
+                                ) {
+                                    return false;
+                                }
+
+                                const qGroup =
+                                    questionItem.questions_id.question_group;
+
+                                if (typeof qGroup === "string") {
+                                    return qGroup === groupId;
+                                } else if (
+                                    typeof qGroup === "object" &&
+                                    qGroup !== null
+                                ) {
+                                    return qGroup.id === groupId;
+                                }
+
+                                return false;
+                            }
+                        );
+
+                        // 将找到的题目IDs保存到题组数据中，方便后续渲染
+                        return {
+                            ...sectionQuestionGroup,
+                            question_groups_id: questionGroupData || null,
+                            group_question_ids: groupQuestions.map((q) => q.id),
+                        };
+                    }
+
                     return {
                         ...sectionQuestionGroup,
                         question_groups_id: questionGroupData || null,
-                        group_question_ids: groupQuestions.map((q) => q.id),
                     };
                 }
-
-                return {
-                    ...sectionQuestionGroup,
-                    question_groups_id: questionGroupData || null,
-                };
-            });
+            );
 
             section.question_groups = sectionQuestionGroupsWithData;
         }
