@@ -192,8 +192,6 @@ const questionResults = ref<QuestionResults[]>([]);
 const examScore = ref<number | null>(null);
 const practiceSessionTime = ref<PracticeSessions>({} as PracticeSessions);
 
-
-
 const handleSidebarToggle = (collapsed: boolean) => {
     sidebarCollapsed.value = collapsed;
 };
@@ -331,7 +329,7 @@ const fetchSubmittedPaper = async (paperId: string) => {
 };
 
 const fetchSubmittedSectionsList = async (sections: any[]) => {
-    const sectionIds = sections.map(s => (typeof s === 'string' ? s : s.id));
+    const sectionIds = sections.map((s) => (typeof s === "string" ? s : s.id));
 
     // 获取章节的基本信息
     const submittedSectionsResponse = (await $fetch(
@@ -377,15 +375,25 @@ const fetchSubmittedSectionsList = async (sections: any[]) => {
 
     const allSectionIds = sectionList.map((section) => section.id);
     let allSectionQuestions: PaperSectionsQuestions[] = [];
-    const paper_sections_question_ids = sectionList.flatMap(s => s.questions);
-    const paper_section_question_group_ids = sectionList.flatMap(s => s.question_groups);
+    const paper_sections_question_ids = sectionList.flatMap((s) => s.questions);
+    const paper_section_question_group_ids = sectionList.flatMap(
+        (s) => s.question_groups
+    );
 
     if (allSectionIds.length > 0) {
-        allSectionQuestions = (await $fetch("/api/paper_sections_questions/list", {
-            method: "POST", body: { ids: paper_sections_question_ids },
-        })) as PaperSectionsQuestions[];
-        const allQuestionIds = allSectionQuestions.map(sq => sq.questions_id as string);
-        question_id_list_local.value = Array.from(new Set(question_id_list_local.value.concat(allQuestionIds)));
+        allSectionQuestions = (await $fetch(
+            "/api/paper_sections_questions/list",
+            {
+                method: "POST",
+                body: { ids: paper_sections_question_ids },
+            }
+        )) as PaperSectionsQuestions[];
+        const allQuestionIds = allSectionQuestions.map(
+            (sq) => sq.questions_id as string
+        );
+        question_id_list_local.value = Array.from(
+            new Set(question_id_list_local.value.concat(allQuestionIds))
+        );
     }
 
     let allSectionQuestionGroups: PaperSectionsQuestionGroups[] = [];
@@ -396,76 +404,137 @@ const fetchSubmittedSectionsList = async (sections: any[]) => {
             .map((section) => section.id);
 
         if (groupModeSectionIds.length > 0) {
-            allSectionQuestionGroups = (await $fetch("/api/paper_sections_question_groups/list", {
-                method: "POST", body: { ids: paper_section_question_group_ids },
-            })) as PaperSectionsQuestionGroups[];
+            allSectionQuestionGroups = (await $fetch(
+                "/api/paper_sections_question_groups/list",
+                {
+                    method: "POST",
+                    body: { ids: paper_section_question_group_ids },
+                }
+            )) as PaperSectionsQuestionGroups[];
             // 将所有题组ID添加到 question_groups_id_list 中
-            const allGroupIds = allSectionQuestionGroups.map(sgq => sgq.question_groups_id as string);
-            question_groups_id_list_local.value = Array.from(new Set(question_groups_id_list_local.value.concat(allGroupIds)));
+            const allGroupIds = allSectionQuestionGroups.map(
+                (sgq) => sgq.question_groups_id as string
+            );
+            question_groups_id_list_local.value = Array.from(
+                new Set(question_groups_id_list_local.value.concat(allGroupIds))
+            );
         }
     }
-    
+
     const questionsData = (await $fetch("/api/questions/list", {
-        method: "POST", body: { ids: Array.from(new Set(question_id_list_local.value)) },
+        method: "POST",
+        body: { ids: Array.from(new Set(question_id_list_local.value)) },
     })) as Questions[];
 
     let questionGroupsData: QuestionGroups[] = [];
     if (question_groups_id_list_local.value.length > 0) {
         questionGroupsData = (await $fetch("/api/question_groups/list", {
-            method: "POST", body: { ids: Array.from(new Set(question_groups_id_list_local.value)) },
+            method: "POST",
+            body: {
+                ids: Array.from(new Set(question_groups_id_list_local.value)),
+            },
         })) as QuestionGroups[];
     }
 
     sectionList.forEach((section) => {
         const currentSectionQuestions = allSectionQuestions
-            .filter(sq => sq.paper_sections_id === section.id)
-            .sort((a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0));
-        const sectionQuestionsWithData = currentSectionQuestions.map(sq => {
-            const questionData = questionsData.find(item => item.id === (sq.questions_id as string));
-            const result = questionResults.value.find(r => r.question_in_paper_id === sq.id);
-            return { ...sq, questions_id: questionData || null, result: result || null };
+            .filter((sq) => sq.paper_sections_id === section.id)
+            .sort(
+                (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
+            );
+        const sectionQuestionsWithData = currentSectionQuestions.map((sq) => {
+            const questionData = questionsData.find(
+                (item) => item.id === (sq.questions_id as string)
+            );
+            const result = questionResults.value.find(
+                (r) => r.question_in_paper_id === sq.id
+            );
+            return {
+                ...sq,
+                questions_id: questionData || null,
+                result: result || null,
+            };
         });
         section.questions = sectionQuestionsWithData;
 
         if (section.question_mode === "group") {
             const currentSectionGroups = allSectionQuestionGroups
-                .filter(sgq => sgq.paper_sections_id === section.id)
-                .sort((a,b) => (a.sort_in_section || 0) - (b.sort_in_section || 0));
-            const sectionQuestionGroupsWithData = currentSectionGroups.map(sgq => {
-                const questionGroupData = questionGroupsData.find(item => item.id === (sgq.question_groups_id as string));
-                if (questionGroupData) {
-                    const groupQuestions = section.questions.filter(qItem => {
-                        if (!qItem.questions_id || !qItem.questions_id.question_group) return false;
-                        const qGroup = qItem.questions_id.question_group;
-                        return (typeof qGroup === 'string' ? qGroup : qGroup.id) === questionGroupData.id;
-                    });
-                    return { ...sgq, question_groups_id: questionGroupData || null, group_question_ids: groupQuestions.map(q => q.id) };
+                .filter((sgq) => sgq.paper_sections_id === section.id)
+                .sort(
+                    (a, b) =>
+                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
+                );
+            const sectionQuestionGroupsWithData = currentSectionGroups.map(
+                (sgq) => {
+                    const questionGroupData = questionGroupsData.find(
+                        (item) => item.id === (sgq.question_groups_id as string)
+                    );
+                    if (questionGroupData) {
+                        const groupQuestions = section.questions.filter(
+                            (qItem) => {
+                                if (
+                                    !qItem.questions_id ||
+                                    !qItem.questions_id.question_group
+                                )
+                                    return false;
+                                const qGroup =
+                                    qItem.questions_id.question_group;
+                                return (
+                                    (typeof qGroup === "string"
+                                        ? qGroup
+                                        : qGroup.id) === questionGroupData.id
+                                );
+                            }
+                        );
+                        return {
+                            ...sgq,
+                            question_groups_id: questionGroupData || null,
+                            group_question_ids: groupQuestions.map((q) => q.id),
+                        };
+                    }
+                    return {
+                        ...sgq,
+                        question_groups_id: questionGroupData || null,
+                    };
                 }
-                return { ...sgq, question_groups_id: questionGroupData || null };
-            });
+            );
             section.question_groups = sectionQuestionGroupsWithData;
         }
     });
 
     submittedPaperSections.value = sectionList;
     if (sectionList.length > 0) {
-        if (sectionList[0].question_mode === "group" && sectionList[0].question_groups && sectionList[0].question_groups.length > 0) {
+        if (
+            sectionList[0].question_mode === "group" &&
+            sectionList[0].question_groups &&
+            sectionList[0].question_groups.length > 0
+        ) {
             const firstGroup = sectionList[0].question_groups[0];
             const groupQuestionIds = firstGroup.group_question_ids || [];
-            const groupQuestions = sectionList[0].questions.filter(q => groupQuestionIds.includes(q.id));
+            const groupQuestions = sectionList[0].questions.filter((q) =>
+                groupQuestionIds.includes(q.id)
+            );
             const sortedGroupQuestions = [...groupQuestions].sort((a, b) => {
                 const aSort = a.questions_id.sort_in_group ?? 999;
                 const bSort = b.questions_id.sort_in_group ?? 999;
-                if (aSort === bSort) return (a.sort_in_section || 0) - (b.sort_in_section || 0);
+                if (aSort === bSort)
+                    return (a.sort_in_section || 0) - (b.sort_in_section || 0);
                 return aSort - bSort;
             });
             selectedQuestion.value = {
-                ...firstGroup, isGroupMode: true, questionGroup: firstGroup.question_groups_id,
-                questions_id: { type: "group" }, section_id: sectionList[0].id,
-                paper_sections_id: sectionList[0].id, sort_in_section: firstGroup.sort_in_section,
+                ...firstGroup,
+                isGroupMode: true,
+                questionGroup: firstGroup.question_groups_id,
+                questions_id: { type: "group" },
+                section_id: sectionList[0].id,
+                paper_sections_id: sectionList[0].id,
+                sort_in_section: firstGroup.sort_in_section,
                 groupQuestions: sortedGroupQuestions,
             };
-        } else if (sectionList[0].questions && sectionList[0].questions.length > 0) {
+        } else if (
+            sectionList[0].questions &&
+            sectionList[0].questions.length > 0
+        ) {
             selectedQuestion.value = sectionList[0].questions[0];
         }
     }
@@ -500,7 +569,10 @@ const updateSubmitStatus = async (current_practice_session_id: string) => {
 };
 
 const submitExam = async (examId_to_submit: string) => {
-    if (practiceSession.value.submit_status === 'done' && props.exam_page_mode !== 'review') {
+    if (
+        practiceSession.value.submit_status === "done" &&
+        props.exam_page_mode !== "review"
+    ) {
         console.log("考试已提交，或为复习模式，跳过重复提交。");
         return;
     }
@@ -527,13 +599,46 @@ const confirmSubmit = () => {
     exitExam();
 };
 
-watch(isTimeUp, (newIsTimeUp) => {
-    if (newIsTimeUp && props.exam_page_mode !== 'review') {
-        if (!ended_dialog_visible.value && practiceSession.value.submit_status !== 'done') {
-            console.log("ExamPage: isTimeUp 变为 true，自动提交考试！");
+watch(isTimeUp, (newIsTimeUp, oldIsTimeUp) => {
+    console.log(
+        `[ExamPage] isTimeUp changed: ${oldIsTimeUp} -> ${newIsTimeUp}`
+    );
+    console.log(`[ExamPage] props.exam_page_mode: ${props.exam_page_mode}`);
+    console.log(
+        `[ExamPage] ended_dialog_visible.value: ${ended_dialog_visible.value}`
+    );
+    console.log(
+        `[ExamPage] practiceSession.value.submit_status: ${practiceSession.value.submit_status}`
+    );
+
+    if (newIsTimeUp && props.exam_page_mode !== "review") {
+        console.log(
+            "[ExamPage] Condition: newIsTimeUp is true AND not review mode."
+        );
+        if (
+            !ended_dialog_visible.value &&
+            practiceSession.value.submit_status !== "done"
+        ) {
+            console.log(
+                "[ExamPage] Condition: Dialog not visible AND submit_status is not done. WILL SHOW DIALOG AND SUBMIT."
+            );
             ended_dialog_visible.value = true;
             submitExam(practice_session_id);
+        } else {
+            console.log(
+                "[ExamPage] Condition NOT MET for showing dialog: ended_dialog_visible=",
+                ended_dialog_visible.value,
+                "submit_status=",
+                practiceSession.value.submit_status
+            );
         }
+    } else {
+        console.log(
+            "[ExamPage] Conditions NOT MET for entering primary if: newIsTimeUp=",
+            newIsTimeUp,
+            "exam_page_mode=",
+            props.exam_page_mode
+        );
     }
 });
 
@@ -548,7 +653,10 @@ const updateCurrentTime_local = () => {
 const startCurrentTimeUpdate_local = () => {
     if (isClient.value) {
         updateCurrentTime_local();
-        currentTimeInterval_local.value = setInterval(updateCurrentTime_local, 1000);
+        currentTimeInterval_local.value = setInterval(
+            updateCurrentTime_local,
+            1000
+        );
     }
 };
 
@@ -574,7 +682,6 @@ onMounted(async () => {
     // const delayTime = generateDelayFromEmail(email.value); // 如果需要延迟加载，可以取消注释
     // await new Promise(resolve => setTimeout(resolve, delayTime)); // 示例延迟
 
-
     await fetchSubmittedExam(); // 注意一定要加await，否则会导致后面的代码先执行。
     await nextTick(); // 等待组件渲染完成
     isClient.value = true; // 标记当前是客户端渲染（组件已经挂载）
@@ -592,7 +699,6 @@ onUnmounted(() => {
         currentTimeInterval_local.value = null;
     }
 });
-
 
 const allQuestions = computed(() => {
     const questions: any[] = [];
@@ -623,17 +729,28 @@ const navigateToQuestion = (direction: number) => {
         currentSectionId = currentQuestion.section_id;
     } else if (typeof currentQuestion.paper_sections_id === "string") {
         currentSectionId = currentQuestion.paper_sections_id;
-    } else if (currentQuestion.paper_sections_id && typeof currentQuestion.paper_sections_id === "object") {
+    } else if (
+        currentQuestion.paper_sections_id &&
+        typeof currentQuestion.paper_sections_id === "object"
+    ) {
         currentSectionId = currentQuestion.paper_sections_id.id;
-    } else { return; }
+    } else {
+        return;
+    }
 
-    const currentSection = submittedPaperSections.value.find(s => s.id === currentSectionId);
+    const currentSection = submittedPaperSections.value.find(
+        (s) => s.id === currentSectionId
+    );
     if (!currentSection) return;
 
     // 判断当前章节的题目模式
     const isGroupMode = currentSection.question_mode === "group";
-    const sortedSections = [...submittedPaperSections.value].sort((a, b) => (a.sort_in_paper || 0) - (b.sort_in_paper || 0));
-    const currentSectionIndex = sortedSections.findIndex(s => s.id === currentSectionId);
+    const sortedSections = [...submittedPaperSections.value].sort(
+        (a, b) => (a.sort_in_paper || 0) - (b.sort_in_paper || 0)
+    );
+    const currentSectionIndex = sortedSections.findIndex(
+        (s) => s.id === currentSectionId
+    );
 
     if (isGroupMode) {
         // 题组模式导航
@@ -673,7 +790,9 @@ const navigateInSingleMode = (
     );
 
     if (direction === 1) {
-        const nextQuestionIndex = sortedSectionQuestions.findIndex(q => q.sort_in_section > currentSortInSection);
+        const nextQuestionIndex = sortedSectionQuestions.findIndex(
+            (q) => q.sort_in_section > currentSortInSection
+        );
         if (nextQuestionIndex !== -1) {
             return selectQuestion(sortedSectionQuestions[nextQuestionIndex]);
         }
@@ -682,12 +801,30 @@ const navigateInSingleMode = (
         if (currentSectionIndex < sortedSections.length - 1) {
             // 且有下一章节，则跳转到下一章节的第一题/题组
             const nextSection = sortedSections[currentSectionIndex + 1];
-            if (nextSection.question_mode === "group" && nextSection.question_groups && nextSection.question_groups.length > 0) {
-                const sortedGroups = [...nextSection.question_groups].sort((a,b) => (a.sort_in_section || 0) - (b.sort_in_section || 0));
-                if (sortedGroups.length > 0) return handleQuestionGroupClick(sortedGroups[0], nextSection);
-            } else if (nextSection.questions && nextSection.questions.length > 0) {
-                const sortedNextQuestions = [...nextSection.questions].sort((a,b) => (a.sort_in_section || 0) - (b.sort_in_section || 0));
-                if (sortedNextQuestions.length > 0) return selectQuestion(sortedNextQuestions[0]);
+            if (
+                nextSection.question_mode === "group" &&
+                nextSection.question_groups &&
+                nextSection.question_groups.length > 0
+            ) {
+                const sortedGroups = [...nextSection.question_groups].sort(
+                    (a, b) =>
+                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
+                );
+                if (sortedGroups.length > 0)
+                    return handleQuestionGroupClick(
+                        sortedGroups[0],
+                        nextSection
+                    );
+            } else if (
+                nextSection.questions &&
+                nextSection.questions.length > 0
+            ) {
+                const sortedNextQuestions = [...nextSection.questions].sort(
+                    (a, b) =>
+                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
+                );
+                if (sortedNextQuestions.length > 0)
+                    return selectQuestion(sortedNextQuestions[0]);
             }
         } else {
             nav_boundary_dialog_message.value = "当前已经是最后一题！";
@@ -695,18 +832,40 @@ const navigateInSingleMode = (
             return;
         }
     } else if (direction === -1) {
-        const prevQuestions = sortedSectionQuestions.filter(q => q.sort_in_section < currentSortInSection);
+        const prevQuestions = sortedSectionQuestions.filter(
+            (q) => q.sort_in_section < currentSortInSection
+        );
         if (prevQuestions.length > 0) {
             return selectQuestion(prevQuestions[prevQuestions.length - 1]);
         }
         if (currentSectionIndex > 0) {
             const prevSection = sortedSections[currentSectionIndex - 1];
-             if (prevSection.question_mode === "group" && prevSection.question_groups && prevSection.question_groups.length > 0) {
-                const sortedGroups = [...prevSection.question_groups].sort((a,b) => (a.sort_in_section || 0) - (b.sort_in_section || 0));
-                if (sortedGroups.length > 0) return handleQuestionGroupClick(sortedGroups[sortedGroups.length-1], prevSection);
-            } else if (prevSection.questions && prevSection.questions.length > 0) {
-                const sortedPrevQuestions = [...prevSection.questions].sort((a,b) => (a.sort_in_section || 0) - (b.sort_in_section || 0));
-                if (sortedPrevQuestions.length > 0) return selectQuestion(sortedPrevQuestions[sortedPrevQuestions.length-1]);
+            if (
+                prevSection.question_mode === "group" &&
+                prevSection.question_groups &&
+                prevSection.question_groups.length > 0
+            ) {
+                const sortedGroups = [...prevSection.question_groups].sort(
+                    (a, b) =>
+                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
+                );
+                if (sortedGroups.length > 0)
+                    return handleQuestionGroupClick(
+                        sortedGroups[sortedGroups.length - 1],
+                        prevSection
+                    );
+            } else if (
+                prevSection.questions &&
+                prevSection.questions.length > 0
+            ) {
+                const sortedPrevQuestions = [...prevSection.questions].sort(
+                    (a, b) =>
+                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
+                );
+                if (sortedPrevQuestions.length > 0)
+                    return selectQuestion(
+                        sortedPrevQuestions[sortedPrevQuestions.length - 1]
+                    );
             }
         } else {
             nav_boundary_dialog_message.value = "当前已经是第一题！";
@@ -724,28 +883,63 @@ const navigateInGroupMode = (
     currentQuestion: any,
     direction: number
 ) => {
-    if (!currentSection.question_groups || currentSection.question_groups.length === 0) return;
-    const sortedGroups = [...currentSection.question_groups].sort((a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0));
+    if (
+        !currentSection.question_groups ||
+        currentSection.question_groups.length === 0
+    )
+        return;
+    const sortedGroups = [...currentSection.question_groups].sort(
+        (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
+    );
     let currentGroupIndex = -1;
     if (currentQuestion.isGroupMode && currentQuestion.questionGroup) {
-        const currentGroupId = typeof currentQuestion.questionGroup === "string" ? currentQuestion.questionGroup : currentQuestion.questionGroup.id;
-        currentGroupIndex = sortedGroups.findIndex(group => (typeof group.question_groups_id === "string" ? group.question_groups_id : group.question_groups_id.id) === currentGroupId);
+        const currentGroupId =
+            typeof currentQuestion.questionGroup === "string"
+                ? currentQuestion.questionGroup
+                : currentQuestion.questionGroup.id;
+        currentGroupIndex = sortedGroups.findIndex(
+            (group) =>
+                (typeof group.question_groups_id === "string"
+                    ? group.question_groups_id
+                    : group.question_groups_id.id) === currentGroupId
+        );
     }
     if (currentGroupIndex === -1) return;
 
     if (direction === 1) {
         // 下一题组
         if (currentGroupIndex < sortedGroups.length - 1) {
-            return handleQuestionGroupClick(sortedGroups[currentGroupIndex + 1], currentSection);
+            return handleQuestionGroupClick(
+                sortedGroups[currentGroupIndex + 1],
+                currentSection
+            );
         } else if (currentSectionIndex < sortedSections.length - 1) {
             // 当前章节的最后一个题组，跳转到下一章节的第一个题目/题组
             const nextSection = sortedSections[currentSectionIndex + 1];
-            if (nextSection.question_mode === "group" && nextSection.question_groups && nextSection.question_groups.length > 0) {
-                const sortedNextGroups = [...nextSection.question_groups].sort((a,b) => (a.sort_in_section || 0) - (b.sort_in_section || 0));
-                if (sortedNextGroups.length > 0) return handleQuestionGroupClick(sortedNextGroups[0], nextSection);
-            } else if (nextSection.questions && nextSection.questions.length > 0) {
-                const sortedNextQuestions = [...nextSection.questions].sort((a,b) => (a.sort_in_section || 0) - (b.sort_in_section || 0));
-                if (sortedNextQuestions.length > 0) return selectQuestion(sortedNextQuestions[0]);
+            if (
+                nextSection.question_mode === "group" &&
+                nextSection.question_groups &&
+                nextSection.question_groups.length > 0
+            ) {
+                const sortedNextGroups = [...nextSection.question_groups].sort(
+                    (a, b) =>
+                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
+                );
+                if (sortedNextGroups.length > 0)
+                    return handleQuestionGroupClick(
+                        sortedNextGroups[0],
+                        nextSection
+                    );
+            } else if (
+                nextSection.questions &&
+                nextSection.questions.length > 0
+            ) {
+                const sortedNextQuestions = [...nextSection.questions].sort(
+                    (a, b) =>
+                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
+                );
+                if (sortedNextQuestions.length > 0)
+                    return selectQuestion(sortedNextQuestions[0]);
             }
         } else {
             // 当前是最后一个题组且是最后一个章节
@@ -755,16 +949,39 @@ const navigateInGroupMode = (
         }
     } else if (direction === -1) {
         if (currentGroupIndex > 0) {
-            return handleQuestionGroupClick(sortedGroups[currentGroupIndex - 1], currentSection);
+            return handleQuestionGroupClick(
+                sortedGroups[currentGroupIndex - 1],
+                currentSection
+            );
         } else if (currentSectionIndex > 0) {
             // 当前章节的第一个题组，跳转到上一章节的最后一个题目/题组
             const prevSection = sortedSections[currentSectionIndex - 1];
-            if (prevSection.question_mode === "group" && prevSection.question_groups && prevSection.question_groups.length > 0) {
-                const sortedPrevGroups = [...prevSection.question_groups].sort((a,b) => (a.sort_in_section || 0) - (b.sort_in_section || 0));
-                if (sortedPrevGroups.length > 0) return handleQuestionGroupClick(sortedPrevGroups[sortedPrevGroups.length-1], prevSection);
-            } else if (prevSection.questions && prevSection.questions.length > 0) {
-                const sortedPrevQuestions = [...prevSection.questions].sort((a,b) => (a.sort_in_section || 0) - (b.sort_in_section || 0));
-                if (sortedPrevQuestions.length > 0) return selectQuestion(sortedPrevQuestions[sortedPrevQuestions.length-1]);
+            if (
+                prevSection.question_mode === "group" &&
+                prevSection.question_groups &&
+                prevSection.question_groups.length > 0
+            ) {
+                const sortedPrevGroups = [...prevSection.question_groups].sort(
+                    (a, b) =>
+                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
+                );
+                if (sortedPrevGroups.length > 0)
+                    return handleQuestionGroupClick(
+                        sortedPrevGroups[sortedPrevGroups.length - 1],
+                        prevSection
+                    );
+            } else if (
+                prevSection.questions &&
+                prevSection.questions.length > 0
+            ) {
+                const sortedPrevQuestions = [...prevSection.questions].sort(
+                    (a, b) =>
+                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
+                );
+                if (sortedPrevQuestions.length > 0)
+                    return selectQuestion(
+                        sortedPrevQuestions[sortedPrevQuestions.length - 1]
+                    );
             }
         } else {
             nav_boundary_dialog_message.value = "当前已经是第一题！";
@@ -780,7 +997,10 @@ const navigateInGroupMode = (
  */
 const handleQuestionGroupClick = async (group: any, section: PaperSections) => {
     if (!group || !group.question_groups_id) return;
-    const questionGroup = typeof group.question_groups_id === 'object' ? group.question_groups_id : null;
+    const questionGroup =
+        typeof group.question_groups_id === "object"
+            ? group.question_groups_id
+            : null;
 
     // 获取该题组包含的题目列表
     const groupQuestionIds = group.group_question_ids || [];

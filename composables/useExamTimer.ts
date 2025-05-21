@@ -67,14 +67,14 @@ export function useExamTimer() {
         extraTime_mins_ref.value = Math.max(0, compensationMins); // 确保补偿时长非负
 
         if (!startTimeISO) {
-            console.error(
-                "[useExamTimer] 无效的开始时间 (空字符串):",
-                startTimeISO
-            );
+            console.error("[useExamTimer] Invalid start time (empty string):", startTimeISO);
             examEndTime_dayjs_ref.value = null;
             isLoading_ref.value = false;
-            isTimeUp_ref.value = true; // 如果开始时间无效，则认为考试已结束
-            remainingSeconds_ref.value = 0; // 或设为 -1 表示错误状态
+            if (!isTimeUp_ref.value) {
+                console.log("[useExamTimer] Setting isTimeUp_ref to true due to invalid start time (empty).");
+                isTimeUp_ref.value = true;
+            }
+            remainingSeconds_ref.value = 0;
             return;
         }
 
@@ -87,13 +87,13 @@ export function useExamTimer() {
         const startTimeDate = new Date(actualStartTime_iso_ref.value);
         // 检查日期解析是否成功
         if (isNaN(startTimeDate.getTime())) {
-            console.error(
-                "[useExamTimer] 无效的开始时间 (日期解析失败):",
-                startTimeISO
-            );
+            console.error("[useExamTimer] Invalid start time (date parsing failed):", startTimeISO);
             examEndTime_dayjs_ref.value = null;
             isLoading_ref.value = false;
-            isTimeUp_ref.value = true;
+            if (!isTimeUp_ref.value) {
+                console.log("[useExamTimer] Setting isTimeUp_ref to true due to invalid start time (parsing).");
+                isTimeUp_ref.value = true;
+            }
             remainingSeconds_ref.value = 0;
             return;
         }
@@ -108,13 +108,13 @@ export function useExamTimer() {
         const calculatedEndTime = dayjs(expectedEndTimeStr);
 
         if (!calculatedEndTime.isValid()) {
-            console.error(
-                "[useExamTimer] 计算的结束时间无效 (来自ISO字符串):",
-                expectedEndTimeStr
-            );
+            console.error("[useExamTimer] Calculated end time is invalid (from ISO string):", expectedEndTimeStr);
             examEndTime_dayjs_ref.value = null;
             isLoading_ref.value = false;
-            isTimeUp_ref.value = true;
+            if (!isTimeUp_ref.value) {
+                console.log("[useExamTimer] Setting isTimeUp_ref to true due to invalid calculated end time.");
+                isTimeUp_ref.value = true;
+            }
             remainingSeconds_ref.value = 0;
             return;
         }
@@ -137,7 +137,7 @@ export function useExamTimer() {
         if (diffSeconds <= 0) {
             remainingSeconds_ref.value = 0;
             if (!isTimeUp_ref.value) {
-                // 防止在时间已到时重复触发
+                console.log("[useExamTimer] Time is up! Setting isTimeUp_ref to true.");
                 isTimeUp_ref.value = true;
             }
             _stopCountdownInternal(); // 停止倒计时
