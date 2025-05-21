@@ -23,15 +23,16 @@
 
         <!-- 对话框区域 -->
         <template v-if="exam_page_mode !== 'review'">
+            <!-- 用于 "您已交卷，即将退出考试！" 的统一对话框 -->
             <Dialog
-                v-model:visible="ended_dialog_visible"
+                v-model:visible="final_submission_dialog_visible"
                 modal
                 header="提示"
                 @hide="exitExam()"
                 :style="{ width: '25rem' }"
             >
                 <span class="text-surface-500 dark:text-surface-400 block mb-8"
-                    >考试结束时间到，已自动提交试卷！</span
+                    >您已交卷，即将退出考试！</span
                 >
                 <div class="flex justify-end gap-2">
                     <Button
@@ -41,6 +42,8 @@
                     ></Button>
                 </div>
             </Dialog>
+
+            <!-- 手动提交确认对话框 -->
             <Dialog
                 v-model:visible="confirm_submit_dialog_visible"
                 modal
@@ -67,7 +70,7 @@
                 </div>
             </Dialog>
 
-            <!-- 新增：导航边界提示对话框 -->
+            <!-- 导航边界提示对话框 -->
             <Dialog
                 v-model:visible="nav_boundary_dialog_visible"
                 modal
@@ -158,7 +161,7 @@ const {
     initializeTimer,
 } = useExamTimer();
 
-const ended_dialog_visible = ref(false);
+const final_submission_dialog_visible = ref(false);
 const confirm_submit_dialog_visible = ref(false);
 const nav_boundary_dialog_visible = ref(false);
 const nav_boundary_dialog_message = ref("");
@@ -224,6 +227,16 @@ const fetchSubmittedExam = async () => {
             practiceSession.value = practiceSessionResponse;
             practiceSessionTime.value = practiceSessionResponse;
             examScore.value = Number(practiceSessionResponse.score) || null;
+
+            if (
+                practiceSession.value.submit_status === "done" &&
+                props.exam_page_mode !== "review"
+            ) {
+                final_submission_dialog_visible.value = true;
+                const loadingStateStore = useLoadingStateStore();
+                loadingStateStore.setComponentReady("examPage");
+                return;
+            }
 
             afterFetchSubmittedExamContent();
 
@@ -323,7 +336,6 @@ const fetchSubmittedPaper = async (paperId: string) => {
 };
 
 const fetchSubmittedSectionsList = async (sections: any[]) => {
-
     // 获取章节的基本信息
     const submittedSectionsResponse = (await $fetch(
         "/api/paper_sections/list",
@@ -581,61 +593,30 @@ const manualSubmit = () => {
 };
 
 const exitExam = () => {
-    ended_dialog_visible.value = false;
+    final_submission_dialog_visible.value = false;
     confirm_submit_dialog_visible.value = false;
     router.push(`/exams`);
 };
 
-// 这个仅用于手动提交时，确认提交。
-const confirmSubmit = () => {
-    submitExam(practice_session_id); // 调用提交试卷的函数
-    exitExam();
+const confirmSubmit = async () => {
+    if (props.exam_page_mode === "review") return;
+    confirm_submit_dialog_visible.value = false;
+    await submitExam(practice_session_id);
+    final_submission_dialog_visible.value = true;
 };
 
-watch(isTimeUp, (newIsTimeUp, oldIsTimeUp) => {
-    console.log(
-        `[ExamPage] isTimeUp changed: ${oldIsTimeUp} -> ${newIsTimeUp}`
-    );
-    console.log(`[ExamPage] props.exam_page_mode: ${props.exam_page_mode}`);
-    console.log(
-        `[ExamPage] ended_dialog_visible.value: ${ended_dialog_visible.value}`
-    );
-    console.log(
-        `[ExamPage] practiceSession.value.submit_status: ${practiceSession.value.submit_status}`
-    );
-
+watch(isTimeUp, async (newIsTimeUp) => {
     if (newIsTimeUp && props.exam_page_mode !== "review") {
-        console.log(
-            "[ExamPage] Condition: newIsTimeUp is true AND not review mode."
-        );
-        if (
-            !ended_dialog_visible.value &&
-            practiceSession.value.submit_status !== "done"
-        ) {
-            console.log(
-                "[ExamPage] Condition: Dialog not visible AND submit_status is not done. WILL SHOW DIALOG AND SUBMIT."
-            );
-            ended_dialog_visible.value = true;
-            submitExam(practice_session_id);
-        } else {
-            console.log(
-                "[ExamPage] Condition NOT MET for showing dialog: ended_dialog_visible=",
-                ended_dialog_visible.value,
-                "submit_status=",
-                practiceSession.value.submit_status
-            );
+        if (!final_submission_dialog_visible.value) {
+            if (practiceSession.value.submit_status !== "done") {
+                await submitExam(practice_session_id);
+            }
+            final_submission_dialog_visible.value = true;
         }
-    } else {
-        console.log(
-            "[ExamPage] Conditions NOT MET for entering primary if: newIsTimeUp=",
-            newIsTimeUp,
-            "exam_page_mode=",
-            props.exam_page_mode
-        );
     }
 });
 
-const isClient = ref(false); //
+const isClient = ref(false);
 
 const currentTime_display_local = ref("");
 const currentTimeInterval_local = ref<any>(null);
@@ -653,19 +634,26 @@ const startCurrentTimeUpdate_local = () => {
     }
 };
 
-// 页面加载时调用
 onMounted(async () => {
-    await fetchSubmittedExam(); // 注意一定要加await，否则会导致后面的代码先执行。
-    await nextTick(); // 等待组件渲染完成
-    isClient.value = true; // 标记当前是客户端渲染（组件已经挂载）
+    await fetchSubmittedExam(); // fetchSubmittedExam 内部会处理已提交的情况
 
-    startCurrentTimeUpdate_local();
+    await nextTick();
+    isClient.value = true;
+
+    // 仅当考试未完成时（即 fetchSubmittedExam 没有提前返回），才启动本地时间更新
+    if (
+        practiceSession.value.submit_status !== "done" ||
+        props.exam_page_mode === "review"
+    ) {
+        startCurrentTimeUpdate_local();
+    }
 
     const loadingStateStore = useLoadingStateStore();
-    loadingStateStore.setComponentReady("examPage");
+    if (!loadingStateStore.checkComponentReady("examPage")) {
+        loadingStateStore.setComponentReady("examPage");
+    }
 });
 
-// 组件卸载时清除定时器
 onUnmounted(() => {
     if (currentTimeInterval_local.value) {
         clearInterval(currentTimeInterval_local.value);
