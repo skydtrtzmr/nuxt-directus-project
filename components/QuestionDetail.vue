@@ -67,7 +67,7 @@
                 >
                     <span
                         v-html="
-                            renderMarkdown(
+                            render(
                                 selectedQuestion.questions_id.description || ''
                             )
                         "
@@ -98,7 +98,7 @@
                         :questionResults="questionResults"
                         :exam_page_mode="exam_page_mode"
                         :groupQuestions="selectedQuestion.groupQuestions || []"
-                        :renderMarkdown="renderMarkdown"
+                        :renderMarkdown="render"
                     />
 
                     <!-- 单题模式 -->
@@ -106,7 +106,7 @@
                         v-else-if="selectedQuestion"
                         :selectedQuestion="selectedQuestion"
                         :exam_page_mode="exam_page_mode"
-                        :renderMarkdown="renderMarkdown"
+                        :renderMarkdown="render"
                         :groupMode="false"
                     />
                 </div>
@@ -141,21 +141,12 @@ import { watch, computed, ref, onMounted } from "vue";
 import QuestionContent from "~/components/QuestionContent.vue";
 import QuestionGroupContent from "~/components/QuestionGroupContent.vue";
 import type { QuestionResults } from "~/types/directus_types";
-// @ts-ignore
-import markdownit from "markdown-it";
+// 移除 markdown-it 的直接导入
+// import markdownit from "markdown-it";
 
-// 创建markdown-it实例
-const md = markdownit({
-    html: true,
-    breaks: true,
-    linkify: true,
-});
-
-// 渲染markdown内容为HTML
-const renderMarkdown = (content: string) => {
-    if (!content) return "";
-    return md.render(content);
-};
+// 导入并使用 useMarkdown composable
+import { useMarkdown } from '~/composables/useMarkdown'; // 确保路径正确，Nuxt3一般会自动导入
+const { render } = useMarkdown(); // 获取 render 函数
 
 const props = defineProps<{
     selectedQuestion: any | null;
