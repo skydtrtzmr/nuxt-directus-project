@@ -139,10 +139,8 @@ import type {
     PaperSectionsQuestionGroups,
     QuestionGroups,
 } from "~~/types/directus_types";
-import md5 from "md5";
 import { useAuth } from "~~/stores/auth";
 
-import { useGlobalStore } from "@/stores/examDone";
 import { useLoadingStateStore } from "@/stores/loadingState";
 import { useExamTimer } from "@/composables/useExamTimer";
 
@@ -150,7 +148,6 @@ dayjs.extend(utc);
 
 const auth = useAuth();
 const { user } = storeToRefs(auth);
-const email = ref(user.value?.email || "");
 
 const props = defineProps<{
     exam_page_mode: string;
@@ -329,7 +326,6 @@ const fetchSubmittedPaper = async (paperId: string) => {
 };
 
 const fetchSubmittedSectionsList = async (sections: any[]) => {
-    const sectionIds = sections.map((s) => (typeof s === "string" ? s : s.id));
 
     // 获取章节的基本信息
     const submittedSectionsResponse = (await $fetch(
@@ -662,26 +658,6 @@ const startCurrentTimeUpdate_local = () => {
 
 // 页面加载时调用
 onMounted(async () => {
-    // 基于email生成延迟时间
-
-    function generateDelayFromEmail(email: string) {
-        // 使用md5算法生成email的哈希值
-        const hash = md5(email);
-
-        // 将哈希值转换为整数
-        const numericValue = parseInt(hash.substring(0, 8), 16); // 取哈希的前8位并转为16进制数字
-
-        // 控制延迟范围，可以在500ms - 2000ms之间
-        const minDelay = 500; // 最小延迟500ms
-        const maxDelay = 3000; // 最大延迟3000ms
-
-        // 将哈希值映射到延迟范围
-        const delay = minDelay + (numericValue % (maxDelay - minDelay));
-        return delay;
-    }
-    // const delayTime = generateDelayFromEmail(email.value); // 如果需要延迟加载，可以取消注释
-    // await new Promise(resolve => setTimeout(resolve, delayTime)); // 示例延迟
-
     await fetchSubmittedExam(); // 注意一定要加await，否则会导致后面的代码先执行。
     await nextTick(); // 等待组件渲染完成
     isClient.value = true; // 标记当前是客户端渲染（组件已经挂载）
@@ -698,27 +674,6 @@ onUnmounted(() => {
         clearInterval(currentTimeInterval_local.value);
         currentTimeInterval_local.value = null;
     }
-});
-
-const allQuestions = computed(() => {
-    const questions: any[] = [];
-    submittedPaperSections.value.forEach((section) => {
-        if (section.questions && Array.isArray(section.questions)) {
-            questions.push(...section.questions);
-        }
-    });
-    return questions.sort((a, b) => {
-        const sectionIndexA = submittedPaperSections.value.findIndex(
-            (s) => s.id === a.paper_sections_id
-        );
-        const sectionIndexB = submittedPaperSections.value.findIndex(
-            (s) => s.id === b.paper_sections_id
-        );
-        if (sectionIndexA !== sectionIndexB) {
-            return sectionIndexA - sectionIndexB;
-        }
-        return (a.sort_in_section || 0) - (b.sort_in_section || 0);
-    });
 });
 
 const navigateToQuestion = (direction: number) => {
