@@ -146,9 +146,6 @@ import { useExamTimer } from "@/composables/useExamTimer";
 
 dayjs.extend(utc);
 
-const auth = useAuth();
-const { user } = storeToRefs(auth);
-
 const props = defineProps<{
     exam_page_mode: string;
 }>();
