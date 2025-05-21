@@ -257,11 +257,22 @@ const fetchSubmittedExam = async () => {
                 extraMins = practiceSessionTime.value.extra_time;
             }
 
+            console.log(
+                "ExamPage: Attempting to initialize timer with:",
+                {
+                    actualStartISO,
+                    durationMins,
+                    extraMins,
+                }
+            );
+
             if (actualStartISO) {
                 initializeTimer(actualStartISO, durationMins, extraMins);
+                console.log("ExamPage: Timer initialization called.");
             } else {
                 console.error(
-                    "ExamPage: 无法初始化计时器 - actual_start_time 缺失或无效。"
+                    "ExamPage: 无法初始化计时器 - actual_start_time 缺失或无效。",
+                    "actualStartISO was:", actualStartISO
                 );
             }
         } else {
