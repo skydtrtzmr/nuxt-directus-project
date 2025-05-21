@@ -174,11 +174,16 @@ const sidebarWidth = ref(300);
 
 const { getItemById, getItems, updateItem } = useDirectusItems();
 const router = useRouter();
-const route = useRoute();
+
+// 路由参数：practice_session 的 ID
+const route = useRoute(); // 这里的useRoute是vue-router的useRoute方法，而非Nuxt的useRoute方法。
+
+// 加入预处理参数：在路由守卫或组件加载时，无论是单个值还是数组，都统一解析为单个值。
 const practice_session_id = Array.isArray(route.params.id)
     ? route.params.id[0]
     : route.params.id;
 
+// 数据绑定
 const practiceSession = ref<PracticeSessions>({} as PracticeSessions);
 const paper = ref<Papers>({} as Papers);
 const submittedPaperSections = ref<PaperSections[]>([]);
@@ -187,27 +192,7 @@ const questionResults = ref<QuestionResults[]>([]);
 const examScore = ref<number | null>(null);
 const practiceSessionTime = ref<PracticeSessions>({} as PracticeSessions);
 
-const chapter_id_list = ref<string[]>([]);
-const question_id_list = ref<string[]>([]);
-const question_groups_id_list = ref<string[]>([]);
 
-const getExamTitle = () => {
-    if (!practiceSession.value?.exercises_students_id) return "考试信息";
-    const esId = practiceSession.value.exercises_students_id;
-    if (typeof esId === "object" && "exercises_id" in esId) {
-        const exerciseId = esId.exercises_id;
-        if (
-            typeof exerciseId === "object" &&
-            exerciseId &&
-            "title" in exerciseId
-        ) {
-            return exerciseId.title || "考试信息";
-        }
-    }
-    return "考试信息";
-};
-
-const globalStore = useGlobalStore();
 
 const handleSidebarToggle = (collapsed: boolean) => {
     sidebarCollapsed.value = collapsed;
@@ -216,8 +201,6 @@ const handleSidebarToggle = (collapsed: boolean) => {
 const handleSidebarResize = (width: number) => {
     sidebarWidth.value = width;
 };
-
-const { public: { isTest } } = useRuntimeConfig();
 
 const fetchSubmittedExam = async () => {
     try {
