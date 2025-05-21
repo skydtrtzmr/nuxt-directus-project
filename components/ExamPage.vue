@@ -336,14 +336,22 @@ const afterFetchSubmittedExamTime = () => {
         }
     }
 
+    console.log("duration:", duration.value);
+    
+
     extra_time.value = practiceSessionTime.value.extra_time!;
 
     // 先根据实际开始作答时间和考试时长，计算应交卷时间
     // 由于expected_end_time不再作为直接字段，手动计算
     const endTimeDate = new Date(actual_start_time.value);
+
+    console.log("endTimeDate1:", endTimeDate);
+    
     endTimeDate.setMinutes(
         endTimeDate.getMinutes() + duration.value + extra_time.value
     );
+
+    console.log("endTimeDate2:", endTimeDate);
 
     // 注意：Date对象在directus中能正常运算，但不能打印。
     expected_end_time_str.value = endTimeDate.toISOString();
@@ -352,8 +360,8 @@ const afterFetchSubmittedExamTime = () => {
     examEndTime.value = dayjs(expected_end_time_str.value);
     // CAUTION: 这里dayjs里面的值如果是空的（例如undefined），就会返回当前时间。
 
-    // console.log("examEndTime:");
-    // console.log(examEndTime.value);
+    console.log("examEndTime:");
+    console.log(examEndTime.value);
 
     startCountdown(examEndTime.value);
 };
@@ -820,28 +828,63 @@ const manualSubmit = () => {
 
 // 倒计时更新函数
 const startCountdown = (endTime: dayjs.Dayjs) => {
+    // 1. 检查传入的 endTime 是否有效
+    if (!endTime || !endTime.isValid()) {
+        console.error("启动倒计时失败：无效的结束时间参数。", endTime);
+        formattedCountDown.value = "时间错误";
+        // 可以在此添加更多错误处理逻辑，例如阻止提交按钮
+        return;
+    }
+
     const updateInterval = () => {
-        const now = dayjs.utc(new Date());
-        const remainingTime = endTime.diff(now);
+        const now = dayjs.utc(); // 获取当前UTC时间
+
+        console.log("endTime:", endTime);
+        console.log("now:", now);
+        const remainingTime = endTime.diff(now, 'second');
+        console.log("remainingTime:", remainingTime);
+        
+
         if (remainingTime <= 0) {
-            // clearInterval(interval); 不要直接写在里面。
-            stopCountdown();
+            stopCountdown(); // 先停止任何现有计时器
             countdown.value = 0;
             formattedCountDown.value = "00:00:00";
-            // 执行倒计时结束后的操作，比如提交考试
-            handleTimeOut();
+            // 仅在非复习模式下执行倒计时结束后的操作
+            if (props.exam_page_mode !== 'review') {
+                // console.log("倒计时结束，触发 handleTimeOut");
+                handleTimeOut(); // 执行考试结束处理
+            } else {
+                // console.log("复习模式，倒计时结束，不自动提交。");
+            }
         } else {
-            countdown.value = remainingTime;
-            formattedCountDown.value = dayjs
-                .utc(remainingTime)
-                // 注意，我的数据库里面记录的是带时区的时间戳，在这里也得加上utc不然时间会多8个小时。
-                .format("HH:mm:ss");
+            countdown.value = remainingTime; // remainingTime (总秒数)
+
+            // 手动计算总小时数、分钟数和秒数
+            const totalSeconds = remainingTime;
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            // 格式化为 HH:MM:SS，确保小时、分钟、秒都是两位数
+            const pad = (num: number) => String(num).padStart(2, '0');
+            
+            formattedCountDown.value = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
         }
     };
-    updateInterval(); // 立即执行一次
-    const interval = setInterval(updateInterval, 1000);
 
-    countdownInterval.value = interval; // 保存定时器引用，方便清除
+    updateInterval(); // 2. 立即执行一次，以处理 endTime 可能已经过去或就是现在的情况
+
+    // 3. 仅当 endTime 在未来时才设置 interval
+    if (endTime.isAfter(dayjs.utc())) {
+        // 清除可能存在的旧计时器，以防万一
+        if (countdownInterval.value) {
+            clearInterval(countdownInterval.value);
+        }
+        countdownInterval.value = setInterval(updateInterval, 1000);
+    } else {
+        // console.log("考试结束时间已过或就在当前，不启动周期性倒计时更新。");
+        // 初始的 updateInterval() 调用已经处理了时间已到或已过的情况。
+    }
 };
 
 const stopCountdown = () => {
