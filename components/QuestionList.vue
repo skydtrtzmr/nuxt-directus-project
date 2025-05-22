@@ -90,7 +90,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick, watch, onUnmounted } from "vue";
+import { ref, onMounted, nextTick, watch, onUnmounted, computed } from "vue";
 import type {
     PaperSections,
     QuestionResults,
@@ -132,6 +132,26 @@ const maxWidth = 600; // 最大宽度
 
 // 控制章节展开/折叠的状态和样式
 const sectionStyles = ref<{ [key: number]: any }>({});
+
+// 新增：创建 questionResultsMap 计算属性
+const questionResultsMap = computed(() => {
+    const map = new Map<string, QuestionResults>();
+    if (props.questionResults) {
+        for (const result of props.questionResults) {
+            let key: string | undefined = undefined;
+            if (typeof result.question_in_paper_id === 'number') {
+                key = String(result.question_in_paper_id);
+            } else if (result.question_in_paper_id && typeof result.question_in_paper_id === 'object' && 'id' in result.question_in_paper_id) {
+                // @ts-ignore
+                key = String(result.question_in_paper_id.id);
+            }
+            if (key !== undefined) {
+                map.set(key, result);
+            }
+        }
+    }
+    return map;
+});
 
 const toggleSidebar = () => {
     isSidebarCollapsed.value = !isSidebarCollapsed.value;
@@ -326,15 +346,10 @@ const getQuestionResultById = (questionInPaperId: number | undefined | null): Qu
     // question_in_paper_id 在 QuestionResults 中是 number | PaperSectionsQuestions | null
     // PaperSectionsQuestions['id'] 是 number
     // 因此，这里应该比较 number
-    return props.questionResults.find(qr => {
-        if (typeof qr.question_in_paper_id === 'number') {
-            return qr.question_in_paper_id === questionInPaperId;
-        } else if (qr.question_in_paper_id && typeof qr.question_in_paper_id === 'object' && 'id' in qr.question_in_paper_id) {
-            // 如果 question_in_paper_id 是一个对象 (PaperSectionsQuestions)
-            return qr.question_in_paper_id.id === questionInPaperId;
-        }
-        return false;
-    }) || null;
+
+    // 修改为从 map 中获取
+    const result = questionResultsMap.value.get(String(questionInPaperId));
+    return result || null;
 };
 
 // 判断题目是否已回答
@@ -375,11 +390,11 @@ const isGroupCompleted = (group: EnhancedPaperSectionGroup, section: PaperSectio
 const isGroupFlagged = (group: EnhancedPaperSectionGroup, section: PaperSections): boolean => {
     if (!group || !group.group_question_ids || group.group_question_ids.length === 0) return false;
     const questionIdsInGroup = group.group_question_ids;
-    // console.log(`[QuestionList] Checking group flags for group ${typeof group.id === 'string' ? group.id : JSON.stringify(group.id)}, question IDs:`, questionIdsInGroup);
+    // console.log(`[QuestionList] Checking group flags for group ${typeof group.id === 'string' ? group.id : JSON.stringify(group.id)}, question IDs:`, questionIdsInGroup); // 保留此处的 console.log 以便用户确认
 
     return questionIdsInGroup.some(qId => {
         const result = getQuestionResultById(qId);
-        // console.log(`[QuestionList] For qId ${qId}, result:`, result ? { id: result.id, flagged: result.is_flagged, q_in_p_id: result.question_in_paper_id } : null);
+        // console.log(`[QuestionList] For qId ${qId}, result:`, result ? { id: result.id, flagged: result.is_flagged, q_in_p_id: result.question_in_paper_id } : null); // 保留此处的 console.log 以便用户确认
         return !!result && result.is_flagged === true;
     });
 };
