@@ -42,7 +42,7 @@ alwaysApply: true
 
 进行改动时，尽量不要动改动目标以外的东西。
 
-不要用意义不明的太短的缩写。
+不要用意义不明的太短的首字母缩写（例如question缩写成q，section缩写成s，question result缩写成qr）。
 
 进行改动时，注意保留注释。
 
