@@ -1,0 +1,42 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Your rule content
+
+本项目是一个考试系统。
+
+数据来源于后端-directus。
+
+
+## 项目结构说明
+
+[directus_types.ts](mdc:types/directus_types.ts) 这个文件是后端的类型说明。
+
+这是一个 Nuxt.js 项目。以下是一些关键目录的说明：
+
+- `components/`: 存放可重用的 Vue 组件。例如，按钮、卡片、导航栏等。
+- `pages/`: 存放应用的页面。每个 `.vue` 文件代表一个路由。例如，`pages/index.vue` 是首页，`pages/about.vue` 是关于页面。
+- `layouts/`: 存放布局组件。例如，`layouts/default.vue` 可以定义网站的通用头部和底部。
+- `composables/`: 存放可组合函数，用于封装和重用有状态逻辑。
+- `server/api/`: 存放服务器端 API 端点。
+- `stores/`: 存放 Pinia (或 Vuex) 状态管理文件。
+- `assets/`: 存放需要被 Webpack/Vite 处理的静态资源，如全局 CSS、Sass 文件。
+- `public/`: 存放不需要构建处理的静态资源，如 `favicon.ico`。
+- `nuxt.config.ts`: 项目的核心配置文件。
+- `app.vue`: 应用的根 Vue 组件。
+- `types/`: 存放 TypeScript 类型定义，例如 [directus_types.ts](mdc:types/directus_types.ts) 包含了从 Directus 获取的数据类型。
+
+## 开发须知
+
+- 在 `components/` 目录下创建新组件。
+- 在 `pages/` 目录下创建新页面。
+- 修改 `nuxt.config.ts` 来调整项目配置。
+
+## 其他
+
+使用bullmq进行消息队列处理。
+
+使用ioredis与redis交互（但是以后可能改到后端处理此事）。
