@@ -318,23 +318,16 @@ const toggleQuestionFlag = async (questionItem: PaperSectionsQuestions) => {
     }
 
     try {
-        const nuxtApp = useNuxtApp(); // 获取 NuxtApp 实例
-        const $directusFetch = nuxtApp.$fetch as $Fetch; // 类型断言
-        const config = useRuntimeConfig();
-        const url = config.public.directusUrl as string; // 类型断言 url 为 string
+        // 使用 Nuxt3 的自动导入功能
+        const { updateItem } = useDirectusItems(); // 使用 useDirectusItems
 
-        await $directusFetch(`/question-results-mq/question_result_flag`,
-            {
-                baseURL: url,
-                method: "POST",
-                body: {
-                    collection: "question_results",
-                    id: resultIdToUpdate,
-                    item: { is_flagged: newFlagStatus },
-                },
-            });
+        await updateItem<QuestionResults>({
+            collection: "question_results",
+            id: resultIdToUpdate,
+            item: { is_flagged: newFlagStatus },
+        });
         console.log(
-            `题组内小题 ${questionItem.id} 标记状态已通过MQ更新为: ${newFlagStatus}`
+            `题组内小题 ${questionItem.id} 标记状态已更新为: ${newFlagStatus}`
         );
     } catch (error) {
         console.error(
