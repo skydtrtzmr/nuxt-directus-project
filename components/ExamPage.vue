@@ -442,77 +442,95 @@ const fetchSubmittedPaper = async (paperId: string) => {
 
     console.log("submittedSectionsResponse[0].questions 2.5", submittedSectionsResponse[0].questions);
     // 到这里还在。
+    // 接下来，处理完之后，题目列表就空了。
 
-    submittedSectionsResponse.forEach((section) => {
-        const currentSectionQuestions = allSectionQuestions
-            .filter((sq) => sq.paper_sections_id === section.id)
-            .sort(
-                (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
-            );
-        const sectionQuestionsWithData = currentSectionQuestions.map((sq) => {
-            const questionData = questionsData.find(
-                (item) => item.id === (sq.questions_id as string)
-            );
-            const result = questionResults.value.find(
-                (r) => r.question_in_paper_id === sq.id
-            );
-            return {
-                ...sq,
-                questions_id: questionData || null,
-                result: result || null,
-            };
-        });
-        section.questions = sectionQuestionsWithData;
+    const submittedSectionsResponse_local = toRaw(submittedSectionsResponse);
+    console.log("submittedSectionsResponse_local0q", submittedSectionsResponse_local[0].questions);
+    
+    // [2025-05-22] 注意，嵌套结构中section内的questions其实是在这里重新排序、生成的。
+    // submittedSectionsResponse_local.forEach((section) => {
+    //     console.log("section", section);
+    //     console.log("section.question", section.questions);
+    //     // 这会儿question还在。
+    //     console.log("allSectionQuestions", allSectionQuestions);
+        
+    //     const currentSectionQuestions = allSectionQuestions
+    //         .filter((sq) => sq.paper_sections_id === section.id)
+    //         .sort(
+    //             (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
+    //         );
+    //     console.log("currentSectionQuestions", currentSectionQuestions);
+        
+    //     console.log("questionData", questionsData);
+        
+    //     const sectionQuestionsWithData = currentSectionQuestions.map((sq) => {
+    //         const questionData = questionsData.find(
+    //             (item) => item.id === (sq.questions_id as string)
+    //         );
+    //         const result = questionResults.value.find(
+    //             (r) => r.question_in_paper_id === sq.id
+    //         );
+    //         return {
+    //             ...sq,
+    //             questions_id: questionData || null,
+    //             result: result || null,
+    //         };
+    //     });
+    //     section.questions = sectionQuestionsWithData;
 
-        if (section.question_mode === "group") {
-            const currentSectionGroups = allSectionQuestionGroups
-                .filter((sgq) => sgq.paper_sections_id === section.id)
-                .sort(
-                    (a, b) =>
-                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
-                );
-            const sectionQuestionGroupsWithData = currentSectionGroups.map(
-                (sgq) => {
-                    const questionGroupData = questionGroupsData.find(
-                        (item) => item.id === (sgq.question_groups_id as string)
-                    );
-                    if (questionGroupData) {
-                        const groupQuestions = section.questions.filter(
-                            (qItem) => {
-                                if (
-                                    !qItem.questions_id ||
-                                    !qItem.questions_id.question_group
-                                )
-                                    return false;
-                                const qGroup =
-                                    qItem.questions_id.question_group;
-                                return (
-                                    (typeof qGroup === "string"
-                                        ? qGroup
-                                        : qGroup.id) === questionGroupData.id
-                                );
-                            }
-                        );
-                        return {
-                            ...sgq,
-                            question_groups_id: questionGroupData || null,
-                            group_question_ids: groupQuestions.map((q) => q.id),
-                        };
-                    }
-                    return {
-                        ...sgq,
-                        question_groups_id: questionGroupData || null,
-                    };
-                }
-            );
-            section.question_groups = sectionQuestionGroupsWithData;
-        }
-    });
+    //     if (section.question_mode === "group") {
+    //         const currentSectionGroups = allSectionQuestionGroups
+    //             .filter((sgq) => sgq.paper_sections_id === section.id)
+    //             .sort(
+    //                 (a, b) =>
+    //                     (a.sort_in_section || 0) - (b.sort_in_section || 0)
+    //             );
+    //         const sectionQuestionGroupsWithData = currentSectionGroups.map(
+    //             (sgq) => {
+    //                 const questionGroupData = questionGroupsData.find(
+    //                     (item) => item.id === (sgq.question_groups_id as string)
+    //                 );
+    //                 if (questionGroupData) {
+    //                     const groupQuestions = section.questions.filter(
+    //                         (qItem) => {
+    //                             if (
+    //                                 !qItem.questions_id ||
+    //                                 !qItem.questions_id.question_group
+    //                             )
+    //                                 return false;
+    //                             const qGroup =
+    //                                 qItem.questions_id.question_group;
+    //                             return (
+    //                                 (typeof qGroup === "string"
+    //                                     ? qGroup
+    //                                     : qGroup.id) === questionGroupData.id
+    //                             );
+    //                         }
+    //                     );
+    //                     return {
+    //                         ...sgq,
+    //                         question_groups_id: questionGroupData || null,
+    //                         group_question_ids: groupQuestions.map((q) => q.id),
+    //                     };
+    //                 }
+    //                 return {
+    //                     ...sgq,
+    //                     question_groups_id: questionGroupData || null,
+    //                 };
+    //             }
+    //         );
+    //         section.question_groups = sectionQuestionGroupsWithData;
+    //     }
+    // });
 
+    console.log("submittedSectionsResponse_local0q2", submittedSectionsResponse_local[0].questions);
     console.log("submittedSectionsResponse[0].questions 3", submittedSectionsResponse[0].questions);
     // 到这里就空了。
+    console.log("submittedSectionsResponse", submittedSectionsResponse);
+    console.log("submittedSectionsResponse_local", submittedSectionsResponse_local);
+    
 
-    submittedPaperSections.value = toRaw(submittedSectionsResponse);
+    submittedPaperSections.value = toRaw(submittedSectionsResponse_local);
 
     if (submittedSectionsResponse.length > 0) {
         if (
@@ -542,11 +560,14 @@ const fetchSubmittedPaper = async (paperId: string) => {
                 sort_in_section: firstGroup.sort_in_section,
                 groupQuestions: sortedGroupQuestions,
             };
+            console.log("selectedQuestion1", selectedQuestion.value);
+            
         } else if (
             submittedSectionsResponse[0].questions &&
             submittedSectionsResponse[0].questions.length > 0
         ) {
             selectedQuestion.value = submittedSectionsResponse[0].questions[0];
+            console.log("selectedQuestion2", selectedQuestion.value);
         }
     }
 };
@@ -981,6 +1002,25 @@ const handleQuestionGroupClick = async (group: any, section: PaperSections) => {
     };
     selectQuestion(enhancedQuestion);
 };
+
+// 在组合式API中创建关联关系
+const useQuestionResults = () => {
+    // 创建响应式映射关系
+    const questionResultMap = computed(() => 
+        new Map(
+            questionResults.value.map(r => [r.question_in_paper_id, r])
+        )
+    );
+
+    // 获取题目关联结果的方法
+    // 注意，因为QuestionResults中的question_in_paper_id类型为number，
+    // 所以这里需要传入number类型的参数。
+    const getResultForQuestion = (questionId: number) => 
+        questionResultMap.value.get(questionId) || null;
+
+    return { getResultForQuestion };
+};
+
 </script>
 
 <style scoped>
