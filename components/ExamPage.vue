@@ -201,7 +201,6 @@ const handleSidebarResize = (width: number) => {
     sidebarWidth.value = width;
 };
 
-
 const fetchSubmittedExam = async () => {
     try {
         const practiceSessionResponse: PracticeSessions =
@@ -287,7 +286,6 @@ const fetchSubmittedExam = async () => {
     }
 };
 
-
 const afterFetchSubmittedExamContent = () => {
     if (practiceSession.value.exercises_students_id) {
         // 获取试卷的详情
@@ -332,19 +330,24 @@ const userData = computed(() => {
 });
 
 const fetchSubmittedPaper = async (paperId: string) => {
+    console.log("Paper ID:", paperId);
+
     const { data: paperResponse, error } = await useFetch<Papers>(
         `/api/papers/full/${paperId}`
     );
 
     console.log("paperResponse", paperResponse.value);
 
+    const { data: paperResponse2, error: error2 } = await useFetch<Papers>(
+        `/api/papers/full/c360fcd9-8f0d-48c2-8287-996792da4958`
+    );
+    console.log("paperResponse2", paperResponse2.value);
+
     if (paperResponse.value && typeof paperResponse.value === "object") {
         paper.value = paperResponse.value;
     }
 
     console.log("paperResponse.value", paperResponse.value);
-
-    console.log("paper.value", paper.value);
 
     const submittedSectionsResponse = paper.value
         .paper_sections as PaperSections[];
@@ -627,12 +630,8 @@ const startCurrentTimeUpdate_local = () => {
     }
 };
 
-
-await fetchSubmittedExam(); // fetchSubmittedExam 内部会处理已提交的情况
-
-
-
 onMounted(async () => {
+    await fetchSubmittedExam(); // fetchSubmittedExam 内部会处理已提交的情况
 
     await nextTick();
     isClient.value = true;
