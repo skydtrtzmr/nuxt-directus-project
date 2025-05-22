@@ -1,6 +1,7 @@
 import { setItemsToCache, getItemFromCache } from "~~/server/utils/redisUtils";
 import directus_client from "~~/server/lib/directus";
 import { readUsers, readItems } from "@directus/sdk";
+import { Papers } from "~~/types/directus_types";
 
 const comprehensivePaperFields = [
     "id",
@@ -44,8 +45,9 @@ export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, "id"); // 获取URL的路由参数：id
     // 注意这里id已经是字符串了，可别再stringfy了，那样反而会给他加上多余的引号
 
-    const data = await getItemFromCache(
-        `papers_full_data:${id}`,
+    const data: Papers = await getItemFromCache(
+        `papers_full_data`,
+        id!,
         async () =>
             await directus_client.request(
                 readItems("papers", {

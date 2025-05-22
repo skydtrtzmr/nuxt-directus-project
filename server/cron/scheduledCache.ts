@@ -45,7 +45,7 @@ const comprehensivePaperFields = [
   "paper_sections.question_groups.sort_in_section", // 题组在章节内的排序
 ];
 
-export default defineCronHandler("everyFiveMinutes", async () => {
+export default defineCronHandler("everyMinute", async () => {
 
     // 设置试卷列表缓存（包含完整的试卷数据）
     setItemsToCache(

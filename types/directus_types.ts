@@ -618,13 +618,13 @@ export type Papers = {
   id: string;
   paper_sections: any[] | PaperSections[];
   paper_strategy?: string | PaperStrategies | null;
-  save_and_stay: string;
+  save_and_stay?: string;
   sort?: number | null;
   status: string;
   title?: string | null;
   total_point_value?: number | null;
   total_question_count?: number | null;
-  "triggers-do4gvh": string;
+  "triggers-do4gvh"?: string;
   user_created?: string | DirectusUsers | null;
   user_updated?: string | DirectusUsers | null;
 };

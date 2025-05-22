@@ -142,7 +142,6 @@ import type {
     PaperSectionsQuestionGroups,
     QuestionGroups,
 } from "~~/types/directus_types";
-import { useAuth } from "~~/stores/auth";
 
 import { useLoadingStateStore } from "@/stores/loadingState";
 import { useExamTimer } from "@/composables/useExamTimer";
@@ -181,7 +180,8 @@ const practice_session_id = Array.isArray(route.params.id)
 
 // 数据绑定
 const practiceSession = ref<PracticeSessions>({} as PracticeSessions);
-const paper = ref<Papers>({} as Papers);
+// const paper = ref<Papers>({} as Papers);
+const paper = ref<any>({} as any);
 const submittedPaperSections = ref<PaperSections[]>([]);
 const selectedQuestion = ref({} as any);
 const questionResults = ref<QuestionResults[]>([]);
@@ -257,14 +257,11 @@ const fetchSubmittedExam = async () => {
                 extraMins = practiceSessionTime.value.extra_time;
             }
 
-            console.log(
-                "ExamPage: Attempting to initialize timer with:",
-                {
-                    actualStartISO,
-                    durationMins,
-                    extraMins,
-                }
-            );
+            console.log("ExamPage: Attempting to initialize timer with:", {
+                actualStartISO,
+                durationMins,
+                extraMins,
+            });
 
             if (actualStartISO) {
                 initializeTimer(actualStartISO, durationMins, extraMins);
@@ -272,7 +269,8 @@ const fetchSubmittedExam = async () => {
             } else {
                 console.error(
                     "ExamPage: 无法初始化计时器 - actual_start_time 缺失或无效。",
-                    "actualStartISO was:", actualStartISO
+                    "actualStartISO was:",
+                    actualStartISO
                 );
             }
         } else {
@@ -327,35 +325,14 @@ const userData = computed(() => {
 });
 
 const fetchSubmittedPaper = async (paperId: string) => {
-    const paperResponse = await getItemById<Papers>({
-        collection: "papers",
-        id: paperId,
-        params: {
-            fields: [
-                "title",
-                "paper_sections",
-                "total_point_value",
-                "total_question_count",
-            ],
-        },
-    });
-    if (paperResponse) {
-        paper.value = paperResponse;
-        fetchSubmittedSectionsList(paperResponse.paper_sections as any[]);
+    const { data: paperResponse, error } = await useFetch<Papers>(
+        `/api/papers/full/${paperId}`,
+    );
+    if (paperResponse.value && typeof paperResponse.value === "object") {
+        paper.value = paperResponse.value;
     }
-};
 
-const fetchSubmittedSectionsList = async (sections: any[]) => {
-    // 获取章节的基本信息
-    const submittedSectionsResponse = (await $fetch(
-        "/api/paper_sections/list",
-        {
-            method: "POST",
-            body: {
-                ids: sections,
-            },
-        }
-    )) as PaperSections[];
+    const submittedSectionsResponse = paper.value.paper_sections as PaperSections[];
 
     // 新增：对获取到的章节进行排序
     submittedSectionsResponse.sort(
