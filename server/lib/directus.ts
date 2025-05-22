@@ -15,6 +15,6 @@ const directus_client = createDirectus(directus_url)
     .with(staticToken(directus_token))
     .with(rest());
 
-console.log("directus_client:", directus_client);
+// console.log("directus_client:", directus_client);
 
 export default directus_client;

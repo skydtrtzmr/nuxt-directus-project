@@ -188,7 +188,6 @@ export async function setItemsToCache(
             continue;
         }
         const key = `${namespace}:${itemId.toString()}`;
-        console.log(`[Cache Debug] Namespace '${namespace}', Item ID '${itemId}': Generating Redis key: ${key}`);
         try {
             pipeline.set(key, JSON.stringify(item), "EX", ttl);
             itemsPreparedForCache++;

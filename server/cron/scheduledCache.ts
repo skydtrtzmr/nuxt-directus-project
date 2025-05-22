@@ -25,23 +25,24 @@ const comprehensivePaperFields = [
   "paper_sections.question_mode",
   "paper_sections.total_question_points",
   "paper_sections.questions",
+  "paper_sections.questions.sort_in_section",
   "paper_sections.question_groups",
   // 章节中的问题 (通过 paper_sections_questions 关联)
-  "paper_sections.questions.id", // 这是 paper_sections_questions 中间表条目的ID
-//   "paper_sections.questions.stem",
-//   "paper_sections.questions.type",
-//   "paper_sections.questions.analysis",
-//   "paper_sections.questions.q_mc_single.*",
-//   "paper_sections.questions.q_mc_multi.*",
-//   "paper_sections.questions.q_mc_binary.*",
-//   "paper_sections.questions.q_mc_flexible.*",
-//   "paper_sections.questions.question_group.*",
-//   "paper_sections.questions.sort_in_group",
-//   "paper_sections.questions.correct_ans_select_radio",
-//   "paper_sections.questions.correct_ans_select_multiple_checkbox",
-//   // 章节中的题组 (通过 paper_sections_question_groups 关联)
-//   "paper_sections.question_groups.id", // 这是 paper_sections_question_groups 中间表条目的ID
-//   "paper_sections.question_groups.sort_in_section", // 题组在章节内的排序
+  "paper_sections.questions.questions_id.stem",
+  "paper_sections.questions.questions_id.type",
+  "paper_sections.questions.questions_id.analysis",
+  "paper_sections.questions.questions_id.q_mc_single.*",
+  "paper_sections.questions.questions_id.q_mc_multi.*",
+  "paper_sections.questions.questions_id.q_mc_binary.*",
+  "paper_sections.questions.questions_id.q_mc_flexible.*",
+  "paper_sections.questions.questions_id.question_group.id",
+  "paper_sections.questions.questions_id.sort_in_group",
+  "paper_sections.questions.questions_id.correct_ans_select_radio",
+  "paper_sections.questions.questions_id.correct_ans_select_multiple_checkbox",
+  // 章节中的题组 (通过 paper_sections_question_groups 关联)
+  "paper_sections.question_groups.question_groups_id.id", // 这是 paper_sections_question_groups 中间表条目的ID
+  "paper_sections.question_groups.question_groups_id.shared_stem",
+  "paper_sections.question_groups.sort_in_section", // 题组在章节内的排序
 ];
 
 export default defineCronHandler("everyMinute", async () => {
@@ -67,7 +68,7 @@ export default defineCronHandler("everyMinute", async () => {
                 })
             ),
         "id",
-        3600 // 缓存时间，例如1小时 (3600秒)
+        60 // 缓存时间，例如1小时 (3600秒)
     );
 });
 
