@@ -25,6 +25,7 @@
                     :renderMarkdown="renderMarkdown"
                     :questionType="selectedQuestion.questions_id.type"
                     :currentQuestionResult="currentQuestionResult"
+                    :questionResults="props.questionResults"
                 />
             </template>
             
@@ -56,6 +57,7 @@ const props = defineProps<{
     renderMarkdown: (content: string) => string;
     groupMode: boolean;
     currentQuestionResult: QuestionResults | null;
+    questionResults: QuestionResults[];
 }>();
 
 // Helper function to get question type label

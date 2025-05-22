@@ -110,6 +110,7 @@
                         :renderMarkdown="render"
                         :groupMode="false"
                         :currentQuestionResult="currentSingleQuestionResult"
+                        :questionResults="props.questionResults"
                     />
                 </div>
             </div>
