@@ -34,7 +34,7 @@ const comprehensivePaperFields = [
     "paper_sections.questions.questions_id.sort_in_group",
     "paper_sections.questions.questions_id.correct_ans_select_radio",
     "paper_sections.questions.questions_id.correct_ans_select_multiple_checkbox",
-    "paper_sections.questions.paper_sections_id",
+    // "paper_sections.questions.paper_sections_id",
     // 章节中的题组 (通过 paper_sections_question_groups 关联)
     "paper_sections.question_groups.question_groups_id.id", // 这是 paper_sections_question_groups 中间表条目的ID
     "paper_sections.question_groups.question_groups_id.shared_stem",
