@@ -119,43 +119,6 @@
                                             （{{ index + 1 }}）
                                             {{ typeof questionItem.questions_id === 'object' && questionItem.questions_id !== null ? questionItem.questions_id.title : '' }}
                                         </h3>
-                                        <div class="flex items-center gap-2">
-                                            <Button
-                                                :icon="
-                                                    isQuestionFlagged(
-                                                        questionItem
-                                                    )
-                                                        ? 'pi pi-flag-fill'
-                                                        : 'pi pi-flag'
-                                                "
-                                                :class="{
-                                                    'p-button-danger':
-                                                        isQuestionFlagged(
-                                                            questionItem
-                                                        ),
-                                                }"
-                                                class="p-button-rounded p-button-sm p-button-text"
-                                                @click="
-                                                    toggleQuestionFlag(
-                                                        questionItem
-                                                    )
-                                                "
-                                                :aria-label="
-                                                    isQuestionFlagged(
-                                                        questionItem
-                                                    )
-                                                        ? '取消标记疑问'
-                                                        : '标记疑问'
-                                                "
-                                                v-tooltip.bottom="
-                                                    isQuestionFlagged(
-                                                        questionItem
-                                                    )
-                                                        ? '取消标记疑问'
-                                                        : '标记疑问'
-                                                "
-                                            />
-                                        </div>
                                     </div>
                                     <QuestionContent
                                         :selectedQuestion="
@@ -204,8 +167,6 @@ const props = defineProps<{
 }>();
 
 // console.log("questionGroup in QuestionGroupContent", props.questionGroup);
-
-const emit = defineEmits(["flag-question"]);
 
 // 控制公共题干区域的收缩状态
 const isStemCollapsed = ref(false);
@@ -268,79 +229,10 @@ const getCurrentQuestionResultForSubQuestion = (
     if (!props.questionResults || props.questionResults.length === 0) {
         return null;
     }
-    // 确保比较的是字符串类型的 ID
     const result = props.questionResults.find(
         (qr) => String(qr.question_in_paper_id) === questionInPaperId
     );
     return result || null;
-};
-
-// 判断题组内的小题是否被标记
-const isQuestionFlagged = (questionItem: PaperSectionsQuestions) => {
-    const result = getCurrentQuestionResultForSubQuestion(String(questionItem.id));
-    return !!result?.is_flagged;
-};
-
-// 切换题组内小题的标记状态
-const toggleQuestionFlag = async (questionItem: PaperSectionsQuestions) => {
-    if (props.exam_page_mode === "review") return;
-
-    const resultForQuestion = getCurrentQuestionResultForSubQuestion(
-        String(questionItem.id)
-    );
-    if (!resultForQuestion || !resultForQuestion.id) {
-        console.error(
-            "无法切换标记状态：未找到该题的作答记录或记录ID缺失。",
-            questionItem
-        );
-        return;
-    }
-
-    const resultIdToUpdate = resultForQuestion.id;
-    const currentFlagStatus = !!resultForQuestion.is_flagged;
-    const newFlagStatus = !currentFlagStatus;
-
-    // 乐观更新
-    const resultIndex = props.questionResults.findIndex(
-        (qr) => qr.id === resultIdToUpdate
-    );
-
-    let originalResultDataForRollback: QuestionResults | null = null;
-
-    if (resultIndex !== -1) {
-        originalResultDataForRollback = { ...props.questionResults[resultIndex] };
-        props.questionResults[resultIndex].is_flagged = newFlagStatus;
-    } else {
-        console.warn(
-            "在本地 questionResults 数组中未找到要乐观更新标记状态的记录。"
-        );
-        // 即使本地没有，也尝试更新后端，因为可能存在延迟或未初始化的结果对象
-    }
-
-    try {
-        // 使用 Nuxt3 的自动导入功能
-        const { updateItem } = useDirectusItems(); // 使用 useDirectusItems
-
-        await updateItem<QuestionResults>({
-            collection: "question_results",
-            id: resultIdToUpdate,
-            item: { is_flagged: newFlagStatus },
-        });
-        console.log(
-            `题组内小题 ${questionItem.id} 标记状态已更新为: ${newFlagStatus}`
-        );
-    } catch (error) {
-        console.error(
-            `通过MQ更新题组内小题 ${questionItem.id} 标记状态时出错:`, error
-        );
-        // 回滚乐观更新
-        if (resultIndex !== -1 && originalResultDataForRollback) {
-            props.questionResults.splice(resultIndex, 1, originalResultDataForRollback);
-            console.log(
-                `题组内小题 ${questionItem.id} 标记状态已回滚至: ${originalResultDataForRollback.is_flagged}`
-            );
-        }
-    }
 };
 
 // 获取题目左侧边框的样式
