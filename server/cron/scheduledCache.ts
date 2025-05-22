@@ -45,7 +45,7 @@ const comprehensivePaperFields = [
   "paper_sections.question_groups.sort_in_section", // 题组在章节内的排序
 ];
 
-export default defineCronHandler("everyMinute", async () => {
+export default defineCronHandler("everyFiveMinutes", async () => {
 
     // 设置试卷列表缓存（包含完整的试卷数据）
     setItemsToCache(
@@ -53,11 +53,6 @@ export default defineCronHandler("everyMinute", async () => {
         async () =>
             await directus_client.request(
                 readItems("papers", {
-                    // filter: {
-                    //     status: {
-                    //         _eq: "已发布",
-                    //     },
-                    // },
                     fields: comprehensivePaperFields,
                     limit: -1, // 获取所有符合条件的试卷
                     // 如果需要对关联集合进行排序或过滤，可能需要使用 'deep' 参数，具体语法取决于 Directus SDK 版本
