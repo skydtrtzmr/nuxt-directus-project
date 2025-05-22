@@ -48,13 +48,14 @@
                         <Tag
                             v-if="
                                 !isGroupMode &&
-                                selectedQuestion.result &&
-                                selectedQuestion.result.point_value
+                                currentSingleQuestionResult &&
+                                currentSingleQuestionResult.point_value !== null &&
+                                currentSingleQuestionResult.point_value !== undefined
                             "
-                            :severity="getScoreSeverity(selectedQuestion)"
+                            :severity="getScoreSeverity"
                             class="font-medium"
                         >
-                            {{ getScoreDisplay(selectedQuestion) }}
+                            {{ getScoreDisplay }}
                         </Tag>
                     </div>
                 </div>
@@ -108,6 +109,7 @@
                         :exam_page_mode="exam_page_mode"
                         :renderMarkdown="render"
                         :groupMode="false"
+                        :currentQuestionResult="currentSingleQuestionResult"
                     />
                 </div>
             </div>
@@ -140,7 +142,7 @@
 import { watch, computed, ref, onMounted } from "vue";
 import QuestionContent from "~/components/QuestionContent.vue";
 import QuestionGroupContent from "~/components/QuestionGroupContent.vue";
-import type { QuestionResults } from "~/types/directus_types";
+import type { QuestionResults, PaperSectionsQuestions } from "~/types/directus_types";
 // 移除 markdown-it 的直接导入
 // import markdownit from "markdown-it";
 
@@ -159,6 +161,28 @@ const props = defineProps<{
 
 const emit = defineEmits(["navigate-question"]);
 
+// 辅助函数：根据 paper_sections_questions_id 从 questionResults 中查找结果
+const getResultForCurrentQuestion = (questionInPaperId: number | undefined | null): QuestionResults | null => {
+    if (!props.questionResults || questionInPaperId === undefined || questionInPaperId === null) {
+        return null;
+    }
+    return props.questionResults.find(qr => {
+        const qrId = typeof qr.question_in_paper_id === 'object' && qr.question_in_paper_id !== null 
+                        ? qr.question_in_paper_id.id 
+                        : qr.question_in_paper_id;
+        return qrId === questionInPaperId;
+    }) || null;
+};
+
+// 当前单题的答题结果 (如果非题组模式)
+const currentSingleQuestionResult = computed<QuestionResults | null>(() => {
+    if (isGroupMode.value || !props.selectedQuestion || !props.selectedQuestion.id) {
+        return null;
+    }
+    // props.selectedQuestion.id 应该是 paper_sections_questions 的 id (number)
+    return getResultForCurrentQuestion(props.selectedQuestion.id);
+});
+
 // 判断是否为题组模式
 const isGroupMode = computed(() => {
     return (
@@ -170,8 +194,8 @@ const isGroupMode = computed(() => {
 
 // 判断当前题目是否被标记为有疑问
 const isQuestionFlagged = computed(() => {
-    if (!props.selectedQuestion || !props.selectedQuestion.result) return false;
-    return props.selectedQuestion.result.is_flagged === true;
+    if (isGroupMode.value || !currentSingleQuestionResult.value) return false;
+    return currentSingleQuestionResult.value.is_flagged === true;
 });
 
 // 切换单题"疑问"标记状态
@@ -180,44 +204,42 @@ const isQuestionFlagged = computed(() => {
 //  2. 调用后端接口更新数据库
 //  3. 用后端返回的 response.is_flagged 再次同步本地状态
 const toggleQuestionFlag = async () => {
-    if (
-        !props.selectedQuestion ||
-        !props.selectedQuestion.result ||
-        !props.selectedQuestion.result.id
-    )
+    if (isGroupMode.value || !currentSingleQuestionResult.value || !currentSingleQuestionResult.value.id) {
+        console.warn("Cannot toggle flag: Not in single question mode or no result ID.");
         return;
+    }
+
+    const resultIdToUpdate = currentSingleQuestionResult.value.id;
+    const currentFlagStatus = currentSingleQuestionResult.value.is_flagged;
+    const updatedFlag = !currentFlagStatus;
+
+    let resultIndex = -1; // 在 try 块外部声明，以便 catch 块可以访问
 
     try {
-        // 先更新本地状态，提供即时反馈
-        const updatedFlag = !isQuestionFlagged.value;
-        if (props.selectedQuestion && props.selectedQuestion.result) {
-            props.selectedQuestion.result.is_flagged = updatedFlag;
+        // 乐观更新本地 questionResults 数组中对应项的 is_flagged 状态
+        resultIndex = props.questionResults.findIndex(qr => qr.id === resultIdToUpdate); // 在 try 内部赋值
+        if (resultIndex !== -1) {
+            const updatedResult = { ...props.questionResults[resultIndex], is_flagged: updatedFlag };
+            props.questionResults.splice(resultIndex, 1, updatedResult);
+        } else {
+            console.warn("Cannot find question result in local array to optimistically update flag.");
         }
 
-        // 然后提交到数据库
         const { updateItem } = useDirectusItems();
-
-        const submitted_flag = {
-            is_flagged: updatedFlag,
-        };
-
-        const response = await updateItem({
+        await updateItem<QuestionResults>({
             collection: "question_results",
-            id: props.selectedQuestion.result.id,
-            item: submitted_flag,
+            id: resultIdToUpdate,
+            item: { is_flagged: updatedFlag },
         });
+        console.log(`题目flag已更新为: ${updatedFlag}`);
 
-        console.log(
-            `题目已${updatedFlag ? "标记" : "取消标记"}为疑问:`,
-            response
-        );
     } catch (error) {
-        // 如果提交失败，恢复原状态
-        if (props.selectedQuestion && props.selectedQuestion.result) {
-            props.selectedQuestion.result.is_flagged =
-                !props.selectedQuestion.result.is_flagged;
+        console.error("更新题目flag状态失败:", error);
+        // 如果API调用失败，回滚乐观更新
+        if (resultIndex !== -1) { // 现在 resultIndex 在 catch 块中可见
+            const originalResult = { ...props.questionResults[resultIndex], is_flagged: currentFlagStatus };
+            props.questionResults.splice(resultIndex, 1, originalResult);       
         }
-        console.error("更新标记状态时出错:", error);
     }
 };
 
@@ -235,50 +257,29 @@ const navigateQuestion = (direction: number) => {
 };
 
 // 获取分数展示文本
-const getScoreDisplay = (question: any) => {
-    if (!question || !question.result) return "";
-
-    const score = question.result.score;
-    const pointValue = question.result.point_value;
-
-    if (
-        score === undefined ||
-        score === null ||
-        pointValue === undefined ||
-        pointValue === null
-    ) {
-        return "";
+const getScoreDisplay = computed(() => {
+    if (isGroupMode.value || !currentSingleQuestionResult.value) return "";
+    const score = currentSingleQuestionResult.value.score;
+    const pointValue = currentSingleQuestionResult.value.point_value;
+    if (score === undefined || score === null || pointValue === undefined || pointValue === null || pointValue === 0) {
+        return ""; // 或者显示 "未评分" 等
     }
-
     return `${score}/${pointValue}分`;
-};
+});
 
 // 获取分数标签样式
-const getScoreSeverity = (question: any) => {
-    if (!question || !question.result) return "info";
-
-    const score = question.result.score;
-    const pointValue = question.result.point_value;
-
-    if (
-        score === undefined ||
-        score === null ||
-        pointValue === undefined ||
-        pointValue === null
-    ) {
+const getScoreSeverity = computed(() => {
+    if (isGroupMode.value || !currentSingleQuestionResult.value) return "info";
+    const score = currentSingleQuestionResult.value.score;
+    const pointValue = currentSingleQuestionResult.value.point_value;
+    if (score === undefined || score === null || pointValue === undefined || pointValue === null || pointValue === 0) {
         return "info";
     }
-
     const percentage = (score / pointValue) * 100;
-
-    if (percentage >= 80) {
-        return "success";
-    } else if (percentage >= 60) {
-        return "warning";
-    } else {
-        return "danger";
-    }
-};
+    if (percentage >= 80) return "success";
+    if (percentage >= 60) return "warning";
+    return "danger";
+});
 </script>
 
 <style scoped>
