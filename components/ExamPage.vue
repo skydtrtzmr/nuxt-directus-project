@@ -142,7 +142,7 @@ import type {
     PaperSectionsQuestionGroups,
     QuestionGroups,
 } from "~~/types/directus_types";
-
+import { toRaw } from "vue";
 import { useLoadingStateStore } from "@/stores/loadingState";
 import { useExamTimer } from "@/composables/useExamTimer";
 
@@ -338,29 +338,35 @@ const fetchSubmittedPaper = async (paperId: string) => {
 
     console.log("paperResponse", paperResponse.value);
 
-    const { data: paperResponse2, error: error2 } = await useFetch<Papers>(
-        `/api/papers/full/c360fcd9-8f0d-48c2-8287-996792da4958`
-    );
-    console.log("paperResponse2", paperResponse2.value);
+    console.log("deep", paperResponse.value?.paper_sections[0].questions);
+
+    // 注意：
+    // Nuxt3的useFetch返回的data是深层响应式对象，当嵌套数据结构中存在循环引用或特殊对象（如Date）时，直接控制台输出可能显示代理对象，而实际数据需要通过toRaw()获取原始数据。
 
     if (paperResponse.value && typeof paperResponse.value === "object") {
-        paper.value = paperResponse.value;
+        paper.value = toRaw(paperResponse.value);
+        const rawPaper = toRaw(paperResponse.value);
+        console.log("rawPaper", rawPaper);
+        console.log(rawPaper.paper_sections[0].questions);
+        console.log(paper.value.paper_sections[0].questions);
     }
 
-    console.log("paperResponse.value", paperResponse.value);
 
-    const submittedSectionsResponse = paper.value
+    const submittedSectionsResponse = toRaw(paper.value)
         .paper_sections as PaperSections[];
 
     console.log("submittedSectionsResponse", submittedSectionsResponse);
+    console.log("submittedSectionsResponse[0].questions", submittedSectionsResponse[0].questions);
+    // 到这里为止，题目列表都还是在的。
+    
 
     // 新增：对获取到的章节进行排序
     submittedSectionsResponse.sort(
         (a, b) => (a.sort_in_paper || 0) - (b.sort_in_paper || 0)
     );
-    const sectionList = submittedSectionsResponse;
 
-    console.log("sectionList", sectionList);
+    console.log("submittedSectionsResponse[0].questions 2", submittedSectionsResponse[0].questions);
+    // 到这里为止，题目列表都还是在的。
 
     const questionResultsData = await getItems<QuestionResults>({
         collection: "question_results",
@@ -387,10 +393,10 @@ const fetchSubmittedPaper = async (paperId: string) => {
     const question_id_list_local = ref<string[]>([]);
     const question_groups_id_list_local = ref<string[]>([]);
 
-    const allSectionIds = sectionList.map((section) => section.id);
+    const allSectionIds = submittedSectionsResponse.map((section) => section.id);
     let allSectionQuestions: PaperSectionsQuestions[] = [];
-    const paper_sections_question_ids = sectionList.flatMap((s) => s.questions);
-    const paper_section_question_group_ids = sectionList.flatMap(
+    const paper_sections_question_ids = submittedSectionsResponse.flatMap((s) => s.questions);
+    const paper_section_question_group_ids = submittedSectionsResponse.flatMap(
         (s) => s.question_groups
     );
 
@@ -410,7 +416,7 @@ const fetchSubmittedPaper = async (paperId: string) => {
     let allSectionQuestionGroups: PaperSectionsQuestionGroups[] = [];
     if (allSectionIds.length > 0) {
         // 仅当存在题组模式的章节时才查询
-        const groupModeSectionIds = sectionList
+        const groupModeSectionIds = submittedSectionsResponse
             .filter((section) => section.question_mode === "group")
             .map((section) => section.id);
 
@@ -434,7 +440,10 @@ const fetchSubmittedPaper = async (paperId: string) => {
             paper_section_question_group_ids as QuestionGroups[];
     }
 
-    sectionList.forEach((section) => {
+    console.log("submittedSectionsResponse[0].questions 2.5", submittedSectionsResponse[0].questions);
+    // 到这里还在。
+
+    submittedSectionsResponse.forEach((section) => {
         const currentSectionQuestions = allSectionQuestions
             .filter((sq) => sq.paper_sections_id === section.id)
             .sort(
@@ -500,19 +509,20 @@ const fetchSubmittedPaper = async (paperId: string) => {
         }
     });
 
-    submittedPaperSections.value = sectionList;
+    console.log("submittedSectionsResponse[0].questions 3", submittedSectionsResponse[0].questions);
+    // 到这里就空了。
 
-    console.log("submittedPaperSections", submittedPaperSections.value);
+    submittedPaperSections.value = toRaw(submittedSectionsResponse);
 
-    if (sectionList.length > 0) {
+    if (submittedSectionsResponse.length > 0) {
         if (
-            sectionList[0].question_mode === "group" &&
-            sectionList[0].question_groups &&
-            sectionList[0].question_groups.length > 0
+            submittedSectionsResponse[0].question_mode === "group" &&
+            submittedSectionsResponse[0].question_groups &&
+            submittedSectionsResponse[0].question_groups.length > 0
         ) {
-            const firstGroup = sectionList[0].question_groups[0];
+            const firstGroup = submittedSectionsResponse[0].question_groups[0];
             const groupQuestionIds = firstGroup.group_question_ids || [];
-            const groupQuestions = sectionList[0].questions.filter((q) =>
+            const groupQuestions = submittedSectionsResponse[0].questions.filter((q) =>
                 groupQuestionIds.includes(q.id)
             );
             const sortedGroupQuestions = [...groupQuestions].sort((a, b) => {
@@ -527,16 +537,16 @@ const fetchSubmittedPaper = async (paperId: string) => {
                 isGroupMode: true,
                 questionGroup: firstGroup.question_groups_id,
                 questions_id: { type: "group" },
-                section_id: sectionList[0].id,
-                paper_sections_id: sectionList[0].id,
+                section_id: submittedSectionsResponse[0].id,
+                paper_sections_id: submittedSectionsResponse[0].id,
                 sort_in_section: firstGroup.sort_in_section,
                 groupQuestions: sortedGroupQuestions,
             };
         } else if (
-            sectionList[0].questions &&
-            sectionList[0].questions.length > 0
+            submittedSectionsResponse[0].questions &&
+            submittedSectionsResponse[0].questions.length > 0
         ) {
-            selectedQuestion.value = sectionList[0].questions[0];
+            selectedQuestion.value = submittedSectionsResponse[0].questions[0];
         }
     }
 };

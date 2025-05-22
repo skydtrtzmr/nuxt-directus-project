@@ -110,6 +110,9 @@ const props = defineProps<{
     practiceSessionId: string;
 }>();
 
+console.log("props.submittedPaperSections.q", props.submittedPaperSections[0]);
+
+
 const emit = defineEmits(['sidebar-toggle', 'resize-sidebar']);
 
 const loadingStateStore = useLoadingStateStore();
