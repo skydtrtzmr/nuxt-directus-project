@@ -1,0 +1,1150 @@
+{
+    "id": "e1fe2223-956f-4880-b368-cc7aaa60a0c6",
+    "title": "完整试卷",
+    "description": null,
+    "total_point_value": 60,
+    "total_question_count": 30,
+    "paper_sections": [
+        {
+            "id": "226e216f-de88-4fe9-84bb-a35cf4e757ab",
+            "paper_id": "e1fe2223-956f-4880-b368-cc7aaa60a0c6",
+            "sort_in_paper": 1,
+            "title": "单选题",
+            "description": null,
+            "points_per_question": "2.00",
+            "question_type": "q_mc_single",
+            "question_mode": "single",
+            "total_question_points": 40,
+            "questions": [
+                {
+                    "sort_in_section": 1,
+                    "questions_id": {
+                        "stem": "某企业采用先进先出法对发出存货进行计价。2021年2月初，该企业结存甲材料400千克，每千克实际成本100元。2月15日，入库甲材料600千克，每千克实际成本110元。2月28日，发出甲材料800千克。2月末库存甲材料的实际成本为（　　）元。",
+                        "type": "q_mc_single",
+                        "analysis": "采用先进先出法对发出存货进行计价，发出材料成本＝400×100＋400×110＝84 000（元）；2月末库存量＝400＋600－800＝200（千克），库存材料实际成本＝200×110＝22 000（元）。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "A",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "dbec73de-0a60-47c5-a9c8-fb85de15c3d1",
+                            "option_a": "22 000",
+                            "status": "draft",
+                            "option_b": "21 000",
+                            "option_number": 4,
+                            "option_c": "20 000",
+                            "sort": null,
+                            "option_d": "18 000",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:52:20.554Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "某企业采用先进先出法对发出存货进行计价。2021年2月初，该企业结存甲材料400千克，每千克实际成本100元。2月15日，入库甲材料600千克，每千克实际成本110元。2月28日，发出甲材料800千克。2月末库存甲材料的实际成本为（　　）元。",
+                            "correct_option": "A",
+                            "analysis": "采用先进先出法对发出存货进行计价，发出材料成本＝400×100＋400×110＝84 000（元）；2月末库存量＝400＋600－800＝200（千克），库存材料实际成本＝200×110＝22 000（元）。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "sort_in_section": 2,
+                    "questions_id": {
+                        "stem": "下列各项中，使会计等式“资产=负债+所有者权益”左右两边金额保持不变的经济业务是（　　）。",
+                        "type": "q_mc_single",
+                        "analysis": "选项D，以银行存款预付货款的经济业务，资产内部增减变动，会计等式“资产＝负债＋所有者权益”左右两边金额保持不变。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "D",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "77b58f65-34c8-426c-be1b-de3489514a95",
+                            "option_a": "以银行存款偿还前欠货款",
+                            "status": "draft",
+                            "option_b": "向银行借入为期3个月的短期借款",
+                            "option_number": 4,
+                            "option_c": "接受投资者投入的固定资产",
+                            "sort": null,
+                            "option_d": "以银行存款预付货款",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:52:51.096Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列各项中，使会计等式“资产=负债+所有者权益”左右两边金额保持不变的经济业务是（　　）。",
+                            "correct_option": "D",
+                            "analysis": "选项D，以银行存款预付货款的经济业务，资产内部增减变动，会计等式“资产＝负债＋所有者权益”左右两边金额保持不变。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "sort_in_section": 3,
+                    "questions_id": {
+                        "stem": "上市公司注销库存股时，库存股成本低于其面值总额的差额应贷记的会计科目是（　　）。",
+                        "type": "q_mc_single",
+                        "analysis": "会计分录如下：\n\n（1）回购股份时：\n\n借：库存股\n\n　　贷：银行存款\n\n（2）上市公司注销库存股时，库存股成本低于其面值总额：\n\n借：股本\n\n　　贷：库存股\n\n　　　　资本公积——股本溢价",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "D",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "70164112-99a7-4496-8747-85dc71e64361",
+                            "option_a": "其他综合收益",
+                            "status": "draft",
+                            "option_b": "盈余公积",
+                            "option_number": 4,
+                            "option_c": "利润分配",
+                            "sort": null,
+                            "option_d": "资本公积——股本溢价",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:55:56.816Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "上市公司注销库存股时，库存股成本低于其面值总额的差额应贷记的会计科目是（　　）。",
+                            "correct_option": "D",
+                            "analysis": "会计分录如下：\n\n（1）回购股份时：\n\n借：库存股\n\n　　贷：银行存款\n\n（2）上市公司注销库存股时，库存股成本低于其面值总额：\n\n借：股本\n\n　　贷：库存股\n\n　　　　资本公积——股本溢价"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "sort_in_section": 4,
+                    "questions_id": {
+                        "stem": "2021年1月初，某企业所有者权益总额为3 950万元。2021年度实现净利润500万元，提取盈余公积100万元，以资本公积转增实收资本350万元，不考虑其他因素，2021年12月末该企业所有者权益总额为（　　） 万元。",
+                        "type": "q_mc_single",
+                        "analysis": "2021年12月末该企业所有者权益总额＝3 950＋500－100＋100－350＋350＝4 450（万元）。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "A",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "25e64e49-0755-43ab-8acf-fde5a945eebf",
+                            "option_a": "4 450",
+                            "status": "draft",
+                            "option_b": "4 100",
+                            "option_number": 4,
+                            "option_c": "4 350",
+                            "sort": null,
+                            "option_d": "4 000",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:53:36.021Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "2021年1月初，某企业所有者权益总额为3 950万元。2021年度实现净利润500万元，提取盈余公积100万元，以资本公积转增实收资本350万元，不考虑其他因素，2021年12月末该企业所有者权益总额为（　　） 万元。",
+                            "correct_option": "A",
+                            "analysis": "2021年12月末该企业所有者权益总额＝3 950＋500－100＋100－350＋350＝4 450（万元）。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "sort_in_section": 5,
+                    "questions_id": {
+                        "stem": "下列各项中，不符合会计信息质量要求的是（　　）。",
+                        "type": "q_mc_single",
+                        "analysis": "选项A，体现的是可比性要求；选项B，体现的是实质重于形式要求；选项C，体现的是可靠性要求；选项D，是会计核算基础，不属于反映会计信息质量的要求。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "D",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "91c4542b-34af-4ed7-9e86-d489ec761fdd",
+                            "option_a": "会计核算方法一经确定不得随意变更",
+                            "status": "draft",
+                            "option_b": "会计核算应当注重交易和事项的实质",
+                            "option_number": 4,
+                            "option_c": "\n会计核算应当以实际发生的交易或事项为依据",
+                            "sort": null,
+                            "option_d": "会计核算应当以权责发生制为基础",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:48:26.257Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列各项中，不符合会计信息质量要求的是（　　）。",
+                            "correct_option": "D",
+                            "analysis": "选项A，体现的是可比性要求；选项B，体现的是实质重于形式要求；选项C，体现的是可靠性要求；选项D，是会计核算基础，不属于反映会计信息质量的要求。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "sort_in_section": 6,
+                    "questions_id": {
+                        "stem": "下列各项中，属于政府预算会计要素的是（　　）。",
+                        "type": "q_mc_single",
+                        "analysis": "政府会计要素包括预算会计要素和财务会计要素。其中，预算会计要素包括预算收入、预算支出和预算结余；财务会计要素包括资产、负债、净资产、收入和费用。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "B",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "c4ad1933-136c-4990-9998-d20951c2cb37",
+                            "option_a": "净资产",
+                            "status": "draft",
+                            "option_b": "预算结余",
+                            "option_number": 4,
+                            "option_c": "费用",
+                            "sort": null,
+                            "option_d": "收入",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:49:46.263Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列各项中，属于政府预算会计要素的是（　　）。",
+                            "correct_option": "B",
+                            "analysis": "政府会计要素包括预算会计要素和财务会计要素。其中，预算会计要素包括预算收入、预算支出和预算结余；财务会计要素包括资产、负债、净资产、收入和费用。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "sort_in_section": 7,
+                    "questions_id": {
+                        "stem": "企业签发并经银行承兑的汇票到期时无力支付票款，应将该应付票据转入的会计科目是（　　）。",
+                        "type": "q_mc_single",
+                        "analysis": "银行承兑汇票到期时无力支付票款，应将该应付票据转入“短期借款”科目；商业承兑汇票到期时无力支付票款，应将该应付票据转入“应付账款”科目。选项C正确。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "C",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "80a2086b-1b3d-4413-92c9-b21254d68cc6",
+                            "option_a": "其他应付款",
+                            "status": "draft",
+                            "option_b": "营业外收入",
+                            "option_number": 4,
+                            "option_c": "短期借款",
+                            "sort": null,
+                            "option_d": "应付账款",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:54:42.464Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "企业签发并经银行承兑的汇票到期时无力支付票款，应将该应付票据转入的会计科目是（　　）。",
+                            "correct_option": "C",
+                            "analysis": "银行承兑汇票到期时无力支付票款，应将该应付票据转入“短期借款”科目；商业承兑汇票到期时无力支付票款，应将该应付票据转入“应付账款”科目。选项C正确。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "sort_in_section": 8,
+                    "questions_id": {
+                        "stem": "企业辞退生产工人的预计补偿款应记入的会计科目是（　　）。 ",
+                        "type": "q_mc_single",
+                        "analysis": "确认辞退福利产生的职工薪酬，均通过“管理费用”科目核算。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "B",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "fc7ed653-927b-4281-a7c5-59cac0e845be",
+                            "option_a": "制造费用",
+                            "status": "draft",
+                            "option_b": "管理费用",
+                            "option_number": 4,
+                            "option_c": "营业外支出",
+                            "sort": null,
+                            "option_d": "生产成本",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:50:20.144Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "企业辞退生产工人的预计补偿款应记入的会计科目是（　　）。 ",
+                            "correct_option": "B",
+                            "analysis": "确认辞退福利产生的职工薪酬，均通过“管理费用”科目核算。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "sort_in_section": 9,
+                    "questions_id": {
+                        "stem": "某企业采用托收承付结算方式销售商品，增值税专用发票上注明的价款为500万元，增值税税额为65万元，代购货方垫付包装费2万元、运输费3万元（含增值税），已办妥托收手续。不考虑其他因素，该企业应确认的应收账款的金额为（　　）万元。",
+                        "type": "q_mc_single",
+                        "analysis": "该企业应确认的应收账款的金额＝500＋2＋3＋65＝570（万元），应编制如下会计分录：\n\n借：应收账款     570\n\n　　贷：主营业务收入     500\n\n　　　　应交税费——应交增值税（销项税额）    65\n\n　　　　银行存款          5",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "A",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "5ddd51da-599f-4d0c-abcd-d6710209e9aa",
+                            "option_a": "570",
+                            "status": "draft",
+                            "option_b": "565",
+                            "option_number": 4,
+                            "option_c": "505",
+                            "sort": null,
+                            "option_d": "502",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:48:58.760Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "某企业采用托收承付结算方式销售商品，增值税专用发票上注明的价款为500万元，增值税税额为65万元，代购货方垫付包装费2万元、运输费3万元（含增值税），已办妥托收手续。不考虑其他因素，该企业应确认的应收账款的金额为（　　）万元。",
+                            "correct_option": "A",
+                            "analysis": "该企业应确认的应收账款的金额＝500＋2＋3＋65＝570（万元），应编制如下会计分录：\n\n借：应收账款     570\n\n　　贷：主营业务收入     500\n\n　　　　应交税费——应交增值税（销项税额）    65\n\n　　　　银行存款          5"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "sort_in_section": 10,
+                    "questions_id": {
+                        "stem": "某企业购入公司债券划分为交易性金融资产核算。支付价款100万元（其中包含已到付息期但尚未领取的利息3万元），另支付交易费用0.2万元。不考虑其他因素，该企业取得交易性金融资产的入账价值为（　　）万元。",
+                        "type": "q_mc_single",
+                        "analysis": "取得交易性金融资产中包含已到付息期但尚未领取的利息3万元，计入应收利息；支付的交易费用0.2万元，冲减投资收益，均不计入交易性金融资产的入账成本。故交易性金融资产的入账价值＝100－3＝97（万元）。会计分录如下：\n\n借：交易性金融资产——成本    97\n\n　　投资收益         0.2\n\n　　应收利息       3\n\n　　贷：其他货币资金      100.2",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "C",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "b64affe3-6435-4268-915b-f116bccc8097",
+                            "option_a": "\n100",
+                            "status": "draft",
+                            "option_b": "100.2",
+                            "option_number": 4,
+                            "option_c": "97",
+                            "sort": null,
+                            "option_d": "\n96.8",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:55:11.350Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "某企业购入公司债券划分为交易性金融资产核算。支付价款100万元（其中包含已到付息期但尚未领取的利息3万元），另支付交易费用0.2万元。不考虑其他因素，该企业取得交易性金融资产的入账价值为（　　）万元。",
+                            "correct_option": "C",
+                            "analysis": "取得交易性金融资产中包含已到付息期但尚未领取的利息3万元，计入应收利息；支付的交易费用0.2万元，冲减投资收益，均不计入交易性金融资产的入账成本。故交易性金融资产的入账价值＝100－3＝97（万元）。会计分录如下：\n\n借：交易性金融资产——成本    97\n\n　　投资收益         0.2\n\n　　应收利息       3\n\n　　贷：其他货币资金      100.2"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "sort_in_section": 11,
+                    "questions_id": {
+                        "stem": "2021年4月1日，某企业向银行借入生产经营用短期借款1 000 000元，期限为6个月，年利率为4.5%，本金到期后一次归还，利息按月计提、按季度支付，假定6月30日收到计息通知。下列各项中，该企业6月30日支付利息的会计处理正确的是（　　）。",
+                        "type": "q_mc_single",
+                        "analysis": "解析：4月、5月计提利息时：\n\n借：财务费用     3 750\n\n　　贷：应付利息        3 750\n\n6月30日支付利息时：\n\n借：财务费用     3 750\n\n　　应付利息     7 500\n\n　　贷：银行存款      11 250",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "B",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "249d9910-4526-4895-85d2-291460cf5212",
+                            "option_a": "借：财务费用            7 500\n\n　    贷：银行存款            7 500",
+                            "status": "draft",
+                            "option_b": "借：财务费用            3 750\n\n　　应付利息            7 500\n\n　   贷：银行存款          11 250",
+                            "option_number": 4,
+                            "option_c": "借：财务费用            3 750\n\n　　短期借款            7 500\n\n　贷：银行存款          11 250",
+                            "sort": null,
+                            "option_d": "借：短期借款     1 000 000\n\n　  贷：银行存款     1 000 000",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T03:07:25.736Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "2021年4月1日，某企业向银行借入生产经营用短期借款1 000 000元，期限为6个月，年利率为4.5%，本金到期后一次归还，利息按月计提、按季度支付，假定6月30日收到计息通知。下列各项中，该企业6月30日支付利息的会计处理正确的是（　　）。",
+                            "correct_option": "B",
+                            "analysis": "解析：4月、5月计提利息时：\n\n借：财务费用     3 750\n\n　　贷：应付利息        3 750\n\n6月30日支付利息时：\n\n借：财务费用     3 750\n\n　　应付利息     7 500\n\n　　贷：银行存款      11 250"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "sort_in_section": 12,
+                    "questions_id": {
+                        "stem": "企业自产自销应税矿产品应交的资源税，应计入（　　）。",
+                        "type": "q_mc_single",
+                        "analysis": "资源税是对我国境内开采矿产品或者生产盐的单位和个人征收的税。对外销售应税产品应交纳的资源税应记入“税金及附加”科目。基本账务处理为：\n\n 借：税金及附加\n\n 　　贷：应交税费 —— 应交资源税",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "A",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "ca8786ce-c492-455d-b922-04703b60db6a",
+                            "option_a": "\n税金及附加",
+                            "status": "draft",
+                            "option_b": "生产成本",
+                            "option_number": 4,
+                            "option_c": "主营业务成本",
+                            "sort": null,
+                            "option_d": "销售费用",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T03:06:12.589Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "企业自产自销应税矿产品应交的资源税，应计入（　　）。",
+                            "correct_option": "A",
+                            "analysis": "资源税是对我国境内开采矿产品或者生产盐的单位和个人征收的税。对外销售应税产品应交纳的资源税应记入“税金及附加”科目。基本账务处理为：\n\n 借：税金及附加\n\n 　　贷：应交税费 —— 应交资源税"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "sort_in_section": 13,
+                    "questions_id": {
+                        "stem": "下列关于企业费用的说法中，错误的是（    ）。",
+                        "type": "q_mc_single",
+                        "analysis": "选项A错误。在权责发生制下，凡在本期内已经收到和已经发生或应当负担的一切费用，不论其款项是否收到或付出，都作为本期的收入和费用处理；反之，凡不属于本期的收入和费用，即使款项在本期收到或付出，也不应作为本期的收入和费用处理。选项A所述“费用必须在实际支付现金时才可以确认”为收付实现制下的处理方式。选项BCD是对费用概念的正确表述，本题为选非题，选项A当选。\n\n\n\n\n\n\n【知识点拓展】\n\n1.费用的定义\n\n费用，是指企业在日常活动中发生的、会导致所有者权益减少的、与向所有者分配利润无关的经济利益的总流出。\n\n2.费用的特点\n\n（1）费用是企业在日常活动中形成的；\n\n（2）费用是与向所有者分配利润无关的经济利益的总流出；\n\n（3）费用会导致所有者权益的减少。\n\n3.费用的确认条件\n\n费用的确认除了应当符合定义外，还至少应当符合以下条件：\n\n（1）与费用相关的经济利益应当很可能流出企业；\n\n（2）经济利益流出企业的结果会导致资产的减少或者负债的增加；\n\n（3）经济利益的流出额能够可靠计量。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "A",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "d69a0dcf-968c-44d6-9a29-36ed970d4987",
+                            "option_a": "费用必须在实际支付现金时才可以确认",
+                            "status": "draft",
+                            "option_b": "符合费用定义和费用确认条件的项目，应当列入利润表",
+                            "option_number": 4,
+                            "option_c": "费用是指企业在日常活动中发生的、会导致所有者权益减少的、与向所有者分配利润无关的经济利益的总流出",
+                            "sort": null,
+                            "option_d": "费用的发生可能会导致资产的减少或负债的增加，最终会使所有者权益减少",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:07:35.087Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列关于企业费用的说法中，错误的是（    ）。",
+                            "correct_option": "A",
+                            "analysis": "选项A错误。在权责发生制下，凡在本期内已经收到和已经发生或应当负担的一切费用，不论其款项是否收到或付出，都作为本期的收入和费用处理；反之，凡不属于本期的收入和费用，即使款项在本期收到或付出，也不应作为本期的收入和费用处理。选项A所述“费用必须在实际支付现金时才可以确认”为收付实现制下的处理方式。选项BCD是对费用概念的正确表述，本题为选非题，选项A当选。\n\n\n\n\n\n\n【知识点拓展】\n\n1.费用的定义\n\n费用，是指企业在日常活动中发生的、会导致所有者权益减少的、与向所有者分配利润无关的经济利益的总流出。\n\n2.费用的特点\n\n（1）费用是企业在日常活动中形成的；\n\n（2）费用是与向所有者分配利润无关的经济利益的总流出；\n\n（3）费用会导致所有者权益的减少。\n\n3.费用的确认条件\n\n费用的确认除了应当符合定义外，还至少应当符合以下条件：\n\n（1）与费用相关的经济利益应当很可能流出企业；\n\n（2）经济利益流出企业的结果会导致资产的减少或者负债的增加；\n\n（3）经济利益的流出额能够可靠计量。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "sort_in_section": 14,
+                    "questions_id": {
+                        "stem": "下列各项中，关于会计等式“资产＝负债＋所有者权益”的描述不正确的是（    ）。",
+                        "type": "q_mc_single",
+                        "analysis": "选项C错误，“资产=负债+所有者权益”是静态会计等式，可以反映在某一特定时点企业资产的基本状况，而不是某一特定时期。\n\n\n\n【知识点拓展】\n\n会计等式\n\n1.资产=负债+所有者权益\n\n这一等式反映了企业在某一特定时点资产、负债和所有者权益三者之间的平衡关系，因此，该等式被称为财务状况等式、基本会计等式或静态会计等式，它是复式记账法的理论基础，也是编制资产负债表的依据。\n\n2.收入-费用=利润\n\n这一等式反映了企业利润的实现过程，被称为经营成果等式或动态会计等式。收入、费用和利润之间的上述关系，是编制利润表的依据。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "C",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "af6f722b-c8a6-42ef-a22c-33bb28aaa5d8",
+                            "option_a": "反映了资金运动三个静态要素之间的内在联系",
+                            "status": "draft",
+                            "option_b": "反映在某一特定时点企业资产的基本状况",
+                            "option_number": 4,
+                            "option_c": "反映在某一特定时期企业资产的基本状况",
+                            "sort": null,
+                            "option_d": "资产、负债及所有者权益是构成资产负债表的三个基本要素",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:05:38.143Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列各项中，关于会计等式“资产＝负债＋所有者权益”的描述不正确的是（    ）。",
+                            "correct_option": "C",
+                            "analysis": "选项C错误，“资产=负债+所有者权益”是静态会计等式，可以反映在某一特定时点企业资产的基本状况，而不是某一特定时期。\n\n\n\n【知识点拓展】\n\n会计等式\n\n1.资产=负债+所有者权益\n\n这一等式反映了企业在某一特定时点资产、负债和所有者权益三者之间的平衡关系，因此，该等式被称为财务状况等式、基本会计等式或静态会计等式，它是复式记账法的理论基础，也是编制资产负债表的依据。\n\n2.收入-费用=利润\n\n这一等式反映了企业利润的实现过程，被称为经营成果等式或动态会计等式。收入、费用和利润之间的上述关系，是编制利润表的依据。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "sort_in_section": 15,
+                    "questions_id": {
+                        "stem": "（　 ）是指根据《中华人民共和国会计法》的规定，在国家机关、社会团体、企业、事业单位和其他组织（以下统称单位）中从事会计核算、实行会计监督等会计工作的人员。",
+                        "type": "q_mc_single",
+                        "analysis": "会计人员，是指根据《中华人民共和国会计法》的规定，在国家机关、社会团体、企业、事业单位和其他组织（以下统称单位）中从事会计核算、实行会计监督等会计工作的人员。——财政部《会计人员管理办法》",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "A",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "689bf946-8d91-44b3-90f2-ca2c6c449dbb",
+                            "option_a": "会计人员",
+                            "status": "draft",
+                            "option_b": "管理人员",
+                            "option_number": 4,
+                            "option_c": "行政人员",
+                            "sort": null,
+                            "option_d": "监督人员",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T01:06:26.490Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "（　 ）是指根据《中华人民共和国会计法》的规定，在国家机关、社会团体、企业、事业单位和其他组织（以下统称单位）中从事会计核算、实行会计监督等会计工作的人员。",
+                            "correct_option": "A",
+                            "analysis": "会计人员，是指根据《中华人民共和国会计法》的规定，在国家机关、社会团体、企业、事业单位和其他组织（以下统称单位）中从事会计核算、实行会计监督等会计工作的人员。——财政部《会计人员管理办法》"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "sort_in_section": 16,
+                    "questions_id": {
+                        "stem": "某公司资产总额为6万元，负债总额为3万元，以银行存款2万元偿还短期借款，并以银行存款1.5万元购买设备，则上述业务入账后，该公司的资产总额为（    ）万元。",
+                        "type": "q_mc_single",
+                        "analysis": "会计恒等式为“资产=负债+所有者权益”，本题资产总额一共有6万，以银行存款偿还短期借款2万元，资产减少2万元；以银行存款购买设备，资产增加1.5万元又减少1.5万元，所以最终资产总额=6-2+1.5-1.5=4（万元）。\n\n\n\n【知识点拓展】\n\n1.资产=负债+所有者权益\n\n这一等式反映了企业在某一特定时点资产、负债和所有者权益三者之间的平衡关系，因此，该等式被称为财务状况等式、基本会计等式或静态会计等式，它是复式记账法的理论基础，也是编制资产负债表的依据。\n\n2.每一项经济业务的发生，必然引起会计等式一边或两边有关项目相互联系地发生等额变动。当仅涉及会计等式的一边时，有关项目的金额发生相反方向的等额变动；当涉及会计等式的两边时，有关项目的金额发生相同方向的等额变动，但不会影响会计等式的成立。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "C",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "9cc1236d-3220-4d7d-af0d-4283741c1872",
+                            "option_a": "2.5",
+                            "status": "draft",
+                            "option_b": "3",
+                            "option_number": 4,
+                            "option_c": "4",
+                            "sort": null,
+                            "option_d": "4.5",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:06:54.656Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "某公司资产总额为6万元，负债总额为3万元，以银行存款2万元偿还短期借款，并以银行存款1.5万元购买设备，则上述业务入账后，该公司的资产总额为（    ）万元。",
+                            "correct_option": "C",
+                            "analysis": "会计恒等式为“资产=负债+所有者权益”，本题资产总额一共有6万，以银行存款偿还短期借款2万元，资产减少2万元；以银行存款购买设备，资产增加1.5万元又减少1.5万元，所以最终资产总额=6-2+1.5-1.5=4（万元）。\n\n\n\n【知识点拓展】\n\n1.资产=负债+所有者权益\n\n这一等式反映了企业在某一特定时点资产、负债和所有者权益三者之间的平衡关系，因此，该等式被称为财务状况等式、基本会计等式或静态会计等式，它是复式记账法的理论基础，也是编制资产负债表的依据。\n\n2.每一项经济业务的发生，必然引起会计等式一边或两边有关项目相互联系地发生等额变动。当仅涉及会计等式的一边时，有关项目的金额发生相反方向的等额变动；当涉及会计等式的两边时，有关项目的金额发生相同方向的等额变动，但不会影响会计等式的成立。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "sort_in_section": 17,
+                    "questions_id": {
+                        "stem": "企业对会计要素进行计量时，一般采用（    ）。",
+                        "type": "q_mc_single",
+                        "analysis": "企业对会计要素进行计量时，一般采用历史成本法。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "A",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "13e19849-f19e-4da7-baef-074001b82e7a",
+                            "option_a": "历史成本",
+                            "status": "draft",
+                            "option_b": "公允价值",
+                            "option_number": 4,
+                            "option_c": "现值",
+                            "sort": null,
+                            "option_d": "可变现净值",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:02:54.499Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "企业对会计要素进行计量时，一般采用（    ）。",
+                            "correct_option": "A",
+                            "analysis": "企业对会计要素进行计量时，一般采用历史成本法。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "sort_in_section": 18,
+                    "questions_id": {
+                        "stem": "下列各项中，不符合资产要素定义的是（     ）。",
+                        "type": "q_mc_single",
+                        "analysis": "资产，是指企业过去的交易或者事项形成的，由企业拥有或控制的，预期会给企业带来经济利益的资源。\n\n选项C，受托代销商品企业未取得其所有权，不应确认为企业的资产。\n\n\n\n【知识点拓展】\n\n1.资产的定义：\n\n资产，是指企业过去的交易或者事项形成的，由企业拥有或者控制的，预期会给企业带来经济利益的资源。\n\n2.资产的特征\n\n（1）资产应为企业拥有或者控制的资源。\n\n（2）资产预期会给企业带来经济利益。\n\n（3）资产是由企业过去的交易或者事项形成的。\n\n3.资产的确认条件\n\n将一项资源确认为资产，需要符合资产的定义，还应同时满足以下两个条件：\n\n（1）与该资源有关的经济利益很可能流入企业。\n\n（2）该资源的成本或者价值能够可靠地计量。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "C",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "62caa40a-81c5-4788-a0f4-024c29fddf97",
+                            "option_a": "发出商品",
+                            "status": "draft",
+                            "option_b": "委托加工物资",
+                            "option_number": 4,
+                            "option_c": "受托代销商品",
+                            "sort": null,
+                            "option_d": "在产品",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:04:17.025Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列各项中，不符合资产要素定义的是（     ）。",
+                            "correct_option": "C",
+                            "analysis": "资产，是指企业过去的交易或者事项形成的，由企业拥有或控制的，预期会给企业带来经济利益的资源。\n\n选项C，受托代销商品企业未取得其所有权，不应确认为企业的资产。\n\n\n\n【知识点拓展】\n\n1.资产的定义：\n\n资产，是指企业过去的交易或者事项形成的，由企业拥有或者控制的，预期会给企业带来经济利益的资源。\n\n2.资产的特征\n\n（1）资产应为企业拥有或者控制的资源。\n\n（2）资产预期会给企业带来经济利益。\n\n（3）资产是由企业过去的交易或者事项形成的。\n\n3.资产的确认条件\n\n将一项资源确认为资产，需要符合资产的定义，还应同时满足以下两个条件：\n\n（1）与该资源有关的经济利益很可能流入企业。\n\n（2）该资源的成本或者价值能够可靠地计量。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "sort_in_section": 19,
+                    "questions_id": {
+                        "stem": "下列关于负债的说法中，不正确的是（    ）。",
+                        "type": "q_mc_single",
+                        "analysis": "负债，是指企业过去的交易或者事项形成的，预期会导致经济利益流出企业的现时义务。选项D说法错误，未来的交易或事项形成的义务不确认负债。\n\n提示：负债是现时义务，未来借的钱不可能让你现在还。\n\n\n【知识点拓展】\n\n1.负债的定义\n\n负债，是指企业过去的交易或者事项形成的，预期会导致经济利益流出企业的现时义务。\n\n2.负债的特征\n\n(1)负债是企业承担的现时义务；\n\n(2)负债预期会导致经济利益流出企业；\n\n(3)负债是由企业过去的交易或者事项形成的。\n\n3.负债的确认条件\n\n将一项现时义务确认为负债，需要符合负债的定义，还需要同时满足以下两个条件：\n\n(1)与该义务有关的经济利益很可能流出企业；\n\n(2)未来流出的经济利益的金额能够可靠地计量。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "D",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "b79d1112-fb41-4eb2-a0e9-5c46a5dbb858",
+                            "option_a": "过去的交易或事项形成的，会导致经济利益流出企业的现时义务确认为负债",
+                            "status": "draft",
+                            "option_b": "未来的交易或事项形成的义务不应确认为负债",
+                            "option_number": 4,
+                            "option_c": "企业的负债都是企业的现时义务",
+                            "sort": null,
+                            "option_d": "未来的交易或事项形成的义务可以确认为负债",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:09:09.406Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列关于负债的说法中，不正确的是（    ）。",
+                            "correct_option": "D",
+                            "analysis": "负债，是指企业过去的交易或者事项形成的，预期会导致经济利益流出企业的现时义务。选项D说法错误，未来的交易或事项形成的义务不确认负债。\n\n提示：负债是现时义务，未来借的钱不可能让你现在还。\n\n\n【知识点拓展】\n\n1.负债的定义\n\n负债，是指企业过去的交易或者事项形成的，预期会导致经济利益流出企业的现时义务。\n\n2.负债的特征\n\n(1)负债是企业承担的现时义务；\n\n(2)负债预期会导致经济利益流出企业；\n\n(3)负债是由企业过去的交易或者事项形成的。\n\n3.负债的确认条件\n\n将一项现时义务确认为负债，需要符合负债的定义，还需要同时满足以下两个条件：\n\n(1)与该义务有关的经济利益很可能流出企业；\n\n(2)未来流出的经济利益的金额能够可靠地计量。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "sort_in_section": 20,
+                    "questions_id": {
+                        "stem": "下列会计要素的计量属性中，又被称为现行成本的是（    ）。",
+                        "type": "q_mc_single",
+                        "analysis": "重置成本，又称现行成本，是指按照当前市场条件，重新取得同样一项资产所需要支付的现金或者现金等价物金额。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "C",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "3d520e1f-4bcb-4bc9-9b16-10487d63c647",
+                            "option_a": "历史成本",
+                            "status": "draft",
+                            "option_b": "可变现净值",
+                            "option_number": 4,
+                            "option_c": "重置成本",
+                            "sort": null,
+                            "option_d": "现值",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:03:33.682Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列会计要素的计量属性中，又被称为现行成本的是（    ）。",
+                            "correct_option": "C",
+                            "analysis": "重置成本，又称现行成本，是指按照当前市场条件，重新取得同样一项资产所需要支付的现金或者现金等价物金额。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                }
+            ],
+            "question_groups": []
+        },
+        {
+            "id": "6e511307-8c22-4982-bbd1-621627917719",
+            "paper_id": "e1fe2223-956f-4880-b368-cc7aaa60a0c6",
+            "sort_in_paper": 4,
+            "title": "不定项选择题",
+            "description": null,
+            "points_per_question": "2.00",
+            "question_type": "q_mc_flexible",
+            "question_mode": "group",
+            "total_question_points": 20,
+            "questions": [
+                {
+                    "sort_in_section": 1,
+                    "questions_id": {
+                        "stem": "根据资料（1）至（3），该企业本月的利润表项目填列表述正确的是（　　）。",
+                        "type": "q_mc_flexible",
+                        "analysis": "管理费用=50(资料1)+1.2(资料2)+2(资料3)=53.2（万元），选项A错误，选项D正确；销售费用=30(资料1)+0.6(资料2)=30.6（万元），选项B正确；营业成本=主营业务成本+其他业务成本，资料（1）至（3）均未涉及到营业成本，故营业成本=0（万元），选项C错误。",
+                        "sort_in_group": 5,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "B",
+                            "D"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "5db64257-402d-450f-9fc5-5a17b547db82",
+                            "option_a": "管理费用增加51.2万元",
+                            "status": "draft",
+                            "option_b": "销售费用增加30.6万元",
+                            "option_number": 4,
+                            "option_c": "营业成本增加300万元",
+                            "sort": null,
+                            "option_d": "管理费用增加53.2万元",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T03:20:31.524Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（1）至（3），该企业本月的利润表项目填列表述正确的是（　　）。",
+                            "correct_options": [
+                                "B",
+                                "D"
+                            ],
+                            "analysis": "管理费用=50(资料1)+1.2(资料2)+2(资料3)=53.2（万元），选项A错误，选项D正确；销售费用=30(资料1)+0.6(资料2)=30.6（万元），选项B正确；营业成本=主营业务成本+其他业务成本，资料（1）至（3）均未涉及到营业成本，故营业成本=0（万元），选项C错误。"
+                        },
+                        "question_group": {
+                            "id": "ae7db3f8-c664-4bb3-90ef-f666a794831f"
+                        }
+                    }
+                },
+                {
+                    "sort_in_section": 2,
+                    "questions_id": {
+                        "stem": "根据资料（3），下列各项中，企业有关非货币性职工福利的账务处理正确的是（　　）。",
+                        "type": "q_mc_flexible",
+                        "analysis": "企业为行政部门经理提供汽车作为非货币性福利，确认应付职工薪酬时：\n\n借：管理费用    2\n\n　　贷：应付职工薪酬    2\n\n同时计提折旧费：\n\n借：应付职工薪酬    2\n\n　　贷：累计折旧    2\n\n企业为产品生产工人租赁宿舍楼，确认应付职工薪酬时：\n\n借：生产成本    5\n\n　　贷：应付职工薪酬    5\n\n支付租金：\n\n借：应付职工薪酬    5\n\n　　贷：银行存款          5",
+                        "sort_in_group": 3,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A",
+                            "B"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "d1cf50e5-a905-4678-b8f1-127f7f345b21",
+                            "option_a": "提供汽车非货币性福利：\n\n借：管理费用      2\n\n　　贷：应付职工薪酬      2",
+                            "status": "draft",
+                            "option_b": "支付宿舍楼租金：\n\n借：应付职工薪酬      5\n\n　　贷：银行存款           5",
+                            "option_number": 4,
+                            "option_c": "计提汽车折旧费：\n\n借：管理费用      2\n\n　　贷：累计折旧      2",
+                            "sort": null,
+                            "option_d": "确认为职工租赁宿舍楼的非货币性福利：\n\n借：管理费用     5\n\n　　贷：应付职工薪酬     5",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T03:20:31.509Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（3），下列各项中，企业有关非货币性职工福利的账务处理正确的是（　　）。",
+                            "correct_options": [
+                                "A",
+                                "B"
+                            ],
+                            "analysis": "企业为行政部门经理提供汽车作为非货币性福利，确认应付职工薪酬时：\n\n借：管理费用    2\n\n　　贷：应付职工薪酬    2\n\n同时计提折旧费：\n\n借：应付职工薪酬    2\n\n　　贷：累计折旧    2\n\n企业为产品生产工人租赁宿舍楼，确认应付职工薪酬时：\n\n借：生产成本    5\n\n　　贷：应付职工薪酬    5\n\n支付租金：\n\n借：应付职工薪酬    5\n\n　　贷：银行存款          5"
+                        },
+                        "question_group": {
+                            "id": "ae7db3f8-c664-4bb3-90ef-f666a794831f"
+                        }
+                    }
+                },
+                {
+                    "sort_in_section": 3,
+                    "questions_id": {
+                        "stem": "根据资料（1）至（3），应确认应付职工薪酬的金额为（　　）万元。",
+                        "type": "q_mc_flexible",
+                        "analysis": "职工薪酬总额=400(资料1)+6(资料2)+5(资料3)+2(资料3)=413（万元）。",
+                        "sort_in_group": 4,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "c7317a87-62fc-4504-9197-1194cd014cd8",
+                            "option_a": "413",
+                            "status": "draft",
+                            "option_b": "406",
+                            "option_number": 4,
+                            "option_c": "\n400",
+                            "sort": null,
+                            "option_d": "411",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T03:20:31.516Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（1）至（3），应确认应付职工薪酬的金额为（　　）万元。",
+                            "correct_options": [
+                                "A"
+                            ],
+                            "analysis": "职工薪酬总额=400(资料1)+6(资料2)+5(资料3)+2(资料3)=413（万元）。"
+                        },
+                        "question_group": {
+                            "id": "ae7db3f8-c664-4bb3-90ef-f666a794831f"
+                        }
+                    }
+                },
+                {
+                    "sort_in_section": 4,
+                    "questions_id": {
+                        "stem": "根据资料（1），下列各项中，关于该企业分配3月份职工工资的会计处理表述正确的是（　　）。",
+                        "type": "q_mc_flexible",
+                        "analysis": "会计分录如下：\n\n借：生产成本    300\n\n　　制造费用      20\n\n　　管理费用      50\n\n　　销售费用      30\n\n　　贷：应付职工薪酬——工资      400",
+                        "sort_in_group": 1,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "B",
+                            "C",
+                            "A"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "c0cb7a06-bd7c-41bb-91c2-5ba6ba3082c9",
+                            "option_a": "借记“生产成本”科目300万元",
+                            "status": "draft",
+                            "option_b": "贷记“应付职工薪酬”科目400万元",
+                            "option_number": 4,
+                            "option_c": "借记“销售费用”科目30万元",
+                            "sort": null,
+                            "option_d": "借记“管理费用”科目70万元",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T03:20:31.481Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（1），下列各项中，关于该企业分配3月份职工工资的会计处理表述正确的是（　　）。",
+                            "correct_options": [
+                                "A",
+                                "B",
+                                "C"
+                            ],
+                            "analysis": "会计分录如下：\n\n借：生产成本    300\n\n　　制造费用      20\n\n　　管理费用      50\n\n　　销售费用      30\n\n　　贷：应付职工薪酬——工资      400"
+                        },
+                        "question_group": {
+                            "id": "ae7db3f8-c664-4bb3-90ef-f666a794831f"
+                        }
+                    }
+                },
+                {
+                    "sort_in_section": 5,
+                    "questions_id": {
+                        "stem": "根据资料（2），下列各项中，关于该企业确认并支付职工食堂补贴的会计处理正确的是(　　)。",
+                        "type": "q_mc_flexible",
+                        "analysis": "会计分录如下：\n\n确认补贴时：\n\n借：生产成本        4（200×200/10 000）\n\n　　制造费用        0.2（10×200/10 000）\n\n　　管理费用        1.2（60×200/10 000）\n\n　　销售费用        0.6（30×200/10 000）\n\n　　贷：应付职工薪酬——职工福利费        6\n\n支付补贴时：\n\n借：应付职工薪酬——职工福利费      6\n\n　　贷：银行存款                                        6",
+                        "sort_in_group": 2,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "B",
+                            "D"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "ea2dc951-1e2a-40fd-96aa-cf0cbabc3825",
+                            "option_a": "确认补贴时：\n\n借：生产成本    4\n\n　　管理费用    2\n\n　　贷：其他应付款      6",
+                            "status": "draft",
+                            "option_b": "\n确认补贴时：\n\n借：生产成本      4\n\n　　制造费用   0.2\n\n　　管理费用      1.2\n\n　　销售费用      0.6\n\n　　贷：应付职工薪酬——职工福利费      6",
+                            "option_number": 4,
+                            "option_c": "支付补贴时：\n\n借：其他应付款      6\n\n　　贷：银行存款       6",
+                            "sort": null,
+                            "option_d": "支付补贴时：\n\n借：应付职工薪酬——职工福利费      6\n\n　　贷：银行存款                                         6",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T03:20:31.501Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（2），下列各项中，关于该企业确认并支付职工食堂补贴的会计处理正确的是(　　)。",
+                            "correct_options": [
+                                "B",
+                                "D"
+                            ],
+                            "analysis": "会计分录如下：\n\n确认补贴时：\n\n借：生产成本        4（200×200/10 000）\n\n　　制造费用        0.2（10×200/10 000）\n\n　　管理费用        1.2（60×200/10 000）\n\n　　销售费用        0.6（30×200/10 000）\n\n　　贷：应付职工薪酬——职工福利费        6\n\n支付补贴时：\n\n借：应付职工薪酬——职工福利费      6\n\n　　贷：银行存款                                        6"
+                        },
+                        "question_group": {
+                            "id": "ae7db3f8-c664-4bb3-90ef-f666a794831f"
+                        }
+                    }
+                },
+                {
+                    "sort_in_section": 6,
+                    "questions_id": {
+                        "stem": "根据资料（1）至（3），下列各项中，关于甲公司持有乙公司债券公允价值变动的会计处理表述正确的是（　　）。",
+                        "type": "q_mc_flexible",
+                        "analysis": "3月31日，甲公司持有乙公司债券的公允价值变动的会计处理如下：\n\n借：交易性金融资产——公允价值变动　　40（1 040-1 000）\n\n　　贷：公允价值变动损益                                 40",
+                        "sort_in_group": 3,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A",
+                            "D"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "7bfe84cc-4c1d-42a3-af9c-b5a3478d5909",
+                            "option_a": "借记“交易性金融资产——公允价值变动”科目40万元",
+                            "status": "draft",
+                            "option_b": "借记“交易性金融资产——成本”科目20万元",
+                            "option_number": 4,
+                            "option_c": "贷记“投资收益”科目20万元",
+                            "sort": null,
+                            "option_d": "贷记“公允价值变动损益”科目40万元",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T03:16:31.220Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（1）至（3），下列各项中，关于甲公司持有乙公司债券公允价值变动的会计处理表述正确的是（　　）。",
+                            "correct_options": [
+                                "A",
+                                "D"
+                            ],
+                            "analysis": "3月31日，甲公司持有乙公司债券的公允价值变动的会计处理如下：\n\n借：交易性金融资产——公允价值变动　　40（1 040-1 000）\n\n　　贷：公允价值变动损益                                 40"
+                        },
+                        "question_group": {
+                            "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
+                        }
+                    }
+                },
+                {
+                    "sort_in_section": 7,
+                    "questions_id": {
+                        "stem": "根据期初资料、资料（1）至（4），下列各项中，关于出售乙公司债券的会计处理正确的是（　　）。",
+                        "type": "q_mc_flexible",
+                        "analysis": "4月10日，甲公司出售所持有的全部乙公司债券的会计处理如下：\n\n借：其他货币资金——存出投资款      1 126\n\n　　贷：交易性金融资产——成本              1 000\n\n　　　　　　　　　　　——公允价值变动     40\n\n　　　　投资收益                                             86（1 126-1 040）\n\n借：投资收益                6\n\n　　贷：应交税费——转让金融商品应交增值税          6",
+                        "sort_in_group": 4,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A",
+                            "C"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "1f39808e-ce70-4f64-981d-c95427fd33cf",
+                            "option_a": "借：投资收益      6\n\n   　贷：应交税费——转让金融商品应交增值税      6",
+                            "status": "draft",
+                            "option_b": "借：其他货币资金——存出投资款      1 126\n\n　　贷：交易性金融资产——成本               1 020\n\n　　　　　　　　　　　——公允价值变动      20\n\n　　　　投资收益                                             86",
+                            "option_number": 4,
+                            "option_c": "借：其他货币资金——存出投资款    1 126\n\n　　贷：交易性金融资产——成本               1 000\n\n　　　　　　　　　　　——公允价值变动      40\n\n　　　　投资收益                                              86",
+                            "sort": null,
+                            "option_d": "借：管理费用      6\n\n　　贷：应交税费——转让金融商品应交增值税      6",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T03:16:31.229Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据期初资料、资料（1）至（4），下列各项中，关于出售乙公司债券的会计处理正确的是（　　）。",
+                            "correct_options": [
+                                "A",
+                                "C"
+                            ],
+                            "analysis": "4月10日，甲公司出售所持有的全部乙公司债券的会计处理如下：\n\n借：其他货币资金——存出投资款      1 126\n\n　　贷：交易性金融资产——成本              1 000\n\n　　　　　　　　　　　——公允价值变动     40\n\n　　　　投资收益                                             86（1 126-1 040）\n\n借：投资收益                6\n\n　　贷：应交税费——转让金融商品应交增值税          6"
+                        },
+                        "question_group": {
+                            "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
+                        }
+                    }
+                },
+                {
+                    "sort_in_section": 8,
+                    "questions_id": {
+                        "stem": "根据资料（1）至（4），上述相关业务对甲公司2022年利润表中“营业利润”项目的影响金额为（　　）万元。",
+                        "type": "q_mc_flexible",
+                        "analysis": "对“营业利润”项目的影响金额=-3（资料1）+40（资料3）+86（资料4）-6（资料4）=117（万元）。",
+                        "sort_in_group": 5,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "C"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "3294e2d5-b5c1-414d-ac4b-44672b9b3b26",
+                            "option_a": "\n77",
+                            "status": "draft",
+                            "option_b": "97",
+                            "option_number": 4,
+                            "option_c": "117",
+                            "sort": null,
+                            "option_d": "103",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T03:16:31.238Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（1）至（4），上述相关业务对甲公司2022年利润表中“营业利润”项目的影响金额为（　　）万元。",
+                            "correct_options": [
+                                "C"
+                            ],
+                            "analysis": "对“营业利润”项目的影响金额=-3（资料1）+40（资料3）+86（资料4）-6（资料4）=117（万元）。"
+                        },
+                        "question_group": {
+                            "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
+                        }
+                    }
+                },
+                {
+                    "sort_in_section": 9,
+                    "questions_id": {
+                        "stem": "根据资料（2），下列各项中，关于甲公司收到债券利息的会计处理结果正确的是（　　）。",
+                        "type": "q_mc_flexible",
+                        "analysis": "收到乙公司支付的购入时已宣告但尚未领取的债券利息：\n\n借：其他货币资金——存出投资款    20\n\n　　贷：应收利息                                  20",
+                        "sort_in_group": 2,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "C",
+                            "D"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "8aaf3019-78b9-409d-99d6-d39276e2289c",
+                            "option_a": "\n交易性金融资产减少20万元",
+                            "status": "draft",
+                            "option_b": "投资收益增加20万元",
+                            "option_number": 4,
+                            "option_c": "应收利息减少20万元",
+                            "sort": null,
+                            "option_d": "其他货币资金增加20万元",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T03:16:31.213Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（2），下列各项中，关于甲公司收到债券利息的会计处理结果正确的是（　　）。",
+                            "correct_options": [
+                                "C",
+                                "D"
+                            ],
+                            "analysis": "收到乙公司支付的购入时已宣告但尚未领取的债券利息：\n\n借：其他货币资金——存出投资款    20\n\n　　贷：应收利息                                  20"
+                        },
+                        "question_group": {
+                            "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
+                        }
+                    }
+                },
+                {
+                    "sort_in_section": 10,
+                    "questions_id": {
+                        "stem": "根据期初资料和资料（1），下列各项中，关于甲公司购入乙公司债券的会计处理正确的是（　　）。",
+                        "type": "q_mc_flexible",
+                        "analysis": "3月1日，甲公司购入乙公司债券时的会计处理如下：\n\n借：交易性金融资产——成本 1 000 　　\n\n       应收利息                              20 　　\n\n       贷：其他货币资金——存出投资款 1 020 \n\n借：投资收益  3 　　\n\n       应交税费——应交增值税（进项税额）  0.18 　　\n\n       贷：其他货币资金——存出投资款               3.18",
+                        "sort_in_group": 1,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A",
+                            "B"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "9463b924-2b22-4d46-8ef8-9d4aef2cb51d",
+                            "option_a": "借：交易性金融资产——成本    1 000\n\n　　应收利息                                  20\n\n　　贷：其他货币资金——存出投资款    1 020",
+                            "status": "draft",
+                            "option_b": "\n借：投资收益    3\n\n   　应交税费——应交增值税（进项税额）    0.18\n\n   　贷：其他货币资金——存出投资款    3.18",
+                            "option_number": 4,
+                            "option_c": "借：交易性金融资产——成本     1 020\n\n　　贷：其他货币资金——存出投资款    1 020",
+                            "sort": null,
+                            "option_d": "借：管理费用    3\n\n　　应交税费——应交增值税（进项税额）    0.18\n\n　　贷：其他货币资金——存出投资款    3.18",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T03:16:31.195Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据期初资料和资料（1），下列各项中，关于甲公司购入乙公司债券的会计处理正确的是（　　）。",
+                            "correct_options": [
+                                "A",
+                                "B"
+                            ],
+                            "analysis": "3月1日，甲公司购入乙公司债券时的会计处理如下：\n\n借：交易性金融资产——成本 1 000 　　\n\n       应收利息                              20 　　\n\n       贷：其他货币资金——存出投资款 1 020 \n\n借：投资收益  3 　　\n\n       应交税费——应交增值税（进项税额）  0.18 　　\n\n       贷：其他货币资金——存出投资款               3.18"
+                        },
+                        "question_group": {
+                            "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
+                        }
+                    }
+                }
+            ],
+            "question_groups": [
+                {
+                    "sort_in_section": 1,
+                    "question_groups_id": {
+                        "id": "ae7db3f8-c664-4bb3-90ef-f666a794831f",
+                        "shared_stem": "2022年3月份，某企业发生与职工薪酬相关的事项如下：\n\n（1）本月应付职工工资总额为400万元，“工资费用分配汇总表”中列示的产品生产工人工资为300万元、车间管理人员工资为20万元、企业行政管理人员工资为50万元、专设销售机构人员工资为30万元。\n\n（2）企业下设一所职工食堂，按每月每位在岗职工200元补贴给食堂，每月末以银行存款支付。企业在岗职工共计300人，其中产品生产工人200人，车间管理人员10人，行政管理人员60人，专设销售机构人员30人。\n\n（3）企业行政部门经理10人，企业为其每人提供一辆自有汽车免费使用。每辆汽车每月计提折旧2 000元。企业为产品生产工人租赁一栋宿舍楼，每月租金50 000元，由企业承担租金，以银行存款按月支付。\n\n要求：根据上述资料，不考虑其他因素，分析回答下列小题。(答案中的金额单位用万元表示)"
+                    }
+                },
+                {
+                    "sort_in_section": 2,
+                    "question_groups_id": {
+                        "id": "16214054-0e97-4d27-81b1-bf55d1aee87f",
+                        "shared_stem": "甲公司为增值税一般纳税人。其购买债券均通过投资款专户进行，2022年甲公司发生与债券投资相关的业务如下：\n\n（1）3月1日，甲公司从二级市场购入乙公司发行的面值为950万元的债券，支付价款1 020万元（其中包含已到付息期但尚未领取的债券利息20万元），另支付交易费用3万元，取得的增值税专用发票上注明的增值税税额为0.18万元。甲公司将其划分为交易性金融资产进行管理和核算。\n\n（2）3月10日，甲公司收到乙公司支付的购入时未领取的债券利息20万元。\n\n（3）3月31日，甲公司持有乙公司债券的公允价值为1 040万元。\n\n（4）4月10日，甲公司出售所持有的全部乙公司债券，价款为1 126万元，转让乙公司债券应交增值税6万元。\n\n要求：根据上述资料，不考虑相关税费及其他因素，分析回答下列小题。（答案中的金额单位用万元表示）"
+                    }
+                }
+            ]
+        }
+    ]
+}
