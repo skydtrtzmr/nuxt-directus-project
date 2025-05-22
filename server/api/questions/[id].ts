@@ -1,3 +1,4 @@
+import { stringify } from "@primevue/core";
 import { fetchAllPaginatedData } from "~/server/utils/directusUtils";
 
 export default defineEventHandler(async (event) => {

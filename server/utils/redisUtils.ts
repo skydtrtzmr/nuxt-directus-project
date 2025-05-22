@@ -94,24 +94,25 @@ export async function getHashItemsFromCache<T>(
     }
 }
 
+// TODO 下面是获取普通数值类型的缓存的函数，暂时注释掉，因为暂时不需要
 
-export async function getItemFromCache<T>(
-    key: string, // 缓存的key
-    fetchFunction: () => Promise<any[]>, // 从数据库获取列表数据的方法
-    ttl: number = 3600 // 缓存的过期时间，默认1小时
-): Promise<T> {
-    let data = await redis.get(key);
+// export async function getItemFromCache<T>(
+//     key: string, // 缓存的key
+//     fetchFunction: () => Promise<any[]>, // 从数据库获取列表数据的方法
+//     ttl: number = 3600 // 缓存的过期时间，默认1小时
+// ): Promise<T> {
+//     let data = await redis.get(key);
 
-    if (data) {
-        // 如果缓存命中，直接返回缓存数据
-        return JSON.parse(data);
-    } else {
-        // 如果缓存未命中，从数据库获取数据更新缓存，然后再返回数据
-        await setItemsToCache(key, fetchFunction, "id", ttl);
-        let data = await redis.get(key);
-        return JSON.parse(data!);
-    }
-}
+//     if (data) {
+//         // 如果缓存命中，直接返回缓存数据
+//         return JSON.parse(data);
+//     } else {
+//         // 如果缓存未命中，从数据库获取数据更新缓存，然后再返回数据
+//         await updateCache(key, fetchFunction, ttl);
+//         let data = await redis.get(key);
+//         return JSON.parse(data!);
+//     }
+// }
 
 // 定义一个基础的接口，确保所有传入的数据对象都有 `id` 字段
 // interface WithId {
