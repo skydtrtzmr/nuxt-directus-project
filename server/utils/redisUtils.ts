@@ -120,6 +120,7 @@ export async function getHashItemsFromCache<T>(
 // }
 
 // 更新Hash列表缓存
+// [2025-05-22] 这个设计并不好，因为Hash只适合存储key-value，不适合存储列表。我现在是完全把它当列表来用了。
 export async function updateHashCache(
     key: string,
     fetchFunction: () => Promise<any[]>, // 注意这里一定返回的是个数组，因为是 Hash 列表
