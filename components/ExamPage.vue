@@ -146,6 +146,11 @@ import type {
 import { useLoadingStateStore } from "@/stores/loadingState";
 import { useExamTimer } from "@/composables/useExamTimer";
 
+const { data: paperResponse1, error } = await useFetch<Papers>(
+    `/api/papers/full/c360fcd9-8f0d-48c2-8287-996792da4958`
+);
+console.log("paperResponse1", paperResponse1.value);
+
 dayjs.extend(utc);
 
 const props = defineProps<{
@@ -195,6 +200,7 @@ const handleSidebarToggle = (collapsed: boolean) => {
 const handleSidebarResize = (width: number) => {
     sidebarWidth.value = width;
 };
+
 
 const fetchSubmittedExam = async () => {
     try {
@@ -281,6 +287,7 @@ const fetchSubmittedExam = async () => {
     }
 };
 
+
 const afterFetchSubmittedExamContent = () => {
     if (practiceSession.value.exercises_students_id) {
         // 获取试卷的详情
@@ -328,22 +335,21 @@ const fetchSubmittedPaper = async (paperId: string) => {
     const { data: paperResponse, error } = await useFetch<Papers>(
         `/api/papers/full/${paperId}`
     );
-    
+
+    console.log("paperResponse", paperResponse.value);
+
     if (paperResponse.value && typeof paperResponse.value === "object") {
         paper.value = paperResponse.value;
     }
 
     console.log("paperResponse.value", paperResponse.value);
-    
 
     console.log("paper.value", paper.value);
-    
 
     const submittedSectionsResponse = paper.value
         .paper_sections as PaperSections[];
 
     console.log("submittedSectionsResponse", submittedSectionsResponse);
-    
 
     // 新增：对获取到的章节进行排序
     submittedSectionsResponse.sort(
@@ -421,7 +427,8 @@ const fetchSubmittedPaper = async (paperId: string) => {
 
     let questionGroupsData: QuestionGroups[] = [];
     if (question_groups_id_list_local.value.length > 0) {
-        questionGroupsData = paper_section_question_group_ids as QuestionGroups[];
+        questionGroupsData =
+            paper_section_question_group_ids as QuestionGroups[];
     }
 
     sectionList.forEach((section) => {
@@ -493,7 +500,7 @@ const fetchSubmittedPaper = async (paperId: string) => {
     submittedPaperSections.value = sectionList;
 
     console.log("submittedPaperSections", submittedPaperSections.value);
-    
+
     if (sectionList.length > 0) {
         if (
             sectionList[0].question_mode === "group" &&
@@ -620,8 +627,12 @@ const startCurrentTimeUpdate_local = () => {
     }
 };
 
+
+await fetchSubmittedExam(); // fetchSubmittedExam 内部会处理已提交的情况
+
+
+
 onMounted(async () => {
-    await fetchSubmittedExam(); // fetchSubmittedExam 内部会处理已提交的情况
 
     await nextTick();
     isClient.value = true;
