@@ -7,7 +7,7 @@ import { updateHashCache, updateListCache, setItemsToCache } from "~~/server/uti
 import directus_client from "~~/server/lib/directus";
 import { readUsers, readItems } from "@directus/sdk";
 
-// 概念性的、用于获取完整试卷数据的 fields 数组
+// 用于获取完整试卷数据的 fields 数组
 const comprehensivePaperFields = [
   "id",
   "title",

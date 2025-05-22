@@ -373,13 +373,9 @@ const fetchSubmittedPaper = async (paperId: string) => {
     );
 
     if (allSectionIds.length > 0) {
-        allSectionQuestions = (await $fetch(
-            "/api/paper_sections_questions/list",
-            {
-                method: "POST",
-                body: { ids: paper_sections_question_ids },
-            }
-        )) as PaperSectionsQuestions[];
+        allSectionQuestions = paper_sections_question_ids as PaperSectionsQuestions[];
+        console.log("allSectionQuestions", allSectionQuestions);
+        
         const allQuestionIds = allSectionQuestions.map(
             (sq) => sq.questions_id as string
         );
