@@ -3,54 +3,71 @@
 // 定期更新缓存
 
 import { defineCronHandler } from "#nuxt/cron";
-import { updateHashCache, updateListCache } from "~~/server/utils/redisUtils";
+import { updateHashCache, updateListCache, setItemsToCache } from "~~/server/utils/redisUtils";
 import directus_client from "~~/server/lib/directus";
 import { readUsers, readItems } from "@directus/sdk";
 
-export default defineCronHandler("everyThirtyMinutes", async () => {
-    
-    // 获取所有学生用户
-    updateHashCache(
-        "student_users",
-        async () =>
-            await directus_client.request(
-                readUsers({
-                    fields: ["id,email"],
-                    sort: "email",
-                    filter: {
-                        role: {
-                            name: {
-                                _eq: "学生",
-                            },
-                        },
-                    },
-                    limit: -1,
-                })
-            ),
-        3600 // 1 hour
-    );
+// 概念性的、用于获取完整试卷数据的 fields 数组
+const comprehensivePaperFields = [
+  "id",
+  "title",
+  "description",
+  "total_point_value",
+  "total_question_count",
+  // 关联的试卷章节 (paper_sections)
+  "paper_sections.id",
+  "paper_sections.paper_id",
+  "paper_sections.sort_in_paper",
+  "paper_sections.title",
+  "paper_sections.description",
+  "paper_sections.points_per_question",
+  "paper_sections.question_type",
+  "paper_sections.question_mode",
+  "paper_sections.total_question_points",
+  "paper_sections.questions",
+  "paper_sections.question_groups",
+  // 章节中的问题 (通过 paper_sections_questions 关联)
+  "paper_sections.questions.id", // 这是 paper_sections_questions 中间表条目的ID
+//   "paper_sections.questions.stem",
+//   "paper_sections.questions.type",
+//   "paper_sections.questions.analysis",
+//   "paper_sections.questions.q_mc_single.*",
+//   "paper_sections.questions.q_mc_multi.*",
+//   "paper_sections.questions.q_mc_binary.*",
+//   "paper_sections.questions.q_mc_flexible.*",
+//   "paper_sections.questions.question_group.*",
+//   "paper_sections.questions.sort_in_group",
+//   "paper_sections.questions.correct_ans_select_radio",
+//   "paper_sections.questions.correct_ans_select_multiple_checkbox",
+//   // 章节中的题组 (通过 paper_sections_question_groups 关联)
+//   "paper_sections.question_groups.id", // 这是 paper_sections_question_groups 中间表条目的ID
+//   "paper_sections.question_groups.sort_in_section", // 题组在章节内的排序
+];
 
-    console.log("准备执行返回学生list");
-    // 仅测试用：返回学生用户的list
-    updateListCache(
-        "student_user_email_list",
+export default defineCronHandler("everyMinute", async () => {
+
+    // 设置试卷列表缓存（包含完整的试卷数据）
+    setItemsToCache(
+        "papers_full_data", // 新的缓存键
         async () =>
             await directus_client.request(
-                readUsers({
-                    fields: ["email"],
-                    sort: "email",
-                    filter: {
-                        role: {
-                            name: {
-                                _eq: "学生",
-                            },
-                        },
-                    },
-                    limit: -1,
+                readItems("papers", {
+                    // filter: {
+                    //     status: {
+                    //         _eq: "已发布",
+                    //     },
+                    // },
+                    fields: comprehensivePaperFields,
+                    limit: -1, // 获取所有符合条件的试卷
+                    // 如果需要对关联集合进行排序或过滤，可能需要使用 'deep' 参数，具体语法取决于 Directus SDK 版本
+                    // deep: {
+                    //   paper_sections: { _sort: ["sort_in_paper"] },
+                    //   "paper_sections.questions": { _sort: ["sort_in_section"] }
+                    // }
                 })
             ),
-        "email",
-        3600
+        "id",
+        3600 // 缓存时间，例如1小时 (3600秒)
     );
 });
 
