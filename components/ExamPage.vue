@@ -461,13 +461,9 @@ const fetchSubmittedSectionsList = async (sections: any[]) => {
             const questionData = questionsData.find(
                 (item) => item.id === (sq.questions_id as string)
             );
-            const result = questionResults.value.find(
-                (r) => r.question_in_paper_id === sq.id
-            );
             return {
                 ...sq,
                 questions_id: questionData || null,
-                result: result || null,
             };
         });
         section.questions = sectionQuestionsWithData;
@@ -530,8 +526,8 @@ const fetchSubmittedSectionsList = async (sections: any[]) => {
                 groupQuestionIds.includes(q.id)
             );
             const sortedGroupQuestions = [...groupQuestions].sort((a, b) => {
-                const aSort = a.questions_id.sort_in_group ?? 999;
-                const bSort = b.questions_id.sort_in_group ?? 999;
+                const aSort = a.questions_id?.sort_in_group ?? 999;
+                const bSort = b.questions_id?.sort_in_group ?? 999;
                 if (aSort === bSort)
                     return (a.sort_in_section || 0) - (b.sort_in_section || 0);
                 return aSort - bSort;
@@ -961,8 +957,8 @@ const handleQuestionGroupClick = async (group: any, section: PaperSections) => {
     // 题组模式下按sort_in_group字段排序题目
     const sortedGroupQuestions = [...groupQuestions].sort((a, b) => {
         // 优先使用sort_in_group排序
-        const aSort = a.questions_id.sort_in_group ?? 999;
-        const bSort = b.questions_id.sort_in_group ?? 999;
+        const aSort = a.questions_id?.sort_in_group ?? 999;
+        const bSort = b.questions_id?.sort_in_group ?? 999;
 
         // 如果sort_in_group相同或不存在，再使用sort_in_section作为备选
         if (aSort === bSort) {
