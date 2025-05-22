@@ -201,9 +201,9 @@ const unifiedFlagIcon = computed(() => {
 // Unified flag label for the bottom button
 const unifiedFlagLabel = computed(() => {
     if (isGroupMode.value) {
-        return areAllSubQuestionsInGroupFlagged.value ? '取消标记本组' : '标记本题组';
+        return areAllSubQuestionsInGroupFlagged.value ? '取消标记' : '标记本题';
     }
-    return isSingleQuestionFlagged.value ? '取消标记本题' : '标记本题';
+    return isSingleQuestionFlagged.value ? '取消标记' : '标记本题';
 });
 
 // Unified toggle flag function for the bottom button
