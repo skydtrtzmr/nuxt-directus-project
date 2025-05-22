@@ -326,19 +326,32 @@ const userData = computed(() => {
 
 const fetchSubmittedPaper = async (paperId: string) => {
     const { data: paperResponse, error } = await useFetch<Papers>(
-        `/api/papers/full/${paperId}`,
+        `/api/papers/full/${paperId}`
     );
+    
     if (paperResponse.value && typeof paperResponse.value === "object") {
         paper.value = paperResponse.value;
     }
 
-    const submittedSectionsResponse = paper.value.paper_sections as PaperSections[];
+    console.log("paperResponse.value", paperResponse.value);
+    
+
+    console.log("paper.value", paper.value);
+    
+
+    const submittedSectionsResponse = paper.value
+        .paper_sections as PaperSections[];
+
+    console.log("submittedSectionsResponse", submittedSectionsResponse);
+    
 
     // 新增：对获取到的章节进行排序
     submittedSectionsResponse.sort(
         (a, b) => (a.sort_in_paper || 0) - (b.sort_in_paper || 0)
     );
     const sectionList = submittedSectionsResponse;
+
+    console.log("sectionList", sectionList);
 
     const questionResultsData = await getItems<QuestionResults>({
         collection: "question_results",
@@ -373,9 +386,10 @@ const fetchSubmittedPaper = async (paperId: string) => {
     );
 
     if (allSectionIds.length > 0) {
-        allSectionQuestions = paper_sections_question_ids as PaperSectionsQuestions[];
+        allSectionQuestions =
+            paper_sections_question_ids as PaperSectionsQuestions[];
         console.log("allSectionQuestions", allSectionQuestions);
-        
+
         const allQuestionIds = allSectionQuestions.map(
             (sq) => sq.questions_id as string
         );
@@ -392,13 +406,7 @@ const fetchSubmittedPaper = async (paperId: string) => {
             .map((section) => section.id);
 
         if (groupModeSectionIds.length > 0) {
-            allSectionQuestionGroups = (await $fetch(
-                "/api/paper_sections_question_groups/list",
-                {
-                    method: "POST",
-                    body: { ids: paper_section_question_group_ids },
-                }
-            )) as PaperSectionsQuestionGroups[];
+            allSectionQuestionGroups = paper_section_question_group_ids;
             // 将所有题组ID添加到 question_groups_id_list 中
             const allGroupIds = allSectionQuestionGroups.map(
                 (sgq) => sgq.question_groups_id as string
@@ -409,19 +417,11 @@ const fetchSubmittedPaper = async (paperId: string) => {
         }
     }
 
-    const questionsData = (await $fetch("/api/questions/list", {
-        method: "POST",
-        body: { ids: Array.from(new Set(question_id_list_local.value)) },
-    })) as Questions[];
+    const questionsData = paper_sections_question_ids as Questions[];
 
     let questionGroupsData: QuestionGroups[] = [];
     if (question_groups_id_list_local.value.length > 0) {
-        questionGroupsData = (await $fetch("/api/question_groups/list", {
-            method: "POST",
-            body: {
-                ids: Array.from(new Set(question_groups_id_list_local.value)),
-            },
-        })) as QuestionGroups[];
+        questionGroupsData = paper_section_question_group_ids as QuestionGroups[];
     }
 
     sectionList.forEach((section) => {
@@ -491,6 +491,9 @@ const fetchSubmittedPaper = async (paperId: string) => {
     });
 
     submittedPaperSections.value = sectionList;
+
+    console.log("submittedPaperSections", submittedPaperSections.value);
+    
     if (sectionList.length > 0) {
         if (
             sectionList[0].question_mode === "group" &&
