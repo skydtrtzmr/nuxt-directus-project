@@ -1,6 +1,11 @@
 ---
 description: 
 globs: 
+alwaysApply: false
+---
+---
+description: 
+globs: 
 alwaysApply: true
 ---
 
@@ -34,6 +39,14 @@ alwaysApply: true
 - 在 `components/` 目录下创建新组件。
 - 在 `pages/` 目录下创建新页面。
 - 修改 `nuxt.config.ts` 来调整项目配置。
+
+进行改动时，尽量不要动改动目标以外的东西。
+
+不要用意义不明的太短的缩写。
+
+进行改动时，注意保留注释。
+
+用中文进行注释。
 
 ## 其他
 
