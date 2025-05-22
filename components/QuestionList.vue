@@ -375,11 +375,11 @@ const isGroupCompleted = (group: EnhancedPaperSectionGroup, section: PaperSectio
 const isGroupFlagged = (group: EnhancedPaperSectionGroup, section: PaperSections): boolean => {
     if (!group || !group.group_question_ids || group.group_question_ids.length === 0) return false;
     const questionIdsInGroup = group.group_question_ids;
-    console.log(`[QuestionList] Checking group flags for group ${typeof group.id === 'string' ? group.id : JSON.stringify(group.id)}, question IDs:`, questionIdsInGroup);
+    // console.log(`[QuestionList] Checking group flags for group ${typeof group.id === 'string' ? group.id : JSON.stringify(group.id)}, question IDs:`, questionIdsInGroup);
 
     return questionIdsInGroup.some(qId => {
         const result = getQuestionResultById(qId);
-        console.log(`[QuestionList] For qId ${qId}, result:`, result ? { id: result.id, flagged: result.is_flagged, q_in_p_id: result.question_in_paper_id } : null);
+        // console.log(`[QuestionList] For qId ${qId}, result:`, result ? { id: result.id, flagged: result.is_flagged, q_in_p_id: result.question_in_paper_id } : null);
         return !!result && result.is_flagged === true;
     });
 };
