@@ -121,7 +121,7 @@ export function useExamTimer() {
 
         examEndTime_dayjs_ref.value = calculatedEndTime;
         isLoading_ref.value = false; // 加载完成
-        _updateInterval(); // 调用一次以计算初始 remainingSeconds 和 isTimeUp 状态
+        _startCountdownInternal(); // 启动内部倒计时
     };
 
     // 内部方法：更新倒计时时间间隔
@@ -140,46 +140,49 @@ export function useExamTimer() {
                 console.log("[useExamTimer] Time is up! Setting isTimeUp_ref to true.");
                 isTimeUp_ref.value = true;
             }
-            stopCountdown(); // 调用暴露的停止方法
+            _stopCountdownInternal(); // 停止倒计时
         } else {
             remainingSeconds_ref.value = diffSeconds;
             isTimeUp_ref.value = false; // 如果还有剩余时间，确保 isTimeUp 为 false
         }
     };
 
-    // 将 _startCountdownInternal 重命名并公开为 startCountdown
-    const startCountdown = () => {
-        // 确保只在客户端执行
-        if (!process.client) {
-            console.warn("[useExamTimer] startCountdown called on server. Aborting.");
-            return;
-        }
-        
-        stopCountdown(); // 先清除已存在的计时器
+    // 内部方法：启动倒计时
+    const _startCountdownInternal = () => {
+        _stopCountdownInternal(); // 先清除已存在的计时器
 
+        // 如果仍在加载中，则不启动 (initializeTimer 会在加载完成后调用此方法)
         if (isLoading_ref.value) {
-            console.warn("[useExamTimer] 无法启动倒计时: 数据仍在加载中");
             return;
         }
-        if (!examEndTime_dayjs_ref.value || !examEndTime_dayjs_ref.value.isValid()) {
+        // 如果结束时间无效，则无法启动倒计时
+        if (
+            !examEndTime_dayjs_ref.value ||
+            !examEndTime_dayjs_ref.value.isValid()
+        ) {
             console.error("[useExamTimer] 无法启动倒计时: 结束时间无效");
-            if (!isTimeUp_ref.value) isTimeUp_ref.value = true;
+            isTimeUp_ref.value = true; // 标记为时间已到
             remainingSeconds_ref.value = 0;
             return;
         }
 
         _updateInterval(); // 立即执行一次更新
 
-        if (examEndTime_dayjs_ref.value.isAfter(dayjs.utc()) && !countdownInterval_ref.value) {
+        // 仅当确实有剩余时间时才设置计时器
+        if (examEndTime_dayjs_ref.value.isAfter(dayjs.utc())) {
             countdownInterval_ref.value = setInterval(_updateInterval, 1000);
-        } else if (examEndTime_dayjs_ref.value.isBefore(dayjs.utc()) && !isTimeUp_ref.value) {
-            if (!isTimeUp_ref.value) isTimeUp_ref.value = true; // 确保时间到期状态正确
-            remainingSeconds_ref.value = 0;
+        } else {
+            // 如果结束时间已过，_updateInterval 会设置 isTimeUp
+            if (!isTimeUp_ref.value) {
+                // 确保 isTimeUp 为 true (如果结束时间已过)
+                isTimeUp_ref.value = true;
+                remainingSeconds_ref.value = 0;
+            }
         }
     };
 
-    // 将 _stopCountdownInternal 重命名并公开为 stopCountdown
-    const stopCountdown = () => {
+    // 内部方法：停止倒计时
+    const _stopCountdownInternal = () => {
         if (countdownInterval_ref.value) {
             clearInterval(countdownInterval_ref.value);
             countdownInterval_ref.value = null;
@@ -188,7 +191,7 @@ export function useExamTimer() {
 
     // 组件卸载时清除计时器
     onUnmounted(() => {
-        stopCountdown();
+        _stopCountdownInternal();
     });
 
     // 返回给外部使用的状态和方法
@@ -209,7 +212,6 @@ export function useExamTimer() {
         formattedExamEndTime: formattedExamEndTime_ref, // 格式化后的考试结束时间字符串
 
         initializeTimer, // 初始化计时器方法
-        startCountdown, // 暴露启动方法
-        stopCountdown,  // 暴露停止方法
+        // 通常不需要从外部调用内部的启动/停止方法
     };
 }
