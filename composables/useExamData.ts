@@ -30,15 +30,13 @@ export function useExamData() {
     } | null>(null);
     const shouldShowFinalSubmissionDialog = ref(false);
 
-    const fetchQuestionResults = async(
-        practice_session_id: string
-    ) =>{
+    const fetchQuestionResults = async (practice_session_id: string) => {
         // 这个依然保持从directus直接获取，而非从redis获取。
         const questionResultsData = await getItems<QuestionResults>({
             collection: "question_results",
             params: {
                 filter: {
-                    practice_session_id
+                    practice_session_id,
                 },
                 fields: [
                     "id",
@@ -54,7 +52,7 @@ export function useExamData() {
             },
         });
         questionResults.value = questionResultsData;
-    }
+    };
 
     const fetchSubmittedSectionsList = async (
         sections: PaperSections[],
@@ -71,7 +69,6 @@ export function useExamData() {
         )) as PaperSections[];
 
         console.log("submittedSectionsResponse:", submittedSectionsResponse);
-        
 
         submittedSectionsResponse.sort(
             (a, b) => (a.sort_in_paper || 0) - (b.sort_in_paper || 0)
@@ -216,6 +213,10 @@ export function useExamData() {
         });
 
         submittedPaperSections.value = sectionList;
+        console.log(
+            "submittedPaperSections.value:",
+            submittedPaperSections.value
+        );
         if (sectionList.length > 0) {
             if (
                 sectionList[0].question_mode === "group" &&
@@ -276,7 +277,7 @@ export function useExamData() {
             title: paperFullData.title,
             total_point_value: paperFullData.total_point_value,
             total_question_count: paperFullData.total_question_count,
-            paper_sections: paperFullData.paper_sections.map(s => s.id),
+            paper_sections: paperFullData.paper_sections.map((s) => s.id),
             "triggers-do4gvh": "",
             save_and_stay: "",
         };
@@ -286,10 +287,6 @@ export function useExamData() {
             await fetchSubmittedSectionsList(
                 paperResponse.paper_sections as PaperSections[],
                 current_selected_question_ref
-            );
-            console.log(
-                "submittedPaperSections.value:",
-                submittedPaperSections.value
             );
             await fetchQuestionResults(current_practice_session_id);
         }
