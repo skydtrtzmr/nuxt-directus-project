@@ -31,7 +31,7 @@ export function useExamData() {
     const shouldShowFinalSubmissionDialog = ref(false);
 
     const fetchSubmittedSectionsList = async (
-        sections: any[],
+        sections: PaperSections[],
         current_practice_session_id: string,
         current_selected_question_ref: Ref<any>
     ) => {
@@ -44,6 +44,9 @@ export function useExamData() {
                 },
             }
         )) as PaperSections[];
+
+        console.log();
+        
 
         submittedSectionsResponse.sort(
             (a, b) => (a.sort_in_paper || 0) - (b.sort_in_paper || 0)
@@ -278,7 +281,7 @@ export function useExamData() {
         if (paperResponse) {
             paper.value = paperResponse;
             await fetchSubmittedSectionsList(
-                paperResponse.paper_sections as any[],
+                paperResponse.paper_sections as PaperSections[],
                 current_practice_session_id,
                 current_selected_question_ref
             );
