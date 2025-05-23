@@ -70,7 +70,7 @@ export function useQuestionNavigation(
 
         if (direction === 1) { // Next question
             const nextQuestionInArr = sortedSectionQuestions.find(
-                q => q.sort_in_section > currentSortInSection
+                q => q.sort_in_section! > currentSortInSection
             );
             if (nextQuestionInArr) {
                 selectedQuestion.value = {
@@ -90,7 +90,7 @@ export function useQuestionNavigation(
             }
         } else { // Previous question
             const prevQuestionsInArr = sortedSectionQuestions.filter(
-                q => q.sort_in_section < currentSortInSection
+                q => q.sort_in_section! < currentSortInSection
             );
             if (prevQuestionsInArr.length > 0) {
                 selectedQuestion.value = {
