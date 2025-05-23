@@ -1,4 +1,4 @@
-import { ref, type Ref } from "vue";
+import { ref, type Ref, watchEffect } from "vue";
 import type {
     PracticeSessions,
     Papers,
@@ -23,10 +23,18 @@ export function useExamData() {
     const practiceSessionTime = ref<PracticeSessions>({} as PracticeSessions);
 
     // This will be returned to ExamPage to trigger side effects
-    const timerInitParams = ref<{ actualStartISO: string; durationMins: number; extraMins: number } | null>(null);
+    const timerInitParams = ref<{
+        actualStartISO: string;
+        durationMins: number;
+        extraMins: number;
+    } | null>(null);
     const shouldShowFinalSubmissionDialog = ref(false);
 
-    const fetchSubmittedSectionsList = async (sections: any[], current_practice_session_id: string, current_selected_question_ref: Ref<any>) => {
+    const fetchSubmittedSectionsList = async (
+        sections: any[],
+        current_practice_session_id: string,
+        current_selected_question_ref: Ref<any>
+    ) => {
         const submittedSectionsResponse = (await $fetch(
             "/api/paper_sections/list",
             {
@@ -67,7 +75,9 @@ export function useExamData() {
         const question_id_list_local = ref<string[]>([]);
         const question_groups_id_list_local = ref<string[]>([]);
 
-        const paper_sections_question_ids = sectionList.flatMap((s) => s.questions);
+        const paper_sections_question_ids = sectionList.flatMap(
+            (s) => s.questions
+        );
         const paper_section_question_group_ids = sectionList.flatMap(
             (s) => s.question_groups
         );
@@ -94,7 +104,10 @@ export function useExamData() {
             .filter((section) => section.question_mode === "group")
             .map((section) => section.id);
 
-        if (groupModeSectionIds.length > 0 && paper_section_question_group_ids.length > 0) {
+        if (
+            groupModeSectionIds.length > 0 &&
+            paper_section_question_group_ids.length > 0
+        ) {
             allSectionQuestionGroups = (await $fetch(
                 "/api/paper_sections_question_groups/list",
                 {
@@ -120,7 +133,9 @@ export function useExamData() {
             questionGroupsData = (await $fetch("/api/question_groups/list", {
                 method: "POST",
                 body: {
-                    ids: Array.from(new Set(question_groups_id_list_local.value)),
+                    ids: Array.from(
+                        new Set(question_groups_id_list_local.value)
+                    ),
                 },
             })) as QuestionGroups[];
         }
@@ -129,17 +144,20 @@ export function useExamData() {
             const currentSectionQuestions = allSectionQuestions
                 .filter((sq) => sq.paper_sections_id === section.id)
                 .sort(
-                    (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
+                    (a, b) =>
+                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
                 );
-            const sectionQuestionsWithData = currentSectionQuestions.map((sq) => {
-                const questionData = questionsData.find(
-                    (item) => item.id === (sq.questions_id as string)
-                );
-                return {
-                    ...sq,
-                    questions_id: questionData || null,
-                };
-            });
+            const sectionQuestionsWithData = currentSectionQuestions.map(
+                (sq) => {
+                    const questionData = questionsData.find(
+                        (item) => item.id === (sq.questions_id as string)
+                    );
+                    return {
+                        ...sq,
+                        questions_id: questionData || null,
+                    };
+                }
+            );
             section.questions = sectionQuestionsWithData;
 
             if (section.question_mode === "group") {
@@ -152,7 +170,8 @@ export function useExamData() {
                 const sectionQuestionGroupsWithData = currentSectionGroups.map(
                     (sgq) => {
                         const questionGroupData = questionGroupsData.find(
-                            (item) => item.id === (sgq.question_groups_id as string)
+                            (item) =>
+                                item.id === (sgq.question_groups_id as string)
                         );
                         if (questionGroupData) {
                             const groupQuestions = section.questions.filter(
@@ -167,14 +186,17 @@ export function useExamData() {
                                     return (
                                         (typeof qGroup === "string"
                                             ? qGroup
-                                            : qGroup.id) === questionGroupData.id
+                                            : qGroup.id) ===
+                                        questionGroupData.id
                                     );
                                 }
                             );
                             return {
                                 ...sgq,
                                 question_groups_id: questionGroupData || null,
-                                group_question_ids: groupQuestions.map((q) => q.id),
+                                group_question_ids: groupQuestions.map(
+                                    (q) => q.id
+                                ),
                             };
                         }
                         return {
@@ -199,13 +221,18 @@ export function useExamData() {
                 const groupQuestions = sectionList[0].questions.filter((q) =>
                     groupQuestionIds.includes(q.id)
                 );
-                const sortedGroupQuestions = [...groupQuestions].sort((a, b) => {
-                    const aSort = a.questions_id?.sort_in_group ?? 999;
-                    const bSort = b.questions_id?.sort_in_group ?? 999;
-                    if (aSort === bSort)
-                        return (a.sort_in_section || 0) - (b.sort_in_section || 0);
-                    return aSort - bSort;
-                });
+                const sortedGroupQuestions = [...groupQuestions].sort(
+                    (a, b) => {
+                        const aSort = a.questions_id?.sort_in_group ?? 999;
+                        const bSort = b.questions_id?.sort_in_group ?? 999;
+                        if (aSort === bSort)
+                            return (
+                                (a.sort_in_section || 0) -
+                                (b.sort_in_section || 0)
+                            );
+                        return aSort - bSort;
+                    }
+                );
                 current_selected_question_ref.value = {
                     ...firstGroup,
                     isGroupMode: true,
@@ -220,12 +247,17 @@ export function useExamData() {
                 sectionList[0].questions &&
                 sectionList[0].questions.length > 0
             ) {
-                current_selected_question_ref.value = sectionList[0].questions[0];
+                current_selected_question_ref.value =
+                    sectionList[0].questions[0];
             }
         }
     };
 
-    const fetchSubmittedPaper = async (paperId: string, current_practice_session_id: string, current_selected_question_ref: Ref<any>) => {
+    const fetchSubmittedPaper = async (
+        paperId: string,
+        current_practice_session_id: string,
+        current_selected_question_ref: Ref<any>
+    ) => {
         const paperResponse = await getItemById<Papers>({
             collection: "papers",
             id: paperId,
@@ -240,11 +272,22 @@ export function useExamData() {
         });
         if (paperResponse) {
             paper.value = paperResponse;
-            await fetchSubmittedSectionsList(paperResponse.paper_sections as any[], current_practice_session_id, current_selected_question_ref);
+            await fetchSubmittedSectionsList(
+                paperResponse.paper_sections as any[],
+                current_practice_session_id,
+                current_selected_question_ref
+            );
+            console.log(
+                "submittedPaperSections.value:",
+                submittedPaperSections.value
+            );
         }
     };
 
-    const afterFetchSubmittedExamContent = async (current_practice_session_id: string, current_selected_question_ref: Ref<any>) => {
+    const afterFetchSubmittedExamContent = async (
+        current_practice_session_id: string,
+        current_selected_question_ref: Ref<any>
+    ) => {
         if (practiceSession.value.exercises_students_id) {
             const esId = practiceSession.value.exercises_students_id;
             if (
@@ -256,13 +299,21 @@ export function useExamData() {
                 const exercisesId = esId.exercises_id;
                 if (typeof exercisesId === "object" && "paper" in exercisesId) {
                     const paperId = exercisesId.paper as string;
-                    await fetchSubmittedPaper(paperId, current_practice_session_id, current_selected_question_ref);
+                    await fetchSubmittedPaper(
+                        paperId,
+                        current_practice_session_id,
+                        current_selected_question_ref
+                    );
                 }
             }
         }
     };
 
-    const loadExamData = async (current_practice_session_id: string, exam_page_mode: string, current_selected_question_ref: Ref<any>) => {
+    const loadExamData = async (
+        current_practice_session_id: string,
+        exam_page_mode: string,
+        current_selected_question_ref: Ref<any>
+    ) => {
         try {
             const practiceSessionResponse: PracticeSessions =
                 await getItemById<PracticeSessions>({
@@ -302,9 +353,13 @@ export function useExamData() {
                     return; // Exit early if already submitted and not in review mode
                 }
 
-                await afterFetchSubmittedExamContent(current_practice_session_id, current_selected_question_ref);
+                await afterFetchSubmittedExamContent(
+                    current_practice_session_id,
+                    current_selected_question_ref
+                );
 
-                const actualStartISO = practiceSessionTime.value.actual_start_time;
+                const actualStartISO =
+                    practiceSessionTime.value.actual_start_time;
                 let durationMins = 0;
                 let extraMins = 0;
 
@@ -323,11 +378,16 @@ export function useExamData() {
                 }
 
                 if (actualStartISO) {
-                    timerInitParams.value = { actualStartISO, durationMins, extraMins };
+                    timerInitParams.value = {
+                        actualStartISO,
+                        durationMins,
+                        extraMins,
+                    };
                 } else {
                     console.error(
                         "useExamData: Timer init params incomplete - actual_start_time missing.",
-                        "actualStartISO was:", actualStartISO
+                        "actualStartISO was:",
+                        actualStartISO
                     );
                 }
             } else {
@@ -337,6 +397,20 @@ export function useExamData() {
             console.error("useExamData: Error in loadExamData:", error);
         }
     };
+
+    // 调试日志，用于重构时确认数据
+    watchEffect(() => {
+        console.log("------ 调试日志: useExamData ------");
+        console.log("practiceSession:", practiceSession.value);
+        console.log("paper:", paper.value);
+        console.log("submittedPaperSections:", submittedPaperSections.value);
+        console.log("questionResults:", questionResults.value);
+        console.log("examScore:", examScore.value);
+        console.log("practiceSessionTime:", practiceSessionTime.value);
+        console.log("timerInitParams:", timerInitParams.value);
+        console.log("shouldShowFinalSubmissionDialog:", shouldShowFinalSubmissionDialog.value);
+        console.log("------------------------------------");
+    });
 
     return {
         practiceSession,
@@ -350,4 +424,4 @@ export function useExamData() {
         timerInitParams, // Expose for ExamPage to use
         shouldShowFinalSubmissionDialog, // Expose for ExamPage to use
     };
-} 
+}

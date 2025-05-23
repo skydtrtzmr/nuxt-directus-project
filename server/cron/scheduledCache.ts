@@ -6,6 +6,7 @@ import { defineCronHandler } from "#nuxt/cron";
 import { updateHashCache, updateListCache, setItemsToCache } from "~~/server/utils/redisUtils";
 import directus_client from "~~/server/lib/directus";
 import { readUsers, readItems } from "@directus/sdk";
+import { log } from "console";
 
 // 用于获取完整试卷数据的 fields 数组
 const comprehensivePaperFields = [
@@ -49,7 +50,8 @@ const comprehensivePaperFields = [
 ];
 
 export default defineCronHandler("everyFiveMinutes", async () => {
-
+    console.log("scheduledCache");
+    
     // 设置试卷列表缓存（包含完整的试卷数据）
     setItemsToCache(
         "papers_full_data", // 新的缓存键

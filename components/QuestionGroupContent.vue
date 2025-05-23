@@ -356,6 +356,9 @@ const groupQuestions = computed(() => {
     }
     return [];
 });
+
+console.log("groupQuestions: ", groupQuestions.value);
+
 </script>
 
 <style scoped>
