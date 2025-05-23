@@ -199,27 +199,27 @@ const { data: examInitialData, pending: examDataPending, error: examDataError } 
 
         // 1. Fetch PracticeSession details
         const psResponse = await getItemById<PracticeSessions>({
-            collection: "practice_sessions",
-            id: practice_session_id,
-            params: {
-                fields: [
-                    "id",
-                    "exercises_students_id.exercises_id.paper",
-                    "exercises_students_id.students_id.name",
-                    "exercises_students_id.students_id.number",
-                    "exercises_students_id.students_id.email",
-                    "exercises_students_id.students_id.class.name",
-                    "exercises_students_id.exercises_id.title",
-                    "exercises_students_id.exercises_id.duration",
-                    "score",
-                    "actual_start_time",
-                    "actual_end_time",
-                    "extra_time",
-                    "expected_end_time",
-                    "submit_status",
-                ],
-            },
-        });
+                collection: "practice_sessions",
+                id: practice_session_id,
+                params: {
+                    fields: [
+                        "id",
+                        "exercises_students_id.exercises_id.paper",
+                        "exercises_students_id.students_id.name",
+                        "exercises_students_id.students_id.number",
+                        "exercises_students_id.students_id.email",
+                        "exercises_students_id.students_id.class.name",
+                        "exercises_students_id.exercises_id.title",
+                        "exercises_students_id.exercises_id.duration",
+                        "score",
+                        "actual_start_time",
+                        "actual_end_time",
+                        "extra_time",
+                        "expected_end_time",
+                        "submit_status",
+                    ],
+                },
+            });
 
         if (!psResponse) {
             console.error(`ExamPage: Failed to fetch practice session for ID: ${practice_session_id}`);
@@ -250,22 +250,22 @@ const { data: examInitialData, pending: examDataPending, error: examDataError } 
 
         // 3. Fetch QuestionResults
         const qResultsData = await getItems<QuestionResults>({
-            collection: "question_results",
-            params: {
+        collection: "question_results",
+        params: {
                 filter: { practice_session_id: practice_session_id },
-                fields: [
-                    "id",
-                    "practice_session_id",
+            fields: [
+                "id",
+                "practice_session_id",
                     "question_in_paper_id",
-                    "question_type",
-                    "point_value",
-                    "score",
-                    "submit_ans_select_radio",
-                    "submit_ans_select_multiple_checkbox",
-                    "is_flagged",
-                ],
-            },
-        });
+                "question_type",
+                "point_value",
+                "score",
+                "submit_ans_select_radio",
+                "submit_ans_select_multiple_checkbox",
+                "is_flagged",
+            ],
+        },
+    });
 
         return {
             practiceSession: psResponse,
@@ -337,24 +337,24 @@ watch(examInitialData, (newData) => {
 
                 const groupQuestions = firstSection.questions.filter(q => groupQuestionPsqIds.includes((q as any).id));
 
-                const sortedGroupQuestions = [...groupQuestions].sort((a, b) => {
+            const sortedGroupQuestions = [...groupQuestions].sort((a, b) => {
                     const aData = (a as PaperSectionsQuestions).questions_id as Questions;
                     const bData = (b as PaperSectionsQuestions).questions_id as Questions;
                     const aSort = aData?.sort_in_group ?? 999;
                     const bSort = bData?.sort_in_group ?? 999;
                     if (aSort === bSort) return ((a as PaperSectionsQuestions).sort_in_section || 0) - ((b as PaperSectionsQuestions).sort_in_section || 0);
-                    return aSort - bSort;
-                });
+                return aSort - bSort;
+            });
                 
-                selectedQuestion.value = {
+            selectedQuestion.value = {
                     ...(firstGroup as any),
-                    isGroupMode: true,
+                isGroupMode: true,
                     questionGroup: questionGroupData,
-                    questions_id: { type: "group" },
+                questions_id: { type: "group" },
                     section_id: firstSection.id,
                     paper_sections_id: firstSection.id,
-                    groupQuestions: sortedGroupQuestions,
-                };
+                groupQuestions: sortedGroupQuestions,
+            };
             } else if (firstSection.questions && firstSection.questions.length > 0) {
                 selectedQuestion.value = firstSection.questions[0];
             } else {
@@ -482,7 +482,7 @@ watch(isTimeUp, async (newIsTimeUp) => {
     if (newIsTimeUp && props.exam_page_mode !== "review") {
         if (!final_submission_dialog_visible.value) {
             if (practiceSession.value.submit_status !== "done") {
-                 await submitExam(practice_session_id);
+                await submitExam(practice_session_id);
             }
             final_submission_dialog_visible.value = true;
         }
