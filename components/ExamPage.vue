@@ -146,6 +146,7 @@ import { useAuth } from "~~/stores/auth";
 
 import { useLoadingStateStore } from "@/stores/loadingState";
 import { useExamTimer } from "@/composables/useExamTimer";
+import { useExamData } from "@/composables/useExamData";
 
 dayjs.extend(utc);
 
@@ -179,14 +180,21 @@ const practice_session_id = Array.isArray(route.params.id)
     ? route.params.id[0]
     : route.params.id;
 
-// 数据绑定
-const practiceSession = ref<PracticeSessions>({} as PracticeSessions);
-const paper = ref<Papers>({} as Papers);
-const submittedPaperSections = ref<PaperSections[]>([]);
+// 使用 useExamData Composable
+const {
+    practiceSession,
+    paper,
+    submittedPaperSections,
+    questionResults,
+    examScore,
+    practiceSessionTime,
+    loadExamData,
+    timerInitParams,
+    shouldShowFinalSubmissionDialog,
+} = useExamData();
+
+// selectedQuestion 仍然在 ExamPage.vue 中管理，但其初始值将由 loadExamData 设置
 const selectedQuestion = ref({} as any);
-const questionResults = ref<QuestionResults[]>([]);
-const examScore = ref<number | null>(null);
-const practiceSessionTime = ref<PracticeSessions>({} as PracticeSessions);
 
 const handleSidebarToggle = (collapsed: boolean) => {
     sidebarCollapsed.value = collapsed;
@@ -196,111 +204,38 @@ const handleSidebarResize = (width: number) => {
     sidebarWidth.value = width;
 };
 
-const fetchSubmittedExam = async () => {
-    try {
-        const practiceSessionResponse: PracticeSessions =
-            await getItemById<PracticeSessions>({
-                collection: "practice_sessions",
-                id: practice_session_id,
-                params: {
-                    fields: [
-                        "id",
-                        "exercises_students_id.exercises_id.paper",
-                        "exercises_students_id.students_id.name",
-                        "exercises_students_id.students_id.number",
-                        "exercises_students_id.students_id.email",
-                        "exercises_students_id.students_id.class.name",
-                        "exercises_students_id.exercises_id.title",
-                        "exercises_students_id.exercises_id.duration",
-                        "score",
-                        "actual_start_time",
-                        "actual_end_time",
-                        "extra_time",
-                        "expected_end_time",
-                        "submit_status",
-                    ],
-                },
-            });
-
-        if (practiceSessionResponse) {
-            practiceSession.value = practiceSessionResponse;
-            practiceSessionTime.value = practiceSessionResponse;
-            examScore.value = Number(practiceSessionResponse.score) || null;
-
-            if (
-                practiceSession.value.submit_status === "done" &&
-                props.exam_page_mode !== "review"
-            ) {
-                final_submission_dialog_visible.value = true;
-                const loadingStateStore = useLoadingStateStore();
-                loadingStateStore.setComponentReady("examPage");
-                return;
-            }
-
-            afterFetchSubmittedExamContent();
-
-            const actualStartISO = practiceSessionTime.value.actual_start_time;
-            let durationMins = 0;
-            let extraMins = 0;
-
-            const esId = practiceSessionTime.value.exercises_students_id;
-            if (
-                esId &&
-                typeof esId === "object" &&
-                esId.exercises_id &&
-                typeof esId.exercises_id === "object" &&
-                typeof esId.exercises_id.duration === "number"
-            ) {
-                durationMins = esId.exercises_id.duration;
-            }
-            if (typeof practiceSessionTime.value.extra_time === "number") {
-                extraMins = practiceSessionTime.value.extra_time;
-            }
-
-            console.log(
-                "ExamPage: Attempting to initialize timer with:",
-                {
-                    actualStartISO,
-                    durationMins,
-                    extraMins,
-                }
-            );
-
-            if (actualStartISO) {
-                initializeTimer(actualStartISO, durationMins, extraMins);
-                console.log("ExamPage: Timer initialization called.");
-            } else {
-                console.error(
-                    "ExamPage: 无法初始化计时器 - actual_start_time 缺失或无效。",
-                    "actualStartISO was:", actualStartISO
-                );
-            }
-        } else {
-            console.error("ExamPage: 获取考试会话失败，无法初始化计时器。");
-        }
-    } catch (error) {
-        console.error("ExamPage: fetchSubmittedExam 中发生错误:", error);
+// 监听从 useExamData 返回的 timerInitParams
+watch(timerInitParams, (params) => {
+    if (params && params.actualStartISO) {
+        console.log(
+            "ExamPage: Attempting to initialize timer with (from composable):",
+            params
+        );
+        initializeTimer(params.actualStartISO, params.durationMins, params.extraMins);
+        console.log("ExamPage: Timer initialization called via composable.");
+    } else if (params === null && practiceSession.value.actual_start_time) {
+        // 可能是数据加载完成但没有新的计时器参数（例如，已经是完成状态）
+        // 确保这种情况下计时器不会意外启动
+        console.log("ExamPage: timerInitParams is null, but practiceSession has actual_start_time. Check logic.");
+    } else if (timerInitParams.value === null && !practiceSession.value.actual_start_time) {
+         console.error(
+            "ExamPage: 无法初始化计时器 - actual_start_time 缺失或无效 (from composable watch).",
+             "timerInitParams was:", params,
+             "practiceSession.value.actual_start_time was:", practiceSession.value.actual_start_time
+         );
     }
-};
+}, { immediate: false }); // immediate: false, 因为我们希望在 loadExamData 完成后才初始化
 
-const afterFetchSubmittedExamContent = () => {
-    if (practiceSession.value.exercises_students_id) {
-        // 获取试卷的详情
-        const esId = practiceSession.value.exercises_students_id;
-        if (
-            typeof esId === "object" &&
-            esId &&
-            "exercises_id" in esId &&
-            esId.exercises_id
-        ) {
-            const exercisesId = esId.exercises_id;
-            if (typeof exercisesId === "object" && "paper" in exercisesId) {
-                const paperId = exercisesId.paper as string;
-                fetchSubmittedPaper(paperId);
-            }
+// 监听从 useExamData 返回的 shouldShowFinalSubmissionDialog
+watch(shouldShowFinalSubmissionDialog, (showDialog) => {
+    if (showDialog) {
+        final_submission_dialog_visible.value = true;
+        const loadingStateStore = useLoadingStateStore();
+        if (!loadingStateStore.checkComponentReady("examPage")) {
+            loadingStateStore.setComponentReady("examPage");
         }
     }
-};
+});
 
 // 用户信息
 const userData = computed(() => {
@@ -325,231 +260,6 @@ const userData = computed(() => {
         className: (studentId.class as Classes)?.name || "",
     };
 });
-
-const fetchSubmittedPaper = async (paperId: string) => {
-    const paperResponse = await getItemById<Papers>({
-        collection: "papers",
-        id: paperId,
-        params: {
-            fields: [
-                "title",
-                "paper_sections",
-                "total_point_value",
-                "total_question_count",
-            ],
-        },
-    });
-    if (paperResponse) {
-        paper.value = paperResponse;
-        fetchSubmittedSectionsList(paperResponse.paper_sections as any[]);
-    }
-};
-
-const fetchSubmittedSectionsList = async (sections: any[]) => {
-    // 获取章节的基本信息
-    const submittedSectionsResponse = (await $fetch(
-        "/api/paper_sections/list",
-        {
-            method: "POST",
-            body: {
-                ids: sections,
-            },
-        }
-    )) as PaperSections[];
-
-    // 新增：对获取到的章节进行排序
-    submittedSectionsResponse.sort(
-        (a, b) => (a.sort_in_paper || 0) - (b.sort_in_paper || 0)
-    );
-    const sectionList = submittedSectionsResponse;
-
-    const questionResultsData = await getItems<QuestionResults>({
-        collection: "question_results",
-        params: {
-            filter: {
-                practice_session_id: practice_session_id,
-            },
-            fields: [
-                "id",
-                "practice_session_id",
-                "question_in_paper_id", // 指向paper_sections_questions
-                "question_type",
-                "point_value",
-                "score",
-                "submit_ans_select_radio",
-                "submit_ans_select_multiple_checkbox",
-                "is_flagged",
-            ],
-        },
-    });
-    questionResults.value = questionResultsData;
-
-    const chapter_id_list_local = ref<string[]>([]);
-    const question_id_list_local = ref<string[]>([]);
-    const question_groups_id_list_local = ref<string[]>([]);
-
-    const allSectionIds = sectionList.map((section) => section.id);
-    let allSectionQuestions: PaperSectionsQuestions[] = [];
-    const paper_sections_question_ids = sectionList.flatMap((s) => s.questions);
-    const paper_section_question_group_ids = sectionList.flatMap(
-        (s) => s.question_groups
-    );
-
-    if (allSectionIds.length > 0) {
-        allSectionQuestions = (await $fetch(
-            "/api/paper_sections_questions/list",
-            {
-                method: "POST",
-                body: { ids: paper_sections_question_ids },
-            }
-        )) as PaperSectionsQuestions[];
-        const allQuestionIds = allSectionQuestions.map(
-            (sq) => sq.questions_id as string
-        );
-        question_id_list_local.value = Array.from(
-            new Set(question_id_list_local.value.concat(allQuestionIds))
-        );
-    }
-
-    let allSectionQuestionGroups: PaperSectionsQuestionGroups[] = [];
-    if (allSectionIds.length > 0) {
-        // 仅当存在题组模式的章节时才查询
-        const groupModeSectionIds = sectionList
-            .filter((section) => section.question_mode === "group")
-            .map((section) => section.id);
-
-        if (groupModeSectionIds.length > 0) {
-            allSectionQuestionGroups = (await $fetch(
-                "/api/paper_sections_question_groups/list",
-                {
-                    method: "POST",
-                    body: { ids: paper_section_question_group_ids },
-                }
-            )) as PaperSectionsQuestionGroups[];
-            // 将所有题组ID添加到 question_groups_id_list 中
-            const allGroupIds = allSectionQuestionGroups.map(
-                (sgq) => sgq.question_groups_id as string
-            );
-            question_groups_id_list_local.value = Array.from(
-                new Set(question_groups_id_list_local.value.concat(allGroupIds))
-            );
-        }
-    }
-
-    const questionsData = (await $fetch("/api/questions/list", {
-        method: "POST",
-        body: { ids: Array.from(new Set(question_id_list_local.value)) },
-    })) as Questions[];
-
-    let questionGroupsData: QuestionGroups[] = [];
-    if (question_groups_id_list_local.value.length > 0) {
-        questionGroupsData = (await $fetch("/api/question_groups/list", {
-            method: "POST",
-            body: {
-                ids: Array.from(new Set(question_groups_id_list_local.value)),
-            },
-        })) as QuestionGroups[];
-    }
-
-    sectionList.forEach((section) => {
-        const currentSectionQuestions = allSectionQuestions
-            .filter((sq) => sq.paper_sections_id === section.id)
-            .sort(
-                (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
-            );
-        const sectionQuestionsWithData = currentSectionQuestions.map((sq) => {
-            const questionData = questionsData.find(
-                (item) => item.id === (sq.questions_id as string)
-            );
-            return {
-                ...sq,
-                questions_id: questionData || null,
-            };
-        });
-        section.questions = sectionQuestionsWithData;
-
-        if (section.question_mode === "group") {
-            const currentSectionGroups = allSectionQuestionGroups
-                .filter((sgq) => sgq.paper_sections_id === section.id)
-                .sort(
-                    (a, b) =>
-                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
-                );
-            const sectionQuestionGroupsWithData = currentSectionGroups.map(
-                (sgq) => {
-                    const questionGroupData = questionGroupsData.find(
-                        (item) => item.id === (sgq.question_groups_id as string)
-                    );
-                    if (questionGroupData) {
-                        const groupQuestions = section.questions.filter(
-                            (qItem) => {
-                                if (
-                                    !qItem.questions_id ||
-                                    !qItem.questions_id.question_group
-                                )
-                                    return false;
-                                const qGroup =
-                                    qItem.questions_id.question_group;
-                                return (
-                                    (typeof qGroup === "string"
-                                        ? qGroup
-                                        : qGroup.id) === questionGroupData.id
-                                );
-                            }
-                        );
-                        return {
-                            ...sgq,
-                            question_groups_id: questionGroupData || null,
-                            group_question_ids: groupQuestions.map((q) => q.id),
-                        };
-                    }
-                    return {
-                        ...sgq,
-                        question_groups_id: questionGroupData || null,
-                    };
-                }
-            );
-            section.question_groups = sectionQuestionGroupsWithData;
-        }
-    });
-
-    submittedPaperSections.value = sectionList;
-    if (sectionList.length > 0) {
-        if (
-            sectionList[0].question_mode === "group" &&
-            sectionList[0].question_groups &&
-            sectionList[0].question_groups.length > 0
-        ) {
-            const firstGroup = sectionList[0].question_groups[0];
-            const groupQuestionIds = firstGroup.group_question_ids || [];
-            const groupQuestions = sectionList[0].questions.filter((q) =>
-                groupQuestionIds.includes(q.id)
-            );
-            const sortedGroupQuestions = [...groupQuestions].sort((a, b) => {
-                const aSort = a.questions_id?.sort_in_group ?? 999;
-                const bSort = b.questions_id?.sort_in_group ?? 999;
-                if (aSort === bSort)
-                    return (a.sort_in_section || 0) - (b.sort_in_section || 0);
-                return aSort - bSort;
-            });
-            selectedQuestion.value = {
-                ...firstGroup,
-                isGroupMode: true,
-                questionGroup: firstGroup.question_groups_id,
-                questions_id: { type: "group" },
-                section_id: sectionList[0].id,
-                paper_sections_id: sectionList[0].id,
-                sort_in_section: firstGroup.sort_in_section,
-                groupQuestions: sortedGroupQuestions,
-            };
-        } else if (
-            sectionList[0].questions &&
-            sectionList[0].questions.length > 0
-        ) {
-            selectedQuestion.value = sectionList[0].questions[0];
-        }
-    }
-};
 
 const selectQuestion = (question: any) => {
     selectedQuestion.value = question;
@@ -641,12 +351,12 @@ const startCurrentTimeUpdate_local = () => {
 };
 
 onMounted(async () => {
-    await fetchSubmittedExam(); // fetchSubmittedExam 内部会处理已提交的情况
+    await loadExamData(practice_session_id, props.exam_page_mode, selectedQuestion);
 
     await nextTick();
     isClient.value = true;
 
-    // 仅当考试未完成时（即 fetchSubmittedExam 没有提前返回），才启动本地时间更新
+    // 仅当考试未完成时（即 loadExamData 没有提前返回），才启动本地时间更新
     if (
         practiceSession.value.submit_status !== "done" ||
         props.exam_page_mode === "review"
