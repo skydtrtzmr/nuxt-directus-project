@@ -58,7 +58,6 @@ export function useExamData() {
 
     const fetchSubmittedSectionsList = async (
         sections: PaperSections[],
-        current_practice_session_id: string,
         current_selected_question_ref: Ref<any>
     ) => {
         const submittedSectionsResponse = (await $fetch(
@@ -71,7 +70,7 @@ export function useExamData() {
             }
         )) as PaperSections[];
 
-        console.log();
+        console.log("submittedSectionsResponse:", submittedSectionsResponse);
         
 
         submittedSectionsResponse.sort(
@@ -286,7 +285,6 @@ export function useExamData() {
             paper.value = paperResponse;
             await fetchSubmittedSectionsList(
                 paperResponse.paper_sections as PaperSections[],
-                current_practice_session_id,
                 current_selected_question_ref
             );
             console.log(
