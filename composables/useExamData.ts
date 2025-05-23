@@ -42,6 +42,7 @@ export function useExamData() {
         );
         const sectionList = submittedSectionsResponse;
 
+        // 这个依然保持从directus直接获取，而非从redis获取。
         const questionResultsData = await getItems<QuestionResults>({
             collection: "question_results",
             params: {
