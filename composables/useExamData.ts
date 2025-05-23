@@ -17,7 +17,6 @@ export function useExamData() {
     const practiceSession = ref<PracticeSessions>({} as PracticeSessions);
     const paper = ref<Papers>({} as Papers);
     const submittedPaperSections = ref<PaperSections[]>([]);
-    const initialSelectedQuestion = ref<any>(null); // Stores the initially selected question or group
     const questionResults = ref<QuestionResults[]>([]);
     const examScore = ref<number | null>(null);
     const practiceSessionTime = ref<PracticeSessions>({} as PracticeSessions);
@@ -25,242 +24,6 @@ export function useExamData() {
     // This will be returned to ExamPage to trigger side effects
     const timerInitParams = ref<{ actualStartISO: string; durationMins: number; extraMins: number } | null>(null);
     const shouldShowFinalSubmissionDialog = ref(false);
-
-    const fetchSubmittedSectionsList = async (sections: any[], current_practice_session_id: string, current_selected_question_ref: Ref<any>) => {
-        const submittedSectionsResponse = (await $fetch(
-            "/api/paper_sections/list",
-            {
-                method: "POST",
-                body: {
-                    ids: sections,
-                },
-            }
-        )) as PaperSections[];
-
-        submittedSectionsResponse.sort(
-            (a, b) => (a.sort_in_paper || 0) - (b.sort_in_paper || 0)
-        );
-        const sectionList = submittedSectionsResponse;
-
-        // 这个依然保持从directus直接获取，而非从redis获取。
-        const questionResultsData = await getItems<QuestionResults>({
-            collection: "question_results",
-            params: {
-                filter: {
-                    practice_session_id: current_practice_session_id,
-                },
-                fields: [
-                    "id",
-                    "practice_session_id",
-                    "question_in_paper_id",
-                    "question_type",
-                    "point_value",
-                    "score",
-                    "submit_ans_select_radio",
-                    "submit_ans_select_multiple_checkbox",
-                    "is_flagged",
-                ],
-            },
-        });
-        questionResults.value = questionResultsData;
-
-        const question_id_list_local = ref<string[]>([]);
-        const question_groups_id_list_local = ref<string[]>([]);
-
-        const paper_sections_question_ids = sectionList.flatMap((s) => s.questions);
-        const paper_section_question_group_ids = sectionList.flatMap(
-            (s) => s.question_groups
-        );
-
-        let allSectionQuestions: PaperSectionsQuestions[] = [];
-        if (paper_sections_question_ids.length > 0) {
-            allSectionQuestions = (await $fetch(
-                "/api/paper_sections_questions/list",
-                {
-                    method: "POST",
-                    body: { ids: paper_sections_question_ids },
-                }
-            )) as PaperSectionsQuestions[];
-            const allQuestionIds = allSectionQuestions.map(
-                (sq) => sq.questions_id as string
-            );
-            question_id_list_local.value = Array.from(
-                new Set(question_id_list_local.value.concat(allQuestionIds))
-            );
-        }
-
-        let allSectionQuestionGroups: PaperSectionsQuestionGroups[] = [];
-        const groupModeSectionIds = sectionList
-            .filter((section) => section.question_mode === "group")
-            .map((section) => section.id);
-
-        if (groupModeSectionIds.length > 0 && paper_section_question_group_ids.length > 0) {
-            allSectionQuestionGroups = (await $fetch(
-                "/api/paper_sections_question_groups/list",
-                {
-                    method: "POST",
-                    body: { ids: paper_section_question_group_ids },
-                }
-            )) as PaperSectionsQuestionGroups[];
-            const allGroupIds = allSectionQuestionGroups.map(
-                (sgq) => sgq.question_groups_id as string
-            );
-            question_groups_id_list_local.value = Array.from(
-                new Set(question_groups_id_list_local.value.concat(allGroupIds))
-            );
-        }
-
-        const questionsData = (await $fetch("/api/questions/list", {
-            method: "POST",
-            body: { ids: Array.from(new Set(question_id_list_local.value)) },
-        })) as Questions[];
-
-        let questionGroupsData: QuestionGroups[] = [];
-        if (question_groups_id_list_local.value.length > 0) {
-            questionGroupsData = (await $fetch("/api/question_groups/list", {
-                method: "POST",
-                body: {
-                    ids: Array.from(new Set(question_groups_id_list_local.value)),
-                },
-            })) as QuestionGroups[];
-        }
-
-        sectionList.forEach((section) => {
-            const currentSectionQuestions = allSectionQuestions
-                .filter((sq) => sq.paper_sections_id === section.id)
-                .sort(
-                    (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
-                );
-            const sectionQuestionsWithData = currentSectionQuestions.map((sq) => {
-                const questionData = questionsData.find(
-                    (item) => item.id === (sq.questions_id as string)
-                );
-                return {
-                    ...sq,
-                    questions_id: questionData || null,
-                };
-            });
-            section.questions = sectionQuestionsWithData;
-
-            if (section.question_mode === "group") {
-                const currentSectionGroups = allSectionQuestionGroups
-                    .filter((sgq) => sgq.paper_sections_id === section.id)
-                    .sort(
-                        (a, b) =>
-                            (a.sort_in_section || 0) - (b.sort_in_section || 0)
-                    );
-                const sectionQuestionGroupsWithData = currentSectionGroups.map(
-                    (sgq) => {
-                        const questionGroupData = questionGroupsData.find(
-                            (item) => item.id === (sgq.question_groups_id as string)
-                        );
-                        if (questionGroupData) {
-                            const groupQuestions = section.questions.filter(
-                                (qItem) => {
-                                    if (
-                                        !qItem.questions_id ||
-                                        !qItem.questions_id.question_group
-                                    )
-                                        return false;
-                                    const qGroup =
-                                        qItem.questions_id.question_group;
-                                    return (
-                                        (typeof qGroup === "string"
-                                            ? qGroup
-                                            : qGroup.id) === questionGroupData.id
-                                    );
-                                }
-                            );
-                            return {
-                                ...sgq,
-                                question_groups_id: questionGroupData || null,
-                                group_question_ids: groupQuestions.map((q) => q.id),
-                            };
-                        }
-                        return {
-                            ...sgq,
-                            question_groups_id: questionGroupData || null,
-                        };
-                    }
-                );
-                section.question_groups = sectionQuestionGroupsWithData;
-            }
-        });
-
-        submittedPaperSections.value = sectionList;
-        if (sectionList.length > 0) {
-            if (
-                sectionList[0].question_mode === "group" &&
-                sectionList[0].question_groups &&
-                sectionList[0].question_groups.length > 0
-            ) {
-                const firstGroup = sectionList[0].question_groups[0];
-                const groupQuestionIds = firstGroup.group_question_ids || [];
-                const groupQuestions = sectionList[0].questions.filter((q) =>
-                    groupQuestionIds.includes(q.id)
-                );
-                const sortedGroupQuestions = [...groupQuestions].sort((a, b) => {
-                    const aSort = a.questions_id?.sort_in_group ?? 999;
-                    const bSort = b.questions_id?.sort_in_group ?? 999;
-                    if (aSort === bSort)
-                        return (a.sort_in_section || 0) - (b.sort_in_section || 0);
-                    return aSort - bSort;
-                });
-                current_selected_question_ref.value = {
-                    ...firstGroup,
-                    isGroupMode: true,
-                    questionGroup: firstGroup.question_groups_id,
-                    questions_id: { type: "group" },
-                    section_id: sectionList[0].id,
-                    paper_sections_id: sectionList[0].id,
-                    sort_in_section: firstGroup.sort_in_section,
-                    groupQuestions: sortedGroupQuestions,
-                };
-            } else if (
-                sectionList[0].questions &&
-                sectionList[0].questions.length > 0
-            ) {
-                current_selected_question_ref.value = sectionList[0].questions[0];
-            }
-        }
-    };
-
-    const fetchSubmittedPaper = async (paperId: string, current_practice_session_id: string, current_selected_question_ref: Ref<any>) => {
-        const paperResponse = await getItemById<Papers>({
-            collection: "papers",
-            id: paperId,
-            params: {
-                fields: [
-                    "title",
-                    "paper_sections",
-                    "total_point_value",
-                    "total_question_count",
-                ],
-            },
-        });
-        if (paperResponse) {
-            paper.value = paperResponse;
-            await fetchSubmittedSectionsList(paperResponse.paper_sections as any[], current_practice_session_id, current_selected_question_ref);
-        }
-    };
-
-    const afterFetchSubmittedExamContent = async (current_practice_session_id: string, current_selected_question_ref: Ref<any>) => {
-        if (practiceSession.value.exercises_students_id) {
-            const esId = practiceSession.value.exercises_students_id;
-            if (
-                typeof esId === "object" &&
-                esId &&
-                "exercises_id" in esId &&
-                esId.exercises_id
-            ) {
-                const exercisesId = esId.exercises_id;
-                if (typeof exercisesId === "object" && "paper" in exercisesId) {
-                    const paperId = exercisesId.paper as string;
-                    await fetchSubmittedPaper(paperId, current_practice_session_id, current_selected_question_ref);
-                }
-            }
-        }
-    };
 
     const loadExamData = async (current_practice_session_id: string, exam_page_mode: string, current_selected_question_ref: Ref<any>) => {
         try {
@@ -298,25 +61,170 @@ export function useExamData() {
                     exam_page_mode !== "review"
                 ) {
                     shouldShowFinalSubmissionDialog.value = true;
-                    // No need to call loadingStateStore here, ExamPage will handle it.
                     return; // Exit early if already submitted and not in review mode
                 }
 
-                await afterFetchSubmittedExamContent(current_practice_session_id, current_selected_question_ref);
+                let paperId: string | null = null;
+                if (practiceSession.value.exercises_students_id) {
+                    const esId = practiceSession.value.exercises_students_id;
+                    if (
+                        typeof esId === "object" &&
+                        esId &&
+                        "exercises_id" in esId &&
+                        esId.exercises_id &&
+                        typeof esId.exercises_id === "object" &&
+                        "paper" in esId.exercises_id
+                    ) {
+                        paperId = esId.exercises_id.paper as string;
+                    }
+                }
 
+                if (!paperId) {
+                    console.error("useExamData: Paper ID could not be determined from practice session.");
+                    return;
+                }
+
+                // Fetch static paper data from the new comprehensive API
+                const fullPaperData: Papers = await $fetch(`/api/papers/full/${paperId}`);
+
+                if (!fullPaperData) {
+                    console.error(`useExamData: Failed to fetch full paper data for paper ID ${paperId}.`);
+                    return;
+                } else {
+                    console.log("fullPaperData:");
+                    console.log(fullPaperData);
+                    
+                    
+                }
+
+                paper.value = fullPaperData; // Assign the whole paper object
+
+                // Process sections, questions, and groups from the new API's response
+                const sectionsFromServer = (fullPaperData.paper_sections as PaperSections[] || [])
+                    .sort((a, b) => (a.sort_in_paper || 0) - (b.sort_in_paper || 0));
+
+                submittedPaperSections.value = sectionsFromServer.map(serverSection => {
+                    // serverSection.questions should be an array of PaperSectionsQuestions items
+                    // where questions_id is a fully populated Question object.
+                    const sortedQuestions = (serverSection.questions as PaperSectionsQuestions[] || [])
+                        .sort((a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0));
+
+                    let processedQuestionGroups: PaperSectionsQuestionGroups[] = [];
+                    if (serverSection.question_mode === 'group' && serverSection.question_groups) {
+                        // serverSection.question_groups should be an array of PaperSectionsQuestionGroups items
+                        // where question_groups_id is a fully populated QuestionGroups object.
+                        processedQuestionGroups = (serverSection.question_groups as PaperSectionsQuestionGroups[] || [])
+                            .sort((a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0))
+                            .map(psqg => { // psqg is a PaperSectionsQuestionGroups item
+                                // Identify questions belonging to this specific group (psqg)
+                                const groupQuestions = sortedQuestions.filter(qItem => { // qItem is PaperSectionsQuestions
+                                    const questionData = qItem.questions_id as Questions; // This is the full Question object
+                                    if (!questionData || !questionData.question_group) return false;
+                                    
+                                    const qGroup = questionData.question_group; // This is the FK to QuestionGroups on the Question itself
+                                    const qGroupId = typeof qGroup === 'string' ? qGroup : (qGroup as QuestionGroups).id;
+                                    
+                                    const currentGroupDefinition = psqg.question_groups_id as QuestionGroups; // This is the full QuestionGroup object for this psqg item
+                                    return qGroupId === currentGroupDefinition.id;
+                                });
+                                return {
+                                    ...psqg, // Spread the original PaperSectionsQuestionGroups item
+                                    // Store IDs of the PaperSectionsQuestions items that belong to this group
+                                    group_question_ids: groupQuestions.map(q => String(q.id)), 
+                                };
+                            });
+                    }
+
+                    return {
+                        ...serverSection, // Basic PaperSections fields
+                        questions: sortedQuestions, // Array of PaperSectionsQuestions items, with questions_id fully populated
+                        question_groups: processedQuestionGroups, // Array of processed PaperSectionsQuestionGroups items
+                    } as PaperSections;
+                });
+
+                // Fetch question_results directly from Directus (this part remains unchanged)
+                const questionResultsData = await getItems<QuestionResults>({
+                    collection: "question_results",
+                    params: {
+                        filter: {
+                            practice_session_id: current_practice_session_id,
+                        },
+                        fields: [
+                            "id",
+                            "practice_session_id",
+                            "question_in_paper_id", // This ID refers to paper_sections_questions.id
+                            "question_type",
+                            "point_value",
+                            "score",
+                            "submit_ans_select_radio",
+                            "submit_ans_select_multiple_checkbox",
+                            "is_flagged",
+                        ],
+                    },
+                });
+                questionResults.value = questionResultsData;
+
+                // Initialize current_selected_question_ref (passed from ExamPage.vue)
+                if (submittedPaperSections.value.length > 0) {
+                    const firstSection = submittedPaperSections.value[0];
+                    if (
+                        firstSection.question_mode === "group" &&
+                        firstSection.question_groups &&
+                        firstSection.question_groups.length > 0
+                    ) {
+                        const firstProcessedGroup = firstSection.question_groups[0]; // This is a processed PaperSectionsQuestionGroups item
+                        
+                        // Filter the section's questions to get those belonging to this first group
+                        const groupQuestionsForDisplay = (firstSection.questions as PaperSectionsQuestions[] || []).filter(qItem =>
+                            (firstProcessedGroup.group_question_ids || []).includes(String(qItem.id))
+                        );
+
+                        const sortedGroupQuestionsForDisplay = [...groupQuestionsForDisplay].sort((a, b) => {
+                            const aQuestionData = a.questions_id as Questions;
+                            const bQuestionData = b.questions_id as Questions;
+                            const aSort = aQuestionData?.sort_in_group ?? 999;
+                            const bSort = bQuestionData?.sort_in_group ?? 999;
+                            if (aSort === bSort) {
+                                return (a.sort_in_section || 0) - (b.sort_in_section || 0);
+                            }
+                            return aSort - bSort;
+                        });
+
+                        current_selected_question_ref.value = {
+                            ...(firstProcessedGroup as any), // Spread properties of PaperSectionsQuestionGroups item
+                            isGroupMode: true,
+                            questionGroup: firstProcessedGroup.question_groups_id, // Full QuestionGroups object
+                            questions_id: { type: "group" }, // Marker for group type
+                            section_id: firstSection.id,
+                            paper_sections_id: firstSection.id, // For compatibility
+                            groupQuestions: sortedGroupQuestionsForDisplay, // Array of PaperSectionsQuestions items for this group
+                        };
+                    } else if (
+                        firstSection.questions &&
+                        firstSection.questions.length > 0
+                    ) {
+                        current_selected_question_ref.value = firstSection.questions[0]; // A PaperSectionsQuestions item
+                    } else {
+                        current_selected_question_ref.value = null; // No questions or groups in the first section
+                    }
+                } else {
+                    current_selected_question_ref.value = null; // No sections in the paper
+                }
+
+                // Initialize timer parameters (logic remains unchanged)
                 const actualStartISO = practiceSessionTime.value.actual_start_time;
                 let durationMins = 0;
                 let extraMins = 0;
 
-                const esId = practiceSessionTime.value.exercises_students_id;
+                const esIdForTimer = practiceSessionTime.value.exercises_students_id;
                 if (
-                    esId &&
-                    typeof esId === "object" &&
-                    esId.exercises_id &&
-                    typeof esId.exercises_id === "object" &&
-                    typeof esId.exercises_id.duration === "number"
+                    esIdForTimer &&
+                    typeof esIdForTimer === "object" &&
+                    esIdForTimer.exercises_id &&
+                    typeof esIdForTimer.exercises_id === "object" &&
+                    typeof esIdForTimer.exercises_id.duration === "number"
                 ) {
-                    durationMins = esId.exercises_id.duration;
+                    durationMins = esIdForTimer.exercises_id.duration;
                 }
                 if (typeof practiceSessionTime.value.extra_time === "number") {
                     extraMins = practiceSessionTime.value.extra_time;
@@ -342,12 +250,11 @@ export function useExamData() {
         practiceSession,
         paper,
         submittedPaperSections,
-        // selectedQuestion is managed by ExamPage.vue, but its initial value is set here via ref
         questionResults,
         examScore,
         practiceSessionTime,
         loadExamData,
-        timerInitParams, // Expose for ExamPage to use
-        shouldShowFinalSubmissionDialog, // Expose for ExamPage to use
+        timerInitParams,
+        shouldShowFinalSubmissionDialog,
     };
 } 
