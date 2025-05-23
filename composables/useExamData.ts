@@ -104,43 +104,41 @@ export function useExamData() {
                     .sort((a, b) => (a.sort_in_paper || 0) - (b.sort_in_paper || 0));
 
                 submittedPaperSections.value = sectionsFromServer.map(serverSection => {
-                    const typedServerSection = serverSection as any; 
-                    const sortedQuestions = (typedServerSection.questions as PaperSectionsQuestions[] || [])
+                    // serverSection.questions should be an array of PaperSectionsQuestions items
+                    // where questions_id is a fully populated Question object.
+                    const sortedQuestions = (serverSection.questions as PaperSectionsQuestions[] || [])
                         .sort((a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0));
 
                     let processedQuestionGroups: PaperSectionsQuestionGroups[] = [];
-                    if (serverSection.question_mode === 'group' && typedServerSection.question_groups) {
-                        processedQuestionGroups = (typedServerSection.question_groups as PaperSectionsQuestionGroups[] || [])
+                    if (serverSection.question_mode === 'group' && serverSection.question_groups) {
+                        // serverSection.question_groups should be an array of PaperSectionsQuestionGroups items
+                        // where question_groups_id is a fully populated QuestionGroups object.
+                        processedQuestionGroups = (serverSection.question_groups as PaperSectionsQuestionGroups[] || [])
                             .sort((a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0))
-                            .map(psqg => { 
-                                const currentGroupDefinition = psqg.question_groups_id as QuestionGroups;
-                                if (!currentGroupDefinition || typeof currentGroupDefinition !== 'object' || !currentGroupDefinition.id) {
-                                    console.warn("[useExamData] Invalid or incomplete question_groups_id in psqg:", psqg, "Setting to null.");
-                                    return { 
-                                        ...psqg, 
-                                        question_groups_id: null,
-                                        group_question_ids: [] 
-                                    };
-                                }
-
-                                const groupQuestions = sortedQuestions.filter(qItem => { 
-                                    const questionData = qItem.questions_id as Questions; 
+                            .map(psqg => { // psqg is a PaperSectionsQuestionGroups item
+                                // Identify questions belonging to this specific group (psqg)
+                                const groupQuestions = sortedQuestions.filter(qItem => { // qItem is PaperSectionsQuestions
+                                    const questionData = qItem.questions_id as Questions; // This is the full Question object
                                     if (!questionData || !questionData.question_group) return false;
-                                    const qGroup = questionData.question_group;
+                                    
+                                    const qGroup = questionData.question_group; // This is the FK to QuestionGroups on the Question itself
                                     const qGroupId = typeof qGroup === 'string' ? qGroup : (qGroup as QuestionGroups).id;
+                                    
+                                    const currentGroupDefinition = psqg.question_groups_id as QuestionGroups; // This is the full QuestionGroup object for this psqg item
                                     return qGroupId === currentGroupDefinition.id;
                                 });
                                 return {
-                                    ...psqg, 
-                                    question_groups_id: currentGroupDefinition, 
+                                    ...psqg, // Spread the original PaperSectionsQuestionGroups item
+                                    // Store IDs of the PaperSectionsQuestions items that belong to this group
                                     group_question_ids: groupQuestions.map(q => String(q.id)), 
                                 };
                             });
                     }
+
                     return {
-                        ...serverSection, 
-                        questions: sortedQuestions, 
-                        question_groups: processedQuestionGroups, 
+                        ...serverSection, // Basic PaperSections fields
+                        questions: sortedQuestions, // Array of PaperSectionsQuestions items, with questions_id fully populated
+                        question_groups: processedQuestionGroups, // Array of processed PaperSectionsQuestionGroups items
                     } as PaperSections;
                 });
 
@@ -154,7 +152,7 @@ export function useExamData() {
                         fields: [
                             "id",
                             "practice_session_id",
-                            "question_in_paper_id", 
+                            "question_in_paper_id", // This ID refers to paper_sections_questions.id
                             "question_type",
                             "point_value",
                             "score",
@@ -169,25 +167,18 @@ export function useExamData() {
                 // Initialize current_selected_question_ref (passed from ExamPage.vue)
                 if (submittedPaperSections.value.length > 0) {
                     const firstSection = submittedPaperSections.value[0];
-                    if (firstSection.question_mode !== "group" && firstSection.questions && firstSection.questions.length > 0) {
-                        const firstQuestion = firstSection.questions[0] as PaperSectionsQuestions; // This is a PaperSectionsQuestions item
-                        if (firstQuestion) {
-                            current_selected_question_ref.value = {
-                                ...firstQuestion, 
-                                section_id: firstSection.id,
-                                paper_sections_id: firstSection.id, // Consistent with navigation
-                                isGroupMode: false
-                            };
-                            console.log("[useExamData] Initial selected (single):", current_selected_question_ref.value);
-                        }
-                    } else if (firstSection.question_mode === "group" && firstSection.question_groups && firstSection.question_groups.length > 0) {
-                        const firstProcessedGroup = firstSection.question_groups[0]; // This is a ProcessedPaperSectionGroup from the map
-                        const questionGroupObject = firstProcessedGroup.question_groups_id as QuestionGroups; // Should be the full QuestionGroups object
-                        const groupPsqIds = firstProcessedGroup.group_question_ids || [];
-
+                    if (
+                        firstSection.question_mode === "group" &&
+                        firstSection.question_groups &&
+                        firstSection.question_groups.length > 0
+                    ) {
+                        const firstProcessedGroup = firstSection.question_groups[0]; // This is a processed PaperSectionsQuestionGroups item
+                        
+                        // Filter the section's questions to get those belonging to this first group
                         const groupQuestionsForDisplay = (firstSection.questions as PaperSectionsQuestions[] || []).filter(qItem =>
-                            groupPsqIds.includes(String(qItem.id))
+                            (firstProcessedGroup.group_question_ids || []).includes(String(qItem.id))
                         );
+
                         const sortedGroupQuestionsForDisplay = [...groupQuestionsForDisplay].sort((a, b) => {
                             const aQuestionData = a.questions_id as Questions;
                             const bQuestionData = b.questions_id as Questions;
@@ -196,24 +187,28 @@ export function useExamData() {
                             if (aSort === bSort) {
                                 return (a.sort_in_section || 0) - (b.sort_in_section || 0);
                             }
-                            return Number(aSort) - Number(bSort);
+                            return aSort - bSort;
                         });
 
                         current_selected_question_ref.value = {
-                            ...firstProcessedGroup, // Spreading the ProcessedPaperSectionGroup item
+                            ...(firstProcessedGroup as any), // Spread properties of PaperSectionsQuestionGroups item
                             isGroupMode: true,
-                            questionGroup: questionGroupObject, 
-                            questions_id: { type: "group" }, 
+                            questionGroup: firstProcessedGroup.question_groups_id, // Full QuestionGroups object
+                            questions_id: { type: "group" }, // Marker for group type
                             section_id: firstSection.id,
-                            paper_sections_id: firstSection.id, 
-                            groupQuestions: sortedGroupQuestionsForDisplay, 
+                            paper_sections_id: firstSection.id, // For compatibility
+                            groupQuestions: sortedGroupQuestionsForDisplay, // Array of PaperSectionsQuestions items for this group
                         };
-                        console.log("[useExamData] Initial selected (group):", current_selected_question_ref.value);
+                    } else if (
+                        firstSection.questions &&
+                        firstSection.questions.length > 0
+                    ) {
+                        current_selected_question_ref.value = firstSection.questions[0]; // A PaperSectionsQuestions item
                     } else {
-                        current_selected_question_ref.value = null; 
+                        current_selected_question_ref.value = null; // No questions or groups in the first section
                     }
                 } else {
-                    current_selected_question_ref.value = null; 
+                    current_selected_question_ref.value = null; // No sections in the paper
                 }
 
                 // Initialize timer parameters (logic remains unchanged)
