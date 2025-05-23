@@ -258,6 +258,11 @@ export function useExamData() {
         current_practice_session_id: string,
         current_selected_question_ref: Ref<any>
     ) => {
+
+        const paperFullData: Papers = await $fetch(`/api/papers/full/${paperId}`);
+        console.log("paperFullData:");
+        console.log(paperFullData);
+        
         const paperResponse = await getItemById<Papers>({
             collection: "papers",
             id: paperId,
@@ -270,6 +275,8 @@ export function useExamData() {
                 ],
             },
         });
+        
+
         if (paperResponse) {
             paper.value = paperResponse;
             await fetchSubmittedSectionsList(

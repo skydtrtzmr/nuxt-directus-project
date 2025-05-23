@@ -1,0 +1,21 @@
+{
+    "id": "f5740e4a-ed5c-4360-9e20-093fe5b47d1c",
+    "score": "12.5",
+    "actual_start_time": "2025-05-22T07:07:05.854Z",
+    "actual_end_time": null,
+    "extra_time": 0,
+    "expected_end_time": null,
+    "submit_status": "doing",
+    "exercises_students_id": {
+        "exercises_id": {
+            "paper": "c360fcd9-8f0d-48c2-8287-996792da4958",
+            "title": "12",
+            "duration": 6000
+        },
+        "students_id": {
+            "name": "student2024010001",
+            "number": 2024010001,
+            "email": "2024010001@stu.com"
+        }
+    }
+}

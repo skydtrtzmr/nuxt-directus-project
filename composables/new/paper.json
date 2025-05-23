@@ -1,0 +1,2163 @@
+{
+    "id": "c360fcd9-8f0d-48c2-8287-996792da4958",
+    "title": "试卷-题组显示为1个大题",
+    "description": null,
+    "total_point_value": 100,
+    "total_question_count": 55,
+    "paper_sections": [
+        {
+            "id": "2755007c-f72c-43d6-801e-92edc409ecff",
+            "paper_id": "c360fcd9-8f0d-48c2-8287-996792da4958",
+            "sort_in_paper": 1,
+            "title": "单选题",
+            "description": null,
+            "points_per_question": "2.00",
+            "question_type": "q_mc_single",
+            "question_mode": "single",
+            "total_question_points": 40,
+            "questions": [
+                {
+                    "id": 406,
+                    "sort_in_section": 1,
+                    "questions_id": {
+                        "stem": "下列各项中，属于对会计人员履职要求的是（　 ）。",
+                        "type": "q_mc_single",
+                        "analysis": "“坚持诚信，守法奉公”是对会计人员的自律要求，“坚持准则，守责敬业”是对会计人员的履职要求，“坚持学习，守正创新”是对会计人员的发展要求。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "C",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "b1e6670c-d97c-4ece-be66-84e2a0c8cbe0",
+                            "option_a": "坚持学习，守正创新",
+                            "status": "draft",
+                            "option_b": "严肃认真，一丝不苟",
+                            "option_number": 4,
+                            "option_c": "坚持准则，守责敬业",
+                            "sort": null,
+                            "option_d": "忠于职守，尽职尽责",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-15T13:12:48.454Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列各项中，属于对会计人员履职要求的是（　 ）。",
+                            "correct_option": "C",
+                            "analysis": "“坚持诚信，守法奉公”是对会计人员的自律要求，“坚持准则，守责敬业”是对会计人员的履职要求，“坚持学习，守正创新”是对会计人员的发展要求。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 407,
+                    "sort_in_section": 2,
+                    "questions_id": {
+                        "stem": "下列各项中，属于银行存款清查所采用的方法是（　 ）。",
+                        "type": "q_mc_single",
+                        "analysis": "银行存款的清查是采用与开户银行核对账目的方法进行的，即将本单位银行存款日记账的账簿记录与开户银行转来的对账单逐笔进行核对，来查明银行存款的实有数额。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "D",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "f61f84da-8543-4a13-93a7-43e7ca62a541",
+                            "option_a": "定期盘存法",
+                            "status": "draft",
+                            "option_b": "和往来单位核对账目的方法",
+                            "option_number": 4,
+                            "option_c": "实地盘存法",
+                            "sort": null,
+                            "option_d": "与开户银行核对账目的方法",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-15T13:04:34.117Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列各项中，属于银行存款清查所采用的方法是（　 ）。",
+                            "correct_option": "D",
+                            "analysis": "银行存款的清查是采用与开户银行核对账目的方法进行的，即将本单位银行存款日记账的账簿记录与开户银行转来的对账单逐笔进行核对，来查明银行存款的实有数额。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 408,
+                    "sort_in_section": 3,
+                    "questions_id": {
+                        "stem": "对于企业已经发出商品但尚未确认销售收入的商品成本，应作出的会计处理是（　 ）。",
+                        "type": "q_mc_single",
+                        "analysis": "对于企业已经发出商品但尚未确认销售收入的商品成本：\n借：发出商品\n贷：库存商品",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "D",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "f5c68d19-e445-4a14-afb9-467fce4540c4",
+                            "option_a": "借：应收账款\n贷：库存商品",
+                            "status": "draft",
+                            "option_b": "借：应收账款\n贷：主营业务收入",
+                            "option_number": 4,
+                            "option_c": "借：主营业务成本\n贷：库存商品",
+                            "sort": null,
+                            "option_d": "借：发出商品\n贷：库存商品",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-15T13:18:31.114Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "对于企业已经发出商品但尚未确认销售收入的商品成本，应作出的会计处理是（　 ）。",
+                            "correct_option": "D",
+                            "analysis": "对于企业已经发出商品但尚未确认销售收入的商品成本：\n借：发出商品\n贷：库存商品"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 409,
+                    "sort_in_section": 4,
+                    "questions_id": {
+                        "stem": "下列选项中，不属于会计拓展职能的是（　）。",
+                        "type": "q_mc_single",
+                        "analysis": "A不属于会计拓展职能，BCD选项均属于会计拓展职能。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "A",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "fd467bc6-d474-4e9d-beec-8f2532e991f0",
+                            "option_a": "反映受托责任履行情况",
+                            "status": "draft",
+                            "option_b": "参与经济决策",
+                            "option_number": 4,
+                            "option_c": "预测经济前景",
+                            "sort": null,
+                            "option_d": "评价经营业绩",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-15T13:05:32.472Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列选项中，不属于会计拓展职能的是（　）。",
+                            "correct_option": "A",
+                            "analysis": "A不属于会计拓展职能，BCD选项均属于会计拓展职能。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 410,
+                    "sort_in_section": 5,
+                    "questions_id": {
+                        "stem": "下列各项中，没有体现会计信息质量要求的谨慎性原则的是（　 ）。",
+                        "type": "q_mc_single",
+                        "analysis": "谨慎性原则要求不高估收益，不低估费用，对于可能发生的费用要充分估计，固定资产采用加速折旧法、对售出商品很可能发生的保修义务确认预计负债、对很可能承担的环保责任确认预计负债均体现了谨慎性原则，而租入的固定资产（短期租赁和低值资产租赁除外）作为企业自有资产体现了实质重于形式的原则。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "B",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "d9cd3c16-0382-48c8-b1eb-a3b6de3e7d65",
+                            "option_a": "固定资产采用加速折旧法折旧",
+                            "status": "draft",
+                            "option_b": "租入的固定资产（短期租赁和低值资产租赁除外）作为企业自有资产",
+                            "option_number": 4,
+                            "option_c": "对售出商品很可能发生的保修义务确认预计负债",
+                            "sort": null,
+                            "option_d": "对很可能承担的环保责任确认预计负债",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-15T13:06:51.690Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列各项中，没有体现会计信息质量要求的谨慎性原则的是（　 ）。",
+                            "correct_option": "B",
+                            "analysis": "谨慎性原则要求不高估收益，不低估费用，对于可能发生的费用要充分估计，固定资产采用加速折旧法、对售出商品很可能发生的保修义务确认预计负债、对很可能承担的环保责任确认预计负债均体现了谨慎性原则，而租入的固定资产（短期租赁和低值资产租赁除外）作为企业自有资产体现了实质重于形式的原则。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 510,
+                    "sort_in_section": 6,
+                    "questions_id": {
+                        "stem": "会计是以（    ）作为主要的计量单位。",
+                        "type": "q_mc_single",
+                        "analysis": "会计是以货币作为主要的计量单位。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "A",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "3804b57d-aed6-42d8-8dc0-f4e0721e1dac",
+                            "option_a": "货币",
+                            "status": "draft",
+                            "option_b": "人民币",
+                            "option_number": 4,
+                            "option_c": "金属货币",
+                            "sort": null,
+                            "option_d": "现金",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T01:08:20.232Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "会计是以（    ）作为主要的计量单位。",
+                            "correct_option": "A",
+                            "analysis": "会计是以货币作为主要的计量单位。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 511,
+                    "sort_in_section": 7,
+                    "questions_id": {
+                        "stem": "下列各项中，能够引起所有者权益总额变化的是（　　）。",
+                        "type": "q_mc_single",
+                        "analysis": "本题考核所有者权益的相关账务处理。选项A、D，属于所有者权益内部一增一减的变动，对所有者权益总额没有影响；选项B，资产和所有者权益同时增加；选项C，资产和负债同时减少。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "B",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "90be7add-5670-4a99-b2d7-49c23d7ea92a",
+                            "option_a": "以资本公积转增资本",
+                            "status": "draft",
+                            "option_b": "增发新股",
+                            "option_number": 4,
+                            "option_c": "向股东支付已宣告分派的现金股利",
+                            "sort": null,
+                            "option_d": "以盈余公积弥补亏损",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-15T13:09:43.270Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列各项中，能够引起所有者权益总额变化的是（　　）。",
+                            "correct_option": "B",
+                            "analysis": "本题考核所有者权益的相关账务处理。选项A、D，属于所有者权益内部一增一减的变动，对所有者权益总额没有影响；选项B，资产和所有者权益同时增加；选项C，资产和负债同时减少。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 512,
+                    "sort_in_section": 8,
+                    "questions_id": {
+                        "stem": "企业专设销售机构的无形资产摊销额应借记的会计科目是（　 ）。",
+                        "type": "q_mc_single",
+                        "analysis": "企业专设销售机构的无形资产摊销额应计入销售费用。\n会计分录为：\n借：销售费用\n  贷：累计摊销",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "B",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "c54087bc-f56e-4776-807a-d453c898b0a4",
+                            "option_a": "其他业务成本",
+                            "status": "draft",
+                            "option_b": "销售费用",
+                            "option_number": 4,
+                            "option_c": "主营业务成本",
+                            "sort": null,
+                            "option_d": "管理费用",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-15T13:07:52.158Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "企业专设销售机构的无形资产摊销额应借记的会计科目是（　 ）。",
+                            "correct_option": "B",
+                            "analysis": "企业专设销售机构的无形资产摊销额应计入销售费用。\n会计分录为：\n借：销售费用\n  贷：累计摊销"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 513,
+                    "sort_in_section": 9,
+                    "questions_id": {
+                        "stem": "下列不是会计职能的拓展职能的是（　 ）。",
+                        "type": "q_mc_single",
+                        "analysis": "核算与监督是会计的基本职能。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "A",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "d172e386-7e38-4e62-a21e-dde26767af1c",
+                            "option_a": "核算和监督",
+                            "status": "draft",
+                            "option_b": "参与经济决策",
+                            "option_number": 4,
+                            "option_c": "预测经济前景",
+                            "sort": null,
+                            "option_d": "评价经营业绩",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T01:11:24.859Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列不是会计职能的拓展职能的是（　 ）。",
+                            "correct_option": "A",
+                            "analysis": "核算与监督是会计的基本职能。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 514,
+                    "sort_in_section": 10,
+                    "questions_id": {
+                        "stem": "下列各项中，对企业会计核算资料的真实性、合法性和合理性进行审查的会计职能是（　）。",
+                        "type": "q_mc_single",
+                        "analysis": "单位内部的会计监督职能是指会计机构、会计人员对其特定主体经济活动和相关会计核算的真实性、完整性、合法性和合理性进行重查使之达到预期经济活动和会计核算目标的功能。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "B",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "a6e656ad-176c-480a-9e4d-fea277e0e65a",
+                            "option_a": "核算职能",
+                            "status": "draft",
+                            "option_b": "监督职能",
+                            "option_number": 4,
+                            "option_c": "参与经济决策职能",
+                            "sort": null,
+                            "option_d": "评价经济业绩职能",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-15T12:59:02.496Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列各项中，对企业会计核算资料的真实性、合法性和合理性进行审查的会计职能是（　）。",
+                            "correct_option": "B",
+                            "analysis": "单位内部的会计监督职能是指会计机构、会计人员对其特定主体经济活动和相关会计核算的真实性、完整性、合法性和合理性进行重查使之达到预期经济活动和会计核算目标的功能。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 543,
+                    "sort_in_section": 11,
+                    "questions_id": {
+                        "stem": "根据交易或者事项的经济特征对会计对象作基本分类的是（    ）。",
+                        "type": "q_mc_single",
+                        "analysis": "会计要素是根据交易或者事项的经济特征所确定的财务会计对象和基本分类，是构成会计内容的主要因素。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "A",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "16f4de7b-0946-499d-9d57-d616f4bdd3ba",
+                            "option_a": "会计要素",
+                            "status": "draft",
+                            "option_b": "会计内容",
+                            "option_number": 4,
+                            "option_c": "会计科目",
+                            "sort": null,
+                            "option_d": "会计账户",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:01:30.561Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据交易或者事项的经济特征对会计对象作基本分类的是（    ）。",
+                            "correct_option": "A",
+                            "analysis": "会计要素是根据交易或者事项的经济特征所确定的财务会计对象和基本分类，是构成会计内容的主要因素。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 544,
+                    "sort_in_section": 12,
+                    "questions_id": {
+                        "stem": "（  ）是指检查各项经济业务及其会计核算是否符合国家有关法律法规，遵守财经纪律，执行国家各项方针政策。",
+                        "type": "q_mc_single",
+                        "analysis": "合法性审查，是指检查各项经济交易或事项及其会计核算是否符合国家有关法律法规，遵守财经纪律，执行国家各项方针政策，以杜绝违法乱纪行为。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "C",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "0c15385e-b899-4588-8a5c-60ba84a8cb3c",
+                            "option_a": "真实性审查",
+                            "status": "draft",
+                            "option_b": "完整性审查",
+                            "option_number": 4,
+                            "option_c": "合法性审查",
+                            "sort": null,
+                            "option_d": "合理性审查",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T01:03:44.803Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "（  ）是指检查各项经济业务及其会计核算是否符合国家有关法律法规，遵守财经纪律，执行国家各项方针政策。",
+                            "correct_option": "C",
+                            "analysis": "合法性审查，是指检查各项经济交易或事项及其会计核算是否符合国家有关法律法规，遵守财经纪律，执行国家各项方针政策，以杜绝违法乱纪行为。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 545,
+                    "sort_in_section": 13,
+                    "questions_id": {
+                        "stem": "（    ）是指检查各项会计核算是否根据实际发生的经济业务进行，是否如实反映经济业务或者事项的真实状况。",
+                        "type": "q_mc_single",
+                        "analysis": "真实性审查，是指检查各项会计核算是否根据实际发生的经济业务进行，是否如实反映经济交易或事项的真实状况。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "A",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "4d7c1b76-7a54-4927-8a8d-1db2c36fcdbb",
+                            "option_a": "真实性审查",
+                            "status": "draft",
+                            "option_b": "完整性审查",
+                            "option_number": 4,
+                            "option_c": "合法性审查",
+                            "sort": null,
+                            "option_d": "合理性审查",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T00:36:02.322Z",
+                            "option_f": null,
+                            "user_updated": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "date_updated": "2025-04-18T01:02:18.675Z",
+                            "stem": "（    ）是指检查各项会计核算是否根据实际发生的经济业务进行，是否如实反映经济业务或者事项的真实状况。",
+                            "correct_option": "A",
+                            "analysis": "真实性审查，是指检查各项会计核算是否根据实际发生的经济业务进行，是否如实反映经济交易或事项的真实状况。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 546,
+                    "sort_in_section": 14,
+                    "questions_id": {
+                        "stem": "会计的基本特征不包括（　）。",
+                        "type": "q_mc_single",
+                        "analysis": "会计的基本特征：1. 以货币为主要的计量单位；2. 准确完整性、连续系统性。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "D",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "bb577893-36c8-4824-98ce-a657406d195d",
+                            "option_a": "以货币为主要的计量单位",
+                            "status": "draft",
+                            "option_b": "准确完整性",
+                            "option_number": 4,
+                            "option_c": "连续系统性",
+                            "sort": null,
+                            "option_d": "跳跃性",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T01:10:34.455Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "会计的基本特征不包括（　）。",
+                            "correct_option": "D",
+                            "analysis": "会计的基本特征：1. 以货币为主要的计量单位；2. 准确完整性、连续系统性。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 547,
+                    "sort_in_section": 15,
+                    "questions_id": {
+                        "stem": "会计核算与会计监督的关系（　 ）。",
+                        "type": "q_mc_single",
+                        "analysis": "会计核算与会计监督的关系。\n会计核算与会计监督是相辅相成、辩证统一的。会计核算是会计监督的基础，核算提供的各种系统性会计资料，监督就失去了依据；会计监督又是会计核算的保障，只有核算没有监督，就难以保证核算提供信息的质量。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "D",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "e15d339b-5687-4c50-968e-a1675e1c6c73",
+                            "option_a": "会计核算与会计监督是不相干的",
+                            "status": "draft",
+                            "option_b": "会计核算包含会计监督",
+                            "option_number": 4,
+                            "option_c": "会计监督包含会计核算",
+                            "sort": null,
+                            "option_d": "会计核算与会计监督是相辅相成的",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T01:09:22.859Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "会计核算与会计监督的关系（　 ）。",
+                            "correct_option": "D",
+                            "analysis": "会计核算与会计监督的关系。\n会计核算与会计监督是相辅相成、辩证统一的。会计核算是会计监督的基础，核算提供的各种系统性会计资料，监督就失去了依据；会计监督又是会计核算的保障，只有核算没有监督，就难以保证核算提供信息的质量。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 548,
+                    "sort_in_section": 16,
+                    "questions_id": {
+                        "stem": "下列不属于会计计量属性的是（    ）。",
+                        "type": "q_mc_single",
+                        "analysis": "会计计量属性包括：历史成本、重置成本、可变现净值、现值和公允价值等。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "D",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "0592af5f-5533-4e07-8f3b-cb75e0f78aac",
+                            "option_a": "重置成本",
+                            "status": "draft",
+                            "option_b": "公允价值",
+                            "option_number": 4,
+                            "option_c": "历史成本",
+                            "sort": null,
+                            "option_d": "货币计算",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:02:04.617Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列不属于会计计量属性的是（    ）。",
+                            "correct_option": "D",
+                            "analysis": "会计计量属性包括：历史成本、重置成本、可变现净值、现值和公允价值等。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 549,
+                    "sort_in_section": 17,
+                    "questions_id": {
+                        "stem": "下列会计要素的计量属性中，又被称为现行成本的是（    ）。",
+                        "type": "q_mc_single",
+                        "analysis": "重置成本，又称现行成本，是指按照当前市场条件，重新取得同样一项资产所需要支付的现金或者现金等价物金额。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "C",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "3d520e1f-4bcb-4bc9-9b16-10487d63c647",
+                            "option_a": "历史成本",
+                            "status": "draft",
+                            "option_b": "可变现净值",
+                            "option_number": 4,
+                            "option_c": "重置成本",
+                            "sort": null,
+                            "option_d": "现值",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:03:33.682Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列会计要素的计量属性中，又被称为现行成本的是（    ）。",
+                            "correct_option": "C",
+                            "analysis": "重置成本，又称现行成本，是指按照当前市场条件，重新取得同样一项资产所需要支付的现金或者现金等价物金额。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 550,
+                    "sort_in_section": 18,
+                    "questions_id": {
+                        "stem": "下列关于负债的说法中，不正确的是（    ）。",
+                        "type": "q_mc_single",
+                        "analysis": "负债，是指企业过去的交易或者事项形成的，预期会导致经济利益流出企业的现时义务。选项D说法错误，未来的交易或事项形成的义务不确认负债。\n\n提示：负债是现时义务，未来借的钱不可能让你现在还。\n\n\n【知识点拓展】\n\n1.负债的定义\n\n负债，是指企业过去的交易或者事项形成的，预期会导致经济利益流出企业的现时义务。\n\n2.负债的特征\n\n(1)负债是企业承担的现时义务；\n\n(2)负债预期会导致经济利益流出企业；\n\n(3)负债是由企业过去的交易或者事项形成的。\n\n3.负债的确认条件\n\n将一项现时义务确认为负债，需要符合负债的定义，还需要同时满足以下两个条件：\n\n(1)与该义务有关的经济利益很可能流出企业；\n\n(2)未来流出的经济利益的金额能够可靠地计量。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "D",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "b79d1112-fb41-4eb2-a0e9-5c46a5dbb858",
+                            "option_a": "过去的交易或事项形成的，会导致经济利益流出企业的现时义务确认为负债",
+                            "status": "draft",
+                            "option_b": "未来的交易或事项形成的义务不应确认为负债",
+                            "option_number": 4,
+                            "option_c": "企业的负债都是企业的现时义务",
+                            "sort": null,
+                            "option_d": "未来的交易或事项形成的义务可以确认为负债",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:09:09.406Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列关于负债的说法中，不正确的是（    ）。",
+                            "correct_option": "D",
+                            "analysis": "负债，是指企业过去的交易或者事项形成的，预期会导致经济利益流出企业的现时义务。选项D说法错误，未来的交易或事项形成的义务不确认负债。\n\n提示：负债是现时义务，未来借的钱不可能让你现在还。\n\n\n【知识点拓展】\n\n1.负债的定义\n\n负债，是指企业过去的交易或者事项形成的，预期会导致经济利益流出企业的现时义务。\n\n2.负债的特征\n\n(1)负债是企业承担的现时义务；\n\n(2)负债预期会导致经济利益流出企业；\n\n(3)负债是由企业过去的交易或者事项形成的。\n\n3.负债的确认条件\n\n将一项现时义务确认为负债，需要符合负债的定义，还需要同时满足以下两个条件：\n\n(1)与该义务有关的经济利益很可能流出企业；\n\n(2)未来流出的经济利益的金额能够可靠地计量。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 551,
+                    "sort_in_section": 19,
+                    "questions_id": {
+                        "stem": "下列各项中，不符合资产要素定义的是（     ）。",
+                        "type": "q_mc_single",
+                        "analysis": "资产，是指企业过去的交易或者事项形成的，由企业拥有或控制的，预期会给企业带来经济利益的资源。\n\n选项C，受托代销商品企业未取得其所有权，不应确认为企业的资产。\n\n\n\n【知识点拓展】\n\n1.资产的定义：\n\n资产，是指企业过去的交易或者事项形成的，由企业拥有或者控制的，预期会给企业带来经济利益的资源。\n\n2.资产的特征\n\n（1）资产应为企业拥有或者控制的资源。\n\n（2）资产预期会给企业带来经济利益。\n\n（3）资产是由企业过去的交易或者事项形成的。\n\n3.资产的确认条件\n\n将一项资源确认为资产，需要符合资产的定义，还应同时满足以下两个条件：\n\n（1）与该资源有关的经济利益很可能流入企业。\n\n（2）该资源的成本或者价值能够可靠地计量。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "C",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "62caa40a-81c5-4788-a0f4-024c29fddf97",
+                            "option_a": "发出商品",
+                            "status": "draft",
+                            "option_b": "委托加工物资",
+                            "option_number": 4,
+                            "option_c": "受托代销商品",
+                            "sort": null,
+                            "option_d": "在产品",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:04:17.025Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列各项中，不符合资产要素定义的是（     ）。",
+                            "correct_option": "C",
+                            "analysis": "资产，是指企业过去的交易或者事项形成的，由企业拥有或控制的，预期会给企业带来经济利益的资源。\n\n选项C，受托代销商品企业未取得其所有权，不应确认为企业的资产。\n\n\n\n【知识点拓展】\n\n1.资产的定义：\n\n资产，是指企业过去的交易或者事项形成的，由企业拥有或者控制的，预期会给企业带来经济利益的资源。\n\n2.资产的特征\n\n（1）资产应为企业拥有或者控制的资源。\n\n（2）资产预期会给企业带来经济利益。\n\n（3）资产是由企业过去的交易或者事项形成的。\n\n3.资产的确认条件\n\n将一项资源确认为资产，需要符合资产的定义，还应同时满足以下两个条件：\n\n（1）与该资源有关的经济利益很可能流入企业。\n\n（2）该资源的成本或者价值能够可靠地计量。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 552,
+                    "sort_in_section": 20,
+                    "questions_id": {
+                        "stem": "企业对会计要素进行计量时，一般采用（    ）。",
+                        "type": "q_mc_single",
+                        "analysis": "企业对会计要素进行计量时，一般采用历史成本法。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "A",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": {
+                            "id": "13e19849-f19e-4da7-baef-074001b82e7a",
+                            "option_a": "历史成本",
+                            "status": "draft",
+                            "option_b": "公允价值",
+                            "option_number": 4,
+                            "option_c": "现值",
+                            "sort": null,
+                            "option_d": "可变现净值",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:02:54.499Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "企业对会计要素进行计量时，一般采用（    ）。",
+                            "correct_option": "A",
+                            "analysis": "企业对会计要素进行计量时，一般采用历史成本法。"
+                        },
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                }
+            ],
+            "question_groups": []
+        },
+        {
+            "id": "db8df0cb-adb2-469a-aa89-3c7aec0161eb",
+            "paper_id": "c360fcd9-8f0d-48c2-8287-996792da4958",
+            "sort_in_paper": 2,
+            "title": "多选题",
+            "description": null,
+            "points_per_question": "2.00",
+            "question_type": "q_mc_multi",
+            "question_mode": "single",
+            "total_question_points": 20,
+            "questions": [
+                {
+                    "id": 411,
+                    "sort_in_section": 1,
+                    "questions_id": {
+                        "stem": "会计职能的拓展职能包括（　）。",
+                        "type": "q_mc_multi",
+                        "analysis": "会计职能的拓展职能：\n（1）预测经济前景，是指根据财务报告等提供的信息，定量、定性地判断和推测经济活动的发展变化规律，以指导和调节经济活动，提高经济效益。\n（2）参与经济决策，是指根据财务报告等提供的信息资料，运用定量分析和定性分析方法，对备选方案进行经济可行性分析，为企业经营管理等提供与决策相关的信息。\n（3）评价经营业绩，是指利用财务报告等提供的会计资料，采用适当的方法，对企业一定经营期间的资产运营、经济效益等经营成果，对照相应的评价标准，进行定量及定性对比分析并作出综合评价。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A",
+                            "B",
+                            "C"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": {
+                            "id": "6f17b0d9-e0df-4291-95b2-bfbaff2c5e8b",
+                            "option_a": "预测经济前景",
+                            "status": "draft",
+                            "option_b": "参与经济决策",
+                            "option_number": 4,
+                            "option_c": "评价经济业绩",
+                            "sort": null,
+                            "option_d": "上报报告",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T01:13:29.551Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "会计职能的拓展职能包括（　）。",
+                            "correct_options": [
+                                "A",
+                                "B",
+                                "C"
+                            ],
+                            "analysis": "会计职能的拓展职能：\n（1）预测经济前景，是指根据财务报告等提供的信息，定量、定性地判断和推测经济活动的发展变化规律，以指导和调节经济活动，提高经济效益。\n（2）参与经济决策，是指根据财务报告等提供的信息资料，运用定量分析和定性分析方法，对备选方案进行经济可行性分析，为企业经营管理等提供与决策相关的信息。\n（3）评价经营业绩，是指利用财务报告等提供的会计资料，采用适当的方法，对企业一定经营期间的资产运营、经济效益等经营成果，对照相应的评价标准，进行定量及定性对比分析并作出综合评价。"
+                        },
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 412,
+                    "sort_in_section": 2,
+                    "questions_id": {
+                        "stem": "会计的基本特征包括（　）。",
+                        "type": "q_mc_multi",
+                        "analysis": "会计的基本特征：1. 以货币为主要的计量单位 2. 准确完整性、连续系统性。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A",
+                            "C"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": {
+                            "id": "345232eb-2418-4bd1-b8a6-8bee5ec4a5dc",
+                            "option_a": "以货币为主要的计量单位",
+                            "status": "draft",
+                            "option_b": "间歇性",
+                            "option_number": 4,
+                            "option_c": "准确完整性",
+                            "sort": null,
+                            "option_d": "对外一致性",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T01:14:29.406Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "会计的基本特征包括（　）。",
+                            "correct_options": [
+                                "A",
+                                "C"
+                            ],
+                            "analysis": "会计的基本特征：1. 以货币为主要的计量单位 2. 准确完整性、连续系统性。"
+                        },
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 413,
+                    "sort_in_section": 3,
+                    "questions_id": {
+                        "stem": "下列各项中，关于会计职能的表述正确的有（    ）。",
+                        "type": "q_mc_multi",
+                        "analysis": "会计的基本职能包括核算职能和监督职能。会计核算是会计监督的基础；会计监督是会计核算质量的保障。会计拓展职能包括预测经济前景、参与经济决策、评价经营业绩。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A",
+                            "B",
+                            "C",
+                            "D"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": {
+                            "id": "d54b84e7-ad92-426a-89d3-7e1a6b4a7a49",
+                            "option_a": "监督职能是核算职能的质量保障",
+                            "status": "draft",
+                            "option_b": "核算职能是监督职能的基础",
+                            "option_number": 4,
+                            "option_c": "核算与监督是基本职能",
+                            "sort": null,
+                            "option_d": "预测经济前景，参与经济决策和评价经营业绩是拓展职能",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T01:18:54.421Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列各项中，关于会计职能的表述正确的有（    ）。",
+                            "correct_options": [
+                                "A",
+                                "B",
+                                "C",
+                                "D"
+                            ],
+                            "analysis": "会计的基本职能包括核算职能和监督职能。会计核算是会计监督的基础；会计监督是会计核算质量的保障。会计拓展职能包括预测经济前景、参与经济决策、评价经营业绩。"
+                        },
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 414,
+                    "sort_in_section": 4,
+                    "questions_id": {
+                        "stem": "会计核算的内容主要包括（    ）。",
+                        "type": "q_mc_multi",
+                        "analysis": "会计核算的内容主要包括：（1）资产的增减和使用；（2）负债的增减；（3）净资产（所有者权益）的增减；（4）收入、支出、费用、成本的增减；（5）财务成果的计算和处理；（6）需要办理会计手续、进行会计核算的其他事项。综上可知本题的正确答案为ABCD。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A",
+                            "B",
+                            "C",
+                            "D"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": {
+                            "id": "1c4f58e7-d602-47d6-a763-b62490e1e80c",
+                            "option_a": "负债的增减",
+                            "status": "draft",
+                            "option_b": "净资产（所有者权益）的增减",
+                            "option_number": 4,
+                            "option_c": "收入、支出、费用、成本的增减",
+                            "sort": null,
+                            "option_d": "财务成果的计算和处理",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T01:21:11.450Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "会计核算的内容主要包括（    ）。",
+                            "correct_options": [
+                                "A",
+                                "B",
+                                "C",
+                                "D"
+                            ],
+                            "analysis": "会计核算的内容主要包括：（1）资产的增减和使用；（2）负债的增减；（3）净资产（所有者权益）的增减；（4）收入、支出、费用、成本的增减；（5）财务成果的计算和处理；（6）需要办理会计手续、进行会计核算的其他事项。综上可知本题的正确答案为ABCD。"
+                        },
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 415,
+                    "sort_in_section": 5,
+                    "questions_id": {
+                        "stem": "下列各项中，属于会计信息使用者的有（     ）。",
+                        "type": "q_mc_multi",
+                        "analysis": "会计资料及会计信息的使用者既包括企业的内部使用者又包括外部使用者，主要包括投资者（选项A）、债权人（选项B）、政府（选项D）及有关部门和社会公众（选项C）等。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A",
+                            "B",
+                            "C",
+                            "D"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": {
+                            "id": "53cd70d3-0121-4857-919d-96ded6d080b0",
+                            "option_a": "投资者",
+                            "status": "draft",
+                            "option_b": "债权人",
+                            "option_number": 4,
+                            "option_c": "社会公众",
+                            "sort": null,
+                            "option_d": "政府",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T01:24:34.870Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列各项中，属于会计信息使用者的有（     ）。",
+                            "correct_options": [
+                                "A",
+                                "B",
+                                "C",
+                                "D"
+                            ],
+                            "analysis": "会计资料及会计信息的使用者既包括企业的内部使用者又包括外部使用者，主要包括投资者（选项A）、债权人（选项B）、政府（选项D）及有关部门和社会公众（选项C）等。"
+                        },
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 493,
+                    "sort_in_section": 6,
+                    "questions_id": {
+                        "stem": "本月收到上月销售产品的货款存入银行，下列表述中正确的有（    ）。",
+                        "type": "q_mc_multi",
+                        "analysis": "在权责发生制下，应该在销售当月确认为收入；收付实现制下，应该在实际收到货款时确认收入。由此可知A、B为正确选项。\n\n\n\n【知识点拓展】\n\n由于会计分期，才产生了当期与其他期间的差别，从而形成了权责发生制和收付实现制的区别。\n\n\n\n【注意】\n\n①在我国，企业会计核算采用权责发生制。\n\n②我国事业单位，除其部分经营业务外应当采用收付实现制记账。\n\n③我国政府会计，其预算会计采用收付实现制，而财务会计采用权责发生制。\n\n④工会会计、社会保险基金等基金（资金）会计主要以收付实现制为核算基础。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A",
+                            "B"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": {
+                            "id": "d0a86e79-1072-4d3c-b198-346245cf368e",
+                            "option_a": "收付实现制下，应当作为本月收入",
+                            "status": "draft",
+                            "option_b": "权责发生制下，不能作为本月收入",
+                            "option_number": 4,
+                            "option_c": "收付实现制下，不能作为本月收入",
+                            "sort": null,
+                            "option_d": "权责发生制下，应当作为本月收入",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T01:40:18.972Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "本月收到上月销售产品的货款存入银行，下列表述中正确的有（    ）。",
+                            "correct_options": [
+                                "A",
+                                "B"
+                            ],
+                            "analysis": "在权责发生制下，应该在销售当月确认为收入；收付实现制下，应该在实际收到货款时确认收入。由此可知A、B为正确选项。\n\n\n\n【知识点拓展】\n\n由于会计分期，才产生了当期与其他期间的差别，从而形成了权责发生制和收付实现制的区别。\n\n\n\n【注意】\n\n①在我国，企业会计核算采用权责发生制。\n\n②我国事业单位，除其部分经营业务外应当采用收付实现制记账。\n\n③我国政府会计，其预算会计采用收付实现制，而财务会计采用权责发生制。\n\n④工会会计、社会保险基金等基金（资金）会计主要以收付实现制为核算基础。"
+                        },
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 494,
+                    "sort_in_section": 7,
+                    "questions_id": {
+                        "stem": "财务会计目标是通过编制财务报告，借以反映企业的（    ）。",
+                        "type": "q_mc_multi",
+                        "analysis": "企业编制财务报告的目标，是向财务报告使用者提供与企业财务状况、经营成果和现金流量等有关的会计信息，反映企业管理层受托责任的履行情况，有助于财务报告使用者作出经济决策。由此可知BCD为正确选项。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "C",
+                            "D",
+                            "B"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": {
+                            "id": "86a23f30-d434-4cb7-a0b4-89689f4741c4",
+                            "option_a": "成本费用",
+                            "status": "draft",
+                            "option_b": "经营成果",
+                            "option_number": 4,
+                            "option_c": "财务状况",
+                            "sort": null,
+                            "option_d": "现金流量",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T01:19:32.001Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "财务会计目标是通过编制财务报告，借以反映企业的（    ）。",
+                            "correct_options": [
+                                "B",
+                                "C",
+                                "D"
+                            ],
+                            "analysis": "企业编制财务报告的目标，是向财务报告使用者提供与企业财务状况、经营成果和现金流量等有关的会计信息，反映企业管理层受托责任的履行情况，有助于财务报告使用者作出经济决策。由此可知BCD为正确选项。"
+                        },
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 515,
+                    "sort_in_section": 8,
+                    "questions_id": {
+                        "stem": "下列选项中，属于相关性要求的有（    ）。",
+                        "type": "q_mc_multi",
+                        "analysis": "相关性要求企业提供的会计信息应当与投资者等财务报告使用者的经济决策需要相关，有助于投资者等财务报告使用者对企业过去、现在或未来的情况作出评价或者预测。相关的会计信息应当能够有助于使用者评价企业过去的决策，证实或者修正过去的有关预测，因而具有反馈价值。相关的会计信息还应当具有预测价值，有助于使用者根据财务报告提供的会计信息预测企业未来的财务状况、经营成果和现金流量。选项A属于谨慎性要求；选项D属于可靠性要求。\n\n\n\n【知识点拓展】\n\n相关性，例如：\n\n1.在财务会计报告中区分收入和利得、费用和损失，有助于财务会计报告使用者评价企业实际的盈利能力，同时还有助于预测企业未来的盈利能力；\n\n2.在财务会计报告中区分流动资产和非流动资产，有助于财务会计报告使用者评价和预测企业资产流动性和支付能力；\n\n3.在财务会计报告中区分流动负债和非流动负债，有助于财务会计报告使用者评价和预测企业的短期偿债能力和长期偿债能力；\n\n4.实施资产减值准备会计政策，有助于提高企业投资者作出决策过程中的谨慎性；\n\n5.适度引入公允价值信息，有助于提高会计信息的预测价值，提升会计信息的有用性。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "B",
+                            "C"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": {
+                            "id": "148906a4-a9a7-49df-a0f3-49769a641a88",
+                            "option_a": "不高估资产或收益、低估负债或费用",
+                            "status": "draft",
+                            "option_b": "能够有助于信息使用者评价企业过去的决策，证实或者修正过去的有关预测",
+                            "option_number": 4,
+                            "option_c": "可以根据会计信息预测企业未来的财务状况、经营成果和现金流量",
+                            "sort": null,
+                            "option_d": "以实际发生的交易或事项为依据进行确认、计量、记录和报告",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T01:41:57.730Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列选项中，属于相关性要求的有（    ）。",
+                            "correct_options": [
+                                "B",
+                                "C"
+                            ],
+                            "analysis": "相关性要求企业提供的会计信息应当与投资者等财务报告使用者的经济决策需要相关，有助于投资者等财务报告使用者对企业过去、现在或未来的情况作出评价或者预测。相关的会计信息应当能够有助于使用者评价企业过去的决策，证实或者修正过去的有关预测，因而具有反馈价值。相关的会计信息还应当具有预测价值，有助于使用者根据财务报告提供的会计信息预测企业未来的财务状况、经营成果和现金流量。选项A属于谨慎性要求；选项D属于可靠性要求。\n\n\n\n【知识点拓展】\n\n相关性，例如：\n\n1.在财务会计报告中区分收入和利得、费用和损失，有助于财务会计报告使用者评价企业实际的盈利能力，同时还有助于预测企业未来的盈利能力；\n\n2.在财务会计报告中区分流动资产和非流动资产，有助于财务会计报告使用者评价和预测企业资产流动性和支付能力；\n\n3.在财务会计报告中区分流动负债和非流动负债，有助于财务会计报告使用者评价和预测企业的短期偿债能力和长期偿债能力；\n\n4.实施资产减值准备会计政策，有助于提高企业投资者作出决策过程中的谨慎性；\n\n5.适度引入公允价值信息，有助于提高会计信息的预测价值，提升会计信息的有用性。"
+                        },
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 516,
+                    "sort_in_section": 9,
+                    "questions_id": {
+                        "stem": "下列各项中，符合可比性信息质量要求的有（    ）。",
+                        "type": "q_mc_multi",
+                        "analysis": "可比性包括两层含义：同一企业不同时期可比；不同企业相同会计期间可比。选项A和选项B符合题意。选项C属于可理解性的要求；选项D正确的表述为：企业采用的会计政策，以后期间不得随意变更。\n\n\n\n【知识点拓展】\n\n1.可比性要求企业提供的会计信息应当相互可比。例如，企业不同时期采用一致的固定资产折旧方法。\n\n2.会计信息质量要求主要包括8个方面：可靠性、相关性、可理解性、可比性、实质重于形式、重要性、谨慎性、及时性。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A",
+                            "B"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": {
+                            "id": "0b8c3e6d-90c1-4917-af69-471f8f97a505",
+                            "option_a": "不同企业相同会计期间会计信息可比",
+                            "status": "draft",
+                            "option_b": "\n同一企业不同时期的会计信息可比",
+                            "option_number": 4,
+                            "option_c": "企业提供的会计信息应便于使用者理解和使用",
+                            "sort": null,
+                            "option_d": "企业采用的会计政策，以后期间不得变更",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T01:43:36.493Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列各项中，符合可比性信息质量要求的有（    ）。",
+                            "correct_options": [
+                                "A",
+                                "B"
+                            ],
+                            "analysis": "可比性包括两层含义：同一企业不同时期可比；不同企业相同会计期间可比。选项A和选项B符合题意。选项C属于可理解性的要求；选项D正确的表述为：企业采用的会计政策，以后期间不得随意变更。\n\n\n\n【知识点拓展】\n\n1.可比性要求企业提供的会计信息应当相互可比。例如，企业不同时期采用一致的固定资产折旧方法。\n\n2.会计信息质量要求主要包括8个方面：可靠性、相关性、可理解性、可比性、实质重于形式、重要性、谨慎性、及时性。"
+                        },
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 517,
+                    "sort_in_section": 10,
+                    "questions_id": {
+                        "stem": "下列各项中，关于企业会计信息可靠性表述正确的有（    ）。",
+                        "type": "q_mc_multi",
+                        "analysis": "可靠性要求企业应当以实际发生的交易或者事项为依据进行确认、计量、记录和报告，如实反映符合确认和计量要求的会计要素及其他相关信息，保证会计信息真实可靠、内容完整。选项A，属于会计信息质量谨慎性要求；选项B，属于会计信息质量可比性要求；因此本题的答案为CD。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "C",
+                            "D"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": {
+                            "id": "89681d28-d956-4ce8-99da-6b8804e43233",
+                            "option_a": "企业应当保持应有的谨慎，不高估资产或者收益、不低估负债或费用",
+                            "status": "draft",
+                            "option_b": "企业提供的会计信息应当相互可比",
+                            "option_number": 4,
+                            "option_c": "企业应当保证会计信息真实可靠、内容完整",
+                            "sort": null,
+                            "option_d": "企业应当以实际发生的交易或事项为依据进行确认、计量、记录和报告",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T01:49:45.436Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列各项中，关于企业会计信息可靠性表述正确的有（    ）。",
+                            "correct_options": [
+                                "C",
+                                "D"
+                            ],
+                            "analysis": "可靠性要求企业应当以实际发生的交易或者事项为依据进行确认、计量、记录和报告，如实反映符合确认和计量要求的会计要素及其他相关信息，保证会计信息真实可靠、内容完整。选项A，属于会计信息质量谨慎性要求；选项B，属于会计信息质量可比性要求；因此本题的答案为CD。"
+                        },
+                        "q_mc_binary": null,
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                }
+            ],
+            "question_groups": []
+        },
+        {
+            "id": "e401adce-f112-471f-a275-0207b40937d7",
+            "paper_id": "c360fcd9-8f0d-48c2-8287-996792da4958",
+            "sort_in_paper": 3,
+            "title": "判断题",
+            "description": null,
+            "points_per_question": "1.00",
+            "question_type": "q_mc_binary",
+            "question_mode": "single",
+            "total_question_points": 10,
+            "questions": [
+                {
+                    "id": 518,
+                    "sort_in_section": 1,
+                    "questions_id": {
+                        "stem": "持续经营是指会计主体将会按当前的规模和状态一直持续经营下去，将经营活动划分为一个个连续的、长短相同的期间。（　 ）",
+                        "type": "q_mc_binary",
+                        "analysis": "持续经营，是指在可以预见的将来，企业会按当前的规模和状态继续经营下去，不会停业，也不会大规模削减业务。题干的后半段“将经营活动划分为一个个连续的、长短相同的期间”是对会计分期的描述。\n\n\n\n【知识点拓展】\n\n企业一系列会计核算方法和原则都是建立在持续经营原则基础上的。持续经营是会计分期的基础，会计分期为会计工作划定了其时间范围。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "B",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": {
+                            "id": "f2fa6511-afc2-4eaf-b30b-f3248c6d25aa",
+                            "option_a": "✓",
+                            "status": "draft",
+                            "option_b": "✕",
+                            "sort": null,
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "date_created": "2025-04-18T01:56:27.717Z",
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "持续经营是指会计主体将会按当前的规模和状态一直持续经营下去，将经营活动划分为一个个连续的、长短相同的期间。（　 ）",
+                            "correct_option": "B",
+                            "analysis": "持续经营，是指在可以预见的将来，企业会按当前的规模和状态继续经营下去，不会停业，也不会大规模削减业务。题干的后半段“将经营活动划分为一个个连续的、长短相同的期间”是对会计分期的描述。\n\n\n\n【知识点拓展】\n\n企业一系列会计核算方法和原则都是建立在持续经营原则基础上的。持续经营是会计分期的基础，会计分期为会计工作划定了其时间范围。"
+                        },
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 519,
+                    "sort_in_section": 2,
+                    "questions_id": {
+                        "stem": "甲公司发出存货计价方法采用月末一次加权平均法，因管理需要将其改为移动加权平均法违背可比性原则。（　　）",
+                        "type": "q_mc_binary",
+                        "analysis": "此变更属于会计政策变更。甲公司基于管理需要对存货发出计价方法进行变更，变更后的会计政策可以提供更可靠、更相关的会计信息，不违背可比性原则。\n\n\n\n【知识点拓展】\n\n1.会计政策变更是指企业对相同的交易或事项由原来采用的会计政策改用另一会计政策的行为。\n\n2.企业为保证会计信息的可比性，一般情况下，采用的会计政策在每一会计期间和前后各期应当保持一致，不得随意变更。但是，确有必要变更的，应当按照国家统一的会计制度的规定变更，并将变更的原因、情况及影响在财务会计报告中说明。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "B",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": {
+                            "id": "306b2f48-627d-457d-b8af-4e48e15d487e",
+                            "option_a": "✓",
+                            "status": "draft",
+                            "option_b": "✕",
+                            "sort": null,
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "date_created": "2025-04-18T01:56:43.183Z",
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "甲公司发出存货计价方法采用月末一次加权平均法，因管理需要将其改为移动加权平均法违背可比性原则。（　　）",
+                            "correct_option": "B",
+                            "analysis": "此变更属于会计政策变更。甲公司基于管理需要对存货发出计价方法进行变更，变更后的会计政策可以提供更可靠、更相关的会计信息，不违背可比性原则。\n\n\n\n【知识点拓展】\n\n1.会计政策变更是指企业对相同的交易或事项由原来采用的会计政策改用另一会计政策的行为。\n\n2.企业为保证会计信息的可比性，一般情况下，采用的会计政策在每一会计期间和前后各期应当保持一致，不得随意变更。但是，确有必要变更的，应当按照国家统一的会计制度的规定变更，并将变更的原因、情况及影响在财务会计报告中说明。"
+                        },
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 520,
+                    "sort_in_section": 3,
+                    "questions_id": {
+                        "stem": "可靠性要求企业提供的会计信息应当反映与企业财务状况、经营成果和现金流量有关的所有重要交易或者事项。（　）",
+                        "type": "q_mc_binary",
+                        "analysis": "可靠性要求企业应当以实际发生的交易或者事项为依据进行确认、计量、记录和报告，如实反映符合确认和计量要求的各项会计要素及其他相关信息，保证会计信息真实可靠、内容完整。题干表述为重要性的要求。\n\n",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "B",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": {
+                            "id": "73055908-5749-45ba-96b4-ae507caa1f3d",
+                            "option_a": "✓",
+                            "status": "draft",
+                            "option_b": "✕",
+                            "sort": null,
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "date_created": "2025-04-18T01:57:06.574Z",
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "可靠性要求企业提供的会计信息应当反映与企业财务状况、经营成果和现金流量有关的所有重要交易或者事项。（　）",
+                            "correct_option": "B",
+                            "analysis": "可靠性要求企业应当以实际发生的交易或者事项为依据进行确认、计量、记录和报告，如实反映符合确认和计量要求的各项会计要素及其他相关信息，保证会计信息真实可靠、内容完整。题干表述为重要性的要求。\n\n"
+                        },
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 521,
+                    "sort_in_section": 4,
+                    "questions_id": {
+                        "stem": "在实务中，如果某会计信息的省略或者错报会影响投资者等财务报告使用者据此作出决策，该信息就具有重要性。（　）",
+                        "type": "q_mc_binary",
+                        "analysis": "题目所述内容正确。\n\n\n\n\n【知识点拓展】\n\n重要性的应用需要依赖职业判断，企业应当根据其所处环境和实际情况，从项目的功能、性质和金额大小等多方面加以判断。例如，企业发生的某些支出金额较小，从支出的受益期来看，可能需要在若干会计期间进行分摊，但根据重要性要求，可以一次性计入当期损益。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "A",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": {
+                            "id": "41a24218-7b57-45af-aeec-c02429f3e7cd",
+                            "option_a": "✓",
+                            "status": "draft",
+                            "option_b": "✕",
+                            "sort": null,
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "date_created": "2025-04-18T01:57:28.460Z",
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "在实务中，如果某会计信息的省略或者错报会影响投资者等财务报告使用者据此作出决策，该信息就具有重要性。（　）",
+                            "correct_option": "A",
+                            "analysis": "题目所述内容正确。\n\n\n\n\n【知识点拓展】\n\n重要性的应用需要依赖职业判断，企业应当根据其所处环境和实际情况，从项目的功能、性质和金额大小等多方面加以判断。例如，企业发生的某些支出金额较小，从支出的受益期来看，可能需要在若干会计期间进行分摊，但根据重要性要求，可以一次性计入当期损益。"
+                        },
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 522,
+                    "sort_in_section": 5,
+                    "questions_id": {
+                        "stem": "会计监督的合法性审查，主要是检查各项财务收支是否符合特定对象的财务收支计划和是否有利于预算目标的实现等。（　）",
+                        "type": "q_mc_binary",
+                        "analysis": "合法性审查是指检查各项经济业务是否符合国家有关法律法规，遵守财经纪律，执行国家的各项方针政策，以杜绝违法乱纪行为；合理性审查是指检查各项财务收支计划是否符合客观经济规律及经营管理方面的要求，保证各项财务收支符合特定的财务收支计划，实现预算的目标。题干表述为合理性审查的要求。\n\n\n\n【知识点拓展】\n\n会计监督的主要内容：\n\n1.真实性审查，是指检查各项会计核算是否根据实际发生的经济业务进行，是否如实反映经济交易或事项的真实状况。\n\n2.完整性审查，是指检查会计核算的范围和内容是否全面，是否有遗漏等不完整的情况。\n\n3.合法性审查，是指检查各项经济交易或事项及其会计核算是否符合国家有关法律法规，遵守财经纪律，执行国家各项方针政策，以杜绝违法乱纪行为。\n\n4.合理性审查，是指检查各项财务收支是否符合客观经济规律及经营管理方面的要求，保证各项财务收支符合特定的财务收支计划，实现预算目标，保持会计核算的准确性和科学性。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "B",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": {
+                            "id": "cbe877a8-4d2f-4c1f-902a-f20e494c9e42",
+                            "option_a": "✓",
+                            "status": "draft",
+                            "option_b": "✕",
+                            "sort": null,
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "date_created": "2025-04-18T01:54:25.965Z",
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "会计监督的合法性审查，主要是检查各项财务收支是否符合特定对象的财务收支计划和是否有利于预算目标的实现等。（　）",
+                            "correct_option": "B",
+                            "analysis": "合法性审查是指检查各项经济业务是否符合国家有关法律法规，遵守财经纪律，执行国家的各项方针政策，以杜绝违法乱纪行为；合理性审查是指检查各项财务收支计划是否符合客观经济规律及经营管理方面的要求，保证各项财务收支符合特定的财务收支计划，实现预算的目标。题干表述为合理性审查的要求。\n\n\n\n【知识点拓展】\n\n会计监督的主要内容：\n\n1.真实性审查，是指检查各项会计核算是否根据实际发生的经济业务进行，是否如实反映经济交易或事项的真实状况。\n\n2.完整性审查，是指检查会计核算的范围和内容是否全面，是否有遗漏等不完整的情况。\n\n3.合法性审查，是指检查各项经济交易或事项及其会计核算是否符合国家有关法律法规，遵守财经纪律，执行国家各项方针政策，以杜绝违法乱纪行为。\n\n4.合理性审查，是指检查各项财务收支是否符合客观经济规律及经营管理方面的要求，保证各项财务收支符合特定的财务收支计划，实现预算目标，保持会计核算的准确性和科学性。"
+                        },
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 523,
+                    "sort_in_section": 6,
+                    "questions_id": {
+                        "stem": "收入一定表现为企业资产的增加。（    ）",
+                        "type": "q_mc_binary",
+                        "analysis": "收入的增加可以表现为资产的增加或负债的减少或两者兼有，一定会表现为所有者权益的增加。\n\n\n\n【知识点拓展】\n\n1.收入的定义\n\n收入，是指企业在日常活动中形成的，会导致所有者权益增加的、与所有者投入资本无关的经济利益的总流入\n\n2.收入的特征\n\n（1）收入是企业在日常活动中形成的;\n\n（2）收入是与所有者投入资本无关的经济利益的总流入;\n\n（3）收入会导致所有者权益的增加。\n\n3.收入的确认条件\n\n（1）合同各方已批准该合同并承诺将履行各自义务；\n\n（2）该合同明确了合同各方与所转让商品或提供劳务相关的权利和义务；\n\n（3）该合同有明确的与所转让商品或提供劳务相关的支付条款；\n\n（4）该合同具有商业实质，即履行该合同将改变企业未来现金流量的风险、时间分布或金额；\n\n（5）企业因向客户转让商品或提供劳务而有权取得的对价很可能收回。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "B",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": {
+                            "id": "259e2fe9-ea2f-4bc6-ba86-9bb626202bba",
+                            "option_a": "✓",
+                            "status": "draft",
+                            "option_b": "✕",
+                            "sort": null,
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "date_created": "2025-04-18T02:20:01.026Z",
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "收入一定表现为企业资产的增加。（    ）",
+                            "correct_option": "B",
+                            "analysis": "收入的增加可以表现为资产的增加或负债的减少或两者兼有，一定会表现为所有者权益的增加。\n\n\n\n【知识点拓展】\n\n1.收入的定义\n\n收入，是指企业在日常活动中形成的，会导致所有者权益增加的、与所有者投入资本无关的经济利益的总流入\n\n2.收入的特征\n\n（1）收入是企业在日常活动中形成的;\n\n（2）收入是与所有者投入资本无关的经济利益的总流入;\n\n（3）收入会导致所有者权益的增加。\n\n3.收入的确认条件\n\n（1）合同各方已批准该合同并承诺将履行各自义务；\n\n（2）该合同明确了合同各方与所转让商品或提供劳务相关的权利和义务；\n\n（3）该合同有明确的与所转让商品或提供劳务相关的支付条款；\n\n（4）该合同具有商业实质，即履行该合同将改变企业未来现金流量的风险、时间分布或金额；\n\n（5）企业因向客户转让商品或提供劳务而有权取得的对价很可能收回。"
+                        },
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 524,
+                    "sort_in_section": 7,
+                    "questions_id": {
+                        "stem": "所有者权益是指企业投资人对企业资产的所有权。（    ）",
+                        "type": "q_mc_binary",
+                        "analysis": "所有者权益是指企业资产扣除负债后，由所有者享有的剩余权益，代表企业投资人对企业净资产的所有权。\n\n\n\n【知识点拓展】\n\n1.所有者权益的来源：包括所有者投入的资本、其他综合收益、留存收益等，通常由股本（或实收资本）、资本公积（含股本溢价或资本溢价、其他资本公积）、其他综合收益、盈余公积和未分配利润等构成。\n\n2.其他综合收益，是指企业根据会计准则规定未在当期损益中确认的各项利得和损失。留存收益，是指企业从历年实现的利润中提取或形成的留存于企业的内部积累，包括盈余公积和未分配利润。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "B",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": {
+                            "id": "4943d881-eb60-429e-979c-77f43f2d2a15",
+                            "option_a": "✓",
+                            "status": "draft",
+                            "option_b": "✕",
+                            "sort": null,
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "date_created": "2025-04-18T02:20:52.480Z",
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "所有者权益是指企业投资人对企业资产的所有权。（    ）",
+                            "correct_option": "B",
+                            "analysis": "所有者权益是指企业资产扣除负债后，由所有者享有的剩余权益，代表企业投资人对企业净资产的所有权。\n\n\n\n【知识点拓展】\n\n1.所有者权益的来源：包括所有者投入的资本、其他综合收益、留存收益等，通常由股本（或实收资本）、资本公积（含股本溢价或资本溢价、其他资本公积）、其他综合收益、盈余公积和未分配利润等构成。\n\n2.其他综合收益，是指企业根据会计准则规定未在当期损益中确认的各项利得和损失。留存收益，是指企业从历年实现的利润中提取或形成的留存于企业的内部积累，包括盈余公积和未分配利润。"
+                        },
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 525,
+                    "sort_in_section": 8,
+                    "questions_id": {
+                        "stem": "在可变现净值计量下，资产按照预计从其持续使用和最终处置中所产生的未来净现金流入量的折现金额计量。（    ）",
+                        "type": "q_mc_binary",
+                        "analysis": "在可变现净值计量下，资产按照其正常对外销售所能收到的现金或者现金等价物的金额扣减该资产至完工时预计发生的成本、销售费用以及相关税费后的金额计量；在现值计量下，资产按照预计从其持续使用和最终处置中所产生的未来净现金流入量的折现金额计量。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "B",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": {
+                            "id": "7333e103-a744-47e2-9f4b-a02dae29d2d9",
+                            "option_a": "✓",
+                            "status": "draft",
+                            "option_b": "✕",
+                            "sort": null,
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "date_created": "2025-04-18T02:21:33.706Z",
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "在可变现净值计量下，资产按照预计从其持续使用和最终处置中所产生的未来净现金流入量的折现金额计量。（    ）",
+                            "correct_option": "B",
+                            "analysis": "在可变现净值计量下，资产按照其正常对外销售所能收到的现金或者现金等价物的金额扣减该资产至完工时预计发生的成本、销售费用以及相关税费后的金额计量；在现值计量下，资产按照预计从其持续使用和最终处置中所产生的未来净现金流入量的折现金额计量。"
+                        },
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 526,
+                    "sort_in_section": 9,
+                    "questions_id": {
+                        "stem": "资产按流动性分为流动资产和固定资产。（    ）",
+                        "type": "q_mc_binary",
+                        "analysis": "资产按流动性质可分为流动资产和非流动资产。\n\n\n\n【知识点拓展】\n\n资产的分类和内容\n\n企业资产分为流动资产和非流动资产两大类。\n\n（1）流动资产包括：货币资金、交易性金融资产、衍生金融资产、应收票据、应收账款、应收款项融资、预付款项、其他应收款、存货、合同资产、持有待售资产、一年内到期的非流动资产、其他流动资产；\n\n（2）非流动资产包括：债权投资、其他债权投资、长期应收款、长期股权投资、其他权益工具投资、其他非流动金融资产、投资性房地产、固定资产、在建工程、生产性生物资产、油气资产、使用权资产、无形资产、开发支出、商誉、长期待摊费用、递延所得税资产、其他非流动资产。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "B",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": {
+                            "id": "29aac988-db3f-4689-a6f8-679693f456f5",
+                            "option_a": "✓",
+                            "status": "draft",
+                            "option_b": "✕",
+                            "sort": null,
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "date_created": "2025-04-18T02:19:41.056Z",
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "资产按流动性分为流动资产和固定资产。（    ）",
+                            "correct_option": "B",
+                            "analysis": "资产按流动性质可分为流动资产和非流动资产。\n\n\n\n【知识点拓展】\n\n资产的分类和内容\n\n企业资产分为流动资产和非流动资产两大类。\n\n（1）流动资产包括：货币资金、交易性金融资产、衍生金融资产、应收票据、应收账款、应收款项融资、预付款项、其他应收款、存货、合同资产、持有待售资产、一年内到期的非流动资产、其他流动资产；\n\n（2）非流动资产包括：债权投资、其他债权投资、长期应收款、长期股权投资、其他权益工具投资、其他非流动金融资产、投资性房地产、固定资产、在建工程、生产性生物资产、油气资产、使用权资产、无形资产、开发支出、商誉、长期待摊费用、递延所得税资产、其他非流动资产。"
+                        },
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                },
+                {
+                    "id": 527,
+                    "sort_in_section": 10,
+                    "questions_id": {
+                        "stem": "出售交易性金融资产支付的交易费用应记入“投资收益”科目的贷方。（    ）",
+                        "type": "q_mc_binary",
+                        "analysis": "出售交易性金融资产支付的交易费用应借记“投资收益”科目。",
+                        "sort_in_group": null,
+                        "correct_ans_select_radio": "B",
+                        "correct_ans_select_multiple_checkbox": null,
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": {
+                            "id": "1383279f-7733-4613-91c2-4d3d62de0f33",
+                            "option_a": "✓",
+                            "status": "draft",
+                            "option_b": "✕",
+                            "sort": null,
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "date_created": "2025-04-18T02:59:11.259Z",
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "出售交易性金融资产支付的交易费用应记入“投资收益”科目的贷方。（    ）",
+                            "correct_option": "B",
+                            "analysis": "出售交易性金融资产支付的交易费用应借记“投资收益”科目。"
+                        },
+                        "q_mc_flexible": null,
+                        "question_group": null
+                    }
+                }
+            ],
+            "question_groups": []
+        },
+        {
+            "id": "b35ba23b-bd2c-45d3-825d-af33b7e797a4",
+            "paper_id": "c360fcd9-8f0d-48c2-8287-996792da4958",
+            "sort_in_paper": 4,
+            "title": "不定项选择题",
+            "description": null,
+            "points_per_question": "2.00",
+            "question_type": "q_mc_flexible",
+            "question_mode": "group",
+            "total_question_points": 30,
+            "questions": [
+                {
+                    "id": 528,
+                    "sort_in_section": 1,
+                    "questions_id": {
+                        "stem": "根据资料（1）至（3），对2021年利润表中“营业利润”项目的影响金额是（　　）万元。",
+                        "type": "q_mc_flexible",
+                        "analysis": "对2021年利润表中“营业利润”项目影响的金额＝－2－1－1.2＋200－120＝75.8（万元）。",
+                        "sort_in_group": 5,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "C"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "74a9024b-d1a9-4b67-9848-3a5ae0a2b8ca",
+                            "option_a": "73.4",
+                            "status": "draft",
+                            "option_b": "78.2",
+                            "option_number": 4,
+                            "option_c": "75.8",
+                            "sort": null,
+                            "option_d": "\n71",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:40:10.601Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（1）至（3），对2021年利润表中“营业利润”项目的影响金额是（　　）万元。",
+                            "correct_options": [
+                                "C"
+                            ],
+                            "analysis": "对2021年利润表中“营业利润”项目影响的金额＝－2－1－1.2＋200－120＝75.8（万元）。"
+                        },
+                        "question_group": {
+                            "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae"
+                        }
+                    }
+                },
+                {
+                    "id": 529,
+                    "sort_in_section": 2,
+                    "questions_id": {
+                        "stem": "根据资料（1），下列表述正确的是（　　）。",
+                        "type": "q_mc_flexible",
+                        "analysis": "企业为取得合同发生的、除预期能够收回的增量成本之外的其他支出，如无论是否取得合同均会发生的差旅费、投标费等相关费用，应当在发生时计入当期损益，除非这些支出明确由客户承担。投标费2万元和投标人员差旅费1万元均通过“管理费用”核算，因订立该合同使期间费用增加3万元；所以选项A正确，选项BC错误；销售人员佣金6万元属于预期未来能够收回的增量成本，应作为合同取得成本确认为一项资产，所以选项D正确。",
+                        "sort_in_group": 2,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A",
+                            "D"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "f6770ec9-3710-4a1a-9705-d6fc322aa0c9",
+                            "option_a": "投标人员差旅费1万元应计入管理费用",
+                            "status": "draft",
+                            "option_b": "投标费2万元应计入合同取得成本",
+                            "option_number": 4,
+                            "option_c": "因订立该合同使期间费用增加9万元",
+                            "sort": null,
+                            "option_d": "销售人员佣金6万元应计入合同取得成本",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:33:52.025Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（1），下列表述正确的是（　　）。",
+                            "correct_options": [
+                                "A",
+                                "D"
+                            ],
+                            "analysis": "企业为取得合同发生的、除预期能够收回的增量成本之外的其他支出，如无论是否取得合同均会发生的差旅费、投标费等相关费用，应当在发生时计入当期损益，除非这些支出明确由客户承担。投标费2万元和投标人员差旅费1万元均通过“管理费用”核算，因订立该合同使期间费用增加3万元；所以选项A正确，选项BC错误；销售人员佣金6万元属于预期未来能够收回的增量成本，应作为合同取得成本确认为一项资产，所以选项D正确。"
+                        },
+                        "question_group": {
+                            "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae"
+                        }
+                    }
+                },
+                {
+                    "id": 530,
+                    "sort_in_section": 3,
+                    "questions_id": {
+                        "stem": "根据资料（2）和（3），下列表述正确的是（　　）。",
+                        "type": "q_mc_flexible",
+                        "analysis": "合同履约进度＝120÷（120＋480）×100%＝20%；主营业务收入＝1 000×20%＝200（万元）；主营业务成本＝120（万元）；合同负债＝250－200＝50（万元）。会计分录如下：\n\n借：银行存款     250\n\n　　贷：主营业务收入     200\n\n　　　　合同负债        50\n\n借：主营业务成本     120\n\n　　贷：合同履约成本     120",
+                        "sort_in_group": 3,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A",
+                            "B",
+                            "C",
+                            "D"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "1d63ee59-add7-4492-8628-01b5be3015ec",
+                            "option_a": "合同负债增加50万元",
+                            "status": "draft",
+                            "option_b": "主营业务收入增加200万元",
+                            "option_number": 4,
+                            "option_c": "甲公司施工进度为20%",
+                            "sort": null,
+                            "option_d": "\n主营业务成本增加120万元",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:40:10.561Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（2）和（3），下列表述正确的是（　　）。",
+                            "correct_options": [
+                                "A",
+                                "B",
+                                "C",
+                                "D"
+                            ],
+                            "analysis": "合同履约进度＝120÷（120＋480）×100%＝20%；主营业务收入＝1 000×20%＝200（万元）；主营业务成本＝120（万元）；合同负债＝250－200＝50（万元）。会计分录如下：\n\n借：银行存款     250\n\n　　贷：主营业务收入     200\n\n　　　　合同负债        50\n\n借：主营业务成本     120\n\n　　贷：合同履约成本     120"
+                        },
+                        "question_group": {
+                            "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae"
+                        }
+                    }
+                },
+                {
+                    "id": 531,
+                    "sort_in_section": 4,
+                    "questions_id": {
+                        "stem": "根据资料（1）和（2），2021年12月31日关于合同取得成本摊销的账务处理中正确的是（　　）。",
+                        "type": "q_mc_flexible",
+                        "analysis": "甲公司应编制如下会计分录：\n\n借：销售费用     1.2（6×20%）\n\n　　贷：合同取得成本       1.2 ",
+                        "sort_in_group": 4,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "C"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "787c8121-0c6f-4eec-9c11-0af7861a0078",
+                            "option_a": "借：销售费用     1.8\n\n　　贷：合同取得成本     1.8 ",
+                            "status": "draft",
+                            "option_b": "借：销售费用     1.6\n\n　　贷：合同取得成本     1.6",
+                            "option_number": 4,
+                            "option_c": "借：销售费用     1.2\n\n　　贷：合同取得成本     1.2 ",
+                            "sort": null,
+                            "option_d": "\n借：管理费用     1.8\n\n　　贷：合同取得成本     1.8",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:40:10.592Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（1）和（2），2021年12月31日关于合同取得成本摊销的账务处理中正确的是（　　）。",
+                            "correct_options": [
+                                "C"
+                            ],
+                            "analysis": "甲公司应编制如下会计分录：\n\n借：销售费用     1.2（6×20%）\n\n　　贷：合同取得成本       1.2 "
+                        },
+                        "question_group": {
+                            "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae"
+                        }
+                    }
+                },
+                {
+                    "id": 532,
+                    "sort_in_section": 5,
+                    "questions_id": {
+                        "stem": "下列关于合同取得成本的表述中，正确的是（　　）。",
+                        "type": "q_mc_flexible",
+                        "analysis": "合同取得成本是指企业为取得合同发生的预期能够收回的增量成本，选项A正确；增量成本是指企业不取得合同就不会发生的成本，也就是企业发生的与合同直接相关，但又不是所签订合同的对象或内容本身所直接发生的费用，选项D不正确；企业发生合同取得成本应借记“合同取得成本”科目，贷记“银行存款”等科目，选项B不正确，选项C正确。",
+                        "sort_in_group": 1,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A",
+                            "C"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "228cd3c1-380d-46d0-be1c-92a1bafefe13",
+                            "option_a": "合同取得成本是企业为取得合同发生的预期能收回的增量成本",
+                            "status": "draft",
+                            "option_b": "企业发生合同取得成本应借记“合同资产”",
+                            "option_number": 4,
+                            "option_c": "企业发生合同取得成本应借记“合同取得成本”",
+                            "sort": null,
+                            "option_d": "合同取得成本是所签订合同对象内容本身直接发生的费用",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:33:52.003Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "下列关于合同取得成本的表述中，正确的是（　　）。",
+                            "correct_options": [
+                                "A",
+                                "C"
+                            ],
+                            "analysis": "合同取得成本是指企业为取得合同发生的预期能够收回的增量成本，选项A正确；增量成本是指企业不取得合同就不会发生的成本，也就是企业发生的与合同直接相关，但又不是所签订合同的对象或内容本身所直接发生的费用，选项D不正确；企业发生合同取得成本应借记“合同取得成本”科目，贷记“银行存款”等科目，选项B不正确，选项C正确。"
+                        },
+                        "question_group": {
+                            "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae"
+                        }
+                    }
+                },
+                {
+                    "id": 533,
+                    "sort_in_section": 6,
+                    "questions_id": {
+                        "stem": "根据资料（3），下列各项中，甲公司报废N设备会计处理正确的是（　　）。",
+                        "type": "q_mc_flexible",
+                        "analysis": "结转报废净损失分录如下：\n\n借：营业外支出       26 000\n\n　　贷：固定资产清理     26 000",
+                        "sort_in_group": 4,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A",
+                            "B",
+                            "C"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "a5cc04c6-8022-476a-a1cf-05f4a9c27863",
+                            "option_a": "支付清理费用时：\n\n借：固定资产清理         6 000\n\n　　贷：银行存款          6 000",
+                            "status": "draft",
+                            "option_b": "转入清理时：\n\n借：固定资产清理       40 000\n\n　　累计折旧     760 000\n\n　　贷：固定资产      800 000",
+                            "option_number": 4,
+                            "option_c": "取得变价收入时：\n\n借：银行存款       22 600\n\n　　贷：固定资产清理       20 000\n\n　　　　应交税费——应交增值税（销项税额）      2 600",
+                            "sort": null,
+                            "option_d": "结转报废净损失时：\n\n借：资产处置损益       26 000\n\n　　贷：固定资产清理       26 000 ",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:45:27.118Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（3），下列各项中，甲公司报废N设备会计处理正确的是（　　）。",
+                            "correct_options": [
+                                "A",
+                                "B",
+                                "C"
+                            ],
+                            "analysis": "结转报废净损失分录如下：\n\n借：营业外支出       26 000\n\n　　贷：固定资产清理     26 000"
+                        },
+                        "question_group": {
+                            "id": "ff0aeb10-f381-4bd0-932d-67ab01778176"
+                        }
+                    }
+                },
+                {
+                    "id": 534,
+                    "sort_in_section": 7,
+                    "questions_id": {
+                        "stem": "根据资料（2），下列各项中，甲公司支付设备修理费的会计处理正确的是（　　）。",
+                        "type": "q_mc_flexible",
+                        "analysis": "本题分录如下：\n\n借：管理费用     30 000\n\n　　销售费用     10 000\n\n　　应交税费——应交增值税（进项税额）    5 200\n\n　　贷：银行存款      45 200",
+                        "sort_in_group": 3,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "C",
+                            "D"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "f13f3547-c725-4445-a0d0-8a510aba8267",
+                            "option_a": "确认管理费用40 000元",
+                            "status": "draft",
+                            "option_b": "确认制造费用40 000元",
+                            "option_number": 4,
+                            "option_c": "确认销售费用10 000元",
+                            "sort": null,
+                            "option_d": "确认管理费用30 000元",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:45:27.111Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（2），下列各项中，甲公司支付设备修理费的会计处理正确的是（　　）。",
+                            "correct_options": [
+                                "C",
+                                "D"
+                            ],
+                            "analysis": "本题分录如下：\n\n借：管理费用     30 000\n\n　　销售费用     10 000\n\n　　应交税费——应交增值税（进项税额）    5 200\n\n　　贷：银行存款      45 200"
+                        },
+                        "question_group": {
+                            "id": "ff0aeb10-f381-4bd0-932d-67ab01778176"
+                        }
+                    }
+                },
+                {
+                    "id": 535,
+                    "sort_in_section": 8,
+                    "questions_id": {
+                        "stem": "根据资料（1），下列各项中，甲公司购入M设备的入账价值是（　　）元。",
+                        "type": "q_mc_flexible",
+                        "analysis": "甲公司购入M设备的入账价值＝500 000＋40 000＝540 000（元）。",
+                        "sort_in_group": 1,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "33cc687d-2e88-4ce7-b201-4689424e02b6",
+                            "option_a": "540 000",
+                            "status": "draft",
+                            "option_b": "605 000",
+                            "option_number": 4,
+                            "option_c": "565 000",
+                            "sort": null,
+                            "option_d": "500 000",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:45:27.075Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（1），下列各项中，甲公司购入M设备的入账价值是（　　）元。",
+                            "correct_options": [
+                                "A"
+                            ],
+                            "analysis": "甲公司购入M设备的入账价值＝500 000＋40 000＝540 000（元）。"
+                        },
+                        "question_group": {
+                            "id": "ff0aeb10-f381-4bd0-932d-67ab01778176"
+                        }
+                    }
+                },
+                {
+                    "id": 536,
+                    "sort_in_section": 9,
+                    "questions_id": {
+                        "stem": "根据资料（1），下列各项中，甲公司购入M设备计提折旧的表述正确的是（　　）。",
+                        "type": "q_mc_flexible",
+                        "analysis": "1月10日M设备达到预定可使用状态，固定资产于次月开始计提折旧，所以从2月开始计提折旧，选项A错误，选项C正确；采用年限平均法计提折旧，2021年计提折旧额＝（540 000－30 000）÷5÷12×11＝93 500（元），选项B正确；月折旧额＝（540 000－30 000）÷5÷12＝8 500（元），选项D正确。",
+                        "sort_in_group": 2,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "B",
+                            "C",
+                            "D"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "e2cbce7f-2577-477b-a025-1dae350d9614",
+                            "option_a": "自2021年1月开始计提折旧",
+                            "status": "draft",
+                            "option_b": "2021年计提折旧93 500元",
+                            "option_number": 4,
+                            "option_c": "自2021年2月开始计提折旧",
+                            "sort": null,
+                            "option_d": "每月折旧额为8 500元",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:45:27.100Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（1），下列各项中，甲公司购入M设备计提折旧的表述正确的是（　　）。",
+                            "correct_options": [
+                                "B",
+                                "C",
+                                "D"
+                            ],
+                            "analysis": "1月10日M设备达到预定可使用状态，固定资产于次月开始计提折旧，所以从2月开始计提折旧，选项A错误，选项C正确；采用年限平均法计提折旧，2021年计提折旧额＝（540 000－30 000）÷5÷12×11＝93 500（元），选项B正确；月折旧额＝（540 000－30 000）÷5÷12＝8 500（元），选项D正确。"
+                        },
+                        "question_group": {
+                            "id": "ff0aeb10-f381-4bd0-932d-67ab01778176"
+                        }
+                    }
+                },
+                {
+                    "id": 537,
+                    "sort_in_section": 10,
+                    "questions_id": {
+                        "stem": "根据资料（1）和（4），下列各项中，12月31日关于M设备期末计量和报表填列正确的是（　　） 。",
+                        "type": "q_mc_flexible",
+                        "analysis": "年末时，M设备计提减值准备前的账面价值＝540 000－93 500＝446 500（元）>可收回金额440 000元，计提减值准备的金额＝446 500－440 000＝6 500（元），选项A正确；固定资产减值准备一经计提，以后会计期间不得转回，选项C正确；期末M设备在资产负债表“固定资产”项目填列的金额应根据M设备固定资产的期末余额（540 000元），减去M设备计提的折旧（93 500元）和M设备计提的减值准备（6 500元）后的金额（440 000元）填列，选项D正确，选项B错误。",
+                        "sort_in_group": 5,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A",
+                            "C",
+                            "D"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "696a4d98-6ebb-440e-8c42-9b73cda77c10",
+                            "option_a": "M设备应计提减值准备6 500元",
+                            "status": "draft",
+                            "option_b": "期末M设备在资产负债表“固定资产”项目填列的金额为446 500元",
+                            "option_number": 4,
+                            "option_c": "M设备的减值损失在以后会计期间不得转回",
+                            "sort": null,
+                            "option_d": "期末M设备在资产负债表“固定资产”项目填列的金额为440 000元",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T02:45:27.125Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（1）和（4），下列各项中，12月31日关于M设备期末计量和报表填列正确的是（　　） 。",
+                            "correct_options": [
+                                "A",
+                                "C",
+                                "D"
+                            ],
+                            "analysis": "年末时，M设备计提减值准备前的账面价值＝540 000－93 500＝446 500（元）>可收回金额440 000元，计提减值准备的金额＝446 500－440 000＝6 500（元），选项A正确；固定资产减值准备一经计提，以后会计期间不得转回，选项C正确；期末M设备在资产负债表“固定资产”项目填列的金额应根据M设备固定资产的期末余额（540 000元），减去M设备计提的折旧（93 500元）和M设备计提的减值准备（6 500元）后的金额（440 000元）填列，选项D正确，选项B错误。"
+                        },
+                        "question_group": {
+                            "id": "ff0aeb10-f381-4bd0-932d-67ab01778176"
+                        }
+                    }
+                },
+                {
+                    "id": 538,
+                    "sort_in_section": 11,
+                    "questions_id": {
+                        "stem": "根据资料（1）至（3），下列各项中，关于甲公司持有乙公司债券公允价值变动的会计处理表述正确的是（　　）。",
+                        "type": "q_mc_flexible",
+                        "analysis": "3月31日，甲公司持有乙公司债券的公允价值变动的会计处理如下：\n\n借：交易性金融资产——公允价值变动　　40（1 040-1 000）\n\n　　贷：公允价值变动损益                                 40",
+                        "sort_in_group": 3,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A",
+                            "D"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "7bfe84cc-4c1d-42a3-af9c-b5a3478d5909",
+                            "option_a": "借记“交易性金融资产——公允价值变动”科目40万元",
+                            "status": "draft",
+                            "option_b": "借记“交易性金融资产——成本”科目20万元",
+                            "option_number": 4,
+                            "option_c": "贷记“投资收益”科目20万元",
+                            "sort": null,
+                            "option_d": "贷记“公允价值变动损益”科目40万元",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T03:16:31.220Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（1）至（3），下列各项中，关于甲公司持有乙公司债券公允价值变动的会计处理表述正确的是（　　）。",
+                            "correct_options": [
+                                "A",
+                                "D"
+                            ],
+                            "analysis": "3月31日，甲公司持有乙公司债券的公允价值变动的会计处理如下：\n\n借：交易性金融资产——公允价值变动　　40（1 040-1 000）\n\n　　贷：公允价值变动损益                                 40"
+                        },
+                        "question_group": {
+                            "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
+                        }
+                    }
+                },
+                {
+                    "id": 539,
+                    "sort_in_section": 12,
+                    "questions_id": {
+                        "stem": "根据期初资料、资料（1）至（4），下列各项中，关于出售乙公司债券的会计处理正确的是（　　）。",
+                        "type": "q_mc_flexible",
+                        "analysis": "4月10日，甲公司出售所持有的全部乙公司债券的会计处理如下：\n\n借：其他货币资金——存出投资款      1 126\n\n　　贷：交易性金融资产——成本              1 000\n\n　　　　　　　　　　　——公允价值变动     40\n\n　　　　投资收益                                             86（1 126-1 040）\n\n借：投资收益                6\n\n　　贷：应交税费——转让金融商品应交增值税          6",
+                        "sort_in_group": 4,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A",
+                            "C"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "1f39808e-ce70-4f64-981d-c95427fd33cf",
+                            "option_a": "借：投资收益      6\n\n   　贷：应交税费——转让金融商品应交增值税      6",
+                            "status": "draft",
+                            "option_b": "借：其他货币资金——存出投资款      1 126\n\n　　贷：交易性金融资产——成本               1 020\n\n　　　　　　　　　　　——公允价值变动      20\n\n　　　　投资收益                                             86",
+                            "option_number": 4,
+                            "option_c": "借：其他货币资金——存出投资款    1 126\n\n　　贷：交易性金融资产——成本               1 000\n\n　　　　　　　　　　　——公允价值变动      40\n\n　　　　投资收益                                              86",
+                            "sort": null,
+                            "option_d": "借：管理费用      6\n\n　　贷：应交税费——转让金融商品应交增值税      6",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T03:16:31.229Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据期初资料、资料（1）至（4），下列各项中，关于出售乙公司债券的会计处理正确的是（　　）。",
+                            "correct_options": [
+                                "A",
+                                "C"
+                            ],
+                            "analysis": "4月10日，甲公司出售所持有的全部乙公司债券的会计处理如下：\n\n借：其他货币资金——存出投资款      1 126\n\n　　贷：交易性金融资产——成本              1 000\n\n　　　　　　　　　　　——公允价值变动     40\n\n　　　　投资收益                                             86（1 126-1 040）\n\n借：投资收益                6\n\n　　贷：应交税费——转让金融商品应交增值税          6"
+                        },
+                        "question_group": {
+                            "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
+                        }
+                    }
+                },
+                {
+                    "id": 540,
+                    "sort_in_section": 13,
+                    "questions_id": {
+                        "stem": "根据资料（1）至（4），上述相关业务对甲公司2022年利润表中“营业利润”项目的影响金额为（　　）万元。",
+                        "type": "q_mc_flexible",
+                        "analysis": "对“营业利润”项目的影响金额=-3（资料1）+40（资料3）+86（资料4）-6（资料4）=117（万元）。",
+                        "sort_in_group": 5,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "C"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "3294e2d5-b5c1-414d-ac4b-44672b9b3b26",
+                            "option_a": "\n77",
+                            "status": "draft",
+                            "option_b": "97",
+                            "option_number": 4,
+                            "option_c": "117",
+                            "sort": null,
+                            "option_d": "103",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T03:16:31.238Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（1）至（4），上述相关业务对甲公司2022年利润表中“营业利润”项目的影响金额为（　　）万元。",
+                            "correct_options": [
+                                "C"
+                            ],
+                            "analysis": "对“营业利润”项目的影响金额=-3（资料1）+40（资料3）+86（资料4）-6（资料4）=117（万元）。"
+                        },
+                        "question_group": {
+                            "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
+                        }
+                    }
+                },
+                {
+                    "id": 541,
+                    "sort_in_section": 14,
+                    "questions_id": {
+                        "stem": "根据资料（2），下列各项中，关于甲公司收到债券利息的会计处理结果正确的是（　　）。",
+                        "type": "q_mc_flexible",
+                        "analysis": "收到乙公司支付的购入时已宣告但尚未领取的债券利息：\n\n借：其他货币资金——存出投资款    20\n\n　　贷：应收利息                                  20",
+                        "sort_in_group": 2,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "C",
+                            "D"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "8aaf3019-78b9-409d-99d6-d39276e2289c",
+                            "option_a": "\n交易性金融资产减少20万元",
+                            "status": "draft",
+                            "option_b": "投资收益增加20万元",
+                            "option_number": 4,
+                            "option_c": "应收利息减少20万元",
+                            "sort": null,
+                            "option_d": "其他货币资金增加20万元",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T03:16:31.213Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据资料（2），下列各项中，关于甲公司收到债券利息的会计处理结果正确的是（　　）。",
+                            "correct_options": [
+                                "C",
+                                "D"
+                            ],
+                            "analysis": "收到乙公司支付的购入时已宣告但尚未领取的债券利息：\n\n借：其他货币资金——存出投资款    20\n\n　　贷：应收利息                                  20"
+                        },
+                        "question_group": {
+                            "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
+                        }
+                    }
+                },
+                {
+                    "id": 542,
+                    "sort_in_section": 15,
+                    "questions_id": {
+                        "stem": "根据期初资料和资料（1），下列各项中，关于甲公司购入乙公司债券的会计处理正确的是（　　）。",
+                        "type": "q_mc_flexible",
+                        "analysis": "3月1日，甲公司购入乙公司债券时的会计处理如下：\n\n借：交易性金融资产——成本 1 000 　　\n\n       应收利息                              20 　　\n\n       贷：其他货币资金——存出投资款 1 020 \n\n借：投资收益  3 　　\n\n       应交税费——应交增值税（进项税额）  0.18 　　\n\n       贷：其他货币资金——存出投资款               3.18",
+                        "sort_in_group": 1,
+                        "correct_ans_select_radio": null,
+                        "correct_ans_select_multiple_checkbox": [
+                            "A",
+                            "B"
+                        ],
+                        "q_mc_single": null,
+                        "q_mc_multi": null,
+                        "q_mc_binary": null,
+                        "q_mc_flexible": {
+                            "id": "9463b924-2b22-4d46-8ef8-9d4aef2cb51d",
+                            "option_a": "借：交易性金融资产——成本    1 000\n\n　　应收利息                                  20\n\n　　贷：其他货币资金——存出投资款    1 020",
+                            "status": "draft",
+                            "option_b": "\n借：投资收益    3\n\n   　应交税费——应交增值税（进项税额）    0.18\n\n   　贷：其他货币资金——存出投资款    3.18",
+                            "option_number": 4,
+                            "option_c": "借：交易性金融资产——成本     1 020\n\n　　贷：其他货币资金——存出投资款    1 020",
+                            "sort": null,
+                            "option_d": "借：管理费用    3\n\n　　应交税费——应交增值税（进项税额）    0.18\n\n　　贷：其他货币资金——存出投资款    3.18",
+                            "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                            "option_e": null,
+                            "date_created": "2025-04-18T03:16:31.195Z",
+                            "option_f": null,
+                            "user_updated": null,
+                            "date_updated": null,
+                            "stem": "根据期初资料和资料（1），下列各项中，关于甲公司购入乙公司债券的会计处理正确的是（　　）。",
+                            "correct_options": [
+                                "A",
+                                "B"
+                            ],
+                            "analysis": "3月1日，甲公司购入乙公司债券时的会计处理如下：\n\n借：交易性金融资产——成本 1 000 　　\n\n       应收利息                              20 　　\n\n       贷：其他货币资金——存出投资款 1 020 \n\n借：投资收益  3 　　\n\n       应交税费——应交增值税（进项税额）  0.18 　　\n\n       贷：其他货币资金——存出投资款               3.18"
+                        },
+                        "question_group": {
+                            "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
+                        }
+                    }
+                }
+            ],
+            "question_groups": [
+                {
+                    "id": 73,
+                    "sort_in_section": 1,
+                    "question_groups_id": {
+                        "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae",
+                        "shared_stem": "甲公司提供施工服务，属于在某一时段内履行的履约义务，为取得施工合同发生的合同取得成本按照履约进度进行摊销。2021年7月至12月，发生的有关经济业务如下：\n\n（1）2021年7月1日，通过竞标取得一项为期两年的施工合同， 合同总价款为1 000万元，施工费每半年支付250万元，为取得该合同，2021年7月甲公司以银行存款支付投标费2万元，投标人员差旅费1万元，销售人员佣金6万元，预期这些支出未来均能收回。\n\n（2）截止到2021年12月31日，为该项合同累计发生施工成本120万元，预计还将发生施工成本480万元，甲公司按照实际发生的成本占预计总成本的比例确定履约进度。\n\n（3）2021年12月31日，甲公司按照合同约定收到施工费250万元。\n\n要求：根据上述资料不考虑相关税费等因素，分析回答下列问题。（答案中的金额单位用万元表示）"
+                    }
+                },
+                {
+                    "id": 74,
+                    "sort_in_section": 2,
+                    "question_groups_id": {
+                        "id": "ff0aeb10-f381-4bd0-932d-67ab01778176",
+                        "shared_stem": "甲公司为增值税一般纳税人，2021年度该公司发生与固定资产相关业务如下：\n\n（1）1月8日，购入一台需要安装的M设备，取得的增值税专用发票上注明的价款为500 000元，增值税税额为65 000元，另支付安装费取得的增值税专用发票上注明的价款为40 000元，增值税税额为3 600元，全部款项以银行存款支付。该设备预计可使用5年，预计净残值为30 000元，采用年限平均法计提折旧。1月10日M设备达到预定可使用状态并交付生产车间使用。\n\n（2）6月30日，委托外单位对本公司设备进行日常维护修理，其中行政管理部门设备的修理费为30 000元，销售部门设备修理费为10 000元，取得的增值税专用发票上注明的价款为40 000元，增值税税额为5 200元，全部款项以银行存款支付。\n\n（3）12月5日，报废一台N设备，该设备原值为800 000元，已计提折旧760 000元，未发生资产减值损失。设备报废取得变价收入20 000元，开具的增值税专用发票上注明的增值税税额为2 600元，报废过程中发生清理费用6 000元，全部款项均已通过银行办理结算。\n\n（4）12月31日，对固定资产进行减值测试，发现2021年1月购入的M设备存在减值迹象，其可收回金额为440 000元。\n\n要求：根据上述资料，不考虑其他因素，分析回答下列小题。（答案中的金额单位用元表示）"
+                    }
+                },
+                {
+                    "id": 75,
+                    "sort_in_section": 3,
+                    "question_groups_id": {
+                        "id": "16214054-0e97-4d27-81b1-bf55d1aee87f",
+                        "shared_stem": "甲公司为增值税一般纳税人。其购买债券均通过投资款专户进行，2022年甲公司发生与债券投资相关的业务如下：\n\n（1）3月1日，甲公司从二级市场购入乙公司发行的面值为950万元的债券，支付价款1 020万元（其中包含已到付息期但尚未领取的债券利息20万元），另支付交易费用3万元，取得的增值税专用发票上注明的增值税税额为0.18万元。甲公司将其划分为交易性金融资产进行管理和核算。\n\n（2）3月10日，甲公司收到乙公司支付的购入时未领取的债券利息20万元。\n\n（3）3月31日，甲公司持有乙公司债券的公允价值为1 040万元。\n\n（4）4月10日，甲公司出售所持有的全部乙公司债券，价款为1 126万元，转让乙公司债券应交增值税6万元。\n\n要求：根据上述资料，不考虑相关税费及其他因素，分析回答下列小题。（答案中的金额单位用万元表示）"
+                    }
+                }
+            ]
+        }
+    ]
+}
