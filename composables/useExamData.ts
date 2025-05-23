@@ -258,24 +258,22 @@ export function useExamData() {
         current_practice_session_id: string,
         current_selected_question_ref: Ref<any>
     ) => {
-
-        const paperFullData: Papers = await $fetch(`/api/papers/full/${paperId}`);
+        const paperFullData: Papers = await $fetch(
+            `/api/papers/full/${paperId}`
+        );
         console.log("paperFullData:");
         console.log(paperFullData);
-        
-        const paperResponse = await getItemById<Papers>({
-            collection: "papers",
-            id: paperId,
-            params: {
-                fields: [
-                    "title",
-                    "paper_sections",
-                    "total_point_value",
-                    "total_question_count",
-                ],
-            },
-        });
-        
+
+        const paperResponse: Papers = {
+            id: paperFullData.id,
+            status: paperFullData.status,
+            title: paperFullData.title,
+            total_point_value: paperFullData.total_point_value,
+            total_question_count: paperFullData.total_question_count,
+            paper_sections: paperFullData.paper_sections.map(s => s.id),
+            "triggers-do4gvh": "",
+            save_and_stay: "",
+        };
 
         if (paperResponse) {
             paper.value = paperResponse;
@@ -415,7 +413,10 @@ export function useExamData() {
         console.log("examScore:", examScore.value);
         console.log("practiceSessionTime:", practiceSessionTime.value);
         console.log("timerInitParams:", timerInitParams.value);
-        console.log("shouldShowFinalSubmissionDialog:", shouldShowFinalSubmissionDialog.value);
+        console.log(
+            "shouldShowFinalSubmissionDialog:",
+            shouldShowFinalSubmissionDialog.value
+        );
         console.log("------------------------------------");
     });
 
