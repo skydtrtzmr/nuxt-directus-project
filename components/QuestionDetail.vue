@@ -128,6 +128,9 @@ const props = defineProps<{
 
 const emit = defineEmits(["navigate-question"]);
 
+console.log("selectedQuestion in QuestionDetail:", props.selectedQuestion);
+
+
 // Helper: Get result for a question by its PaperSectionsQuestions ID
 const getResultByPsqId = (psqId: string | number | undefined | null): QuestionResults | null => {
     if (!props.questionResults || psqId === undefined || psqId === null) return null;
