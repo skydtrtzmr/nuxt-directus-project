@@ -30,6 +30,32 @@ export function useExamData() {
     } | null>(null);
     const shouldShowFinalSubmissionDialog = ref(false);
 
+    const fetchQuestionResults = async(
+        practice_session_id: string
+    ) =>{
+        // 这个依然保持从directus直接获取，而非从redis获取。
+        const questionResultsData = await getItems<QuestionResults>({
+            collection: "question_results",
+            params: {
+                filter: {
+                    practice_session_id
+                },
+                fields: [
+                    "id",
+                    "practice_session_id",
+                    "question_in_paper_id",
+                    "question_type",
+                    "point_value",
+                    "score",
+                    "submit_ans_select_radio",
+                    "submit_ans_select_multiple_checkbox",
+                    "is_flagged",
+                ],
+            },
+        });
+        questionResults.value = questionResultsData;
+    }
+
     const fetchSubmittedSectionsList = async (
         sections: PaperSections[],
         current_practice_session_id: string,
@@ -52,28 +78,6 @@ export function useExamData() {
             (a, b) => (a.sort_in_paper || 0) - (b.sort_in_paper || 0)
         );
         const sectionList = submittedSectionsResponse;
-
-        // 这个依然保持从directus直接获取，而非从redis获取。
-        const questionResultsData = await getItems<QuestionResults>({
-            collection: "question_results",
-            params: {
-                filter: {
-                    practice_session_id: current_practice_session_id,
-                },
-                fields: [
-                    "id",
-                    "practice_session_id",
-                    "question_in_paper_id",
-                    "question_type",
-                    "point_value",
-                    "score",
-                    "submit_ans_select_radio",
-                    "submit_ans_select_multiple_checkbox",
-                    "is_flagged",
-                ],
-            },
-        });
-        questionResults.value = questionResultsData;
 
         const question_id_list_local = ref<string[]>([]);
         const question_groups_id_list_local = ref<string[]>([]);
@@ -289,6 +293,7 @@ export function useExamData() {
                 "submittedPaperSections.value:",
                 submittedPaperSections.value
             );
+            await fetchQuestionResults(current_practice_session_id);
         }
     };
 
