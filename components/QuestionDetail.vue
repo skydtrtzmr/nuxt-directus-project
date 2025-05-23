@@ -37,21 +37,6 @@
                         </Tag>
                     </div>
                 </div>
-                <p
-                    v-if="
-                        !isGroupMode &&
-                        (selectedQuestion.questions_id as Questions).stem
-                    "
-                    class="mt-4 text-surface-600 dark:text-surface-400 bg-surface-100 dark:bg-surface-800 p-3 rounded-md"
-                >
-                    <span
-                        v-html="
-                            render(
-                                (selectedQuestion.questions_id as Questions).stem || ''
-                            )
-                        "
-                    ></span>
-                </p>
             </template>
             <div v-else class="text-center p-5 text-surface-500">
                 <i class="pi pi-book mr-2"></i>请选择一个题目开始答题
