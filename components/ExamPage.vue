@@ -147,6 +147,7 @@ import { useAuth } from "~~/stores/auth";
 import { useLoadingStateStore } from "@/stores/loadingState";
 import { useExamTimer } from "@/composables/useExamTimer";
 import { useExamData } from "@/composables/useExamData";
+import { useQuestionNavigation } from "@/composables/useQuestionNavigation";
 
 dayjs.extend(utc);
 
@@ -164,8 +165,6 @@ const {
 
 const final_submission_dialog_visible = ref(false);
 const confirm_submit_dialog_visible = ref(false);
-const nav_boundary_dialog_visible = ref(false);
-const nav_boundary_dialog_message = ref("");
 
 const sidebarCollapsed = ref(false);
 const sidebarWidth = ref(300);
@@ -195,6 +194,13 @@ const {
 
 // selectedQuestion 仍然在 ExamPage.vue 中管理，但其初始值将由 loadExamData 设置
 const selectedQuestion = ref({} as any);
+
+const {
+    navBoundaryDialogVisible: nav_boundary_dialog_visible,
+    navBoundaryMessage: nav_boundary_dialog_message,
+    navigateToQuestion,
+    handleQuestionGroupClick
+} = useQuestionNavigation(submittedPaperSections, selectedQuestion);
 
 const handleSidebarToggle = (collapsed: boolean) => {
     sidebarCollapsed.value = collapsed;
@@ -376,321 +382,6 @@ onUnmounted(() => {
         currentTimeInterval_local.value = null;
     }
 });
-
-const navigateToQuestion = (direction: number) => {
-    if (!selectedQuestion.value) return;
-    const currentQuestion = selectedQuestion.value;
-    let currentSectionId;
-    if (typeof currentQuestion.section_id === "string") {
-        currentSectionId = currentQuestion.section_id;
-    } else if (typeof currentQuestion.paper_sections_id === "string") {
-        currentSectionId = currentQuestion.paper_sections_id;
-    } else if (
-        currentQuestion.paper_sections_id &&
-        typeof currentQuestion.paper_sections_id === "object"
-    ) {
-        currentSectionId = currentQuestion.paper_sections_id.id;
-    } else {
-        return;
-    }
-
-    const currentSection = submittedPaperSections.value.find(
-        (s) => s.id === currentSectionId
-    );
-    if (!currentSection) return;
-
-    // 判断当前章节的题目模式
-    const isGroupMode = currentSection.question_mode === "group";
-    const sortedSections = [...submittedPaperSections.value].sort(
-        (a, b) => (a.sort_in_paper || 0) - (b.sort_in_paper || 0)
-    );
-    const currentSectionIndex = sortedSections.findIndex(
-        (s) => s.id === currentSectionId
-    );
-
-    if (isGroupMode) {
-        // 题组模式导航
-        navigateInGroupMode(
-            currentSection,
-            sortedSections,
-            currentSectionIndex,
-            currentQuestion,
-            direction
-        );
-    } else {
-        // 单题模式导航
-        navigateInSingleMode(
-            currentSection,
-            sortedSections,
-            currentSectionIndex,
-            currentQuestion,
-            direction
-        );
-    }
-};
-
-// 单题模式下的导航
-const navigateInSingleMode = (
-    currentSection: PaperSections,
-    sortedSections: PaperSections[],
-    currentSectionIndex: number,
-    currentQuestion: any,
-    direction: number
-) => {
-    // 获取当前题目在章节中的排序号
-    const currentSortInSection = currentQuestion.sort_in_section;
-
-    // 确保章节的题目按sort_in_section排序
-    const sortedSectionQuestions = [...currentSection.questions].sort(
-        (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
-    );
-
-    if (direction === 1) {
-        const nextQuestionIndex = sortedSectionQuestions.findIndex(
-            (q) => q.sort_in_section > currentSortInSection
-        );
-        if (nextQuestionIndex !== -1) {
-            return selectQuestion(sortedSectionQuestions[nextQuestionIndex]);
-        }
-
-        // 如果当前是章节的最后一题
-        if (currentSectionIndex < sortedSections.length - 1) {
-            // 且有下一章节，则跳转到下一章节的第一题/题组
-            const nextSection = sortedSections[currentSectionIndex + 1];
-            if (
-                nextSection.question_mode === "group" &&
-                nextSection.question_groups &&
-                nextSection.question_groups.length > 0
-            ) {
-                const sortedGroups = [...nextSection.question_groups].sort(
-                    (a, b) =>
-                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
-                );
-                if (sortedGroups.length > 0)
-                    return handleQuestionGroupClick(
-                        sortedGroups[0],
-                        nextSection
-                    );
-            } else if (
-                nextSection.questions &&
-                nextSection.questions.length > 0
-            ) {
-                const sortedNextQuestions = [...nextSection.questions].sort(
-                    (a, b) =>
-                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
-                );
-                if (sortedNextQuestions.length > 0)
-                    return selectQuestion(sortedNextQuestions[0]);
-            }
-        } else {
-            nav_boundary_dialog_message.value = "当前已经是最后一题！";
-            nav_boundary_dialog_visible.value = true;
-            return;
-        }
-    } else if (direction === -1) {
-        const prevQuestions = sortedSectionQuestions.filter(
-            (q) => q.sort_in_section < currentSortInSection
-        );
-        if (prevQuestions.length > 0) {
-            return selectQuestion(prevQuestions[prevQuestions.length - 1]);
-        }
-        if (currentSectionIndex > 0) {
-            const prevSection = sortedSections[currentSectionIndex - 1];
-            if (
-                prevSection.question_mode === "group" &&
-                prevSection.question_groups &&
-                prevSection.question_groups.length > 0
-            ) {
-                const sortedGroups = [...prevSection.question_groups].sort(
-                    (a, b) =>
-                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
-                );
-                if (sortedGroups.length > 0)
-                    return handleQuestionGroupClick(
-                        sortedGroups[sortedGroups.length - 1],
-                        prevSection
-                    );
-            } else if (
-                prevSection.questions &&
-                prevSection.questions.length > 0
-            ) {
-                const sortedPrevQuestions = [...prevSection.questions].sort(
-                    (a, b) =>
-                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
-                );
-                if (sortedPrevQuestions.length > 0)
-                    return selectQuestion(
-                        sortedPrevQuestions[sortedPrevQuestions.length - 1]
-                    );
-            }
-        } else {
-            nav_boundary_dialog_message.value = "当前已经是第一题！";
-            nav_boundary_dialog_visible.value = true;
-            return;
-        }
-    }
-};
-
-// 题组模式下的导航
-const navigateInGroupMode = (
-    currentSection: PaperSections,
-    sortedSections: PaperSections[],
-    currentSectionIndex: number,
-    currentQuestion: any,
-    direction: number
-) => {
-    if (
-        !currentSection.question_groups ||
-        currentSection.question_groups.length === 0
-    )
-        return;
-    const sortedGroups = [...currentSection.question_groups].sort(
-        (a, b) => (a.sort_in_section || 0) - (b.sort_in_section || 0)
-    );
-    let currentGroupIndex = -1;
-    if (currentQuestion.isGroupMode && currentQuestion.questionGroup) {
-        const currentGroupId =
-            typeof currentQuestion.questionGroup === "string"
-                ? currentQuestion.questionGroup
-                : currentQuestion.questionGroup.id;
-        currentGroupIndex = sortedGroups.findIndex(
-            (group) =>
-                (typeof group.question_groups_id === "string"
-                    ? group.question_groups_id
-                    : group.question_groups_id.id) === currentGroupId
-        );
-    }
-    if (currentGroupIndex === -1) return;
-
-    if (direction === 1) {
-        // 下一题组
-        if (currentGroupIndex < sortedGroups.length - 1) {
-            return handleQuestionGroupClick(
-                sortedGroups[currentGroupIndex + 1],
-                currentSection
-            );
-        } else if (currentSectionIndex < sortedSections.length - 1) {
-            // 当前章节的最后一个题组，跳转到下一章节的第一个题目/题组
-            const nextSection = sortedSections[currentSectionIndex + 1];
-            if (
-                nextSection.question_mode === "group" &&
-                nextSection.question_groups &&
-                nextSection.question_groups.length > 0
-            ) {
-                const sortedNextGroups = [...nextSection.question_groups].sort(
-                    (a, b) =>
-                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
-                );
-                if (sortedNextGroups.length > 0)
-                    return handleQuestionGroupClick(
-                        sortedNextGroups[0],
-                        nextSection
-                    );
-            } else if (
-                nextSection.questions &&
-                nextSection.questions.length > 0
-            ) {
-                const sortedNextQuestions = [...nextSection.questions].sort(
-                    (a, b) =>
-                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
-                );
-                if (sortedNextQuestions.length > 0)
-                    return selectQuestion(sortedNextQuestions[0]);
-            }
-        } else {
-            // 当前是最后一个题组且是最后一个章节
-            nav_boundary_dialog_message.value = "当前已经是最后一题！";
-            nav_boundary_dialog_visible.value = true;
-            return;
-        }
-    } else if (direction === -1) {
-        if (currentGroupIndex > 0) {
-            return handleQuestionGroupClick(
-                sortedGroups[currentGroupIndex - 1],
-                currentSection
-            );
-        } else if (currentSectionIndex > 0) {
-            // 当前章节的第一个题组，跳转到上一章节的最后一个题目/题组
-            const prevSection = sortedSections[currentSectionIndex - 1];
-            if (
-                prevSection.question_mode === "group" &&
-                prevSection.question_groups &&
-                prevSection.question_groups.length > 0
-            ) {
-                const sortedPrevGroups = [...prevSection.question_groups].sort(
-                    (a, b) =>
-                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
-                );
-                if (sortedPrevGroups.length > 0)
-                    return handleQuestionGroupClick(
-                        sortedPrevGroups[sortedPrevGroups.length - 1],
-                        prevSection
-                    );
-            } else if (
-                prevSection.questions &&
-                prevSection.questions.length > 0
-            ) {
-                const sortedPrevQuestions = [...prevSection.questions].sort(
-                    (a, b) =>
-                        (a.sort_in_section || 0) - (b.sort_in_section || 0)
-                );
-                if (sortedPrevQuestions.length > 0)
-                    return selectQuestion(
-                        sortedPrevQuestions[sortedPrevQuestions.length - 1]
-                    );
-            }
-        } else {
-            nav_boundary_dialog_message.value = "当前已经是第一题！";
-            nav_boundary_dialog_visible.value = true;
-            return;
-        }
-    }
-};
-
-/**
- * 处理题组点击事件
- * 在题组模式下，点击题组时查找并加载该题组内的所有题目
- */
-const handleQuestionGroupClick = async (group: any, section: PaperSections) => {
-    if (!group || !group.question_groups_id) return;
-    const questionGroup =
-        typeof group.question_groups_id === "object"
-            ? group.question_groups_id
-            : null;
-
-    // 获取该题组包含的题目列表
-    const groupQuestionIds = group.group_question_ids || [];
-    const groupQuestions = section.questions.filter((q) =>
-        groupQuestionIds.includes(q.id)
-    );
-
-    // 题组模式下按sort_in_group字段排序题目
-    const sortedGroupQuestions = [...groupQuestions].sort((a, b) => {
-        // 优先使用sort_in_group排序
-        const aSort = a.questions_id?.sort_in_group ?? 999;
-        const bSort = b.questions_id?.sort_in_group ?? 999;
-
-        // 如果sort_in_group相同或不存在，再使用sort_in_section作为备选
-        if (aSort === bSort) {
-            return (a.sort_in_section || 0) - (b.sort_in_section || 0);
-        }
-
-        return aSort - bSort;
-    });
-
-    // 创建包含题组的question对象
-    const enhancedQuestion = {
-        ...group,
-        isGroupMode: true,
-        questionGroup: questionGroup,
-        questions_id: { type: "group" }, // 保留一个虚拟的questions_id以兼容现有代码
-        section_id: section.id,
-        paper_sections_id: section.id,
-        sort_in_section: group.sort_in_section,
-        groupQuestions: sortedGroupQuestions, // 使用排序后的题目列表
-    };
-    selectQuestion(enhancedQuestion);
-};
 </script>
 
 <style scoped>
