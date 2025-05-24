@@ -70,7 +70,7 @@ export default defineCronHandler("everyFiveMinutes", async () => {
                 })
             ),
         "id",
-        60 // 缓存时间，例如1小时 (3600秒)
+        600 // 缓存时间，例如1小时 (3600秒)
     );
 });
 

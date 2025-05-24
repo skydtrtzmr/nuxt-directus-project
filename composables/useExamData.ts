@@ -120,7 +120,7 @@ export function useExamData() {
 
         // allSectionQuestions = 
 
-        console.log("allSectionQuesions:", allSectionQuestions);
+        console.log("allSectionQuestions:", allSectionQuestions);
         
 
         let allSectionQuestionGroups: PaperSectionsQuestionGroups[] = [];
@@ -152,6 +152,10 @@ export function useExamData() {
             body: { ids: Array.from(new Set(question_id_list_local.value)) },
         })) as Questions[];
 
+        console.log("questionsData:");
+        console.log(questionsData);
+        
+
         let questionGroupsData: QuestionGroups[] = [];
         if (question_groups_id_list_local.value.length > 0) {
             // questionGroupsData = sections.flatMap(s=>s.question_groups) as QuestionGroups[];
@@ -175,6 +179,10 @@ export function useExamData() {
                     (a, b) =>
                         (a.sort_in_section || 0) - (b.sort_in_section || 0)
                 );
+            console.log("currentSectionQuestions:");
+            console.log(currentSectionQuestions);
+            
+            
             const sectionQuestionsWithData = currentSectionQuestions.map(
                 (sq) => {
                     const questionData = questionsData.find(
@@ -452,13 +460,13 @@ export function useExamData() {
     });
 
     return {
-        practiceSession,
-        paper,
-        submittedPaperSections,
+        practiceSession, // session信息（包括时间，有点重复了，后期优化） TODO
+        paper, // 试卷信息
+        submittedPaperSections, // 最终试题信息
         // selectedQuestion is managed by ExamPage.vue, but its initial value is set here via ref
-        questionResults,
-        examScore,
-        practiceSessionTime,
+        questionResults, // 答题结果
+        examScore, // 考试得分（仅review模式显示）
+        practiceSessionTime, // 时间信息
         loadExamData,
         timerInitParams, // Expose for ExamPage to use
         shouldShowFinalSubmissionDialog, // Expose for ExamPage to use
