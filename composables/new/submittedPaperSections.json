@@ -12,6 +12,7 @@
         "questions": [
             {
                 "id": 406,
+                "sort_in_section": 1,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "cdc86409-c836-4b4b-b901-691fe69e6435",
@@ -44,11 +45,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 1
+                }
             },
             {
                 "id": 407,
+                "sort_in_section": 2,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "c707816b-f5a0-4907-8c33-0b48f4f29361",
@@ -81,11 +82,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 2
+                }
             },
             {
                 "id": 408,
+                "sort_in_section": 3,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "2f240950-89f9-4f69-8468-e9eb95b6a17c",
@@ -118,11 +119,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 3
+                }
             },
             {
                 "id": 409,
+                "sort_in_section": 4,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "fb674f51-f84b-4614-9d69-8249ed1a98ff",
@@ -155,11 +156,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 4
+                }
             },
             {
                 "id": 410,
+                "sort_in_section": 5,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "301f1c43-ce2b-4d21-8392-22e6bf6b52eb",
@@ -192,11 +193,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 5
+                }
             },
             {
                 "id": 510,
+                "sort_in_section": 6,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "2b4c3787-c76f-4c6f-8d54-be64666d11d8",
@@ -229,11 +230,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 6
+                }
             },
             {
                 "id": 511,
+                "sort_in_section": 7,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "05e66bf0-6188-4810-b086-34bc557748ad",
@@ -266,11 +267,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 7
+                }
             },
             {
                 "id": 512,
+                "sort_in_section": 8,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "392d770b-7bfd-4bfa-8cab-8817610c2912",
@@ -303,11 +304,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 8
+                }
             },
             {
                 "id": 513,
+                "sort_in_section": 9,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "7cf7cdcd-3a47-471c-aa3c-80bcda13d519",
@@ -340,11 +341,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 9
+                }
             },
             {
                 "id": 514,
+                "sort_in_section": 10,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "a0974238-c118-43c5-b267-93ac5a411ada",
@@ -377,11 +378,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 10
+                }
             },
             {
                 "id": 543,
+                "sort_in_section": 11,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "06190fd6-89f0-4f6b-8236-38f6ac93ea41",
@@ -414,11 +415,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 11
+                }
             },
             {
                 "id": 544,
+                "sort_in_section": 12,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "28993041-2b5e-4dae-8075-ff0d750f19bb",
@@ -451,11 +452,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 12
+                }
             },
             {
                 "id": 545,
+                "sort_in_section": 13,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "a505c1e1-6ee8-422c-9f5a-1aee1c642dc2",
@@ -488,11 +489,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 13
+                }
             },
             {
                 "id": 546,
+                "sort_in_section": 14,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "0ceae21b-9dcc-4e3f-af26-d236efb99c46",
@@ -525,11 +526,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 14
+                }
             },
             {
                 "id": 547,
+                "sort_in_section": 15,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "be36c90a-f1c9-430e-8260-ec317f62f037",
@@ -562,11 +563,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 15
+                }
             },
             {
                 "id": 548,
+                "sort_in_section": 16,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "490ebfb3-ee9d-4e39-bfaf-00dd7f5e4d2e",
@@ -599,11 +600,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 16
+                }
             },
             {
                 "id": 549,
+                "sort_in_section": 17,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "42b1b6a7-bf09-47ee-b0ca-7393b2b0abac",
@@ -636,11 +637,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 17
+                }
             },
             {
                 "id": 550,
+                "sort_in_section": 18,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "db7d8d0d-f18c-4699-abbe-4f55d14595fa",
@@ -673,11 +674,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 18
+                }
             },
             {
                 "id": 551,
+                "sort_in_section": 19,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "280e2063-da78-4225-995b-c241ecf14e1a",
@@ -710,11 +711,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 19
+                }
             },
             {
                 "id": 552,
+                "sort_in_section": 20,
                 "paper_sections_id": "2755007c-f72c-43d6-801e-92edc409ecff",
                 "questions_id": {
                     "id": "551f9603-bb32-465b-9f17-d0b032d41064",
@@ -747,8 +748,7 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 20
+                }
             }
         ],
         "question_groups": []
@@ -766,6 +766,7 @@
         "questions": [
             {
                 "id": 411,
+                "sort_in_section": 1,
                 "paper_sections_id": "db8df0cb-adb2-469a-aa89-3c7aec0161eb",
                 "questions_id": {
                     "id": "046ed865-028e-451d-96f3-5a3f47d6ea92",
@@ -806,11 +807,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 1
+                }
             },
             {
                 "id": 412,
+                "sort_in_section": 2,
                 "paper_sections_id": "db8df0cb-adb2-469a-aa89-3c7aec0161eb",
                 "questions_id": {
                     "id": "1313016f-0a03-4507-87f0-73fe16976848",
@@ -849,11 +850,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 2
+                }
             },
             {
                 "id": 413,
+                "sort_in_section": 3,
                 "paper_sections_id": "db8df0cb-adb2-469a-aa89-3c7aec0161eb",
                 "questions_id": {
                     "id": "bd81d4a9-5bad-4b9c-89f1-12dabfef8ab6",
@@ -896,11 +897,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 3
+                }
             },
             {
                 "id": 414,
+                "sort_in_section": 4,
                 "paper_sections_id": "db8df0cb-adb2-469a-aa89-3c7aec0161eb",
                 "questions_id": {
                     "id": "9aeb443e-6a27-45ba-9d91-196bd28a3f7f",
@@ -943,11 +944,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 4
+                }
             },
             {
                 "id": 415,
+                "sort_in_section": 5,
                 "paper_sections_id": "db8df0cb-adb2-469a-aa89-3c7aec0161eb",
                 "questions_id": {
                     "id": "eb56dd68-7db0-4f71-ab34-215aa0f547f3",
@@ -990,11 +991,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 5
+                }
             },
             {
                 "id": 493,
+                "sort_in_section": 6,
                 "paper_sections_id": "db8df0cb-adb2-469a-aa89-3c7aec0161eb",
                 "questions_id": {
                     "id": "720c6bd5-2f35-445d-9d57-034d57a6f1c3",
@@ -1033,11 +1034,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 6
+                }
             },
             {
                 "id": 494,
+                "sort_in_section": 7,
                 "paper_sections_id": "db8df0cb-adb2-469a-aa89-3c7aec0161eb",
                 "questions_id": {
                     "id": "01ec993c-3c14-40eb-a8e8-b8b94515c057",
@@ -1078,11 +1079,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 7
+                }
             },
             {
                 "id": 515,
+                "sort_in_section": 8,
                 "paper_sections_id": "db8df0cb-adb2-469a-aa89-3c7aec0161eb",
                 "questions_id": {
                     "id": "5671a259-a49a-449c-91ef-c53f46a7822b",
@@ -1121,11 +1122,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 8
+                }
             },
             {
                 "id": 516,
+                "sort_in_section": 9,
                 "paper_sections_id": "db8df0cb-adb2-469a-aa89-3c7aec0161eb",
                 "questions_id": {
                     "id": "d376a94b-1e6d-40bd-9eed-aaeac8f46f3c",
@@ -1164,11 +1165,11 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 9
+                }
             },
             {
                 "id": 517,
+                "sort_in_section": 10,
                 "paper_sections_id": "db8df0cb-adb2-469a-aa89-3c7aec0161eb",
                 "questions_id": {
                     "id": "5c3a1bcd-a140-4c83-bafa-f6a0d6eff50f",
@@ -1207,8 +1208,7 @@
                     "q_mc_binary": null,
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 10
+                }
             }
         ],
         "question_groups": []
@@ -1226,6 +1226,7 @@
         "questions": [
             {
                 "id": 518,
+                "sort_in_section": 1,
                 "paper_sections_id": "e401adce-f112-471f-a275-0207b40937d7",
                 "questions_id": {
                     "id": "cbea4613-a2a2-49df-a7b5-33a8ef073dbc",
@@ -1253,11 +1254,11 @@
                     },
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 1
+                }
             },
             {
                 "id": 519,
+                "sort_in_section": 2,
                 "paper_sections_id": "e401adce-f112-471f-a275-0207b40937d7",
                 "questions_id": {
                     "id": "bf1d6204-e6ca-43fa-8fbc-8a6d76fbef82",
@@ -1285,11 +1286,11 @@
                     },
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 2
+                }
             },
             {
                 "id": 520,
+                "sort_in_section": 3,
                 "paper_sections_id": "e401adce-f112-471f-a275-0207b40937d7",
                 "questions_id": {
                     "id": "cd10c724-2cb5-4fed-8eb4-c4dc09db5c24",
@@ -1317,11 +1318,11 @@
                     },
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 3
+                }
             },
             {
                 "id": 521,
+                "sort_in_section": 4,
                 "paper_sections_id": "e401adce-f112-471f-a275-0207b40937d7",
                 "questions_id": {
                     "id": "1797ca5c-a7ed-49b6-ac90-deee5ff30465",
@@ -1349,11 +1350,11 @@
                     },
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 4
+                }
             },
             {
                 "id": 522,
+                "sort_in_section": 5,
                 "paper_sections_id": "e401adce-f112-471f-a275-0207b40937d7",
                 "questions_id": {
                     "id": "be42cfa7-00da-49fb-afac-56e7bc667fde",
@@ -1381,11 +1382,11 @@
                     },
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 5
+                }
             },
             {
                 "id": 523,
+                "sort_in_section": 6,
                 "paper_sections_id": "e401adce-f112-471f-a275-0207b40937d7",
                 "questions_id": {
                     "id": "1d16c0a5-7ce6-44e0-805d-faff7babbb97",
@@ -1413,11 +1414,11 @@
                     },
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 6
+                }
             },
             {
                 "id": 524,
+                "sort_in_section": 7,
                 "paper_sections_id": "e401adce-f112-471f-a275-0207b40937d7",
                 "questions_id": {
                     "id": "821f3878-066b-40af-9a8a-d0b99f9404ca",
@@ -1445,11 +1446,11 @@
                     },
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 7
+                }
             },
             {
                 "id": 525,
+                "sort_in_section": 8,
                 "paper_sections_id": "e401adce-f112-471f-a275-0207b40937d7",
                 "questions_id": {
                     "id": "a874b7ea-221e-4047-a4b4-8c0cec1fa032",
@@ -1477,11 +1478,11 @@
                     },
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 8
+                }
             },
             {
                 "id": 526,
+                "sort_in_section": 9,
                 "paper_sections_id": "e401adce-f112-471f-a275-0207b40937d7",
                 "questions_id": {
                     "id": "9ade52e8-5011-49fc-8106-5c6eddf906f7",
@@ -1509,11 +1510,11 @@
                     },
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 9
+                }
             },
             {
                 "id": 527,
+                "sort_in_section": 10,
                 "paper_sections_id": "e401adce-f112-471f-a275-0207b40937d7",
                 "questions_id": {
                     "id": "1a23a26d-85ea-43cd-81bd-ed27c8f56c81",
@@ -1541,8 +1542,7 @@
                     },
                     "q_mc_flexible": null,
                     "question_group": null
-                },
-                "sort_in_section": 10
+                }
             }
         ],
         "question_groups": []
@@ -1560,6 +1560,7 @@
         "questions": [
             {
                 "id": 528,
+                "sort_in_section": 1,
                 "paper_sections_id": "b35ba23b-bd2c-45d3-825d-af33b7e797a4",
                 "questions_id": {
                     "id": "871bc422-0dcc-4ac6-88f4-c691bb247ae0",
@@ -1596,29 +1597,13 @@
                         "analysis": "对2021年利润表中“营业利润”项目影响的金额＝－2－1－1.2＋200－120＝75.8（万元）。"
                     },
                     "question_group": {
-                        "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae",
-                        "status": "draft",
-                        "sort": null,
-                        "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_created": "2025-04-18T02:31:46.189Z",
-                        "user_updated": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_updated": "2025-05-01T14:54:11.664Z",
-                        "title": null,
-                        "shared_stem": "甲公司提供施工服务，属于在某一时段内履行的履约义务，为取得施工合同发生的合同取得成本按照履约进度进行摊销。2021年7月至12月，发生的有关经济业务如下：\n\n（1）2021年7月1日，通过竞标取得一项为期两年的施工合同， 合同总价款为1 000万元，施工费每半年支付250万元，为取得该合同，2021年7月甲公司以银行存款支付投标费2万元，投标人员差旅费1万元，销售人员佣金6万元，预期这些支出未来均能收回。\n\n（2）截止到2021年12月31日，为该项合同累计发生施工成本120万元，预计还将发生施工成本480万元，甲公司按照实际发生的成本占预计总成本的比例确定履约进度。\n\n（3）2021年12月31日，甲公司按照合同约定收到施工费250万元。\n\n要求：根据上述资料不考虑相关税费等因素，分析回答下列问题。（答案中的金额单位用万元表示）",
-                        "question_count": 5,
-                        "questions": [
-                            "e77d62b8-750d-4e18-9f96-5efef0162ac0",
-                            "ea953e32-f5a4-444b-92ea-e2b6b75d1e73",
-                            "b81db797-275b-4f1d-b094-367e404e9621",
-                            "5d44e7d0-6284-44da-841b-ade4320e8f9e",
-                            "871bc422-0dcc-4ac6-88f4-c691bb247ae0"
-                        ]
+                        "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae"
                     }
-                },
-                "sort_in_section": 1
+                }
             },
             {
                 "id": 529,
+                "sort_in_section": 2,
                 "paper_sections_id": "b35ba23b-bd2c-45d3-825d-af33b7e797a4",
                 "questions_id": {
                     "id": "ea953e32-f5a4-444b-92ea-e2b6b75d1e73",
@@ -1657,29 +1642,13 @@
                         "analysis": "企业为取得合同发生的、除预期能够收回的增量成本之外的其他支出，如无论是否取得合同均会发生的差旅费、投标费等相关费用，应当在发生时计入当期损益，除非这些支出明确由客户承担。投标费2万元和投标人员差旅费1万元均通过“管理费用”核算，因订立该合同使期间费用增加3万元；所以选项A正确，选项BC错误；销售人员佣金6万元属于预期未来能够收回的增量成本，应作为合同取得成本确认为一项资产，所以选项D正确。"
                     },
                     "question_group": {
-                        "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae",
-                        "status": "draft",
-                        "sort": null,
-                        "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_created": "2025-04-18T02:31:46.189Z",
-                        "user_updated": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_updated": "2025-05-01T14:54:11.664Z",
-                        "title": null,
-                        "shared_stem": "甲公司提供施工服务，属于在某一时段内履行的履约义务，为取得施工合同发生的合同取得成本按照履约进度进行摊销。2021年7月至12月，发生的有关经济业务如下：\n\n（1）2021年7月1日，通过竞标取得一项为期两年的施工合同， 合同总价款为1 000万元，施工费每半年支付250万元，为取得该合同，2021年7月甲公司以银行存款支付投标费2万元，投标人员差旅费1万元，销售人员佣金6万元，预期这些支出未来均能收回。\n\n（2）截止到2021年12月31日，为该项合同累计发生施工成本120万元，预计还将发生施工成本480万元，甲公司按照实际发生的成本占预计总成本的比例确定履约进度。\n\n（3）2021年12月31日，甲公司按照合同约定收到施工费250万元。\n\n要求：根据上述资料不考虑相关税费等因素，分析回答下列问题。（答案中的金额单位用万元表示）",
-                        "question_count": 5,
-                        "questions": [
-                            "e77d62b8-750d-4e18-9f96-5efef0162ac0",
-                            "ea953e32-f5a4-444b-92ea-e2b6b75d1e73",
-                            "b81db797-275b-4f1d-b094-367e404e9621",
-                            "5d44e7d0-6284-44da-841b-ade4320e8f9e",
-                            "871bc422-0dcc-4ac6-88f4-c691bb247ae0"
-                        ]
+                        "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae"
                     }
-                },
-                "sort_in_section": 2
+                }
             },
             {
                 "id": 530,
+                "sort_in_section": 3,
                 "paper_sections_id": "b35ba23b-bd2c-45d3-825d-af33b7e797a4",
                 "questions_id": {
                     "id": "b81db797-275b-4f1d-b094-367e404e9621",
@@ -1722,29 +1691,13 @@
                         "analysis": "合同履约进度＝120÷（120＋480）×100%＝20%；主营业务收入＝1 000×20%＝200（万元）；主营业务成本＝120（万元）；合同负债＝250－200＝50（万元）。会计分录如下：\n\n借：银行存款     250\n\n　　贷：主营业务收入     200\n\n　　　　合同负债        50\n\n借：主营业务成本     120\n\n　　贷：合同履约成本     120"
                     },
                     "question_group": {
-                        "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae",
-                        "status": "draft",
-                        "sort": null,
-                        "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_created": "2025-04-18T02:31:46.189Z",
-                        "user_updated": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_updated": "2025-05-01T14:54:11.664Z",
-                        "title": null,
-                        "shared_stem": "甲公司提供施工服务，属于在某一时段内履行的履约义务，为取得施工合同发生的合同取得成本按照履约进度进行摊销。2021年7月至12月，发生的有关经济业务如下：\n\n（1）2021年7月1日，通过竞标取得一项为期两年的施工合同， 合同总价款为1 000万元，施工费每半年支付250万元，为取得该合同，2021年7月甲公司以银行存款支付投标费2万元，投标人员差旅费1万元，销售人员佣金6万元，预期这些支出未来均能收回。\n\n（2）截止到2021年12月31日，为该项合同累计发生施工成本120万元，预计还将发生施工成本480万元，甲公司按照实际发生的成本占预计总成本的比例确定履约进度。\n\n（3）2021年12月31日，甲公司按照合同约定收到施工费250万元。\n\n要求：根据上述资料不考虑相关税费等因素，分析回答下列问题。（答案中的金额单位用万元表示）",
-                        "question_count": 5,
-                        "questions": [
-                            "e77d62b8-750d-4e18-9f96-5efef0162ac0",
-                            "ea953e32-f5a4-444b-92ea-e2b6b75d1e73",
-                            "b81db797-275b-4f1d-b094-367e404e9621",
-                            "5d44e7d0-6284-44da-841b-ade4320e8f9e",
-                            "871bc422-0dcc-4ac6-88f4-c691bb247ae0"
-                        ]
+                        "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae"
                     }
-                },
-                "sort_in_section": 3
+                }
             },
             {
                 "id": 531,
+                "sort_in_section": 4,
                 "paper_sections_id": "b35ba23b-bd2c-45d3-825d-af33b7e797a4",
                 "questions_id": {
                     "id": "5d44e7d0-6284-44da-841b-ade4320e8f9e",
@@ -1781,29 +1734,13 @@
                         "analysis": "甲公司应编制如下会计分录：\n\n借：销售费用     1.2（6×20%）\n\n　　贷：合同取得成本       1.2 "
                     },
                     "question_group": {
-                        "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae",
-                        "status": "draft",
-                        "sort": null,
-                        "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_created": "2025-04-18T02:31:46.189Z",
-                        "user_updated": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_updated": "2025-05-01T14:54:11.664Z",
-                        "title": null,
-                        "shared_stem": "甲公司提供施工服务，属于在某一时段内履行的履约义务，为取得施工合同发生的合同取得成本按照履约进度进行摊销。2021年7月至12月，发生的有关经济业务如下：\n\n（1）2021年7月1日，通过竞标取得一项为期两年的施工合同， 合同总价款为1 000万元，施工费每半年支付250万元，为取得该合同，2021年7月甲公司以银行存款支付投标费2万元，投标人员差旅费1万元，销售人员佣金6万元，预期这些支出未来均能收回。\n\n（2）截止到2021年12月31日，为该项合同累计发生施工成本120万元，预计还将发生施工成本480万元，甲公司按照实际发生的成本占预计总成本的比例确定履约进度。\n\n（3）2021年12月31日，甲公司按照合同约定收到施工费250万元。\n\n要求：根据上述资料不考虑相关税费等因素，分析回答下列问题。（答案中的金额单位用万元表示）",
-                        "question_count": 5,
-                        "questions": [
-                            "e77d62b8-750d-4e18-9f96-5efef0162ac0",
-                            "ea953e32-f5a4-444b-92ea-e2b6b75d1e73",
-                            "b81db797-275b-4f1d-b094-367e404e9621",
-                            "5d44e7d0-6284-44da-841b-ade4320e8f9e",
-                            "871bc422-0dcc-4ac6-88f4-c691bb247ae0"
-                        ]
+                        "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae"
                     }
-                },
-                "sort_in_section": 4
+                }
             },
             {
                 "id": 532,
+                "sort_in_section": 5,
                 "paper_sections_id": "b35ba23b-bd2c-45d3-825d-af33b7e797a4",
                 "questions_id": {
                     "id": "e77d62b8-750d-4e18-9f96-5efef0162ac0",
@@ -1842,29 +1779,13 @@
                         "analysis": "合同取得成本是指企业为取得合同发生的预期能够收回的增量成本，选项A正确；增量成本是指企业不取得合同就不会发生的成本，也就是企业发生的与合同直接相关，但又不是所签订合同的对象或内容本身所直接发生的费用，选项D不正确；企业发生合同取得成本应借记“合同取得成本”科目，贷记“银行存款”等科目，选项B不正确，选项C正确。"
                     },
                     "question_group": {
-                        "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae",
-                        "status": "draft",
-                        "sort": null,
-                        "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_created": "2025-04-18T02:31:46.189Z",
-                        "user_updated": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_updated": "2025-05-01T14:54:11.664Z",
-                        "title": null,
-                        "shared_stem": "甲公司提供施工服务，属于在某一时段内履行的履约义务，为取得施工合同发生的合同取得成本按照履约进度进行摊销。2021年7月至12月，发生的有关经济业务如下：\n\n（1）2021年7月1日，通过竞标取得一项为期两年的施工合同， 合同总价款为1 000万元，施工费每半年支付250万元，为取得该合同，2021年7月甲公司以银行存款支付投标费2万元，投标人员差旅费1万元，销售人员佣金6万元，预期这些支出未来均能收回。\n\n（2）截止到2021年12月31日，为该项合同累计发生施工成本120万元，预计还将发生施工成本480万元，甲公司按照实际发生的成本占预计总成本的比例确定履约进度。\n\n（3）2021年12月31日，甲公司按照合同约定收到施工费250万元。\n\n要求：根据上述资料不考虑相关税费等因素，分析回答下列问题。（答案中的金额单位用万元表示）",
-                        "question_count": 5,
-                        "questions": [
-                            "e77d62b8-750d-4e18-9f96-5efef0162ac0",
-                            "ea953e32-f5a4-444b-92ea-e2b6b75d1e73",
-                            "b81db797-275b-4f1d-b094-367e404e9621",
-                            "5d44e7d0-6284-44da-841b-ade4320e8f9e",
-                            "871bc422-0dcc-4ac6-88f4-c691bb247ae0"
-                        ]
+                        "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae"
                     }
-                },
-                "sort_in_section": 5
+                }
             },
             {
                 "id": 533,
+                "sort_in_section": 6,
                 "paper_sections_id": "b35ba23b-bd2c-45d3-825d-af33b7e797a4",
                 "questions_id": {
                     "id": "066cc1d2-c182-4a74-a5ad-510a4839dacb",
@@ -1905,29 +1826,13 @@
                         "analysis": "结转报废净损失分录如下：\n\n借：营业外支出       26 000\n\n　　贷：固定资产清理     26 000"
                     },
                     "question_group": {
-                        "id": "ff0aeb10-f381-4bd0-932d-67ab01778176",
-                        "status": "draft",
-                        "sort": null,
-                        "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_created": "2025-04-18T02:40:41.456Z",
-                        "user_updated": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_updated": "2025-04-18T02:45:27.064Z",
-                        "title": null,
-                        "shared_stem": "甲公司为增值税一般纳税人，2021年度该公司发生与固定资产相关业务如下：\n\n（1）1月8日，购入一台需要安装的M设备，取得的增值税专用发票上注明的价款为500 000元，增值税税额为65 000元，另支付安装费取得的增值税专用发票上注明的价款为40 000元，增值税税额为3 600元，全部款项以银行存款支付。该设备预计可使用5年，预计净残值为30 000元，采用年限平均法计提折旧。1月10日M设备达到预定可使用状态并交付生产车间使用。\n\n（2）6月30日，委托外单位对本公司设备进行日常维护修理，其中行政管理部门设备的修理费为30 000元，销售部门设备修理费为10 000元，取得的增值税专用发票上注明的价款为40 000元，增值税税额为5 200元，全部款项以银行存款支付。\n\n（3）12月5日，报废一台N设备，该设备原值为800 000元，已计提折旧760 000元，未发生资产减值损失。设备报废取得变价收入20 000元，开具的增值税专用发票上注明的增值税税额为2 600元，报废过程中发生清理费用6 000元，全部款项均已通过银行办理结算。\n\n（4）12月31日，对固定资产进行减值测试，发现2021年1月购入的M设备存在减值迹象，其可收回金额为440 000元。\n\n要求：根据上述资料，不考虑其他因素，分析回答下列小题。（答案中的金额单位用元表示）",
-                        "question_count": null,
-                        "questions": [
-                            "c15630f6-defb-454f-83af-3e4de9ca3377",
-                            "811a6f57-f2ed-47bd-804c-89bbcfc96245",
-                            "c9605651-7053-4a31-8b82-8d8afed0ce3d",
-                            "066cc1d2-c182-4a74-a5ad-510a4839dacb",
-                            "3d6a1bb0-cc67-4ea3-87ad-7b7ea42080ee"
-                        ]
+                        "id": "ff0aeb10-f381-4bd0-932d-67ab01778176"
                     }
-                },
-                "sort_in_section": 6
+                }
             },
             {
                 "id": 534,
+                "sort_in_section": 7,
                 "paper_sections_id": "b35ba23b-bd2c-45d3-825d-af33b7e797a4",
                 "questions_id": {
                     "id": "c9605651-7053-4a31-8b82-8d8afed0ce3d",
@@ -1966,29 +1871,13 @@
                         "analysis": "本题分录如下：\n\n借：管理费用     30 000\n\n　　销售费用     10 000\n\n　　应交税费——应交增值税（进项税额）    5 200\n\n　　贷：银行存款      45 200"
                     },
                     "question_group": {
-                        "id": "ff0aeb10-f381-4bd0-932d-67ab01778176",
-                        "status": "draft",
-                        "sort": null,
-                        "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_created": "2025-04-18T02:40:41.456Z",
-                        "user_updated": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_updated": "2025-04-18T02:45:27.064Z",
-                        "title": null,
-                        "shared_stem": "甲公司为增值税一般纳税人，2021年度该公司发生与固定资产相关业务如下：\n\n（1）1月8日，购入一台需要安装的M设备，取得的增值税专用发票上注明的价款为500 000元，增值税税额为65 000元，另支付安装费取得的增值税专用发票上注明的价款为40 000元，增值税税额为3 600元，全部款项以银行存款支付。该设备预计可使用5年，预计净残值为30 000元，采用年限平均法计提折旧。1月10日M设备达到预定可使用状态并交付生产车间使用。\n\n（2）6月30日，委托外单位对本公司设备进行日常维护修理，其中行政管理部门设备的修理费为30 000元，销售部门设备修理费为10 000元，取得的增值税专用发票上注明的价款为40 000元，增值税税额为5 200元，全部款项以银行存款支付。\n\n（3）12月5日，报废一台N设备，该设备原值为800 000元，已计提折旧760 000元，未发生资产减值损失。设备报废取得变价收入20 000元，开具的增值税专用发票上注明的增值税税额为2 600元，报废过程中发生清理费用6 000元，全部款项均已通过银行办理结算。\n\n（4）12月31日，对固定资产进行减值测试，发现2021年1月购入的M设备存在减值迹象，其可收回金额为440 000元。\n\n要求：根据上述资料，不考虑其他因素，分析回答下列小题。（答案中的金额单位用元表示）",
-                        "question_count": null,
-                        "questions": [
-                            "c15630f6-defb-454f-83af-3e4de9ca3377",
-                            "811a6f57-f2ed-47bd-804c-89bbcfc96245",
-                            "c9605651-7053-4a31-8b82-8d8afed0ce3d",
-                            "066cc1d2-c182-4a74-a5ad-510a4839dacb",
-                            "3d6a1bb0-cc67-4ea3-87ad-7b7ea42080ee"
-                        ]
+                        "id": "ff0aeb10-f381-4bd0-932d-67ab01778176"
                     }
-                },
-                "sort_in_section": 7
+                }
             },
             {
                 "id": 535,
+                "sort_in_section": 8,
                 "paper_sections_id": "b35ba23b-bd2c-45d3-825d-af33b7e797a4",
                 "questions_id": {
                     "id": "c15630f6-defb-454f-83af-3e4de9ca3377",
@@ -2025,29 +1914,13 @@
                         "analysis": "甲公司购入M设备的入账价值＝500 000＋40 000＝540 000（元）。"
                     },
                     "question_group": {
-                        "id": "ff0aeb10-f381-4bd0-932d-67ab01778176",
-                        "status": "draft",
-                        "sort": null,
-                        "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_created": "2025-04-18T02:40:41.456Z",
-                        "user_updated": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_updated": "2025-04-18T02:45:27.064Z",
-                        "title": null,
-                        "shared_stem": "甲公司为增值税一般纳税人，2021年度该公司发生与固定资产相关业务如下：\n\n（1）1月8日，购入一台需要安装的M设备，取得的增值税专用发票上注明的价款为500 000元，增值税税额为65 000元，另支付安装费取得的增值税专用发票上注明的价款为40 000元，增值税税额为3 600元，全部款项以银行存款支付。该设备预计可使用5年，预计净残值为30 000元，采用年限平均法计提折旧。1月10日M设备达到预定可使用状态并交付生产车间使用。\n\n（2）6月30日，委托外单位对本公司设备进行日常维护修理，其中行政管理部门设备的修理费为30 000元，销售部门设备修理费为10 000元，取得的增值税专用发票上注明的价款为40 000元，增值税税额为5 200元，全部款项以银行存款支付。\n\n（3）12月5日，报废一台N设备，该设备原值为800 000元，已计提折旧760 000元，未发生资产减值损失。设备报废取得变价收入20 000元，开具的增值税专用发票上注明的增值税税额为2 600元，报废过程中发生清理费用6 000元，全部款项均已通过银行办理结算。\n\n（4）12月31日，对固定资产进行减值测试，发现2021年1月购入的M设备存在减值迹象，其可收回金额为440 000元。\n\n要求：根据上述资料，不考虑其他因素，分析回答下列小题。（答案中的金额单位用元表示）",
-                        "question_count": null,
-                        "questions": [
-                            "c15630f6-defb-454f-83af-3e4de9ca3377",
-                            "811a6f57-f2ed-47bd-804c-89bbcfc96245",
-                            "c9605651-7053-4a31-8b82-8d8afed0ce3d",
-                            "066cc1d2-c182-4a74-a5ad-510a4839dacb",
-                            "3d6a1bb0-cc67-4ea3-87ad-7b7ea42080ee"
-                        ]
+                        "id": "ff0aeb10-f381-4bd0-932d-67ab01778176"
                     }
-                },
-                "sort_in_section": 8
+                }
             },
             {
                 "id": 536,
+                "sort_in_section": 9,
                 "paper_sections_id": "b35ba23b-bd2c-45d3-825d-af33b7e797a4",
                 "questions_id": {
                     "id": "811a6f57-f2ed-47bd-804c-89bbcfc96245",
@@ -2088,29 +1961,13 @@
                         "analysis": "1月10日M设备达到预定可使用状态，固定资产于次月开始计提折旧，所以从2月开始计提折旧，选项A错误，选项C正确；采用年限平均法计提折旧，2021年计提折旧额＝（540 000－30 000）÷5÷12×11＝93 500（元），选项B正确；月折旧额＝（540 000－30 000）÷5÷12＝8 500（元），选项D正确。"
                     },
                     "question_group": {
-                        "id": "ff0aeb10-f381-4bd0-932d-67ab01778176",
-                        "status": "draft",
-                        "sort": null,
-                        "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_created": "2025-04-18T02:40:41.456Z",
-                        "user_updated": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_updated": "2025-04-18T02:45:27.064Z",
-                        "title": null,
-                        "shared_stem": "甲公司为增值税一般纳税人，2021年度该公司发生与固定资产相关业务如下：\n\n（1）1月8日，购入一台需要安装的M设备，取得的增值税专用发票上注明的价款为500 000元，增值税税额为65 000元，另支付安装费取得的增值税专用发票上注明的价款为40 000元，增值税税额为3 600元，全部款项以银行存款支付。该设备预计可使用5年，预计净残值为30 000元，采用年限平均法计提折旧。1月10日M设备达到预定可使用状态并交付生产车间使用。\n\n（2）6月30日，委托外单位对本公司设备进行日常维护修理，其中行政管理部门设备的修理费为30 000元，销售部门设备修理费为10 000元，取得的增值税专用发票上注明的价款为40 000元，增值税税额为5 200元，全部款项以银行存款支付。\n\n（3）12月5日，报废一台N设备，该设备原值为800 000元，已计提折旧760 000元，未发生资产减值损失。设备报废取得变价收入20 000元，开具的增值税专用发票上注明的增值税税额为2 600元，报废过程中发生清理费用6 000元，全部款项均已通过银行办理结算。\n\n（4）12月31日，对固定资产进行减值测试，发现2021年1月购入的M设备存在减值迹象，其可收回金额为440 000元。\n\n要求：根据上述资料，不考虑其他因素，分析回答下列小题。（答案中的金额单位用元表示）",
-                        "question_count": null,
-                        "questions": [
-                            "c15630f6-defb-454f-83af-3e4de9ca3377",
-                            "811a6f57-f2ed-47bd-804c-89bbcfc96245",
-                            "c9605651-7053-4a31-8b82-8d8afed0ce3d",
-                            "066cc1d2-c182-4a74-a5ad-510a4839dacb",
-                            "3d6a1bb0-cc67-4ea3-87ad-7b7ea42080ee"
-                        ]
+                        "id": "ff0aeb10-f381-4bd0-932d-67ab01778176"
                     }
-                },
-                "sort_in_section": 9
+                }
             },
             {
                 "id": 537,
+                "sort_in_section": 10,
                 "paper_sections_id": "b35ba23b-bd2c-45d3-825d-af33b7e797a4",
                 "questions_id": {
                     "id": "3d6a1bb0-cc67-4ea3-87ad-7b7ea42080ee",
@@ -2151,29 +2008,13 @@
                         "analysis": "年末时，M设备计提减值准备前的账面价值＝540 000－93 500＝446 500（元）>可收回金额440 000元，计提减值准备的金额＝446 500－440 000＝6 500（元），选项A正确；固定资产减值准备一经计提，以后会计期间不得转回，选项C正确；期末M设备在资产负债表“固定资产”项目填列的金额应根据M设备固定资产的期末余额（540 000元），减去M设备计提的折旧（93 500元）和M设备计提的减值准备（6 500元）后的金额（440 000元）填列，选项D正确，选项B错误。"
                     },
                     "question_group": {
-                        "id": "ff0aeb10-f381-4bd0-932d-67ab01778176",
-                        "status": "draft",
-                        "sort": null,
-                        "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_created": "2025-04-18T02:40:41.456Z",
-                        "user_updated": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_updated": "2025-04-18T02:45:27.064Z",
-                        "title": null,
-                        "shared_stem": "甲公司为增值税一般纳税人，2021年度该公司发生与固定资产相关业务如下：\n\n（1）1月8日，购入一台需要安装的M设备，取得的增值税专用发票上注明的价款为500 000元，增值税税额为65 000元，另支付安装费取得的增值税专用发票上注明的价款为40 000元，增值税税额为3 600元，全部款项以银行存款支付。该设备预计可使用5年，预计净残值为30 000元，采用年限平均法计提折旧。1月10日M设备达到预定可使用状态并交付生产车间使用。\n\n（2）6月30日，委托外单位对本公司设备进行日常维护修理，其中行政管理部门设备的修理费为30 000元，销售部门设备修理费为10 000元，取得的增值税专用发票上注明的价款为40 000元，增值税税额为5 200元，全部款项以银行存款支付。\n\n（3）12月5日，报废一台N设备，该设备原值为800 000元，已计提折旧760 000元，未发生资产减值损失。设备报废取得变价收入20 000元，开具的增值税专用发票上注明的增值税税额为2 600元，报废过程中发生清理费用6 000元，全部款项均已通过银行办理结算。\n\n（4）12月31日，对固定资产进行减值测试，发现2021年1月购入的M设备存在减值迹象，其可收回金额为440 000元。\n\n要求：根据上述资料，不考虑其他因素，分析回答下列小题。（答案中的金额单位用元表示）",
-                        "question_count": null,
-                        "questions": [
-                            "c15630f6-defb-454f-83af-3e4de9ca3377",
-                            "811a6f57-f2ed-47bd-804c-89bbcfc96245",
-                            "c9605651-7053-4a31-8b82-8d8afed0ce3d",
-                            "066cc1d2-c182-4a74-a5ad-510a4839dacb",
-                            "3d6a1bb0-cc67-4ea3-87ad-7b7ea42080ee"
-                        ]
+                        "id": "ff0aeb10-f381-4bd0-932d-67ab01778176"
                     }
-                },
-                "sort_in_section": 10
+                }
             },
             {
                 "id": 538,
+                "sort_in_section": 11,
                 "paper_sections_id": "b35ba23b-bd2c-45d3-825d-af33b7e797a4",
                 "questions_id": {
                     "id": "087ceb8b-80b9-4ab0-906a-bec0621f102d",
@@ -2212,29 +2053,13 @@
                         "analysis": "3月31日，甲公司持有乙公司债券的公允价值变动的会计处理如下：\n\n借：交易性金融资产——公允价值变动　　40（1 040-1 000）\n\n　　贷：公允价值变动损益                                 40"
                     },
                     "question_group": {
-                        "id": "16214054-0e97-4d27-81b1-bf55d1aee87f",
-                        "status": "draft",
-                        "sort": null,
-                        "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_created": "2025-04-18T03:16:31.184Z",
-                        "user_updated": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_updated": "2025-05-02T08:52:35.793Z",
-                        "title": null,
-                        "shared_stem": "甲公司为增值税一般纳税人。其购买债券均通过投资款专户进行，2022年甲公司发生与债券投资相关的业务如下：\n\n（1）3月1日，甲公司从二级市场购入乙公司发行的面值为950万元的债券，支付价款1 020万元（其中包含已到付息期但尚未领取的债券利息20万元），另支付交易费用3万元，取得的增值税专用发票上注明的增值税税额为0.18万元。甲公司将其划分为交易性金融资产进行管理和核算。\n\n（2）3月10日，甲公司收到乙公司支付的购入时未领取的债券利息20万元。\n\n（3）3月31日，甲公司持有乙公司债券的公允价值为1 040万元。\n\n（4）4月10日，甲公司出售所持有的全部乙公司债券，价款为1 126万元，转让乙公司债券应交增值税6万元。\n\n要求：根据上述资料，不考虑相关税费及其他因素，分析回答下列小题。（答案中的金额单位用万元表示）",
-                        "question_count": 5,
-                        "questions": [
-                            "24a9c85f-8310-4f3b-8d97-e3983f9d2afc",
-                            "3d9d0c9f-b691-4511-a7a2-45342c788b6d",
-                            "087ceb8b-80b9-4ab0-906a-bec0621f102d",
-                            "ee7eb57e-a0d6-446e-bc06-8e1b1acff1d0",
-                            "10a1610e-e06e-4de2-b0b8-1b3efbeaec1c"
-                        ]
+                        "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
                     }
-                },
-                "sort_in_section": 11
+                }
             },
             {
                 "id": 539,
+                "sort_in_section": 12,
                 "paper_sections_id": "b35ba23b-bd2c-45d3-825d-af33b7e797a4",
                 "questions_id": {
                     "id": "ee7eb57e-a0d6-446e-bc06-8e1b1acff1d0",
@@ -2273,29 +2098,13 @@
                         "analysis": "4月10日，甲公司出售所持有的全部乙公司债券的会计处理如下：\n\n借：其他货币资金——存出投资款      1 126\n\n　　贷：交易性金融资产——成本              1 000\n\n　　　　　　　　　　　——公允价值变动     40\n\n　　　　投资收益                                             86（1 126-1 040）\n\n借：投资收益                6\n\n　　贷：应交税费——转让金融商品应交增值税          6"
                     },
                     "question_group": {
-                        "id": "16214054-0e97-4d27-81b1-bf55d1aee87f",
-                        "status": "draft",
-                        "sort": null,
-                        "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_created": "2025-04-18T03:16:31.184Z",
-                        "user_updated": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_updated": "2025-05-02T08:52:35.793Z",
-                        "title": null,
-                        "shared_stem": "甲公司为增值税一般纳税人。其购买债券均通过投资款专户进行，2022年甲公司发生与债券投资相关的业务如下：\n\n（1）3月1日，甲公司从二级市场购入乙公司发行的面值为950万元的债券，支付价款1 020万元（其中包含已到付息期但尚未领取的债券利息20万元），另支付交易费用3万元，取得的增值税专用发票上注明的增值税税额为0.18万元。甲公司将其划分为交易性金融资产进行管理和核算。\n\n（2）3月10日，甲公司收到乙公司支付的购入时未领取的债券利息20万元。\n\n（3）3月31日，甲公司持有乙公司债券的公允价值为1 040万元。\n\n（4）4月10日，甲公司出售所持有的全部乙公司债券，价款为1 126万元，转让乙公司债券应交增值税6万元。\n\n要求：根据上述资料，不考虑相关税费及其他因素，分析回答下列小题。（答案中的金额单位用万元表示）",
-                        "question_count": 5,
-                        "questions": [
-                            "24a9c85f-8310-4f3b-8d97-e3983f9d2afc",
-                            "3d9d0c9f-b691-4511-a7a2-45342c788b6d",
-                            "087ceb8b-80b9-4ab0-906a-bec0621f102d",
-                            "ee7eb57e-a0d6-446e-bc06-8e1b1acff1d0",
-                            "10a1610e-e06e-4de2-b0b8-1b3efbeaec1c"
-                        ]
+                        "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
                     }
-                },
-                "sort_in_section": 12
+                }
             },
             {
                 "id": 540,
+                "sort_in_section": 13,
                 "paper_sections_id": "b35ba23b-bd2c-45d3-825d-af33b7e797a4",
                 "questions_id": {
                     "id": "10a1610e-e06e-4de2-b0b8-1b3efbeaec1c",
@@ -2332,29 +2141,13 @@
                         "analysis": "对“营业利润”项目的影响金额=-3（资料1）+40（资料3）+86（资料4）-6（资料4）=117（万元）。"
                     },
                     "question_group": {
-                        "id": "16214054-0e97-4d27-81b1-bf55d1aee87f",
-                        "status": "draft",
-                        "sort": null,
-                        "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_created": "2025-04-18T03:16:31.184Z",
-                        "user_updated": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_updated": "2025-05-02T08:52:35.793Z",
-                        "title": null,
-                        "shared_stem": "甲公司为增值税一般纳税人。其购买债券均通过投资款专户进行，2022年甲公司发生与债券投资相关的业务如下：\n\n（1）3月1日，甲公司从二级市场购入乙公司发行的面值为950万元的债券，支付价款1 020万元（其中包含已到付息期但尚未领取的债券利息20万元），另支付交易费用3万元，取得的增值税专用发票上注明的增值税税额为0.18万元。甲公司将其划分为交易性金融资产进行管理和核算。\n\n（2）3月10日，甲公司收到乙公司支付的购入时未领取的债券利息20万元。\n\n（3）3月31日，甲公司持有乙公司债券的公允价值为1 040万元。\n\n（4）4月10日，甲公司出售所持有的全部乙公司债券，价款为1 126万元，转让乙公司债券应交增值税6万元。\n\n要求：根据上述资料，不考虑相关税费及其他因素，分析回答下列小题。（答案中的金额单位用万元表示）",
-                        "question_count": 5,
-                        "questions": [
-                            "24a9c85f-8310-4f3b-8d97-e3983f9d2afc",
-                            "3d9d0c9f-b691-4511-a7a2-45342c788b6d",
-                            "087ceb8b-80b9-4ab0-906a-bec0621f102d",
-                            "ee7eb57e-a0d6-446e-bc06-8e1b1acff1d0",
-                            "10a1610e-e06e-4de2-b0b8-1b3efbeaec1c"
-                        ]
+                        "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
                     }
-                },
-                "sort_in_section": 13
+                }
             },
             {
                 "id": 541,
+                "sort_in_section": 14,
                 "paper_sections_id": "b35ba23b-bd2c-45d3-825d-af33b7e797a4",
                 "questions_id": {
                     "id": "3d9d0c9f-b691-4511-a7a2-45342c788b6d",
@@ -2393,29 +2186,13 @@
                         "analysis": "收到乙公司支付的购入时已宣告但尚未领取的债券利息：\n\n借：其他货币资金——存出投资款    20\n\n　　贷：应收利息                                  20"
                     },
                     "question_group": {
-                        "id": "16214054-0e97-4d27-81b1-bf55d1aee87f",
-                        "status": "draft",
-                        "sort": null,
-                        "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_created": "2025-04-18T03:16:31.184Z",
-                        "user_updated": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_updated": "2025-05-02T08:52:35.793Z",
-                        "title": null,
-                        "shared_stem": "甲公司为增值税一般纳税人。其购买债券均通过投资款专户进行，2022年甲公司发生与债券投资相关的业务如下：\n\n（1）3月1日，甲公司从二级市场购入乙公司发行的面值为950万元的债券，支付价款1 020万元（其中包含已到付息期但尚未领取的债券利息20万元），另支付交易费用3万元，取得的增值税专用发票上注明的增值税税额为0.18万元。甲公司将其划分为交易性金融资产进行管理和核算。\n\n（2）3月10日，甲公司收到乙公司支付的购入时未领取的债券利息20万元。\n\n（3）3月31日，甲公司持有乙公司债券的公允价值为1 040万元。\n\n（4）4月10日，甲公司出售所持有的全部乙公司债券，价款为1 126万元，转让乙公司债券应交增值税6万元。\n\n要求：根据上述资料，不考虑相关税费及其他因素，分析回答下列小题。（答案中的金额单位用万元表示）",
-                        "question_count": 5,
-                        "questions": [
-                            "24a9c85f-8310-4f3b-8d97-e3983f9d2afc",
-                            "3d9d0c9f-b691-4511-a7a2-45342c788b6d",
-                            "087ceb8b-80b9-4ab0-906a-bec0621f102d",
-                            "ee7eb57e-a0d6-446e-bc06-8e1b1acff1d0",
-                            "10a1610e-e06e-4de2-b0b8-1b3efbeaec1c"
-                        ]
+                        "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
                     }
-                },
-                "sort_in_section": 14
+                }
             },
             {
                 "id": 542,
+                "sort_in_section": 15,
                 "paper_sections_id": "b35ba23b-bd2c-45d3-825d-af33b7e797a4",
                 "questions_id": {
                     "id": "24a9c85f-8310-4f3b-8d97-e3983f9d2afc",
@@ -2454,26 +2231,9 @@
                         "analysis": "3月1日，甲公司购入乙公司债券时的会计处理如下：\n\n借：交易性金融资产——成本 1 000 　　\n\n       应收利息                              20 　　\n\n       贷：其他货币资金——存出投资款 1 020 \n\n借：投资收益  3 　　\n\n       应交税费——应交增值税（进项税额）  0.18 　　\n\n       贷：其他货币资金——存出投资款               3.18"
                     },
                     "question_group": {
-                        "id": "16214054-0e97-4d27-81b1-bf55d1aee87f",
-                        "status": "draft",
-                        "sort": null,
-                        "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_created": "2025-04-18T03:16:31.184Z",
-                        "user_updated": "5baa5930-4404-4a46-846b-d01311564d53",
-                        "date_updated": "2025-05-02T08:52:35.793Z",
-                        "title": null,
-                        "shared_stem": "甲公司为增值税一般纳税人。其购买债券均通过投资款专户进行，2022年甲公司发生与债券投资相关的业务如下：\n\n（1）3月1日，甲公司从二级市场购入乙公司发行的面值为950万元的债券，支付价款1 020万元（其中包含已到付息期但尚未领取的债券利息20万元），另支付交易费用3万元，取得的增值税专用发票上注明的增值税税额为0.18万元。甲公司将其划分为交易性金融资产进行管理和核算。\n\n（2）3月10日，甲公司收到乙公司支付的购入时未领取的债券利息20万元。\n\n（3）3月31日，甲公司持有乙公司债券的公允价值为1 040万元。\n\n（4）4月10日，甲公司出售所持有的全部乙公司债券，价款为1 126万元，转让乙公司债券应交增值税6万元。\n\n要求：根据上述资料，不考虑相关税费及其他因素，分析回答下列小题。（答案中的金额单位用万元表示）",
-                        "question_count": 5,
-                        "questions": [
-                            "24a9c85f-8310-4f3b-8d97-e3983f9d2afc",
-                            "3d9d0c9f-b691-4511-a7a2-45342c788b6d",
-                            "087ceb8b-80b9-4ab0-906a-bec0621f102d",
-                            "ee7eb57e-a0d6-446e-bc06-8e1b1acff1d0",
-                            "10a1610e-e06e-4de2-b0b8-1b3efbeaec1c"
-                        ]
+                        "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
                     }
-                },
-                "sort_in_section": 15
+                }
             }
         ],
         "question_groups": [
@@ -2482,420 +2242,25 @@
                 "sort_in_section": 1,
                 "question_groups_id": {
                     "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae",
-                    "title": null,
-                    "shared_stem": "甲公司提供施工服务，属于在某一时段内履行的履约义务，为取得施工合同发生的合同取得成本按照履约进度进行摊销。2021年7月至12月，发生的有关经济业务如下：\n\n（1）2021年7月1日，通过竞标取得一项为期两年的施工合同， 合同总价款为1 000万元，施工费每半年支付250万元，为取得该合同，2021年7月甲公司以银行存款支付投标费2万元，投标人员差旅费1万元，销售人员佣金6万元，预期这些支出未来均能收回。\n\n（2）截止到2021年12月31日，为该项合同累计发生施工成本120万元，预计还将发生施工成本480万元，甲公司按照实际发生的成本占预计总成本的比例确定履约进度。\n\n（3）2021年12月31日，甲公司按照合同约定收到施工费250万元。\n\n要求：根据上述资料不考虑相关税费等因素，分析回答下列问题。（答案中的金额单位用万元表示）",
-                    "questions": [
-                        {
-                            "id": "e77d62b8-750d-4e18-9f96-5efef0162ac0",
-                            "title": null,
-                            "type": "q_mc_flexible",
-                            "stem": "下列关于合同取得成本的表述中，正确的是（　　）。",
-                            "sort_in_group": 1,
-                            "q_mc_single": null,
-                            "q_mc_multi": null,
-                            "q_mc_binary": null,
-                            "q_mc_flexible": {
-                                "id": "228cd3c1-380d-46d0-be1c-92a1bafefe13",
-                                "stem": "下列关于合同取得成本的表述中，正确的是（　　）。",
-                                "option_a": "合同取得成本是企业为取得合同发生的预期能收回的增量成本",
-                                "option_b": "企业发生合同取得成本应借记“合同资产”",
-                                "option_c": "企业发生合同取得成本应借记“合同取得成本”",
-                                "option_d": "合同取得成本是所签订合同对象内容本身直接发生的费用",
-                                "option_e": null,
-                                "option_f": null,
-                                "correct_options": [
-                                    "A",
-                                    "C"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "ea953e32-f5a4-444b-92ea-e2b6b75d1e73",
-                            "title": null,
-                            "type": "q_mc_flexible",
-                            "stem": "根据资料（1），下列表述正确的是（　　）。",
-                            "sort_in_group": 2,
-                            "q_mc_single": null,
-                            "q_mc_multi": null,
-                            "q_mc_binary": null,
-                            "q_mc_flexible": {
-                                "id": "f6770ec9-3710-4a1a-9705-d6fc322aa0c9",
-                                "stem": "根据资料（1），下列表述正确的是（　　）。",
-                                "option_a": "投标人员差旅费1万元应计入管理费用",
-                                "option_b": "投标费2万元应计入合同取得成本",
-                                "option_c": "因订立该合同使期间费用增加9万元",
-                                "option_d": "销售人员佣金6万元应计入合同取得成本",
-                                "option_e": null,
-                                "option_f": null,
-                                "correct_options": [
-                                    "A",
-                                    "D"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "b81db797-275b-4f1d-b094-367e404e9621",
-                            "title": null,
-                            "type": "q_mc_flexible",
-                            "stem": "根据资料（2）和（3），下列表述正确的是（　　）。",
-                            "sort_in_group": 3,
-                            "q_mc_single": null,
-                            "q_mc_multi": null,
-                            "q_mc_binary": null,
-                            "q_mc_flexible": {
-                                "id": "1d63ee59-add7-4492-8628-01b5be3015ec",
-                                "stem": "根据资料（2）和（3），下列表述正确的是（　　）。",
-                                "option_a": "合同负债增加50万元",
-                                "option_b": "主营业务收入增加200万元",
-                                "option_c": "甲公司施工进度为20%",
-                                "option_d": "\n主营业务成本增加120万元",
-                                "option_e": null,
-                                "option_f": null,
-                                "correct_options": [
-                                    "A",
-                                    "B",
-                                    "C",
-                                    "D"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "5d44e7d0-6284-44da-841b-ade4320e8f9e",
-                            "title": null,
-                            "type": "q_mc_flexible",
-                            "stem": "根据资料（1）和（2），2021年12月31日关于合同取得成本摊销的账务处理中正确的是（　　）。",
-                            "sort_in_group": 4,
-                            "q_mc_single": null,
-                            "q_mc_multi": null,
-                            "q_mc_binary": null,
-                            "q_mc_flexible": {
-                                "id": "787c8121-0c6f-4eec-9c11-0af7861a0078",
-                                "stem": "根据资料（1）和（2），2021年12月31日关于合同取得成本摊销的账务处理中正确的是（　　）。",
-                                "option_a": "借：销售费用     1.8\n\n　　贷：合同取得成本     1.8 ",
-                                "option_b": "借：销售费用     1.6\n\n　　贷：合同取得成本     1.6",
-                                "option_c": "借：销售费用     1.2\n\n　　贷：合同取得成本     1.2 ",
-                                "option_d": "\n借：管理费用     1.8\n\n　　贷：合同取得成本     1.8",
-                                "option_e": null,
-                                "option_f": null,
-                                "correct_options": [
-                                    "C"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "871bc422-0dcc-4ac6-88f4-c691bb247ae0",
-                            "title": null,
-                            "type": "q_mc_flexible",
-                            "stem": "根据资料（1）至（3），对2021年利润表中“营业利润”项目的影响金额是（　　）万元。",
-                            "sort_in_group": 5,
-                            "q_mc_single": null,
-                            "q_mc_multi": null,
-                            "q_mc_binary": null,
-                            "q_mc_flexible": {
-                                "id": "74a9024b-d1a9-4b67-9848-3a5ae0a2b8ca",
-                                "stem": "根据资料（1）至（3），对2021年利润表中“营业利润”项目的影响金额是（　　）万元。",
-                                "option_a": "73.4",
-                                "option_b": "78.2",
-                                "option_c": "75.8",
-                                "option_d": "\n71",
-                                "option_e": null,
-                                "option_f": null,
-                                "correct_options": [
-                                    "C"
-                                ]
-                            }
-                        }
-                    ]
-                },
-                "paper_sections_id": "b35ba23b-bd2c-45d3-825d-af33b7e797a4",
-                "group_question_ids": [
-                    528,
-                    529,
-                    530,
-                    531,
-                    532
-                ]
+                    "shared_stem": "甲公司提供施工服务，属于在某一时段内履行的履约义务，为取得施工合同发生的合同取得成本按照履约进度进行摊销。2021年7月至12月，发生的有关经济业务如下：\n\n（1）2021年7月1日，通过竞标取得一项为期两年的施工合同， 合同总价款为1 000万元，施工费每半年支付250万元，为取得该合同，2021年7月甲公司以银行存款支付投标费2万元，投标人员差旅费1万元，销售人员佣金6万元，预期这些支出未来均能收回。\n\n（2）截止到2021年12月31日，为该项合同累计发生施工成本120万元，预计还将发生施工成本480万元，甲公司按照实际发生的成本占预计总成本的比例确定履约进度。\n\n（3）2021年12月31日，甲公司按照合同约定收到施工费250万元。\n\n要求：根据上述资料不考虑相关税费等因素，分析回答下列问题。（答案中的金额单位用万元表示）"
+                }
             },
             {
                 "id": 74,
                 "sort_in_section": 2,
                 "question_groups_id": {
                     "id": "ff0aeb10-f381-4bd0-932d-67ab01778176",
-                    "title": null,
-                    "shared_stem": "甲公司为增值税一般纳税人，2021年度该公司发生与固定资产相关业务如下：\n\n（1）1月8日，购入一台需要安装的M设备，取得的增值税专用发票上注明的价款为500 000元，增值税税额为65 000元，另支付安装费取得的增值税专用发票上注明的价款为40 000元，增值税税额为3 600元，全部款项以银行存款支付。该设备预计可使用5年，预计净残值为30 000元，采用年限平均法计提折旧。1月10日M设备达到预定可使用状态并交付生产车间使用。\n\n（2）6月30日，委托外单位对本公司设备进行日常维护修理，其中行政管理部门设备的修理费为30 000元，销售部门设备修理费为10 000元，取得的增值税专用发票上注明的价款为40 000元，增值税税额为5 200元，全部款项以银行存款支付。\n\n（3）12月5日，报废一台N设备，该设备原值为800 000元，已计提折旧760 000元，未发生资产减值损失。设备报废取得变价收入20 000元，开具的增值税专用发票上注明的增值税税额为2 600元，报废过程中发生清理费用6 000元，全部款项均已通过银行办理结算。\n\n（4）12月31日，对固定资产进行减值测试，发现2021年1月购入的M设备存在减值迹象，其可收回金额为440 000元。\n\n要求：根据上述资料，不考虑其他因素，分析回答下列小题。（答案中的金额单位用元表示）",
-                    "questions": [
-                        {
-                            "id": "c15630f6-defb-454f-83af-3e4de9ca3377",
-                            "title": null,
-                            "type": "q_mc_flexible",
-                            "stem": "根据资料（1），下列各项中，甲公司购入M设备的入账价值是（　　）元。",
-                            "sort_in_group": 1,
-                            "q_mc_single": null,
-                            "q_mc_multi": null,
-                            "q_mc_binary": null,
-                            "q_mc_flexible": {
-                                "id": "33cc687d-2e88-4ce7-b201-4689424e02b6",
-                                "stem": "根据资料（1），下列各项中，甲公司购入M设备的入账价值是（　　）元。",
-                                "option_a": "540 000",
-                                "option_b": "605 000",
-                                "option_c": "565 000",
-                                "option_d": "500 000",
-                                "option_e": null,
-                                "option_f": null,
-                                "correct_options": [
-                                    "A"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "811a6f57-f2ed-47bd-804c-89bbcfc96245",
-                            "title": null,
-                            "type": "q_mc_flexible",
-                            "stem": "根据资料（1），下列各项中，甲公司购入M设备计提折旧的表述正确的是（　　）。",
-                            "sort_in_group": 2,
-                            "q_mc_single": null,
-                            "q_mc_multi": null,
-                            "q_mc_binary": null,
-                            "q_mc_flexible": {
-                                "id": "e2cbce7f-2577-477b-a025-1dae350d9614",
-                                "stem": "根据资料（1），下列各项中，甲公司购入M设备计提折旧的表述正确的是（　　）。",
-                                "option_a": "自2021年1月开始计提折旧",
-                                "option_b": "2021年计提折旧93 500元",
-                                "option_c": "自2021年2月开始计提折旧",
-                                "option_d": "每月折旧额为8 500元",
-                                "option_e": null,
-                                "option_f": null,
-                                "correct_options": [
-                                    "B",
-                                    "C",
-                                    "D"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "c9605651-7053-4a31-8b82-8d8afed0ce3d",
-                            "title": null,
-                            "type": "q_mc_flexible",
-                            "stem": "根据资料（2），下列各项中，甲公司支付设备修理费的会计处理正确的是（　　）。",
-                            "sort_in_group": 3,
-                            "q_mc_single": null,
-                            "q_mc_multi": null,
-                            "q_mc_binary": null,
-                            "q_mc_flexible": {
-                                "id": "f13f3547-c725-4445-a0d0-8a510aba8267",
-                                "stem": "根据资料（2），下列各项中，甲公司支付设备修理费的会计处理正确的是（　　）。",
-                                "option_a": "确认管理费用40 000元",
-                                "option_b": "确认制造费用40 000元",
-                                "option_c": "确认销售费用10 000元",
-                                "option_d": "确认管理费用30 000元",
-                                "option_e": null,
-                                "option_f": null,
-                                "correct_options": [
-                                    "C",
-                                    "D"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "066cc1d2-c182-4a74-a5ad-510a4839dacb",
-                            "title": null,
-                            "type": "q_mc_flexible",
-                            "stem": "根据资料（3），下列各项中，甲公司报废N设备会计处理正确的是（　　）。",
-                            "sort_in_group": 4,
-                            "q_mc_single": null,
-                            "q_mc_multi": null,
-                            "q_mc_binary": null,
-                            "q_mc_flexible": {
-                                "id": "a5cc04c6-8022-476a-a1cf-05f4a9c27863",
-                                "stem": "根据资料（3），下列各项中，甲公司报废N设备会计处理正确的是（　　）。",
-                                "option_a": "支付清理费用时：\n\n借：固定资产清理         6 000\n\n　　贷：银行存款          6 000",
-                                "option_b": "转入清理时：\n\n借：固定资产清理       40 000\n\n　　累计折旧     760 000\n\n　　贷：固定资产      800 000",
-                                "option_c": "取得变价收入时：\n\n借：银行存款       22 600\n\n　　贷：固定资产清理       20 000\n\n　　　　应交税费——应交增值税（销项税额）      2 600",
-                                "option_d": "结转报废净损失时：\n\n借：资产处置损益       26 000\n\n　　贷：固定资产清理       26 000 ",
-                                "option_e": null,
-                                "option_f": null,
-                                "correct_options": [
-                                    "A",
-                                    "B",
-                                    "C"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "3d6a1bb0-cc67-4ea3-87ad-7b7ea42080ee",
-                            "title": null,
-                            "type": "q_mc_flexible",
-                            "stem": "根据资料（1）和（4），下列各项中，12月31日关于M设备期末计量和报表填列正确的是（　　） 。",
-                            "sort_in_group": 5,
-                            "q_mc_single": null,
-                            "q_mc_multi": null,
-                            "q_mc_binary": null,
-                            "q_mc_flexible": {
-                                "id": "696a4d98-6ebb-440e-8c42-9b73cda77c10",
-                                "stem": "根据资料（1）和（4），下列各项中，12月31日关于M设备期末计量和报表填列正确的是（　　） 。",
-                                "option_a": "M设备应计提减值准备6 500元",
-                                "option_b": "期末M设备在资产负债表“固定资产”项目填列的金额为446 500元",
-                                "option_c": "M设备的减值损失在以后会计期间不得转回",
-                                "option_d": "期末M设备在资产负债表“固定资产”项目填列的金额为440 000元",
-                                "option_e": null,
-                                "option_f": null,
-                                "correct_options": [
-                                    "A",
-                                    "C",
-                                    "D"
-                                ]
-                            }
-                        }
-                    ]
-                },
-                "paper_sections_id": "b35ba23b-bd2c-45d3-825d-af33b7e797a4",
-                "group_question_ids": [
-                    533,
-                    534,
-                    535,
-                    536,
-                    537
-                ]
+                    "shared_stem": "甲公司为增值税一般纳税人，2021年度该公司发生与固定资产相关业务如下：\n\n（1）1月8日，购入一台需要安装的M设备，取得的增值税专用发票上注明的价款为500 000元，增值税税额为65 000元，另支付安装费取得的增值税专用发票上注明的价款为40 000元，增值税税额为3 600元，全部款项以银行存款支付。该设备预计可使用5年，预计净残值为30 000元，采用年限平均法计提折旧。1月10日M设备达到预定可使用状态并交付生产车间使用。\n\n（2）6月30日，委托外单位对本公司设备进行日常维护修理，其中行政管理部门设备的修理费为30 000元，销售部门设备修理费为10 000元，取得的增值税专用发票上注明的价款为40 000元，增值税税额为5 200元，全部款项以银行存款支付。\n\n（3）12月5日，报废一台N设备，该设备原值为800 000元，已计提折旧760 000元，未发生资产减值损失。设备报废取得变价收入20 000元，开具的增值税专用发票上注明的增值税税额为2 600元，报废过程中发生清理费用6 000元，全部款项均已通过银行办理结算。\n\n（4）12月31日，对固定资产进行减值测试，发现2021年1月购入的M设备存在减值迹象，其可收回金额为440 000元。\n\n要求：根据上述资料，不考虑其他因素，分析回答下列小题。（答案中的金额单位用元表示）"
+                }
             },
             {
                 "id": 75,
                 "sort_in_section": 3,
                 "question_groups_id": {
                     "id": "16214054-0e97-4d27-81b1-bf55d1aee87f",
-                    "title": null,
-                    "shared_stem": "甲公司为增值税一般纳税人。其购买债券均通过投资款专户进行，2022年甲公司发生与债券投资相关的业务如下：\n\n（1）3月1日，甲公司从二级市场购入乙公司发行的面值为950万元的债券，支付价款1 020万元（其中包含已到付息期但尚未领取的债券利息20万元），另支付交易费用3万元，取得的增值税专用发票上注明的增值税税额为0.18万元。甲公司将其划分为交易性金融资产进行管理和核算。\n\n（2）3月10日，甲公司收到乙公司支付的购入时未领取的债券利息20万元。\n\n（3）3月31日，甲公司持有乙公司债券的公允价值为1 040万元。\n\n（4）4月10日，甲公司出售所持有的全部乙公司债券，价款为1 126万元，转让乙公司债券应交增值税6万元。\n\n要求：根据上述资料，不考虑相关税费及其他因素，分析回答下列小题。（答案中的金额单位用万元表示）",
-                    "questions": [
-                        {
-                            "id": "24a9c85f-8310-4f3b-8d97-e3983f9d2afc",
-                            "title": null,
-                            "type": "q_mc_flexible",
-                            "stem": "根据期初资料和资料（1），下列各项中，关于甲公司购入乙公司债券的会计处理正确的是（　　）。",
-                            "sort_in_group": 1,
-                            "q_mc_single": null,
-                            "q_mc_multi": null,
-                            "q_mc_binary": null,
-                            "q_mc_flexible": {
-                                "id": "9463b924-2b22-4d46-8ef8-9d4aef2cb51d",
-                                "stem": "根据期初资料和资料（1），下列各项中，关于甲公司购入乙公司债券的会计处理正确的是（　　）。",
-                                "option_a": "借：交易性金融资产——成本    1 000\n\n　　应收利息                                  20\n\n　　贷：其他货币资金——存出投资款    1 020",
-                                "option_b": "\n借：投资收益    3\n\n   　应交税费——应交增值税（进项税额）    0.18\n\n   　贷：其他货币资金——存出投资款    3.18",
-                                "option_c": "借：交易性金融资产——成本     1 020\n\n　　贷：其他货币资金——存出投资款    1 020",
-                                "option_d": "借：管理费用    3\n\n　　应交税费——应交增值税（进项税额）    0.18\n\n　　贷：其他货币资金——存出投资款    3.18",
-                                "option_e": null,
-                                "option_f": null,
-                                "correct_options": [
-                                    "A",
-                                    "B"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "3d9d0c9f-b691-4511-a7a2-45342c788b6d",
-                            "title": null,
-                            "type": "q_mc_flexible",
-                            "stem": "根据资料（2），下列各项中，关于甲公司收到债券利息的会计处理结果正确的是（　　）。",
-                            "sort_in_group": 2,
-                            "q_mc_single": null,
-                            "q_mc_multi": null,
-                            "q_mc_binary": null,
-                            "q_mc_flexible": {
-                                "id": "8aaf3019-78b9-409d-99d6-d39276e2289c",
-                                "stem": "根据资料（2），下列各项中，关于甲公司收到债券利息的会计处理结果正确的是（　　）。",
-                                "option_a": "\n交易性金融资产减少20万元",
-                                "option_b": "投资收益增加20万元",
-                                "option_c": "应收利息减少20万元",
-                                "option_d": "其他货币资金增加20万元",
-                                "option_e": null,
-                                "option_f": null,
-                                "correct_options": [
-                                    "C",
-                                    "D"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "087ceb8b-80b9-4ab0-906a-bec0621f102d",
-                            "title": null,
-                            "type": "q_mc_flexible",
-                            "stem": "根据资料（1）至（3），下列各项中，关于甲公司持有乙公司债券公允价值变动的会计处理表述正确的是（　　）。",
-                            "sort_in_group": 3,
-                            "q_mc_single": null,
-                            "q_mc_multi": null,
-                            "q_mc_binary": null,
-                            "q_mc_flexible": {
-                                "id": "7bfe84cc-4c1d-42a3-af9c-b5a3478d5909",
-                                "stem": "根据资料（1）至（3），下列各项中，关于甲公司持有乙公司债券公允价值变动的会计处理表述正确的是（　　）。",
-                                "option_a": "借记“交易性金融资产——公允价值变动”科目40万元",
-                                "option_b": "借记“交易性金融资产——成本”科目20万元",
-                                "option_c": "贷记“投资收益”科目20万元",
-                                "option_d": "贷记“公允价值变动损益”科目40万元",
-                                "option_e": null,
-                                "option_f": null,
-                                "correct_options": [
-                                    "A",
-                                    "D"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "ee7eb57e-a0d6-446e-bc06-8e1b1acff1d0",
-                            "title": null,
-                            "type": "q_mc_flexible",
-                            "stem": "根据期初资料、资料（1）至（4），下列各项中，关于出售乙公司债券的会计处理正确的是（　　）。",
-                            "sort_in_group": 4,
-                            "q_mc_single": null,
-                            "q_mc_multi": null,
-                            "q_mc_binary": null,
-                            "q_mc_flexible": {
-                                "id": "1f39808e-ce70-4f64-981d-c95427fd33cf",
-                                "stem": "根据期初资料、资料（1）至（4），下列各项中，关于出售乙公司债券的会计处理正确的是（　　）。",
-                                "option_a": "借：投资收益      6\n\n   　贷：应交税费——转让金融商品应交增值税      6",
-                                "option_b": "借：其他货币资金——存出投资款      1 126\n\n　　贷：交易性金融资产——成本               1 020\n\n　　　　　　　　　　　——公允价值变动      20\n\n　　　　投资收益                                             86",
-                                "option_c": "借：其他货币资金——存出投资款    1 126\n\n　　贷：交易性金融资产——成本               1 000\n\n　　　　　　　　　　　——公允价值变动      40\n\n　　　　投资收益                                              86",
-                                "option_d": "借：管理费用      6\n\n　　贷：应交税费——转让金融商品应交增值税      6",
-                                "option_e": null,
-                                "option_f": null,
-                                "correct_options": [
-                                    "A",
-                                    "C"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "10a1610e-e06e-4de2-b0b8-1b3efbeaec1c",
-                            "title": null,
-                            "type": "q_mc_flexible",
-                            "stem": "根据资料（1）至（4），上述相关业务对甲公司2022年利润表中“营业利润”项目的影响金额为（　　）万元。",
-                            "sort_in_group": 5,
-                            "q_mc_single": null,
-                            "q_mc_multi": null,
-                            "q_mc_binary": null,
-                            "q_mc_flexible": {
-                                "id": "3294e2d5-b5c1-414d-ac4b-44672b9b3b26",
-                                "stem": "根据资料（1）至（4），上述相关业务对甲公司2022年利润表中“营业利润”项目的影响金额为（　　）万元。",
-                                "option_a": "\n77",
-                                "option_b": "97",
-                                "option_c": "117",
-                                "option_d": "103",
-                                "option_e": null,
-                                "option_f": null,
-                                "correct_options": [
-                                    "C"
-                                ]
-                            }
-                        }
-                    ]
-                },
-                "paper_sections_id": "b35ba23b-bd2c-45d3-825d-af33b7e797a4",
-                "group_question_ids": [
-                    538,
-                    539,
-                    540,
-                    541,
-                    542
-                ]
+                    "shared_stem": "甲公司为增值税一般纳税人。其购买债券均通过投资款专户进行，2022年甲公司发生与债券投资相关的业务如下：\n\n（1）3月1日，甲公司从二级市场购入乙公司发行的面值为950万元的债券，支付价款1 020万元（其中包含已到付息期但尚未领取的债券利息20万元），另支付交易费用3万元，取得的增值税专用发票上注明的增值税税额为0.18万元。甲公司将其划分为交易性金融资产进行管理和核算。\n\n（2）3月10日，甲公司收到乙公司支付的购入时未领取的债券利息20万元。\n\n（3）3月31日，甲公司持有乙公司债券的公允价值为1 040万元。\n\n（4）4月10日，甲公司出售所持有的全部乙公司债券，价款为1 126万元，转让乙公司债券应交增值税6万元。\n\n要求：根据上述资料，不考虑相关税费及其他因素，分析回答下列小题。（答案中的金额单位用万元表示）"
+                }
             }
         ]
     }
 ]
-
