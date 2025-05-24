@@ -155,7 +155,6 @@ import type {
     PaperSectionsQuestions,
 } from "~/types/directus_types";
 import QuestionContent from "~/components/QuestionContent.vue";
-import type { $Fetch } from 'ofetch'; // 使用 type-only import
 
 const props = defineProps<{
     questionGroup: QuestionGroups | null;
