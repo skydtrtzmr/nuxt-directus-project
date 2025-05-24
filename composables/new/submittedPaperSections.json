@@ -775,11 +775,7 @@
                     "analysis": "会计职能的拓展职能：\n（1）预测经济前景，是指根据财务报告等提供的信息，定量、定性地判断和推测经济活动的发展变化规律，以指导和调节经济活动，提高经济效益。\n（2）参与经济决策，是指根据财务报告等提供的信息资料，运用定量分析和定性分析方法，对备选方案进行经济可行性分析，为企业经营管理等提供与决策相关的信息。\n（3）评价经营业绩，是指利用财务报告等提供的会计资料，采用适当的方法，对企业一定经营期间的资产运营、经济效益等经营成果，对照相应的评价标准，进行定量及定性对比分析并作出综合评价。",
                     "sort_in_group": null,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "A",
-                        "B",
-                        "C"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["A", "B", "C"],
                     "q_mc_single": null,
                     "q_mc_multi": {
                         "id": "6f17b0d9-e0df-4291-95b2-bfbaff2c5e8b",
@@ -797,11 +793,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "会计职能的拓展职能包括（　）。",
-                        "correct_options": [
-                            "A",
-                            "B",
-                            "C"
-                        ],
+                        "correct_options": ["A", "B", "C"],
                         "analysis": "会计职能的拓展职能：\n（1）预测经济前景，是指根据财务报告等提供的信息，定量、定性地判断和推测经济活动的发展变化规律，以指导和调节经济活动，提高经济效益。\n（2）参与经济决策，是指根据财务报告等提供的信息资料，运用定量分析和定性分析方法，对备选方案进行经济可行性分析，为企业经营管理等提供与决策相关的信息。\n（3）评价经营业绩，是指利用财务报告等提供的会计资料，采用适当的方法，对企业一定经营期间的资产运营、经济效益等经营成果，对照相应的评价标准，进行定量及定性对比分析并作出综合评价。"
                     },
                     "q_mc_binary": null,
@@ -820,10 +812,7 @@
                     "analysis": "会计的基本特征：1. 以货币为主要的计量单位 2. 准确完整性、连续系统性。",
                     "sort_in_group": null,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "A",
-                        "C"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["A", "C"],
                     "q_mc_single": null,
                     "q_mc_multi": {
                         "id": "345232eb-2418-4bd1-b8a6-8bee5ec4a5dc",
@@ -841,10 +830,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "会计的基本特征包括（　）。",
-                        "correct_options": [
-                            "A",
-                            "C"
-                        ],
+                        "correct_options": ["A", "C"],
                         "analysis": "会计的基本特征：1. 以货币为主要的计量单位 2. 准确完整性、连续系统性。"
                     },
                     "q_mc_binary": null,
@@ -886,12 +872,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "下列各项中，关于会计职能的表述正确的有（    ）。",
-                        "correct_options": [
-                            "A",
-                            "B",
-                            "C",
-                            "D"
-                        ],
+                        "correct_options": ["A", "B", "C", "D"],
                         "analysis": "会计的基本职能包括核算职能和监督职能。会计核算是会计监督的基础；会计监督是会计核算质量的保障。会计拓展职能包括预测经济前景、参与经济决策、评价经营业绩。"
                     },
                     "q_mc_binary": null,
@@ -933,12 +914,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "会计核算的内容主要包括（    ）。",
-                        "correct_options": [
-                            "A",
-                            "B",
-                            "C",
-                            "D"
-                        ],
+                        "correct_options": ["A", "B", "C", "D"],
                         "analysis": "会计核算的内容主要包括：（1）资产的增减和使用；（2）负债的增减；（3）净资产（所有者权益）的增减；（4）收入、支出、费用、成本的增减；（5）财务成果的计算和处理；（6）需要办理会计手续、进行会计核算的其他事项。综上可知本题的正确答案为ABCD。"
                     },
                     "q_mc_binary": null,
@@ -980,12 +956,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "下列各项中，属于会计信息使用者的有（     ）。",
-                        "correct_options": [
-                            "A",
-                            "B",
-                            "C",
-                            "D"
-                        ],
+                        "correct_options": ["A", "B", "C", "D"],
                         "analysis": "会计资料及会计信息的使用者既包括企业的内部使用者又包括外部使用者，主要包括投资者（选项A）、债权人（选项B）、政府（选项D）及有关部门和社会公众（选项C）等。"
                     },
                     "q_mc_binary": null,
@@ -1004,10 +975,7 @@
                     "analysis": "在权责发生制下，应该在销售当月确认为收入；收付实现制下，应该在实际收到货款时确认收入。由此可知A、B为正确选项。\n\n\n\n【知识点拓展】\n\n由于会计分期，才产生了当期与其他期间的差别，从而形成了权责发生制和收付实现制的区别。\n\n\n\n【注意】\n\n①在我国，企业会计核算采用权责发生制。\n\n②我国事业单位，除其部分经营业务外应当采用收付实现制记账。\n\n③我国政府会计，其预算会计采用收付实现制，而财务会计采用权责发生制。\n\n④工会会计、社会保险基金等基金（资金）会计主要以收付实现制为核算基础。",
                     "sort_in_group": null,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "A",
-                        "B"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["A", "B"],
                     "q_mc_single": null,
                     "q_mc_multi": {
                         "id": "d0a86e79-1072-4d3c-b198-346245cf368e",
@@ -1025,10 +993,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "本月收到上月销售产品的货款存入银行，下列表述中正确的有（    ）。",
-                        "correct_options": [
-                            "A",
-                            "B"
-                        ],
+                        "correct_options": ["A", "B"],
                         "analysis": "在权责发生制下，应该在销售当月确认为收入；收付实现制下，应该在实际收到货款时确认收入。由此可知A、B为正确选项。\n\n\n\n【知识点拓展】\n\n由于会计分期，才产生了当期与其他期间的差别，从而形成了权责发生制和收付实现制的区别。\n\n\n\n【注意】\n\n①在我国，企业会计核算采用权责发生制。\n\n②我国事业单位，除其部分经营业务外应当采用收付实现制记账。\n\n③我国政府会计，其预算会计采用收付实现制，而财务会计采用权责发生制。\n\n④工会会计、社会保险基金等基金（资金）会计主要以收付实现制为核算基础。"
                     },
                     "q_mc_binary": null,
@@ -1047,11 +1012,7 @@
                     "analysis": "企业编制财务报告的目标，是向财务报告使用者提供与企业财务状况、经营成果和现金流量等有关的会计信息，反映企业管理层受托责任的履行情况，有助于财务报告使用者作出经济决策。由此可知BCD为正确选项。",
                     "sort_in_group": null,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "C",
-                        "D",
-                        "B"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["C", "D", "B"],
                     "q_mc_single": null,
                     "q_mc_multi": {
                         "id": "86a23f30-d434-4cb7-a0b4-89689f4741c4",
@@ -1069,11 +1030,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "财务会计目标是通过编制财务报告，借以反映企业的（    ）。",
-                        "correct_options": [
-                            "B",
-                            "C",
-                            "D"
-                        ],
+                        "correct_options": ["B", "C", "D"],
                         "analysis": "企业编制财务报告的目标，是向财务报告使用者提供与企业财务状况、经营成果和现金流量等有关的会计信息，反映企业管理层受托责任的履行情况，有助于财务报告使用者作出经济决策。由此可知BCD为正确选项。"
                     },
                     "q_mc_binary": null,
@@ -1092,10 +1049,7 @@
                     "analysis": "相关性要求企业提供的会计信息应当与投资者等财务报告使用者的经济决策需要相关，有助于投资者等财务报告使用者对企业过去、现在或未来的情况作出评价或者预测。相关的会计信息应当能够有助于使用者评价企业过去的决策，证实或者修正过去的有关预测，因而具有反馈价值。相关的会计信息还应当具有预测价值，有助于使用者根据财务报告提供的会计信息预测企业未来的财务状况、经营成果和现金流量。选项A属于谨慎性要求；选项D属于可靠性要求。\n\n\n\n【知识点拓展】\n\n相关性，例如：\n\n1.在财务会计报告中区分收入和利得、费用和损失，有助于财务会计报告使用者评价企业实际的盈利能力，同时还有助于预测企业未来的盈利能力；\n\n2.在财务会计报告中区分流动资产和非流动资产，有助于财务会计报告使用者评价和预测企业资产流动性和支付能力；\n\n3.在财务会计报告中区分流动负债和非流动负债，有助于财务会计报告使用者评价和预测企业的短期偿债能力和长期偿债能力；\n\n4.实施资产减值准备会计政策，有助于提高企业投资者作出决策过程中的谨慎性；\n\n5.适度引入公允价值信息，有助于提高会计信息的预测价值，提升会计信息的有用性。",
                     "sort_in_group": null,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "B",
-                        "C"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["B", "C"],
                     "q_mc_single": null,
                     "q_mc_multi": {
                         "id": "148906a4-a9a7-49df-a0f3-49769a641a88",
@@ -1113,10 +1067,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "下列选项中，属于相关性要求的有（    ）。",
-                        "correct_options": [
-                            "B",
-                            "C"
-                        ],
+                        "correct_options": ["B", "C"],
                         "analysis": "相关性要求企业提供的会计信息应当与投资者等财务报告使用者的经济决策需要相关，有助于投资者等财务报告使用者对企业过去、现在或未来的情况作出评价或者预测。相关的会计信息应当能够有助于使用者评价企业过去的决策，证实或者修正过去的有关预测，因而具有反馈价值。相关的会计信息还应当具有预测价值，有助于使用者根据财务报告提供的会计信息预测企业未来的财务状况、经营成果和现金流量。选项A属于谨慎性要求；选项D属于可靠性要求。\n\n\n\n【知识点拓展】\n\n相关性，例如：\n\n1.在财务会计报告中区分收入和利得、费用和损失，有助于财务会计报告使用者评价企业实际的盈利能力，同时还有助于预测企业未来的盈利能力；\n\n2.在财务会计报告中区分流动资产和非流动资产，有助于财务会计报告使用者评价和预测企业资产流动性和支付能力；\n\n3.在财务会计报告中区分流动负债和非流动负债，有助于财务会计报告使用者评价和预测企业的短期偿债能力和长期偿债能力；\n\n4.实施资产减值准备会计政策，有助于提高企业投资者作出决策过程中的谨慎性；\n\n5.适度引入公允价值信息，有助于提高会计信息的预测价值，提升会计信息的有用性。"
                     },
                     "q_mc_binary": null,
@@ -1135,10 +1086,7 @@
                     "analysis": "可比性包括两层含义：同一企业不同时期可比；不同企业相同会计期间可比。选项A和选项B符合题意。选项C属于可理解性的要求；选项D正确的表述为：企业采用的会计政策，以后期间不得随意变更。\n\n\n\n【知识点拓展】\n\n1.可比性要求企业提供的会计信息应当相互可比。例如，企业不同时期采用一致的固定资产折旧方法。\n\n2.会计信息质量要求主要包括8个方面：可靠性、相关性、可理解性、可比性、实质重于形式、重要性、谨慎性、及时性。",
                     "sort_in_group": null,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "A",
-                        "B"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["A", "B"],
                     "q_mc_single": null,
                     "q_mc_multi": {
                         "id": "0b8c3e6d-90c1-4917-af69-471f8f97a505",
@@ -1156,10 +1104,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "下列各项中，符合可比性信息质量要求的有（    ）。",
-                        "correct_options": [
-                            "A",
-                            "B"
-                        ],
+                        "correct_options": ["A", "B"],
                         "analysis": "可比性包括两层含义：同一企业不同时期可比；不同企业相同会计期间可比。选项A和选项B符合题意。选项C属于可理解性的要求；选项D正确的表述为：企业采用的会计政策，以后期间不得随意变更。\n\n\n\n【知识点拓展】\n\n1.可比性要求企业提供的会计信息应当相互可比。例如，企业不同时期采用一致的固定资产折旧方法。\n\n2.会计信息质量要求主要包括8个方面：可靠性、相关性、可理解性、可比性、实质重于形式、重要性、谨慎性、及时性。"
                     },
                     "q_mc_binary": null,
@@ -1178,10 +1123,7 @@
                     "analysis": "可靠性要求企业应当以实际发生的交易或者事项为依据进行确认、计量、记录和报告，如实反映符合确认和计量要求的会计要素及其他相关信息，保证会计信息真实可靠、内容完整。选项A，属于会计信息质量谨慎性要求；选项B，属于会计信息质量可比性要求；因此本题的答案为CD。",
                     "sort_in_group": null,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "C",
-                        "D"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["C", "D"],
                     "q_mc_single": null,
                     "q_mc_multi": {
                         "id": "89681d28-d956-4ce8-99da-6b8804e43233",
@@ -1199,10 +1141,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "下列各项中，关于企业会计信息可靠性表述正确的有（    ）。",
-                        "correct_options": [
-                            "C",
-                            "D"
-                        ],
+                        "correct_options": ["C", "D"],
                         "analysis": "可靠性要求企业应当以实际发生的交易或者事项为依据进行确认、计量、记录和报告，如实反映符合确认和计量要求的会计要素及其他相关信息，保证会计信息真实可靠、内容完整。选项A，属于会计信息质量谨慎性要求；选项B，属于会计信息质量可比性要求；因此本题的答案为CD。"
                     },
                     "q_mc_binary": null,
@@ -1569,9 +1508,7 @@
                     "analysis": "对2021年利润表中“营业利润”项目影响的金额＝－2－1－1.2＋200－120＝75.8（万元）。",
                     "sort_in_group": 5,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "C"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["C"],
                     "q_mc_single": null,
                     "q_mc_multi": null,
                     "q_mc_binary": null,
@@ -1591,9 +1528,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "根据资料（1）至（3），对2021年利润表中“营业利润”项目的影响金额是（　　）万元。",
-                        "correct_options": [
-                            "C"
-                        ],
+                        "correct_options": ["C"],
                         "analysis": "对2021年利润表中“营业利润”项目影响的金额＝－2－1－1.2＋200－120＝75.8（万元）。"
                     },
                     "question_group": {
@@ -1612,10 +1547,7 @@
                     "analysis": "企业为取得合同发生的、除预期能够收回的增量成本之外的其他支出，如无论是否取得合同均会发生的差旅费、投标费等相关费用，应当在发生时计入当期损益，除非这些支出明确由客户承担。投标费2万元和投标人员差旅费1万元均通过“管理费用”核算，因订立该合同使期间费用增加3万元；所以选项A正确，选项BC错误；销售人员佣金6万元属于预期未来能够收回的增量成本，应作为合同取得成本确认为一项资产，所以选项D正确。",
                     "sort_in_group": 2,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "A",
-                        "D"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["A", "D"],
                     "q_mc_single": null,
                     "q_mc_multi": null,
                     "q_mc_binary": null,
@@ -1635,10 +1567,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "根据资料（1），下列表述正确的是（　　）。",
-                        "correct_options": [
-                            "A",
-                            "D"
-                        ],
+                        "correct_options": ["A", "D"],
                         "analysis": "企业为取得合同发生的、除预期能够收回的增量成本之外的其他支出，如无论是否取得合同均会发生的差旅费、投标费等相关费用，应当在发生时计入当期损益，除非这些支出明确由客户承担。投标费2万元和投标人员差旅费1万元均通过“管理费用”核算，因订立该合同使期间费用增加3万元；所以选项A正确，选项BC错误；销售人员佣金6万元属于预期未来能够收回的增量成本，应作为合同取得成本确认为一项资产，所以选项D正确。"
                     },
                     "question_group": {
@@ -1682,12 +1611,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "根据资料（2）和（3），下列表述正确的是（　　）。",
-                        "correct_options": [
-                            "A",
-                            "B",
-                            "C",
-                            "D"
-                        ],
+                        "correct_options": ["A", "B", "C", "D"],
                         "analysis": "合同履约进度＝120÷（120＋480）×100%＝20%；主营业务收入＝1 000×20%＝200（万元）；主营业务成本＝120（万元）；合同负债＝250－200＝50（万元）。会计分录如下：\n\n借：银行存款     250\n\n　　贷：主营业务收入     200\n\n　　　　合同负债        50\n\n借：主营业务成本     120\n\n　　贷：合同履约成本     120"
                     },
                     "question_group": {
@@ -1706,9 +1630,7 @@
                     "analysis": "甲公司应编制如下会计分录：\n\n借：销售费用     1.2（6×20%）\n\n　　贷：合同取得成本       1.2 ",
                     "sort_in_group": 4,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "C"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["C"],
                     "q_mc_single": null,
                     "q_mc_multi": null,
                     "q_mc_binary": null,
@@ -1728,9 +1650,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "根据资料（1）和（2），2021年12月31日关于合同取得成本摊销的账务处理中正确的是（　　）。",
-                        "correct_options": [
-                            "C"
-                        ],
+                        "correct_options": ["C"],
                         "analysis": "甲公司应编制如下会计分录：\n\n借：销售费用     1.2（6×20%）\n\n　　贷：合同取得成本       1.2 "
                     },
                     "question_group": {
@@ -1749,10 +1669,7 @@
                     "analysis": "合同取得成本是指企业为取得合同发生的预期能够收回的增量成本，选项A正确；增量成本是指企业不取得合同就不会发生的成本，也就是企业发生的与合同直接相关，但又不是所签订合同的对象或内容本身所直接发生的费用，选项D不正确；企业发生合同取得成本应借记“合同取得成本”科目，贷记“银行存款”等科目，选项B不正确，选项C正确。",
                     "sort_in_group": 1,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "A",
-                        "C"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["A", "C"],
                     "q_mc_single": null,
                     "q_mc_multi": null,
                     "q_mc_binary": null,
@@ -1772,10 +1689,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "下列关于合同取得成本的表述中，正确的是（　　）。",
-                        "correct_options": [
-                            "A",
-                            "C"
-                        ],
+                        "correct_options": ["A", "C"],
                         "analysis": "合同取得成本是指企业为取得合同发生的预期能够收回的增量成本，选项A正确；增量成本是指企业不取得合同就不会发生的成本，也就是企业发生的与合同直接相关，但又不是所签订合同的对象或内容本身所直接发生的费用，选项D不正确；企业发生合同取得成本应借记“合同取得成本”科目，贷记“银行存款”等科目，选项B不正确，选项C正确。"
                     },
                     "question_group": {
@@ -1794,11 +1708,7 @@
                     "analysis": "结转报废净损失分录如下：\n\n借：营业外支出       26 000\n\n　　贷：固定资产清理     26 000",
                     "sort_in_group": 4,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "A",
-                        "B",
-                        "C"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["A", "B", "C"],
                     "q_mc_single": null,
                     "q_mc_multi": null,
                     "q_mc_binary": null,
@@ -1818,11 +1728,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "根据资料（3），下列各项中，甲公司报废N设备会计处理正确的是（　　）。",
-                        "correct_options": [
-                            "A",
-                            "B",
-                            "C"
-                        ],
+                        "correct_options": ["A", "B", "C"],
                         "analysis": "结转报废净损失分录如下：\n\n借：营业外支出       26 000\n\n　　贷：固定资产清理     26 000"
                     },
                     "question_group": {
@@ -1841,10 +1747,7 @@
                     "analysis": "本题分录如下：\n\n借：管理费用     30 000\n\n　　销售费用     10 000\n\n　　应交税费——应交增值税（进项税额）    5 200\n\n　　贷：银行存款      45 200",
                     "sort_in_group": 3,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "C",
-                        "D"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["C", "D"],
                     "q_mc_single": null,
                     "q_mc_multi": null,
                     "q_mc_binary": null,
@@ -1864,10 +1767,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "根据资料（2），下列各项中，甲公司支付设备修理费的会计处理正确的是（　　）。",
-                        "correct_options": [
-                            "C",
-                            "D"
-                        ],
+                        "correct_options": ["C", "D"],
                         "analysis": "本题分录如下：\n\n借：管理费用     30 000\n\n　　销售费用     10 000\n\n　　应交税费——应交增值税（进项税额）    5 200\n\n　　贷：银行存款      45 200"
                     },
                     "question_group": {
@@ -1886,9 +1786,7 @@
                     "analysis": "甲公司购入M设备的入账价值＝500 000＋40 000＝540 000（元）。",
                     "sort_in_group": 1,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "A"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["A"],
                     "q_mc_single": null,
                     "q_mc_multi": null,
                     "q_mc_binary": null,
@@ -1908,9 +1806,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "根据资料（1），下列各项中，甲公司购入M设备的入账价值是（　　）元。",
-                        "correct_options": [
-                            "A"
-                        ],
+                        "correct_options": ["A"],
                         "analysis": "甲公司购入M设备的入账价值＝500 000＋40 000＝540 000（元）。"
                     },
                     "question_group": {
@@ -1929,11 +1825,7 @@
                     "analysis": "1月10日M设备达到预定可使用状态，固定资产于次月开始计提折旧，所以从2月开始计提折旧，选项A错误，选项C正确；采用年限平均法计提折旧，2021年计提折旧额＝（540 000－30 000）÷5÷12×11＝93 500（元），选项B正确；月折旧额＝（540 000－30 000）÷5÷12＝8 500（元），选项D正确。",
                     "sort_in_group": 2,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "B",
-                        "C",
-                        "D"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["B", "C", "D"],
                     "q_mc_single": null,
                     "q_mc_multi": null,
                     "q_mc_binary": null,
@@ -1953,11 +1845,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "根据资料（1），下列各项中，甲公司购入M设备计提折旧的表述正确的是（　　）。",
-                        "correct_options": [
-                            "B",
-                            "C",
-                            "D"
-                        ],
+                        "correct_options": ["B", "C", "D"],
                         "analysis": "1月10日M设备达到预定可使用状态，固定资产于次月开始计提折旧，所以从2月开始计提折旧，选项A错误，选项C正确；采用年限平均法计提折旧，2021年计提折旧额＝（540 000－30 000）÷5÷12×11＝93 500（元），选项B正确；月折旧额＝（540 000－30 000）÷5÷12＝8 500（元），选项D正确。"
                     },
                     "question_group": {
@@ -1976,11 +1864,7 @@
                     "analysis": "年末时，M设备计提减值准备前的账面价值＝540 000－93 500＝446 500（元）>可收回金额440 000元，计提减值准备的金额＝446 500－440 000＝6 500（元），选项A正确；固定资产减值准备一经计提，以后会计期间不得转回，选项C正确；期末M设备在资产负债表“固定资产”项目填列的金额应根据M设备固定资产的期末余额（540 000元），减去M设备计提的折旧（93 500元）和M设备计提的减值准备（6 500元）后的金额（440 000元）填列，选项D正确，选项B错误。",
                     "sort_in_group": 5,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "A",
-                        "C",
-                        "D"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["A", "C", "D"],
                     "q_mc_single": null,
                     "q_mc_multi": null,
                     "q_mc_binary": null,
@@ -2000,11 +1884,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "根据资料（1）和（4），下列各项中，12月31日关于M设备期末计量和报表填列正确的是（　　） 。",
-                        "correct_options": [
-                            "A",
-                            "C",
-                            "D"
-                        ],
+                        "correct_options": ["A", "C", "D"],
                         "analysis": "年末时，M设备计提减值准备前的账面价值＝540 000－93 500＝446 500（元）>可收回金额440 000元，计提减值准备的金额＝446 500－440 000＝6 500（元），选项A正确；固定资产减值准备一经计提，以后会计期间不得转回，选项C正确；期末M设备在资产负债表“固定资产”项目填列的金额应根据M设备固定资产的期末余额（540 000元），减去M设备计提的折旧（93 500元）和M设备计提的减值准备（6 500元）后的金额（440 000元）填列，选项D正确，选项B错误。"
                     },
                     "question_group": {
@@ -2023,10 +1903,7 @@
                     "analysis": "3月31日，甲公司持有乙公司债券的公允价值变动的会计处理如下：\n\n借：交易性金融资产——公允价值变动　　40（1 040-1 000）\n\n　　贷：公允价值变动损益                                 40",
                     "sort_in_group": 3,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "A",
-                        "D"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["A", "D"],
                     "q_mc_single": null,
                     "q_mc_multi": null,
                     "q_mc_binary": null,
@@ -2046,10 +1923,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "根据资料（1）至（3），下列各项中，关于甲公司持有乙公司债券公允价值变动的会计处理表述正确的是（　　）。",
-                        "correct_options": [
-                            "A",
-                            "D"
-                        ],
+                        "correct_options": ["A", "D"],
                         "analysis": "3月31日，甲公司持有乙公司债券的公允价值变动的会计处理如下：\n\n借：交易性金融资产——公允价值变动　　40（1 040-1 000）\n\n　　贷：公允价值变动损益                                 40"
                     },
                     "question_group": {
@@ -2068,10 +1942,7 @@
                     "analysis": "4月10日，甲公司出售所持有的全部乙公司债券的会计处理如下：\n\n借：其他货币资金——存出投资款      1 126\n\n　　贷：交易性金融资产——成本              1 000\n\n　　　　　　　　　　　——公允价值变动     40\n\n　　　　投资收益                                             86（1 126-1 040）\n\n借：投资收益                6\n\n　　贷：应交税费——转让金融商品应交增值税          6",
                     "sort_in_group": 4,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "A",
-                        "C"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["A", "C"],
                     "q_mc_single": null,
                     "q_mc_multi": null,
                     "q_mc_binary": null,
@@ -2091,10 +1962,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "根据期初资料、资料（1）至（4），下列各项中，关于出售乙公司债券的会计处理正确的是（　　）。",
-                        "correct_options": [
-                            "A",
-                            "C"
-                        ],
+                        "correct_options": ["A", "C"],
                         "analysis": "4月10日，甲公司出售所持有的全部乙公司债券的会计处理如下：\n\n借：其他货币资金——存出投资款      1 126\n\n　　贷：交易性金融资产——成本              1 000\n\n　　　　　　　　　　　——公允价值变动     40\n\n　　　　投资收益                                             86（1 126-1 040）\n\n借：投资收益                6\n\n　　贷：应交税费——转让金融商品应交增值税          6"
                     },
                     "question_group": {
@@ -2113,9 +1981,7 @@
                     "analysis": "对“营业利润”项目的影响金额=-3（资料1）+40（资料3）+86（资料4）-6（资料4）=117（万元）。",
                     "sort_in_group": 5,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "C"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["C"],
                     "q_mc_single": null,
                     "q_mc_multi": null,
                     "q_mc_binary": null,
@@ -2135,9 +2001,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "根据资料（1）至（4），上述相关业务对甲公司2022年利润表中“营业利润”项目的影响金额为（　　）万元。",
-                        "correct_options": [
-                            "C"
-                        ],
+                        "correct_options": ["C"],
                         "analysis": "对“营业利润”项目的影响金额=-3（资料1）+40（资料3）+86（资料4）-6（资料4）=117（万元）。"
                     },
                     "question_group": {
@@ -2156,10 +2020,7 @@
                     "analysis": "收到乙公司支付的购入时已宣告但尚未领取的债券利息：\n\n借：其他货币资金——存出投资款    20\n\n　　贷：应收利息                                  20",
                     "sort_in_group": 2,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "C",
-                        "D"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["C", "D"],
                     "q_mc_single": null,
                     "q_mc_multi": null,
                     "q_mc_binary": null,
@@ -2179,10 +2040,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "根据资料（2），下列各项中，关于甲公司收到债券利息的会计处理结果正确的是（　　）。",
-                        "correct_options": [
-                            "C",
-                            "D"
-                        ],
+                        "correct_options": ["C", "D"],
                         "analysis": "收到乙公司支付的购入时已宣告但尚未领取的债券利息：\n\n借：其他货币资金——存出投资款    20\n\n　　贷：应收利息                                  20"
                     },
                     "question_group": {
@@ -2201,10 +2059,7 @@
                     "analysis": "3月1日，甲公司购入乙公司债券时的会计处理如下：\n\n借：交易性金融资产——成本 1 000 　　\n\n       应收利息                              20 　　\n\n       贷：其他货币资金——存出投资款 1 020 \n\n借：投资收益  3 　　\n\n       应交税费——应交增值税（进项税额）  0.18 　　\n\n       贷：其他货币资金——存出投资款               3.18",
                     "sort_in_group": 1,
                     "correct_ans_select_radio": null,
-                    "correct_ans_select_multiple_checkbox": [
-                        "A",
-                        "B"
-                    ],
+                    "correct_ans_select_multiple_checkbox": ["A", "B"],
                     "q_mc_single": null,
                     "q_mc_multi": null,
                     "q_mc_binary": null,
@@ -2224,10 +2079,7 @@
                         "user_updated": null,
                         "date_updated": null,
                         "stem": "根据期初资料和资料（1），下列各项中，关于甲公司购入乙公司债券的会计处理正确的是（　　）。",
-                        "correct_options": [
-                            "A",
-                            "B"
-                        ],
+                        "correct_options": ["A", "B"],
                         "analysis": "3月1日，甲公司购入乙公司债券时的会计处理如下：\n\n借：交易性金融资产——成本 1 000 　　\n\n       应收利息                              20 　　\n\n       贷：其他货币资金——存出投资款 1 020 \n\n借：投资收益  3 　　\n\n       应交税费——应交增值税（进项税额）  0.18 　　\n\n       贷：其他货币资金——存出投资款               3.18"
                     },
                     "question_group": {
@@ -2242,7 +2094,184 @@
                 "sort_in_section": 1,
                 "question_groups_id": {
                     "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae",
-                    "shared_stem": "甲公司提供施工服务，属于在某一时段内履行的履约义务，为取得施工合同发生的合同取得成本按照履约进度进行摊销。2021年7月至12月，发生的有关经济业务如下：\n\n（1）2021年7月1日，通过竞标取得一项为期两年的施工合同， 合同总价款为1 000万元，施工费每半年支付250万元，为取得该合同，2021年7月甲公司以银行存款支付投标费2万元，投标人员差旅费1万元，销售人员佣金6万元，预期这些支出未来均能收回。\n\n（2）截止到2021年12月31日，为该项合同累计发生施工成本120万元，预计还将发生施工成本480万元，甲公司按照实际发生的成本占预计总成本的比例确定履约进度。\n\n（3）2021年12月31日，甲公司按照合同约定收到施工费250万元。\n\n要求：根据上述资料不考虑相关税费等因素，分析回答下列问题。（答案中的金额单位用万元表示）"
+                    "shared_stem": "甲公司提供施工服务，属于在某一时段内履行的履约义务，为取得施工合同发生的合同取得成本按照履约进度进行摊销。2021年7月至12月，发生的有关经济业务如下：\n\n（1）2021年7月1日，通过竞标取得一项为期两年的施工合同， 合同总价款为1 000万元，施工费每半年支付250万元，为取得该合同，2021年7月甲公司以银行存款支付投标费2万元，投标人员差旅费1万元，销售人员佣金6万元，预期这些支出未来均能收回。\n\n（2）截止到2021年12月31日，为该项合同累计发生施工成本120万元，预计还将发生施工成本480万元，甲公司按照实际发生的成本占预计总成本的比例确定履约进度。\n\n（3）2021年12月31日，甲公司按照合同约定收到施工费250万元。\n\n要求：根据上述资料不考虑相关税费等因素，分析回答下列问题。（答案中的金额单位用万元表示）",
+                    "questions": [
+                        {
+                            "id": "e77d62b8-750d-4e18-9f96-5efef0162ac0",
+                            "stem": "下列关于合同取得成本的表述中，正确的是（　　）。",
+                            "type": "q_mc_flexible",
+                            "analysis": "合同取得成本是指企业为取得合同发生的预期能够收回的增量成本，选项A正确；增量成本是指企业不取得合同就不会发生的成本，也就是企业发生的与合同直接相关，但又不是所签订合同的对象或内容本身所直接发生的费用，选项D不正确；企业发生合同取得成本应借记“合同取得成本”科目，贷记“银行存款”等科目，选项B不正确，选项C正确。",
+                            "sort_in_group": 1,
+                            "correct_ans_select_radio": null,
+                            "correct_ans_select_multiple_checkbox": ["A", "C"],
+                            "q_mc_single": null,
+                            "q_mc_multi": null,
+                            "q_mc_binary": null,
+                            "q_mc_flexible": {
+                                "id": "228cd3c1-380d-46d0-be1c-92a1bafefe13",
+                                "option_a": "合同取得成本是企业为取得合同发生的预期能收回的增量成本",
+                                "status": "draft",
+                                "option_b": "企业发生合同取得成本应借记“合同资产”",
+                                "option_number": 4,
+                                "option_c": "企业发生合同取得成本应借记“合同取得成本”",
+                                "sort": null,
+                                "option_d": "合同取得成本是所签订合同对象内容本身直接发生的费用",
+                                "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                                "option_e": null,
+                                "date_created": "2025-04-18T02:33:52.003Z",
+                                "option_f": null,
+                                "user_updated": null,
+                                "date_updated": null,
+                                "stem": "下列关于合同取得成本的表述中，正确的是（　　）。",
+                                "correct_options": ["A", "C"],
+                                "analysis": "合同取得成本是指企业为取得合同发生的预期能够收回的增量成本，选项A正确；增量成本是指企业不取得合同就不会发生的成本，也就是企业发生的与合同直接相关，但又不是所签订合同的对象或内容本身所直接发生的费用，选项D不正确；企业发生合同取得成本应借记“合同取得成本”科目，贷记“银行存款”等科目，选项B不正确，选项C正确。"
+                            },
+                            "question_group": {
+                                "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae"
+                            }
+                        },
+                        {
+                            "id": "ea953e32-f5a4-444b-92ea-e2b6b75d1e73",
+                            "stem": "根据资料（1），下列表述正确的是（　　）。",
+                            "type": "q_mc_flexible",
+                            "analysis": "企业为取得合同发生的、除预期能够收回的增量成本之外的其他支出，如无论是否取得合同均会发生的差旅费、投标费等相关费用，应当在发生时计入当期损益，除非这些支出明确由客户承担。投标费2万元和投标人员差旅费1万元均通过“管理费用”核算，因订立该合同使期间费用增加3万元；所以选项A正确，选项BC错误；销售人员佣金6万元属于预期未来能够收回的增量成本，应作为合同取得成本确认为一项资产，所以选项D正确。",
+                            "sort_in_group": 2,
+                            "correct_ans_select_radio": null,
+                            "correct_ans_select_multiple_checkbox": ["A", "D"],
+                            "q_mc_single": null,
+                            "q_mc_multi": null,
+                            "q_mc_binary": null,
+                            "q_mc_flexible": {
+                                "id": "f6770ec9-3710-4a1a-9705-d6fc322aa0c9",
+                                "option_a": "投标人员差旅费1万元应计入管理费用",
+                                "status": "draft",
+                                "option_b": "投标费2万元应计入合同取得成本",
+                                "option_number": 4,
+                                "option_c": "因订立该合同使期间费用增加9万元",
+                                "sort": null,
+                                "option_d": "销售人员佣金6万元应计入合同取得成本",
+                                "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                                "option_e": null,
+                                "date_created": "2025-04-18T02:33:52.025Z",
+                                "option_f": null,
+                                "user_updated": null,
+                                "date_updated": null,
+                                "stem": "根据资料（1），下列表述正确的是（　　）。",
+                                "correct_options": ["A", "D"],
+                                "analysis": "企业为取得合同发生的、除预期能够收回的增量成本之外的其他支出，如无论是否取得合同均会发生的差旅费、投标费等相关费用，应当在发生时计入当期损益，除非这些支出明确由客户承担。投标费2万元和投标人员差旅费1万元均通过“管理费用”核算，因订立该合同使期间费用增加3万元；所以选项A正确，选项BC错误；销售人员佣金6万元属于预期未来能够收回的增量成本，应作为合同取得成本确认为一项资产，所以选项D正确。"
+                            },
+                            "question_group": {
+                                "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae"
+                            }
+                        },
+                        {
+                            "id": "b81db797-275b-4f1d-b094-367e404e9621",
+                            "stem": "根据资料（2）和（3），下列表述正确的是（　　）。",
+                            "type": "q_mc_flexible",
+                            "analysis": "合同履约进度＝120÷（120＋480）×100%＝20%；主营业务收入＝1 000×20%＝200（万元）；主营业务成本＝120（万元）；合同负债＝250－200＝50（万元）。会计分录如下：\n\n借：银行存款     250\n\n　　贷：主营业务收入     200\n\n　　　　合同负债        50\n\n借：主营业务成本     120\n\n　　贷：合同履约成本     120",
+                            "sort_in_group": 3,
+                            "correct_ans_select_radio": null,
+                            "correct_ans_select_multiple_checkbox": [
+                                "A",
+                                "B",
+                                "C",
+                                "D"
+                            ],
+                            "q_mc_single": null,
+                            "q_mc_multi": null,
+                            "q_mc_binary": null,
+                            "q_mc_flexible": {
+                                "id": "1d63ee59-add7-4492-8628-01b5be3015ec",
+                                "option_a": "合同负债增加50万元",
+                                "status": "draft",
+                                "option_b": "主营业务收入增加200万元",
+                                "option_number": 4,
+                                "option_c": "甲公司施工进度为20%",
+                                "sort": null,
+                                "option_d": "\n主营业务成本增加120万元",
+                                "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                                "option_e": null,
+                                "date_created": "2025-04-18T02:40:10.561Z",
+                                "option_f": null,
+                                "user_updated": null,
+                                "date_updated": null,
+                                "stem": "根据资料（2）和（3），下列表述正确的是（　　）。",
+                                "correct_options": ["A", "B", "C", "D"],
+                                "analysis": "合同履约进度＝120÷（120＋480）×100%＝20%；主营业务收入＝1 000×20%＝200（万元）；主营业务成本＝120（万元）；合同负债＝250－200＝50（万元）。会计分录如下：\n\n借：银行存款     250\n\n　　贷：主营业务收入     200\n\n　　　　合同负债        50\n\n借：主营业务成本     120\n\n　　贷：合同履约成本     120"
+                            },
+                            "question_group": {
+                                "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae"
+                            }
+                        },
+                        {
+                            "id": "5d44e7d0-6284-44da-841b-ade4320e8f9e",
+                            "stem": "根据资料（1）和（2），2021年12月31日关于合同取得成本摊销的账务处理中正确的是（　　）。",
+                            "type": "q_mc_flexible",
+                            "analysis": "甲公司应编制如下会计分录：\n\n借：销售费用     1.2（6×20%）\n\n　　贷：合同取得成本       1.2 ",
+                            "sort_in_group": 4,
+                            "correct_ans_select_radio": null,
+                            "correct_ans_select_multiple_checkbox": ["C"],
+                            "q_mc_single": null,
+                            "q_mc_multi": null,
+                            "q_mc_binary": null,
+                            "q_mc_flexible": {
+                                "id": "787c8121-0c6f-4eec-9c11-0af7861a0078",
+                                "option_a": "借：销售费用     1.8\n\n　　贷：合同取得成本     1.8 ",
+                                "status": "draft",
+                                "option_b": "借：销售费用     1.6\n\n　　贷：合同取得成本     1.6",
+                                "option_number": 4,
+                                "option_c": "借：销售费用     1.2\n\n　　贷：合同取得成本     1.2 ",
+                                "sort": null,
+                                "option_d": "\n借：管理费用     1.8\n\n　　贷：合同取得成本     1.8",
+                                "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                                "option_e": null,
+                                "date_created": "2025-04-18T02:40:10.592Z",
+                                "option_f": null,
+                                "user_updated": null,
+                                "date_updated": null,
+                                "stem": "根据资料（1）和（2），2021年12月31日关于合同取得成本摊销的账务处理中正确的是（　　）。",
+                                "correct_options": ["C"],
+                                "analysis": "甲公司应编制如下会计分录：\n\n借：销售费用     1.2（6×20%）\n\n　　贷：合同取得成本       1.2 "
+                            },
+                            "question_group": {
+                                "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae"
+                            }
+                        },
+                        {
+                            "id": "871bc422-0dcc-4ac6-88f4-c691bb247ae0",
+                            "stem": "根据资料（1）至（3），对2021年利润表中“营业利润”项目的影响金额是（　　）万元。",
+                            "type": "q_mc_flexible",
+                            "analysis": "对2021年利润表中“营业利润”项目影响的金额＝－2－1－1.2＋200－120＝75.8（万元）。",
+                            "sort_in_group": 5,
+                            "correct_ans_select_radio": null,
+                            "correct_ans_select_multiple_checkbox": ["C"],
+                            "q_mc_single": null,
+                            "q_mc_multi": null,
+                            "q_mc_binary": null,
+                            "q_mc_flexible": {
+                                "id": "74a9024b-d1a9-4b67-9848-3a5ae0a2b8ca",
+                                "option_a": "73.4",
+                                "status": "draft",
+                                "option_b": "78.2",
+                                "option_number": 4,
+                                "option_c": "75.8",
+                                "sort": null,
+                                "option_d": "\n71",
+                                "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                                "option_e": null,
+                                "date_created": "2025-04-18T02:40:10.601Z",
+                                "option_f": null,
+                                "user_updated": null,
+                                "date_updated": null,
+                                "stem": "根据资料（1）至（3），对2021年利润表中“营业利润”项目的影响金额是（　　）万元。",
+                                "correct_options": ["C"],
+                                "analysis": "对2021年利润表中“营业利润”项目影响的金额＝－2－1－1.2＋200－120＝75.8（万元）。"
+                            },
+                            "question_group": {
+                                "id": "4622ede4-c48f-4b0b-ba8c-dadb29e386ae"
+                            }
+                        }
+                    ]
                 }
             },
             {
@@ -2250,7 +2279,191 @@
                 "sort_in_section": 2,
                 "question_groups_id": {
                     "id": "ff0aeb10-f381-4bd0-932d-67ab01778176",
-                    "shared_stem": "甲公司为增值税一般纳税人，2021年度该公司发生与固定资产相关业务如下：\n\n（1）1月8日，购入一台需要安装的M设备，取得的增值税专用发票上注明的价款为500 000元，增值税税额为65 000元，另支付安装费取得的增值税专用发票上注明的价款为40 000元，增值税税额为3 600元，全部款项以银行存款支付。该设备预计可使用5年，预计净残值为30 000元，采用年限平均法计提折旧。1月10日M设备达到预定可使用状态并交付生产车间使用。\n\n（2）6月30日，委托外单位对本公司设备进行日常维护修理，其中行政管理部门设备的修理费为30 000元，销售部门设备修理费为10 000元，取得的增值税专用发票上注明的价款为40 000元，增值税税额为5 200元，全部款项以银行存款支付。\n\n（3）12月5日，报废一台N设备，该设备原值为800 000元，已计提折旧760 000元，未发生资产减值损失。设备报废取得变价收入20 000元，开具的增值税专用发票上注明的增值税税额为2 600元，报废过程中发生清理费用6 000元，全部款项均已通过银行办理结算。\n\n（4）12月31日，对固定资产进行减值测试，发现2021年1月购入的M设备存在减值迹象，其可收回金额为440 000元。\n\n要求：根据上述资料，不考虑其他因素，分析回答下列小题。（答案中的金额单位用元表示）"
+                    "shared_stem": "甲公司为增值税一般纳税人，2021年度该公司发生与固定资产相关业务如下：\n\n（1）1月8日，购入一台需要安装的M设备，取得的增值税专用发票上注明的价款为500 000元，增值税税额为65 000元，另支付安装费取得的增值税专用发票上注明的价款为40 000元，增值税税额为3 600元，全部款项以银行存款支付。该设备预计可使用5年，预计净残值为30 000元，采用年限平均法计提折旧。1月10日M设备达到预定可使用状态并交付生产车间使用。\n\n（2）6月30日，委托外单位对本公司设备进行日常维护修理，其中行政管理部门设备的修理费为30 000元，销售部门设备修理费为10 000元，取得的增值税专用发票上注明的价款为40 000元，增值税税额为5 200元，全部款项以银行存款支付。\n\n（3）12月5日，报废一台N设备，该设备原值为800 000元，已计提折旧760 000元，未发生资产减值损失。设备报废取得变价收入20 000元，开具的增值税专用发票上注明的增值税税额为2 600元，报废过程中发生清理费用6 000元，全部款项均已通过银行办理结算。\n\n（4）12月31日，对固定资产进行减值测试，发现2021年1月购入的M设备存在减值迹象，其可收回金额为440 000元。\n\n要求：根据上述资料，不考虑其他因素，分析回答下列小题。（答案中的金额单位用元表示）",
+                    "questions": [
+                        {
+                            "id": "c15630f6-defb-454f-83af-3e4de9ca3377",
+                            "stem": "根据资料（1），下列各项中，甲公司购入M设备的入账价值是（　　）元。",
+                            "type": "q_mc_flexible",
+                            "analysis": "甲公司购入M设备的入账价值＝500 000＋40 000＝540 000（元）。",
+                            "sort_in_group": 1,
+                            "correct_ans_select_radio": null,
+                            "correct_ans_select_multiple_checkbox": ["A"],
+                            "q_mc_single": null,
+                            "q_mc_multi": null,
+                            "q_mc_binary": null,
+                            "q_mc_flexible": {
+                                "id": "33cc687d-2e88-4ce7-b201-4689424e02b6",
+                                "option_a": "540 000",
+                                "status": "draft",
+                                "option_b": "605 000",
+                                "option_number": 4,
+                                "option_c": "565 000",
+                                "sort": null,
+                                "option_d": "500 000",
+                                "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                                "option_e": null,
+                                "date_created": "2025-04-18T02:45:27.075Z",
+                                "option_f": null,
+                                "user_updated": null,
+                                "date_updated": null,
+                                "stem": "根据资料（1），下列各项中，甲公司购入M设备的入账价值是（　　）元。",
+                                "correct_options": ["A"],
+                                "analysis": "甲公司购入M设备的入账价值＝500 000＋40 000＝540 000（元）。"
+                            },
+                            "question_group": {
+                                "id": "ff0aeb10-f381-4bd0-932d-67ab01778176"
+                            }
+                        },
+                        {
+                            "id": "811a6f57-f2ed-47bd-804c-89bbcfc96245",
+                            "stem": "根据资料（1），下列各项中，甲公司购入M设备计提折旧的表述正确的是（　　）。",
+                            "type": "q_mc_flexible",
+                            "analysis": "1月10日M设备达到预定可使用状态，固定资产于次月开始计提折旧，所以从2月开始计提折旧，选项A错误，选项C正确；采用年限平均法计提折旧，2021年计提折旧额＝（540 000－30 000）÷5÷12×11＝93 500（元），选项B正确；月折旧额＝（540 000－30 000）÷5÷12＝8 500（元），选项D正确。",
+                            "sort_in_group": 2,
+                            "correct_ans_select_radio": null,
+                            "correct_ans_select_multiple_checkbox": [
+                                "B",
+                                "C",
+                                "D"
+                            ],
+                            "q_mc_single": null,
+                            "q_mc_multi": null,
+                            "q_mc_binary": null,
+                            "q_mc_flexible": {
+                                "id": "e2cbce7f-2577-477b-a025-1dae350d9614",
+                                "option_a": "自2021年1月开始计提折旧",
+                                "status": "draft",
+                                "option_b": "2021年计提折旧93 500元",
+                                "option_number": 4,
+                                "option_c": "自2021年2月开始计提折旧",
+                                "sort": null,
+                                "option_d": "每月折旧额为8 500元",
+                                "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                                "option_e": null,
+                                "date_created": "2025-04-18T02:45:27.100Z",
+                                "option_f": null,
+                                "user_updated": null,
+                                "date_updated": null,
+                                "stem": "根据资料（1），下列各项中，甲公司购入M设备计提折旧的表述正确的是（　　）。",
+                                "correct_options": ["B", "C", "D"],
+                                "analysis": "1月10日M设备达到预定可使用状态，固定资产于次月开始计提折旧，所以从2月开始计提折旧，选项A错误，选项C正确；采用年限平均法计提折旧，2021年计提折旧额＝（540 000－30 000）÷5÷12×11＝93 500（元），选项B正确；月折旧额＝（540 000－30 000）÷5÷12＝8 500（元），选项D正确。"
+                            },
+                            "question_group": {
+                                "id": "ff0aeb10-f381-4bd0-932d-67ab01778176"
+                            }
+                        },
+                        {
+                            "id": "c9605651-7053-4a31-8b82-8d8afed0ce3d",
+                            "stem": "根据资料（2），下列各项中，甲公司支付设备修理费的会计处理正确的是（　　）。",
+                            "type": "q_mc_flexible",
+                            "analysis": "本题分录如下：\n\n借：管理费用     30 000\n\n　　销售费用     10 000\n\n　　应交税费——应交增值税（进项税额）    5 200\n\n　　贷：银行存款      45 200",
+                            "sort_in_group": 3,
+                            "correct_ans_select_radio": null,
+                            "correct_ans_select_multiple_checkbox": ["C", "D"],
+                            "q_mc_single": null,
+                            "q_mc_multi": null,
+                            "q_mc_binary": null,
+                            "q_mc_flexible": {
+                                "id": "f13f3547-c725-4445-a0d0-8a510aba8267",
+                                "option_a": "确认管理费用40 000元",
+                                "status": "draft",
+                                "option_b": "确认制造费用40 000元",
+                                "option_number": 4,
+                                "option_c": "确认销售费用10 000元",
+                                "sort": null,
+                                "option_d": "确认管理费用30 000元",
+                                "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                                "option_e": null,
+                                "date_created": "2025-04-18T02:45:27.111Z",
+                                "option_f": null,
+                                "user_updated": null,
+                                "date_updated": null,
+                                "stem": "根据资料（2），下列各项中，甲公司支付设备修理费的会计处理正确的是（　　）。",
+                                "correct_options": ["C", "D"],
+                                "analysis": "本题分录如下：\n\n借：管理费用     30 000\n\n　　销售费用     10 000\n\n　　应交税费——应交增值税（进项税额）    5 200\n\n　　贷：银行存款      45 200"
+                            },
+                            "question_group": {
+                                "id": "ff0aeb10-f381-4bd0-932d-67ab01778176"
+                            }
+                        },
+                        {
+                            "id": "066cc1d2-c182-4a74-a5ad-510a4839dacb",
+                            "stem": "根据资料（3），下列各项中，甲公司报废N设备会计处理正确的是（　　）。",
+                            "type": "q_mc_flexible",
+                            "analysis": "结转报废净损失分录如下：\n\n借：营业外支出       26 000\n\n　　贷：固定资产清理     26 000",
+                            "sort_in_group": 4,
+                            "correct_ans_select_radio": null,
+                            "correct_ans_select_multiple_checkbox": [
+                                "A",
+                                "B",
+                                "C"
+                            ],
+                            "q_mc_single": null,
+                            "q_mc_multi": null,
+                            "q_mc_binary": null,
+                            "q_mc_flexible": {
+                                "id": "a5cc04c6-8022-476a-a1cf-05f4a9c27863",
+                                "option_a": "支付清理费用时：\n\n借：固定资产清理         6 000\n\n　　贷：银行存款          6 000",
+                                "status": "draft",
+                                "option_b": "转入清理时：\n\n借：固定资产清理       40 000\n\n　　累计折旧     760 000\n\n　　贷：固定资产      800 000",
+                                "option_number": 4,
+                                "option_c": "取得变价收入时：\n\n借：银行存款       22 600\n\n　　贷：固定资产清理       20 000\n\n　　　　应交税费——应交增值税（销项税额）      2 600",
+                                "sort": null,
+                                "option_d": "结转报废净损失时：\n\n借：资产处置损益       26 000\n\n　　贷：固定资产清理       26 000 ",
+                                "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                                "option_e": null,
+                                "date_created": "2025-04-18T02:45:27.118Z",
+                                "option_f": null,
+                                "user_updated": null,
+                                "date_updated": null,
+                                "stem": "根据资料（3），下列各项中，甲公司报废N设备会计处理正确的是（　　）。",
+                                "correct_options": ["A", "B", "C"],
+                                "analysis": "结转报废净损失分录如下：\n\n借：营业外支出       26 000\n\n　　贷：固定资产清理     26 000"
+                            },
+                            "question_group": {
+                                "id": "ff0aeb10-f381-4bd0-932d-67ab01778176"
+                            }
+                        },
+                        {
+                            "id": "3d6a1bb0-cc67-4ea3-87ad-7b7ea42080ee",
+                            "stem": "根据资料（1）和（4），下列各项中，12月31日关于M设备期末计量和报表填列正确的是（　　） 。",
+                            "type": "q_mc_flexible",
+                            "analysis": "年末时，M设备计提减值准备前的账面价值＝540 000－93 500＝446 500（元）>可收回金额440 000元，计提减值准备的金额＝446 500－440 000＝6 500（元），选项A正确；固定资产减值准备一经计提，以后会计期间不得转回，选项C正确；期末M设备在资产负债表“固定资产”项目填列的金额应根据M设备固定资产的期末余额（540 000元），减去M设备计提的折旧（93 500元）和M设备计提的减值准备（6 500元）后的金额（440 000元）填列，选项D正确，选项B错误。",
+                            "sort_in_group": 5,
+                            "correct_ans_select_radio": null,
+                            "correct_ans_select_multiple_checkbox": [
+                                "A",
+                                "C",
+                                "D"
+                            ],
+                            "q_mc_single": null,
+                            "q_mc_multi": null,
+                            "q_mc_binary": null,
+                            "q_mc_flexible": {
+                                "id": "696a4d98-6ebb-440e-8c42-9b73cda77c10",
+                                "option_a": "M设备应计提减值准备6 500元",
+                                "status": "draft",
+                                "option_b": "期末M设备在资产负债表“固定资产”项目填列的金额为446 500元",
+                                "option_number": 4,
+                                "option_c": "M设备的减值损失在以后会计期间不得转回",
+                                "sort": null,
+                                "option_d": "期末M设备在资产负债表“固定资产”项目填列的金额为440 000元",
+                                "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                                "option_e": null,
+                                "date_created": "2025-04-18T02:45:27.125Z",
+                                "option_f": null,
+                                "user_updated": null,
+                                "date_updated": null,
+                                "stem": "根据资料（1）和（4），下列各项中，12月31日关于M设备期末计量和报表填列正确的是（　　） 。",
+                                "correct_options": ["A", "C", "D"],
+                                "analysis": "年末时，M设备计提减值准备前的账面价值＝540 000－93 500＝446 500（元）>可收回金额440 000元，计提减值准备的金额＝446 500－440 000＝6 500（元），选项A正确；固定资产减值准备一经计提，以后会计期间不得转回，选项C正确；期末M设备在资产负债表“固定资产”项目填列的金额应根据M设备固定资产的期末余额（540 000元），减去M设备计提的折旧（93 500元）和M设备计提的减值准备（6 500元）后的金额（440 000元）填列，选项D正确，选项B错误。"
+                            },
+                            "question_group": {
+                                "id": "ff0aeb10-f381-4bd0-932d-67ab01778176"
+                            }
+                        }
+                    ]
                 }
             },
             {
@@ -2258,7 +2471,179 @@
                 "sort_in_section": 3,
                 "question_groups_id": {
                     "id": "16214054-0e97-4d27-81b1-bf55d1aee87f",
-                    "shared_stem": "甲公司为增值税一般纳税人。其购买债券均通过投资款专户进行，2022年甲公司发生与债券投资相关的业务如下：\n\n（1）3月1日，甲公司从二级市场购入乙公司发行的面值为950万元的债券，支付价款1 020万元（其中包含已到付息期但尚未领取的债券利息20万元），另支付交易费用3万元，取得的增值税专用发票上注明的增值税税额为0.18万元。甲公司将其划分为交易性金融资产进行管理和核算。\n\n（2）3月10日，甲公司收到乙公司支付的购入时未领取的债券利息20万元。\n\n（3）3月31日，甲公司持有乙公司债券的公允价值为1 040万元。\n\n（4）4月10日，甲公司出售所持有的全部乙公司债券，价款为1 126万元，转让乙公司债券应交增值税6万元。\n\n要求：根据上述资料，不考虑相关税费及其他因素，分析回答下列小题。（答案中的金额单位用万元表示）"
+                    "shared_stem": "甲公司为增值税一般纳税人。其购买债券均通过投资款专户进行，2022年甲公司发生与债券投资相关的业务如下：\n\n（1）3月1日，甲公司从二级市场购入乙公司发行的面值为950万元的债券，支付价款1 020万元（其中包含已到付息期但尚未领取的债券利息20万元），另支付交易费用3万元，取得的增值税专用发票上注明的增值税税额为0.18万元。甲公司将其划分为交易性金融资产进行管理和核算。\n\n（2）3月10日，甲公司收到乙公司支付的购入时未领取的债券利息20万元。\n\n（3）3月31日，甲公司持有乙公司债券的公允价值为1 040万元。\n\n（4）4月10日，甲公司出售所持有的全部乙公司债券，价款为1 126万元，转让乙公司债券应交增值税6万元。\n\n要求：根据上述资料，不考虑相关税费及其他因素，分析回答下列小题。（答案中的金额单位用万元表示）",
+                    "questions": [
+                        {
+                            "id": "24a9c85f-8310-4f3b-8d97-e3983f9d2afc",
+                            "stem": "根据期初资料和资料（1），下列各项中，关于甲公司购入乙公司债券的会计处理正确的是（　　）。",
+                            "type": "q_mc_flexible",
+                            "analysis": "3月1日，甲公司购入乙公司债券时的会计处理如下：\n\n借：交易性金融资产——成本 1 000 　　\n\n       应收利息                              20 　　\n\n       贷：其他货币资金——存出投资款 1 020 \n\n借：投资收益  3 　　\n\n       应交税费——应交增值税（进项税额）  0.18 　　\n\n       贷：其他货币资金——存出投资款               3.18",
+                            "sort_in_group": 1,
+                            "correct_ans_select_radio": null,
+                            "correct_ans_select_multiple_checkbox": ["A", "B"],
+                            "q_mc_single": null,
+                            "q_mc_multi": null,
+                            "q_mc_binary": null,
+                            "q_mc_flexible": {
+                                "id": "9463b924-2b22-4d46-8ef8-9d4aef2cb51d",
+                                "option_a": "借：交易性金融资产——成本    1 000\n\n　　应收利息                                  20\n\n　　贷：其他货币资金——存出投资款    1 020",
+                                "status": "draft",
+                                "option_b": "\n借：投资收益    3\n\n   　应交税费——应交增值税（进项税额）    0.18\n\n   　贷：其他货币资金——存出投资款    3.18",
+                                "option_number": 4,
+                                "option_c": "借：交易性金融资产——成本     1 020\n\n　　贷：其他货币资金——存出投资款    1 020",
+                                "sort": null,
+                                "option_d": "借：管理费用    3\n\n　　应交税费——应交增值税（进项税额）    0.18\n\n　　贷：其他货币资金——存出投资款    3.18",
+                                "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                                "option_e": null,
+                                "date_created": "2025-04-18T03:16:31.195Z",
+                                "option_f": null,
+                                "user_updated": null,
+                                "date_updated": null,
+                                "stem": "根据期初资料和资料（1），下列各项中，关于甲公司购入乙公司债券的会计处理正确的是（　　）。",
+                                "correct_options": ["A", "B"],
+                                "analysis": "3月1日，甲公司购入乙公司债券时的会计处理如下：\n\n借：交易性金融资产——成本 1 000 　　\n\n       应收利息                              20 　　\n\n       贷：其他货币资金——存出投资款 1 020 \n\n借：投资收益  3 　　\n\n       应交税费——应交增值税（进项税额）  0.18 　　\n\n       贷：其他货币资金——存出投资款               3.18"
+                            },
+                            "question_group": {
+                                "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
+                            }
+                        },
+                        {
+                            "id": "3d9d0c9f-b691-4511-a7a2-45342c788b6d",
+                            "stem": "根据资料（2），下列各项中，关于甲公司收到债券利息的会计处理结果正确的是（　　）。",
+                            "type": "q_mc_flexible",
+                            "analysis": "收到乙公司支付的购入时已宣告但尚未领取的债券利息：\n\n借：其他货币资金——存出投资款    20\n\n　　贷：应收利息                                  20",
+                            "sort_in_group": 2,
+                            "correct_ans_select_radio": null,
+                            "correct_ans_select_multiple_checkbox": ["C", "D"],
+                            "q_mc_single": null,
+                            "q_mc_multi": null,
+                            "q_mc_binary": null,
+                            "q_mc_flexible": {
+                                "id": "8aaf3019-78b9-409d-99d6-d39276e2289c",
+                                "option_a": "\n交易性金融资产减少20万元",
+                                "status": "draft",
+                                "option_b": "投资收益增加20万元",
+                                "option_number": 4,
+                                "option_c": "应收利息减少20万元",
+                                "sort": null,
+                                "option_d": "其他货币资金增加20万元",
+                                "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                                "option_e": null,
+                                "date_created": "2025-04-18T03:16:31.213Z",
+                                "option_f": null,
+                                "user_updated": null,
+                                "date_updated": null,
+                                "stem": "根据资料（2），下列各项中，关于甲公司收到债券利息的会计处理结果正确的是（　　）。",
+                                "correct_options": ["C", "D"],
+                                "analysis": "收到乙公司支付的购入时已宣告但尚未领取的债券利息：\n\n借：其他货币资金——存出投资款    20\n\n　　贷：应收利息                                  20"
+                            },
+                            "question_group": {
+                                "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
+                            }
+                        },
+                        {
+                            "id": "087ceb8b-80b9-4ab0-906a-bec0621f102d",
+                            "stem": "根据资料（1）至（3），下列各项中，关于甲公司持有乙公司债券公允价值变动的会计处理表述正确的是（　　）。",
+                            "type": "q_mc_flexible",
+                            "analysis": "3月31日，甲公司持有乙公司债券的公允价值变动的会计处理如下：\n\n借：交易性金融资产——公允价值变动　　40（1 040-1 000）\n\n　　贷：公允价值变动损益                                 40",
+                            "sort_in_group": 3,
+                            "correct_ans_select_radio": null,
+                            "correct_ans_select_multiple_checkbox": ["A", "D"],
+                            "q_mc_single": null,
+                            "q_mc_multi": null,
+                            "q_mc_binary": null,
+                            "q_mc_flexible": {
+                                "id": "7bfe84cc-4c1d-42a3-af9c-b5a3478d5909",
+                                "option_a": "借记“交易性金融资产——公允价值变动”科目40万元",
+                                "status": "draft",
+                                "option_b": "借记“交易性金融资产——成本”科目20万元",
+                                "option_number": 4,
+                                "option_c": "贷记“投资收益”科目20万元",
+                                "sort": null,
+                                "option_d": "贷记“公允价值变动损益”科目40万元",
+                                "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                                "option_e": null,
+                                "date_created": "2025-04-18T03:16:31.220Z",
+                                "option_f": null,
+                                "user_updated": null,
+                                "date_updated": null,
+                                "stem": "根据资料（1）至（3），下列各项中，关于甲公司持有乙公司债券公允价值变动的会计处理表述正确的是（　　）。",
+                                "correct_options": ["A", "D"],
+                                "analysis": "3月31日，甲公司持有乙公司债券的公允价值变动的会计处理如下：\n\n借：交易性金融资产——公允价值变动　　40（1 040-1 000）\n\n　　贷：公允价值变动损益                                 40"
+                            },
+                            "question_group": {
+                                "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
+                            }
+                        },
+                        {
+                            "id": "ee7eb57e-a0d6-446e-bc06-8e1b1acff1d0",
+                            "stem": "根据期初资料、资料（1）至（4），下列各项中，关于出售乙公司债券的会计处理正确的是（　　）。",
+                            "type": "q_mc_flexible",
+                            "analysis": "4月10日，甲公司出售所持有的全部乙公司债券的会计处理如下：\n\n借：其他货币资金——存出投资款      1 126\n\n　　贷：交易性金融资产——成本              1 000\n\n　　　　　　　　　　　——公允价值变动     40\n\n　　　　投资收益                                             86（1 126-1 040）\n\n借：投资收益                6\n\n　　贷：应交税费——转让金融商品应交增值税          6",
+                            "sort_in_group": 4,
+                            "correct_ans_select_radio": null,
+                            "correct_ans_select_multiple_checkbox": ["A", "C"],
+                            "q_mc_single": null,
+                            "q_mc_multi": null,
+                            "q_mc_binary": null,
+                            "q_mc_flexible": {
+                                "id": "1f39808e-ce70-4f64-981d-c95427fd33cf",
+                                "option_a": "借：投资收益      6\n\n   　贷：应交税费——转让金融商品应交增值税      6",
+                                "status": "draft",
+                                "option_b": "借：其他货币资金——存出投资款      1 126\n\n　　贷：交易性金融资产——成本               1 020\n\n　　　　　　　　　　　——公允价值变动      20\n\n　　　　投资收益                                             86",
+                                "option_number": 4,
+                                "option_c": "借：其他货币资金——存出投资款    1 126\n\n　　贷：交易性金融资产——成本               1 000\n\n　　　　　　　　　　　——公允价值变动      40\n\n　　　　投资收益                                              86",
+                                "sort": null,
+                                "option_d": "借：管理费用      6\n\n　　贷：应交税费——转让金融商品应交增值税      6",
+                                "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                                "option_e": null,
+                                "date_created": "2025-04-18T03:16:31.229Z",
+                                "option_f": null,
+                                "user_updated": null,
+                                "date_updated": null,
+                                "stem": "根据期初资料、资料（1）至（4），下列各项中，关于出售乙公司债券的会计处理正确的是（　　）。",
+                                "correct_options": ["A", "C"],
+                                "analysis": "4月10日，甲公司出售所持有的全部乙公司债券的会计处理如下：\n\n借：其他货币资金——存出投资款      1 126\n\n　　贷：交易性金融资产——成本              1 000\n\n　　　　　　　　　　　——公允价值变动     40\n\n　　　　投资收益                                             86（1 126-1 040）\n\n借：投资收益                6\n\n　　贷：应交税费——转让金融商品应交增值税          6"
+                            },
+                            "question_group": {
+                                "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
+                            }
+                        },
+                        {
+                            "id": "10a1610e-e06e-4de2-b0b8-1b3efbeaec1c",
+                            "stem": "根据资料（1）至（4），上述相关业务对甲公司2022年利润表中“营业利润”项目的影响金额为（　　）万元。",
+                            "type": "q_mc_flexible",
+                            "analysis": "对“营业利润”项目的影响金额=-3（资料1）+40（资料3）+86（资料4）-6（资料4）=117（万元）。",
+                            "sort_in_group": 5,
+                            "correct_ans_select_radio": null,
+                            "correct_ans_select_multiple_checkbox": ["C"],
+                            "q_mc_single": null,
+                            "q_mc_multi": null,
+                            "q_mc_binary": null,
+                            "q_mc_flexible": {
+                                "id": "3294e2d5-b5c1-414d-ac4b-44672b9b3b26",
+                                "option_a": "\n77",
+                                "status": "draft",
+                                "option_b": "97",
+                                "option_number": 4,
+                                "option_c": "117",
+                                "sort": null,
+                                "option_d": "103",
+                                "user_created": "5baa5930-4404-4a46-846b-d01311564d53",
+                                "option_e": null,
+                                "date_created": "2025-04-18T03:16:31.238Z",
+                                "option_f": null,
+                                "user_updated": null,
+                                "date_updated": null,
+                                "stem": "根据资料（1）至（4），上述相关业务对甲公司2022年利润表中“营业利润”项目的影响金额为（　　）万元。",
+                                "correct_options": ["C"],
+                                "analysis": "对“营业利润”项目的影响金额=-3（资料1）+40（资料3）+86（资料4）-6（资料4）=117（万元）。"
+                            },
+                            "question_group": {
+                                "id": "16214054-0e97-4d27-81b1-bf55d1aee87f"
+                            }
+                        }
+                    ]
                 }
             }
         ]

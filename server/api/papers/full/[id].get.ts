@@ -33,6 +33,7 @@ const comprehensivePaperFields = [
     "paper_sections.questions.questions_id.q_mc_binary.*",
     "paper_sections.questions.questions_id.q_mc_flexible.*",
     "paper_sections.questions.questions_id.question_group.id",
+    "paper_sections.questions.questions_id.question_group.shared_stem",
     "paper_sections.questions.questions_id.sort_in_group",
     "paper_sections.questions.questions_id.correct_ans_select_radio",
     "paper_sections.questions.questions_id.correct_ans_select_multiple_checkbox",
