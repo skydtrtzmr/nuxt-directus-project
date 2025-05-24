@@ -22,9 +22,9 @@ const comprehensivePaperFields = [
     "paper_sections.questions",
     "paper_sections.questions.id",
     "paper_sections.questions.sort_in_section",
-    "paper_sections.question_groups",
-    "paper_sections.question_groups.id",
+    "paper_sections.questions.paper_sections_id",
     // 章节中的问题 (通过 paper_sections_questions 关联)
+    "paper_sections.questions.questions_id.id",
     "paper_sections.questions.questions_id.stem",
     "paper_sections.questions.questions_id.type",
     "paper_sections.questions.questions_id.analysis",
@@ -38,6 +38,8 @@ const comprehensivePaperFields = [
     "paper_sections.questions.questions_id.correct_ans_select_multiple_checkbox",
     // "paper_sections.questions.paper_sections_id",
     // 章节中的题组 (通过 paper_sections_question_groups 关联)
+    "paper_sections.question_groups",
+    "paper_sections.question_groups.id",
     "paper_sections.question_groups.question_groups_id.id", // 这是 question_groups 集合中项的 ID
     "paper_sections.question_groups.question_groups_id.shared_stem",
     "paper_sections.question_groups.sort_in_section", // 题组在章节内的排序

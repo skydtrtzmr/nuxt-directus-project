@@ -71,6 +71,8 @@ export function useExamData() {
             }
         )) as PaperSections[];
 
+        
+
         console.log("submittedSectionsResponse:", submittedSectionsResponse);
         console.log("sections:", sections);
 
@@ -115,6 +117,8 @@ export function useExamData() {
                 new Set(question_id_list_local.value.concat(allQuestionIds))
             );
         }
+
+        // allSectionQuestions = 
 
         console.log("allSectionQuesions:", allSectionQuestions);
         
