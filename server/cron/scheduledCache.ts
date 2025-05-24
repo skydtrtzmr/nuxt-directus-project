@@ -48,7 +48,7 @@ const comprehensivePaperFields = [
     "paper_sections.question_groups",
     "paper_sections.question_groups.id",
     "paper_sections.question_groups.question_groups_id.id", // 这是 question_groups 集合中项的 ID
-    "paper_sections.question_groups.question_groups_id.questions.id",
+    "paper_sections.question_groups.question_groups_id.questions", // 题组中的问题id列表
     "paper_sections.question_groups.question_groups_id.shared_stem",
     // 题组中的问题（这边可以优化 TODO）
     "paper_sections.question_groups.sort_in_section", // 题组在章节内的排序
