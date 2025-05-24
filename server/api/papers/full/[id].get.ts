@@ -58,6 +58,8 @@ const comprehensivePaperFields = [
     "paper_sections.question_groups.question_groups_id.questions.correct_ans_select_radio",
     "paper_sections.question_groups.question_groups_id.questions.correct_ans_select_multiple_checkbox",
     "paper_sections.question_groups.sort_in_section", // 题组在章节内的排序
+    "paper_sections.question_groups.paper_sections_id",
+    // "paper_sections.question_groups.group_question_ids"
 ];
 
 export default defineEventHandler(async (event) => {
