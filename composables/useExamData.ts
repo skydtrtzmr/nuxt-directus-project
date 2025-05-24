@@ -58,12 +58,15 @@ export function useExamData() {
         sections: PaperSections[],
         current_selected_question_ref: Ref<any>
     ) => {
+        console.log("sections:");
+        console.log(sections);
+        const sections_id_list = sections.flatMap(s=>s.id);
         const submittedSectionsResponse = (await $fetch(
             "/api/paper_sections/list",
             {
                 method: "POST",
                 body: {
-                    ids: sections,
+                    ids: sections_id_list,
                 },
             }
         )) as PaperSections[];
@@ -133,6 +136,7 @@ export function useExamData() {
 
         let questionGroupsData: QuestionGroups[] = [];
         if (question_groups_id_list_local.value.length > 0) {
+            // questionGroupsData = sections.flatMap(s=>s.question_groups) as QuestionGroups[];
             questionGroupsData = (await $fetch("/api/question_groups/list", {
                 method: "POST",
                 body: {
@@ -141,6 +145,9 @@ export function useExamData() {
                     ),
                 },
             })) as QuestionGroups[];
+            console.log("questionGroupsData:");
+            console.log(questionGroupsData);
+            
         }
 
         sectionList.forEach((section) => {
@@ -277,7 +284,7 @@ export function useExamData() {
             title: paperFullData.title,
             total_point_value: paperFullData.total_point_value,
             total_question_count: paperFullData.total_question_count,
-            paper_sections: paperFullData.paper_sections.map((s) => s.id),
+            paper_sections: paperFullData.paper_sections,
             "triggers-do4gvh": "",
             save_and_stay: "",
         };
