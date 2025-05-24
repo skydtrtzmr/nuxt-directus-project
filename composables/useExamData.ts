@@ -72,21 +72,32 @@ export function useExamData() {
         )) as PaperSections[];
 
         console.log("submittedSectionsResponse:", submittedSectionsResponse);
+        console.log("sections:", sections);
 
         submittedSectionsResponse.sort(
             (a, b) => (a.sort_in_paper || 0) - (b.sort_in_paper || 0)
         );
         const sectionList = submittedSectionsResponse;
 
+        // const sectionList = sections;
+
         const question_id_list_local = ref<string[]>([]);
         const question_groups_id_list_local = ref<string[]>([]);
 
+        // 注意：这里传递的是paper_sections_question的id列表（字符串列表）
         const paper_sections_question_ids = sectionList.flatMap(
             (s) => s.questions
         );
+        console.log("paper_sections_question_ids:");
+        console.log(paper_sections_question_ids);
+        
+
         const paper_section_question_group_ids = sectionList.flatMap(
             (s) => s.question_groups
         );
+        console.log("paper_section_question_group_ids:");
+        console.log(paper_section_question_group_ids);
+        
 
         let allSectionQuestions: PaperSectionsQuestions[] = [];
         if (paper_sections_question_ids.length > 0) {
@@ -104,6 +115,9 @@ export function useExamData() {
                 new Set(question_id_list_local.value.concat(allQuestionIds))
             );
         }
+
+        console.log("allSectionQuesions:", allSectionQuestions);
+        
 
         let allSectionQuestionGroups: PaperSectionsQuestionGroups[] = [];
         const groupModeSectionIds = sectionList
@@ -224,6 +238,8 @@ export function useExamData() {
             "submittedPaperSections.value:",
             submittedPaperSections.value
         );
+
+        // 接下来，根据sectionList中的question_mode，来确定初始化哪个问题
         if (sectionList.length > 0) {
             if (
                 sectionList[0].question_mode === "group" &&
@@ -258,6 +274,7 @@ export function useExamData() {
                     groupQuestions: sortedGroupQuestions,
                 };
             } else if (
+                // 如果不是group模式，则直接取第一个问题
                 sectionList[0].questions &&
                 sectionList[0].questions.length > 0
             ) {

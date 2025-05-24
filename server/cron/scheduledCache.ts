@@ -28,7 +28,9 @@ const comprehensivePaperFields = [
     "paper_sections.questions",
     "paper_sections.questions.id",
     "paper_sections.questions.sort_in_section",
+    "paper_sections.questions.paper_sections_id",
     // 章节中的问题 (通过 paper_sections_questions 关联)
+    "paper_sections.questions.questions_id.id",
     "paper_sections.questions.questions_id.stem",
     "paper_sections.questions.questions_id.type",
     "paper_sections.questions.questions_id.analysis",
