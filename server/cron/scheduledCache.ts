@@ -47,12 +47,25 @@ const comprehensivePaperFields = [
     "paper_sections.question_groups",
     "paper_sections.question_groups.id",
     "paper_sections.question_groups.question_groups_id.id", // 这是 question_groups 集合中项的 ID
-    "paper_sections.question_groups.question_groups_id.questions.*",
+    "paper_sections.question_groups.question_groups_id.questions.id",
     "paper_sections.question_groups.question_groups_id.shared_stem",
+    // 题组中的问题（这边可以优化 TODO）
+    "paper_sections.question_groups.question_groups_id.questions.id",
+    "paper_sections.question_groups.question_groups_id.questions.stem",
+    "paper_sections.question_groups.question_groups_id.questions.type",
+    "paper_sections.question_groups.question_groups_id.questions.analysis",
+    "paper_sections.question_groups.question_groups_id.questions.q_mc_single.*",
+    "paper_sections.question_groups.question_groups_id.questions.q_mc_multi.*",
+    "paper_sections.question_groups.question_groups_id.questions.q_mc_binary.*",
+    "paper_sections.question_groups.question_groups_id.questions.q_mc_flexible.*",
+    "paper_sections.question_groups.question_groups_id.questions.question_group.id",
+    "paper_sections.question_groups.question_groups_id.questions.sort_in_group",
+    "paper_sections.question_groups.question_groups_id.questions.correct_ans_select_radio",
+    "paper_sections.question_groups.question_groups_id.questions.correct_ans_select_multiple_checkbox",
     "paper_sections.question_groups.sort_in_section", // 题组在章节内的排序
 ];
 
-export default defineCronHandler("everyFiveMinutes", async () => {
+export default defineCronHandler("everyMinute", async () => {
     console.log("scheduledCache");
     
     // 设置试卷列表缓存（包含完整的试卷数据）
@@ -71,7 +84,7 @@ export default defineCronHandler("everyFiveMinutes", async () => {
                 })
             ),
         "id",
-        600 // 缓存时间，例如1小时 (3600秒)
+        60 // 缓存时间，例如1小时 (3600秒)
     );
 });
 
