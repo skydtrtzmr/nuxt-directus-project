@@ -59,7 +59,10 @@ export async function fillInput(
 // 返回 true 表示当前的路径 path 满足了你期望的导航成功条件。
 // 返回 false 表示当前路径还不满足条件。
 // 在 waitForNavigation 函数内部，会不断地获取当前页面的路径，并调用 pathCondition 函数，把当前路径传给它。如果 pathCondition 返回 true，waitForNavigation 就认为导航已经成功完成。如果超时仍未满足条件，则认为导航失败。
+// [2025-05-25] 注意，此函数仅仅用于等待验证是否成功跳转，本身并不包含跳转逻辑。
 export async function waitForNavigation(router: any, pathCondition: (path: string) => boolean, timeout = 10000): Promise<boolean> {
+    console.log("waitForNavigation");
+    
     const startTime = Date.now();
     while (Date.now() - startTime < timeout) {
         // console.log("router.currentRoute.value:", router.currentRoute.value);

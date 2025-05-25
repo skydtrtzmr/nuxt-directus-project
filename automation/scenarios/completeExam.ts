@@ -343,9 +343,9 @@ export async function runCompleteExamScenario(
                 endDialogMessageElementButton &&
                 !endDialogMessageElementButton.disabled
             ) {
-                // console.log(
-                //     "自动化测试：检测到'已经是最后一题'提示框，点击确定并准备交卷。"
-                // );
+                console.log(
+                    "自动化测试：检测到'已经是最后一题'提示框，点击确定并准备交卷。"
+                );
                 endDialogMessageElementButton.click();
                 await delay(500);
                 break;
@@ -374,26 +374,36 @@ export async function runCompleteExamScenario(
     submitExamButton.scrollIntoView({ behavior: "smooth", block: "center" });
     await delay(400);
     submitExamButton.click();
-    // console.log("自动化测试：已点击最终的提交考试按钮。");
+    console.log("自动化测试：已点击最终的提交考试按钮。");
 
     await delay(1000);
-    
+
     const confirmSubmitButton = document.querySelector(
         "button[aria-label='确定交卷']"
     ) as HTMLButtonElement | null;
 
-    if (
-        confirmSubmitButton &&
-        !confirmSubmitButton.disabled
-    ) {
-        // console.log(
-        //     "自动化测试：检测到确认提交试卷对话框，点击确定。"
-        // );
+    if (confirmSubmitButton && !confirmSubmitButton.disabled) {
+        // console.log("自动化测试：检测到确认提交试卷对话框，点击确定交卷。");
         confirmSubmitButton.click();
         await delay(500);
-    }else {
+    } else {
         console.warn("自动化测试：确认提交试卷对话框中的确定按钮未找到。");
     }
+
+    // 会弹出提示框“即将退出考试”，需点击确定。
+    const readyToExitExamButton = document.querySelector(
+        "button[aria-label='确定']"
+    ) as HTMLButtonElement | null;  
+
+    if (readyToExitExamButton && !readyToExitExamButton.disabled) {
+        // console.log("自动化测试：检测到提示退出对话框，点击确定。");
+        readyToExitExamButton.click();
+        await delay(500);
+    } else {
+        console.warn("自动化测试：提示退出对话框中的确定按钮未找到。");
+    }
+
+    // 确定后，会自动开始跳转。
 
     const navigatedAfterSubmit = await waitForNavigation(
         router,
