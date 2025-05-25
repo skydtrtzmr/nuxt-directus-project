@@ -1,5 +1,5 @@
 import type { Ref } from "vue";
-import type { PaperSections, Questions } from "~~/types/directus_types";
+import type { PaperSections } from "~~/types/directus_types";
 import type { PaperSectionsQuestionGroups, QuestionGroups } from "~~/types/directus_types";
 
 type EnhancedPaperSectionsQuestionGroups = PaperSectionsQuestionGroups & {
@@ -131,7 +131,7 @@ export function useQuestionNavigation(
 
     const handleQuestionGroupClick = (group: EnhancedPaperSectionsQuestionGroups, section: PaperSections) => {
         const questionGroup = group.question_groups_id;
-        const groupQuestionIds = group.question_groups_id.questions.flatMap((q: Questions) => q.id) || [];
+        const groupQuestionIds = group.group_question_ids || [];
         
         const groupQuestions = section.questions
             .filter(q => groupQuestionIds.includes(q.id))
