@@ -66,15 +66,22 @@
                     />
 
                     <!-- 单题模式 -->
-                    <QuestionContent
+                    <ScrollPanel
                         v-else-if="selectedQuestion"
-                        :selectedQuestion="selectedQuestion"
-                        :exam_page_mode="exam_page_mode"
-                        :renderMarkdown="render"
-                        :groupMode="false"
-                        :currentQuestionResult="currentSingleQuestionResult"
-                        :questionResults="props.questionResults"
-                    />
+                        style="width: 100%; height: 100%"
+                        :pt="{
+                            bary: 'hover:bg-primary-400 bg-primary-300 opacity-100'
+                        }"
+                    >
+                        <QuestionContent
+                            :selectedQuestion="selectedQuestion"
+                            :exam_page_mode="exam_page_mode"
+                            :renderMarkdown="render"
+                            :groupMode="false"
+                            :currentQuestionResult="currentSingleQuestionResult"
+                            :questionResults="props.questionResults"
+                        />
+                    </ScrollPanel>
                 </div>
             </div>
         </div>
@@ -117,6 +124,7 @@ import QuestionContent from "~/components/QuestionContent.vue";
 import QuestionGroupContent from "~/components/QuestionGroupContent.vue";
 import type { QuestionResults, PaperSectionsQuestions, Questions } from "~/types/directus_types";
 import { useMarkdown } from '~/composables/useMarkdown';
+import ScrollPanel from 'primevue/scrollpanel';
 const { render } = useMarkdown();
 
 const props = defineProps<{
