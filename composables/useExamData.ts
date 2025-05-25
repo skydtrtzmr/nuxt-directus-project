@@ -318,23 +318,6 @@ export function useExamData() {
         }
     };
 
-    // 调试日志，用于重构时确认数据
-    watchEffect(() => {
-        console.log("------ 调试日志: useExamData ------");
-        console.log("practiceSession:", practiceSession.value);
-        console.log("paper:", paper.value);
-        console.log("submittedPaperSections:", submittedPaperSections.value);
-        console.log("questionResults:", questionResults.value);
-        console.log("examScore:", examScore.value);
-        console.log("practiceSessionTime:", practiceSessionTime.value);
-        console.log("timerInitParams:", timerInitParams.value);
-        console.log(
-            "shouldShowFinalSubmissionDialog:",
-            shouldShowFinalSubmissionDialog.value
-        );
-        console.log("------------------------------------");
-    });
-
     return {
         practiceSession, // session信息（包括时间，有点重复了，后期优化） TODO
         paper, // 试卷信息

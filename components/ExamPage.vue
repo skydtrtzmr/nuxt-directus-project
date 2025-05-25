@@ -195,6 +195,9 @@ const {
 // selectedQuestion 仍然在 ExamPage.vue 中管理，但其初始值将由 loadExamData 设置
 const selectedQuestion = ref({} as any);
 
+// 提前调用 loadExamData
+loadExamData(practice_session_id, props.exam_page_mode, selectedQuestion);
+
 const {
     navBoundaryDialogVisible: nav_boundary_dialog_visible,
     navBoundaryMessage: nav_boundary_dialog_message,
@@ -339,15 +342,16 @@ watch(isTimeUp, async (newIsTimeUp) => {
 });
 
 const isClient = ref(false);
-
 const currentTime_display_local = ref("");
 const currentTimeInterval_local = ref<any>(null);
 
 const updateCurrentTime_local = () => {
     currentTime_display_local.value = dayjs().format("MM-DD HH:mm:ss");
 };
+
 const startCurrentTimeUpdate_local = () => {
-    if (isClient.value) {
+    // 确保在客户端环境下并且计时器未启动时才执行
+    if (isClient.value && !currentTimeInterval_local.value) {
         updateCurrentTime_local();
         currentTimeInterval_local.value = setInterval(
             updateCurrentTime_local,
@@ -356,18 +360,35 @@ const startCurrentTimeUpdate_local = () => {
     }
 };
 
-onMounted(async () => {
-    await loadExamData(practice_session_id, props.exam_page_mode, selectedQuestion);
+// 监听 practiceSession 的变化，以便在数据加载完成后启动本地时间更新
+watch(practiceSession, (currentPracticeSession) => {
+    if (currentPracticeSession && currentPracticeSession.id && isClient.value && !currentTimeInterval_local.value) {
+        // 仅当考试未完成或为复习模式时启动
+        if (
+            currentPracticeSession.submit_status !== "done" ||
+            props.exam_page_mode === "review"
+        ) {
+            startCurrentTimeUpdate_local();
+        }
+    }
+}, { deep: true });
 
-    await nextTick();
+onMounted(async () => {
+    // loadExamData 已移至 setup 顶部
+
+    await nextTick(); // 确保 DOM 更新完成
     isClient.value = true;
 
-    // 仅当考试未完成时（即 loadExamData 没有提前返回），才启动本地时间更新
-    if (
-        practiceSession.value.submit_status !== "done" ||
-        props.exam_page_mode === "review"
-    ) {
-        startCurrentTimeUpdate_local();
+    // 在组件挂载后，如果 practiceSession 数据已存在 (可能由提前的 loadExamData 加载)
+    // 并且满足条件，则尝试启动本地时间更新。
+    // watch 会处理 practiceSession 数据在 isClient.value 变为 true 后才可用的情况。
+    if (practiceSession.value && practiceSession.value.id && !currentTimeInterval_local.value) {
+        if (
+            practiceSession.value.submit_status !== "done" ||
+            props.exam_page_mode === "review"
+        ) {
+            startCurrentTimeUpdate_local();
+        }
     }
 
     const loadingStateStore = useLoadingStateStore();
