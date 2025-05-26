@@ -9,11 +9,15 @@ import type {
     PaperSectionsQuestionGroups,
     QuestionGroups,
 } from "~~/types/directus_types";
-import { useDirectusItems } from "#imports"; // Nuxt auto-imports
-
-const config = useRuntimeConfig();
+import { useDirectusItems, useRuntimeConfig } from "#imports"; // Nuxt auto-imports
 
 export function useExamData() {
+    const config = useRuntimeConfig();
+    // 注意，这个一定要写在函数内部。
+    // 这样，useRuntimeConfig() 只有在 useExamData 这个组合式函数被实际调用时（例如，在 ExamPage.vue 的 setup 函数中）才会执行，此时 Nuxt 的上下文是可用的。
+    // 否则，如果写在外面，这行代码在 useExamData.ts 模块被导入和首次评估时就会执行。在页面刷新（特别是首次加载或 SSR 期间）的某些阶段，这个执行时机可能早于 Nuxt 应用实例完全准备好并提供给 useRuntimeConfig() 所需的上下文。于是变回导致报错：
+    // 500 [nuxt] A composable that requires access to the Nuxt instance was called outside of a plugin, Nuxt hook, Nuxt middleware, or Vue setup function.
+
     const { getItemById, getItems } = useDirectusItems();
 
     const practiceSession = ref<PracticeSessions>({} as PracticeSessions);
