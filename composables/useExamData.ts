@@ -11,6 +11,8 @@ import type {
 } from "~~/types/directus_types";
 import { useDirectusItems } from "#imports"; // Nuxt auto-imports
 
+const config = useRuntimeConfig();
+
 export function useExamData() {
     const { getItemById, getItems } = useDirectusItems();
 
@@ -64,46 +66,63 @@ export function useExamData() {
         const sectionList = sections;
 
         // 开始：为 section.question_groups 添加 group_question_ids
-        sectionList.forEach(section => {
+        sectionList.forEach((section) => {
             // 只处理题组模式的section，并且确保相关数组存在
-            if (section.question_mode === 'group' && Array.isArray(section.question_groups) && Array.isArray(section.questions)) {
+            if (
+                section.question_mode === "group" &&
+                Array.isArray(section.question_groups) &&
+                Array.isArray(section.questions)
+            ) {
                 // 构建一个映射：question_group_id -> PaperSectionsQuestions.id[]
                 const groupToQuestionIdsMap = new Map<string, string[]>();
                 console.log("开始映射");
                 // 注意，paper_sections_questions的id类型为int。
-                section.questions.forEach(psq => { // psq 是 PaperSectionsQuestions 类型的题目项
+                section.questions.forEach((psq) => {
+                    // psq 是 PaperSectionsQuestions 类型的题目项
                     if (psq.questions_id && psq.questions_id.question_group) {
                         let questionGroupId: string | undefined;
                         // 获取题目所属题组的ID
-                        if (typeof psq.questions_id.question_group === 'string') {
+                        if (
+                            typeof psq.questions_id.question_group === "string"
+                        ) {
                             questionGroupId = psq.questions_id.question_group;
-                        } else if (psq.questions_id.question_group && typeof psq.questions_id.question_group.id === 'string') {
-                            questionGroupId = psq.questions_id.question_group.id;
+                        } else if (
+                            psq.questions_id.question_group &&
+                            typeof psq.questions_id.question_group.id ===
+                                "string"
+                        ) {
+                            questionGroupId =
+                                psq.questions_id.question_group.id;
                         }
                         console.log("questionGroupId：");
                         console.log(questionGroupId);
-                        
+
                         console.log("psq.id:");
                         console.log(psq.id);
-                        
-                        
-                        if (questionGroupId && typeof psq.id === 'number') {
+
+                        if (questionGroupId && typeof psq.id === "number") {
                             if (!groupToQuestionIdsMap.has(questionGroupId)) {
                                 groupToQuestionIdsMap.set(questionGroupId, []);
                             }
-                            groupToQuestionIdsMap.get(questionGroupId)!.push(psq.id);
+                            groupToQuestionIdsMap
+                                .get(questionGroupId)!
+                                .push(psq.id);
                         }
                     }
                 });
 
                 // 为 section.question_groups 中的每个题组对象添加 group_question_ids 字段
-                section.question_groups.forEach(psqg => { // psqg 是 PaperSectionsQuestionGroups 类型的题组项
+                section.question_groups.forEach((psqg) => {
+                    // psqg 是 PaperSectionsQuestionGroups 类型的题组项
                     let actualQuestionGroupId: string | undefined;
                     // 获取当前题组定义的ID
                     if (psqg.question_groups_id) {
-                        if (typeof psqg.question_groups_id === 'string') {
+                        if (typeof psqg.question_groups_id === "string") {
                             actualQuestionGroupId = psqg.question_groups_id;
-                        } else if (psqg.question_groups_id && typeof psqg.question_groups_id.id === 'string') {
+                        } else if (
+                            psqg.question_groups_id &&
+                            typeof psqg.question_groups_id.id === "string"
+                        ) {
                             actualQuestionGroupId = psqg.question_groups_id.id;
                         }
                     }
@@ -111,7 +130,9 @@ export function useExamData() {
                     if (actualQuestionGroupId) {
                         // 将计算得到的题目ID列表赋值给 group_question_ids
                         // 使用 'as any' 是因为我们动态地向现有类型添加属性
-                        (psqg as any).group_question_ids = groupToQuestionIdsMap.get(actualQuestionGroupId) || [];
+                        (psqg as any).group_question_ids =
+                            groupToQuestionIdsMap.get(actualQuestionGroupId) ||
+                            [];
                     } else {
                         // 如果题组没有有效ID，则关联一个空列表
                         (psqg as any).group_question_ids = [];
@@ -178,7 +199,8 @@ export function useExamData() {
         current_selected_question_ref: Ref<any>
     ) => {
         const paperFullData: Papers = await $fetch(
-            `/api/papers/full/${paperId}`
+            // `/api/papers/full/${paperId}`
+            `${config.public.directus.url}fetch-paper-cache-endpoint/papers/${paperId}`
         );
         console.log("paperFullData:");
         console.log(paperFullData);
