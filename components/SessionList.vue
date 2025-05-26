@@ -565,9 +565,6 @@ const getSubmitStatusAction = (practice_session: PracticeSessions) => {
 };
 
 // 获取环境变量，确定是否运行测试
-const {
-    public: { isTest },
-} = useRuntimeConfig();
 
 onMounted(async () => {
     await fetchPracticeSessions(); // 注意要await！确保PracticeSessions.value已经被赋值
