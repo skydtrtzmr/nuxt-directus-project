@@ -7,8 +7,6 @@
 </template>
 
 <script setup lang="ts">
-// import { onMounted } from "vue";
-// import { useAuth } from "~/stores/auth";
 import { onMounted, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 // import { useRuntimeConfig } from '#app'; // No longer directly used here for isTest
