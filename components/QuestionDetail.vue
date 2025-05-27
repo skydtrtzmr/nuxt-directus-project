@@ -205,6 +205,8 @@ const unifiedFlagLabel = computed(() => {
 const handleUnifiedToggleFlag = async () => {
     if (props.exam_page_mode === 'review') return;
     const { updateItem } = useDirectusItems();
+    const MAX_RETRIES = 3;
+    const RETRY_DELAY_MS = 1000;
 
     if (!isGroupMode.value) {
         // --- Single Question Mode --- 
@@ -218,23 +220,36 @@ const handleUnifiedToggleFlag = async () => {
         const resultIndex = props.questionResults.findIndex(qr => qr.id === resultIdToUpdate);
         let originalResultData: QuestionResults | null = null;
 
+        // 乐观更新
         if (resultIndex !== -1) {
             originalResultData = JSON.parse(JSON.stringify(props.questionResults[resultIndex]));
             props.questionResults[resultIndex].is_flagged = newFlagStatus;
         } else {
             console.warn("Cannot find single question result in local array to optimistically update flag.");
         }
-        try {
-            await updateItem<QuestionResults>({
-                collection: "question_results",
-                id: resultIdToUpdate,
-                item: { is_flagged: newFlagStatus },
-            });
-            console.log(`单题 (Result ID: ${resultIdToUpdate}) 标记状态已更新为: ${newFlagStatus}`);
-        } catch (error) {
-            console.error(`更新单题 (Result ID: ${resultIdToUpdate}) 标记状态失败:`, error);
-            if (resultIndex !== -1 && originalResultData) {
-                props.questionResults.splice(resultIndex, 1, originalResultData);
+        // 重试逻辑 
+        let retries = 0;
+        while (retries < MAX_RETRIES) {
+            try {
+                await updateItem<QuestionResults>({
+                    collection: "question_results",
+                    id: resultIdToUpdate,
+                    item: { is_flagged: newFlagStatus },
+                });
+                console.log(`单题 (Result ID: ${resultIdToUpdate}) 标记状态已更新为: ${newFlagStatus}`);
+                return; // 成功
+            } catch (error) {
+                retries++;
+                console.error(`更新单题 (Result ID: ${resultIdToUpdate}) 标记状态失败 (尝试 ${retries}/${MAX_RETRIES}):`, error);
+                if (retries >= MAX_RETRIES) {
+                    console.error("达到最大重试次数，更新单题标记状态失败。");
+                    // 回滚
+                    if (resultIndex !== -1 && originalResultData) {
+                        props.questionResults.splice(resultIndex, 1, originalResultData);
+                    }
+                    return;
+                }
+                await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
             }
         }
     } else {
@@ -246,8 +261,8 @@ const handleUnifiedToggleFlag = async () => {
 
         const targetFlagStatus = !areAllSubQuestionsInGroupFlagged.value;
         const subQuestions = props.selectedQuestion.groupQuestions as PaperSectionsQuestions[];
+        // 构建需要处理的更新列表，并进行乐观更新
         const updatesToProcess: {resultId: string, psqId: string | number, originalResult: QuestionResults | null, newStatus: boolean, resultIndex: number}[] = [];
-
         for (const subQuestion of subQuestions) {
             const result = getResultByPsqId(subQuestion.id);
             if (result && result.id) {
@@ -260,8 +275,7 @@ const handleUnifiedToggleFlag = async () => {
                         newStatus: targetFlagStatus,
                         resultIndex: resultIndex
                     });
-                    // Optimistic update for this sub-question
-                    props.questionResults[resultIndex].is_flagged = targetFlagStatus;
+                    props.questionResults[resultIndex].is_flagged = targetFlagStatus; // 乐观更新
                 }
             } else {
                 console.warn(`No result found for sub-question ${subQuestion.id} in group, cannot toggle flag.`);
@@ -273,28 +287,50 @@ const handleUnifiedToggleFlag = async () => {
             return;
         }
 
-        try {
-            // Sequentially update all sub-questions. 
-            // Consider Promise.all for parallel updates if backend handles it well and order doesn't matter.
-            for (const update of updatesToProcess) {
-                await updateItem<QuestionResults>({
-                    collection: "question_results",
-                    id: update.resultId,
-                    item: { is_flagged: update.newStatus },
-                });
-                console.log(`题组内小题 (PSQ ID: ${update.psqId}, Result ID: ${update.resultId}) 标记状态已更新为: ${update.newStatus}`);
+        // 尝试更新所有子题目的标记状态
+        let overallSuccess = true;
+        for (const update of updatesToProcess) {
+            let retries = 0;
+            let successThisUpdate = false;
+            while (retries < MAX_RETRIES) {
+                try {
+                    await updateItem<QuestionResults>({
+                        collection: "question_results",
+                        id: update.resultId,
+                        item: { is_flagged: update.newStatus },
+                    });
+                    console.log(`题组内小题 (PSQ ID: ${update.psqId}, Result ID: ${update.resultId}) 标记状态已更新为: ${update.newStatus}`);
+                    successThisUpdate = true;
+                    break; // 当前子题目更新成功，跳出重试循环
+                } catch (error) {
+                    retries++;
+                    console.error(`更新题组内小题 (Result ID: ${update.resultId}) 标记状态失败 (尝试 ${retries}/${MAX_RETRIES}):`, error);
+                    if (retries >= MAX_RETRIES) {
+                        console.error(`达到最大重试次数，题组内小题 (Result ID: ${update.resultId}) 标记状态更新失败。`);
+                        overallSuccess = false;
+                        break; // 当前子题目更新失败，跳出重试循环
+                    }
+                    await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
+                }
             }
+            if (!successThisUpdate) {
+                // 如果单个子题目最终失败，也标记整体失败，以便回滚
+                overallSuccess = false;
+            }
+        }
+
+        if (overallSuccess) {
             console.log(`题组标记操作完成，目标状态: ${targetFlagStatus}`);
-        } catch (error) {
-            console.error("更新题组内某个小题标记状态时失败:", error);
-            // Rollback all processed optimistic updates for this group on any error
+        } else {
+            console.error("题组标记操作中至少有一个小题更新失败，将回滚所有更改。");
+            // 如果任何一个子题目的更新最终失败，则回滚所有已进行的乐观更新
             for (const update of updatesToProcess) {
-                 // Check if originalResult is not null before using it for splice.
                 if (update.originalResult && props.questionResults[update.resultIndex]?.id === update.resultId) {
+                     // 仅当 originalResult 存在且本地数组中的项确实是我们要回滚的项时才执行 splice
                     props.questionResults.splice(update.resultIndex, 1, update.originalResult);
                 }
             }
-            alert("标记题组时发生错误，部分或全部标记可能未成功，已尝试回滚。");
+            alert("标记题组时发生错误，部分或全部标记可能未成功，已尝试回滚所有更改。");
         }
     }
 };

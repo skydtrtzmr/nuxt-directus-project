@@ -216,6 +216,11 @@ const updateAnswer = async () => {
     const resultIndex = props.questionResults.findIndex(qr => qr.id === resultIdToUpdate);
     let originalResultDataForRollback: QuestionResults | null = null;
 
+    const MAX_RETRIES = 3;
+    const RETRY_DELAY_MS = 1000;
+    let retries = 0;
+
+    // 乐观更新UI
     if (resultIndex !== -1) {
         originalResultDataForRollback = { ...props.questionResults[resultIndex] };
         const currentLocalAnswer = localAnswer.value;
@@ -230,29 +235,42 @@ const updateAnswer = async () => {
         console.warn("在本地 questionResults 数组中未找到要乐观更新的记录。");
     }
 
-    try {
-        const response = await $fetch(
-            `/question-results-mq/question_result`,
-            {
-                baseURL: url,
-                method: "POST",
-                body: {
-                    collection: "question_results",
-                    id: resultIdToUpdate,
-                    item: newAnswerPayload,
-                },
+    while (retries < MAX_RETRIES) {
+        try {
+            const response = await $fetch(
+                `/question-results-mq/question_result`,
+                {
+                    baseURL: url,
+                    method: "POST",
+                    body: {
+                        collection: "question_results",
+                        id: resultIdToUpdate,
+                        item: newAnswerPayload,
+                    },
+                }
+            );
+            console.log("答案已通过MQ提交更新:", response);
+            return; // 成功，退出函数
+        } catch (error) {
+            retries++;
+            console.error(`通过MQ更新答案时出错 (尝试 ${retries}/${MAX_RETRIES}):`, error);
+            if (retries >= MAX_RETRIES) {
+                console.error("达到最大重试次数，更新答案失败。");
+                // 回滚乐观更新
+                if (resultIndex !== -1 && originalResultDataForRollback) {
+                    props.questionResults.splice(resultIndex, 1, originalResultDataForRollback);
+                    // 恢复 localAnswer 的值
+                    if (props.questionType === "q_mc_multi" || props.questionType === "q_mc_flexible") {
+                        localAnswer.value = Array.isArray(previousAnswer) ? [...previousAnswer] : [];
+                    } else {
+                        localAnswer.value = previousAnswer as string;
+                    }
+                }
+                // 可以考虑在这里通知用户
+                return; // 退出函数
             }
-        );
-        console.log("答案已通过MQ提交更新:", response);
-    } catch (error) {
-        console.error("通过MQ更新答案时出错:", error);
-        if (resultIndex !== -1 && originalResultDataForRollback) {
-            props.questionResults.splice(resultIndex, 1, originalResultDataForRollback);
-            if (props.questionType === "q_mc_multi" || props.questionType === "q_mc_flexible") {
-                localAnswer.value = Array.isArray(previousAnswer) ? [...previousAnswer] : [];
-            } else {
-                localAnswer.value = previousAnswer as string;
-            }
+            // 等待一段时间后重试
+            await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
         }
     }
 };
