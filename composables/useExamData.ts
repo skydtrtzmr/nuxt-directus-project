@@ -64,8 +64,6 @@ export function useExamData() {
         sections: PaperSections[],
         current_selected_question_ref: Ref<any>
     ) => {
-        console.log("sections:");
-        console.log(sections);
 
         const sectionList = sections;
 
@@ -79,7 +77,6 @@ export function useExamData() {
             ) {
                 // 构建一个映射：question_group_id -> PaperSectionsQuestions.id[]
                 const groupToQuestionIdsMap = new Map<string, string[]>();
-                console.log("开始映射");
                 // 注意，paper_sections_questions的id类型为int。
                 section.questions.forEach((psq) => {
                     // psq 是 PaperSectionsQuestions 类型的题目项
@@ -98,11 +95,6 @@ export function useExamData() {
                             questionGroupId =
                                 psq.questions_id.question_group.id;
                         }
-                        console.log("questionGroupId：");
-                        console.log(questionGroupId);
-
-                        console.log("psq.id:");
-                        console.log(psq.id);
 
                         if (questionGroupId && typeof psq.id === "number") {
                             if (!groupToQuestionIdsMap.has(questionGroupId)) {
@@ -147,10 +139,6 @@ export function useExamData() {
         // 结束：为 section.question_groups 添加 group_question_ids
 
         submittedPaperSections.value = sectionList;
-        console.log(
-            "submittedPaperSections.value:",
-            submittedPaperSections.value
-        );
 
         // 接下来，根据sectionList中的question_mode，来确定初始化哪个问题
         if (sectionList.length > 0) {
