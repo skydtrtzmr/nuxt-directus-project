@@ -38,26 +38,30 @@ export function useExamData() {
 
     const fetchQuestionResults = async (practice_session_id: string) => {
         // 这个依然保持从directus直接获取，而非从redis获取。
-        const questionResultsData = await getItems<QuestionResults>({
-            collection: "question_results",
-            params: {
-                filter: {
-                    practice_session_id,
-                },
-                fields: [
-                    "id",
-                    "practice_session_id",
-                    "question_in_paper_id",
-                    "question_type",
-                    "point_value",
-                    "score",
-                    "submit_ans_select_radio",
-                    "submit_ans_select_multiple_checkbox",
-                    "is_flagged",
-                ],
-            },
-        });
-        questionResults.value = questionResultsData;
+        // const questionResultsData = await getItems<QuestionResults>({
+        //     collection: "question_results",
+        //     params: {
+        //         filter: {
+        //             practice_session_id,
+        //         },
+        //         fields: [
+        //             "id",
+        //             "practice_session_id",
+        //             "question_in_paper_id",
+        //             "question_type",
+        //             "point_value",
+        //             "score",
+        //             "submit_ans_select_radio",
+        //             "submit_ans_select_multiple_checkbox",
+        //             "is_flagged",
+        //         ],
+        //     },
+        // });
+
+        const questionResultsData = await $fetch(
+            `${config.public.directus.url}fetch-practice-session-cache-endpoint/practice_session_qresults/${practice_session_id}/qresults`
+        );
+        questionResults.value = questionResultsData as QuestionResults[];
     };
 
     const fetchSubmittedSectionsList = async (
@@ -185,6 +189,7 @@ export function useExamData() {
         }
     };
 
+    // 在这一步获取了试卷的全部静态数据（题干、选项等）
     const fetchSubmittedPaper = async (
         paperId: string,
         current_practice_session_id: string,
