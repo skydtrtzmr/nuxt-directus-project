@@ -18,6 +18,10 @@ export async function runNavigateToExamsFromHomepageScenario(router: Router): Pr
     
     // index.vue 的 onMounted 逻辑是直接跳转
     // console.log("Automation: Assuming index.vue will redirect to /exams. Waiting for redirection...");
+
+    // 要先执行跳转，然后再开始等待
+    router.push('/exams');
+
     // 等待跳转到 /exams
     const navigated = await waitForNavigation(router, path => path === '/exams', 10000);
     if (navigated) {

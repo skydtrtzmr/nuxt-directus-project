@@ -2,7 +2,7 @@
 <!-- 这里是通用选择题内容组件 -->
 <template>
     <div
-        v-if="questionData && questionData.questions_id && questionData.result"
+        v-if="questionData && questionData.questions_id && currentQuestionResult"
     >
         <!-- 题干 -->
         <div
@@ -68,11 +68,11 @@
             </div>
         </BlockUI>
     </div>
-    <template v-if="showResult">
+    <template v-if="showResult && currentQuestionResult">
         <Divider />
         <!-- 以下是答题结果区域 -->
         <QuestionResult
-            :questionResult="questionData.result"
+            :questionResult="currentQuestionResult"
             :questionData="questionData"
             :question_type="dynamicQuestionTypeForQuestionResult"
             :renderMarkdown="renderMarkdown"
@@ -106,7 +106,14 @@ const props = defineProps<{
     exam_page_mode: string;
     renderMarkdown: (content: string) => string;
     questionType: QuestionType;
+    currentQuestionResult: QuestionResults | null;
+    questionResults: QuestionResults[];
 }>();
+
+console.log("props.questionData.questions_id.stem", props.questionData.questions_id.stem);
+
+console.log("renderMarkdown", props.renderMarkdown(props.questionData.questions_id.stem));
+
 
 const dynamicQuestionTypeForQuestionResult = computed(() => {
     return props.questionType;
@@ -140,28 +147,25 @@ const localAnswer = ref<string | string[]>(
  * 这确保了切换题目时能显示正确的已选答案
  */
 watch(
-    () => props.questionData,
-    (newQuestionData) => {
+    () => props.currentQuestionResult,
+    (newResult) => {
         if (
             props.questionType === "q_mc_multi" ||
             props.questionType === "q_mc_flexible"
         ) {
-            if (newQuestionData?.result?.submit_ans_select_multiple_checkbox) {
+            if (newResult?.submit_ans_select_multiple_checkbox) {
                 localAnswer.value = Array.isArray(
-                    newQuestionData.result.submit_ans_select_multiple_checkbox
+                    newResult.submit_ans_select_multiple_checkbox
                 )
-                    ? [
-                          ...newQuestionData.result
-                              .submit_ans_select_multiple_checkbox,
-                      ]
+                    ? [...newResult.submit_ans_select_multiple_checkbox]
                     : [];
             } else {
                 localAnswer.value = [];
             }
         } else {
-            if (newQuestionData?.result?.submit_ans_select_radio) {
+            if (newResult?.submit_ans_select_radio) {
                 localAnswer.value =
-                    newQuestionData.result.submit_ans_select_radio;
+                    newResult.submit_ans_select_radio;
             } else {
                 localAnswer.value = "";
             }
@@ -186,69 +190,93 @@ const blockQuestion = computed(() => {
     return props.exam_page_mode === "review";
 });
 
-const { updateItem } = useDirectusItems();
-
 /**
  * 更新答案到数据库
  * 当用户选择答案时触发，将结果保存到question_results表
  */
 const updateAnswer = async () => {
-    if (!props.questionData?.result?.id) return;
+    if (!props.currentQuestionResult || !props.currentQuestionResult.id) {
+        console.error("无法更新答案：currentQuestionResult 或其 ID 缺失。");
+        return;
+    }
+    if (!props.questionResults || !Array.isArray(props.questionResults)) {
+        console.error("无法更新答案：questionResults prop 未定义或不是数组。父组件可能未正确传递。");
+        return;
+    }
 
-    try {
-        let submitted_question: any = {};
-        if (
-            props.questionType === "q_mc_multi" ||
-            props.questionType === "q_mc_flexible"
-        ) {
-            submitted_question.submit_ans_select_multiple_checkbox =
-                localAnswer.value;
-        } else {
-            submitted_question.submit_ans_select_radio = localAnswer.value;
-        }
+    const resultIdToUpdate = props.currentQuestionResult.id;
+    let newAnswerPayload: any = {};
+    let previousAnswer: any;
 
-        // 更新答案到数据库
-        // const response = await updateItem<QuestionResults>({
-        //     collection: "question_results",
-        //     id: props.questionData.result.id,
-        //     item: submitted_question,
-        // });
+    if (props.questionType === "q_mc_multi" || props.questionType === "q_mc_flexible") {
+        newAnswerPayload.submit_ans_select_multiple_checkbox = localAnswer.value;
+        previousAnswer = Array.isArray(props.currentQuestionResult.submit_ans_select_multiple_checkbox)
+            ? [...props.currentQuestionResult.submit_ans_select_multiple_checkbox]
+            : [];
+    } else {
+        newAnswerPayload.submit_ans_select_radio = localAnswer.value;
+        previousAnswer = props.currentQuestionResult.submit_ans_select_radio;
+    }
 
-        // [2025-05-16] 不再直接更新数据库，而是通过消息队列更新
-        const response = await $fetch(
-            `/question-results-mq/question_result`,
-            {
-                baseURL: url,
-                method: "POST",
-                body: {
-                    collection: "question_results",
-                    id: props.questionData.result.id,
-                    item: submitted_question,
-                },
-            }
-        );
+    const resultIndex = props.questionResults.findIndex(qr => qr.id === resultIdToUpdate);
+    let originalResultDataForRollback: QuestionResults | null = null;
 
-        // 确保更新本地状态以反映在UI上
-        if (response) {
-            // 更新本地props中的数据，这样在下次渲染时能够显示正确的答案
-            if (props.questionData && props.questionData.result) {
-                if (
-                    props.questionType === "q_mc_multi" ||
-                    props.questionType === "q_mc_flexible"
-                ) {
-                    props.questionData.result.submit_ans_select_multiple_checkbox =
-                        Array.isArray(localAnswer.value)
-                            ? [...localAnswer.value]
-                            : [];
-                } else {
-                    props.questionData.result.submit_ans_select_radio =
-                        localAnswer.value;
+    const MAX_RETRIES = 3;
+    const RETRY_DELAY_MS = 1000;
+    let retries = 0;
+
+    // 乐观更新UI
+    if (resultIndex !== -1) {
+        originalResultDataForRollback = { ...props.questionResults[resultIndex] };
+        const currentLocalAnswer = localAnswer.value;
+        const updatedResultItem = {
+            ...props.questionResults[resultIndex],
+            ...(props.questionType === "q_mc_multi" || props.questionType === "q_mc_flexible"
+                ? { submit_ans_select_multiple_checkbox: Array.isArray(currentLocalAnswer) ? [...currentLocalAnswer] : [] }
+                : { submit_ans_select_radio: currentLocalAnswer as string })
+        };
+        props.questionResults.splice(resultIndex, 1, updatedResultItem);
+    } else {
+        console.warn("在本地 questionResults 数组中未找到要乐观更新的记录。");
+    }
+
+    while (retries < MAX_RETRIES) {
+        try {
+            const response = await $fetch(
+                `/question-results-mq/question_result`,
+                {
+                    baseURL: url,
+                    method: "POST",
+                    body: {
+                        collection: "question_results",
+                        id: resultIdToUpdate,
+                        item: newAnswerPayload,
+                    },
                 }
+            );
+            console.log("答案已通过MQ提交更新:", response);
+            return; // 成功，退出函数
+        } catch (error) {
+            retries++;
+            console.error(`通过MQ更新答案时出错 (尝试 ${retries}/${MAX_RETRIES}):`, error);
+            if (retries >= MAX_RETRIES) {
+                console.error("达到最大重试次数，更新答案失败。");
+                // 回滚乐观更新
+                if (resultIndex !== -1 && originalResultDataForRollback) {
+                    props.questionResults.splice(resultIndex, 1, originalResultDataForRollback);
+                    // 恢复 localAnswer 的值
+                    if (props.questionType === "q_mc_multi" || props.questionType === "q_mc_flexible") {
+                        localAnswer.value = Array.isArray(previousAnswer) ? [...previousAnswer] : [];
+                    } else {
+                        localAnswer.value = previousAnswer as string;
+                    }
+                }
+                // 可以考虑在这里通知用户
+                return; // 退出函数
             }
+            // 等待一段时间后重试
+            await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
         }
-        console.log("答案已成功更新:", response);
-    } catch (error) {
-        console.error("更新答案时出错:", error);
     }
 };
 
@@ -257,10 +285,10 @@ const updateAnswer = async () => {
  * 用于在UI上显示不同样式
  */
 const isCorrectAnswer = computed(() => {
-    if (!props.questionData?.result) return false;
+    if (!props.currentQuestionResult) return false;
     return (
-        props.questionData.result.point_value ===
-        props.questionData.result.score
+        props.currentQuestionResult.point_value ===
+        props.currentQuestionResult.score
     );
 });
 

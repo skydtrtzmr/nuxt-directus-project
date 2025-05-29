@@ -5,7 +5,7 @@ export async function delay(ms: number): Promise<void> {
 
 export async function waitForElement(
     selector: string,
-    timeout = 10000 // 增加默认超时时间
+    timeout = 20000 // 增加默认超时时间
 ): Promise<Element | null> {
     const startTime = Date.now();
     while (Date.now() - startTime < timeout) {
@@ -23,7 +23,7 @@ export async function waitForElement(
     return null;
 }
 
-export async function clickElement(selector: string, timeout = 10000): Promise<boolean> {
+export async function clickElement(selector: string, timeout = 20000): Promise<boolean> {
     const element = await waitForElement(selector, timeout);
     if (element) {
         (element as HTMLElement).click();
@@ -37,7 +37,7 @@ export async function clickElement(selector: string, timeout = 10000): Promise<b
 export async function fillInput(
     selector: string,
     value: string,
-    timeout = 10000
+    timeout = 20000
 ): Promise<boolean> {
     const element = (await waitForElement(selector, timeout)) as HTMLInputElement | null;
     if (element) {
@@ -59,7 +59,10 @@ export async function fillInput(
 // 返回 true 表示当前的路径 path 满足了你期望的导航成功条件。
 // 返回 false 表示当前路径还不满足条件。
 // 在 waitForNavigation 函数内部，会不断地获取当前页面的路径，并调用 pathCondition 函数，把当前路径传给它。如果 pathCondition 返回 true，waitForNavigation 就认为导航已经成功完成。如果超时仍未满足条件，则认为导航失败。
-export async function waitForNavigation(router: any, pathCondition: (path: string) => boolean, timeout = 10000): Promise<boolean> {
+// [2025-05-25] 注意，此函数仅仅用于等待验证是否成功跳转，本身并不包含跳转逻辑。
+export async function waitForNavigation(router: any, pathCondition: (path: string) => boolean, timeout = 20000): Promise<boolean> {
+    console.log("waitForNavigation");
+    
     const startTime = Date.now();
     while (Date.now() - startTime < timeout) {
         // console.log("router.currentRoute.value:", router.currentRoute.value);

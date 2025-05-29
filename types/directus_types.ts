@@ -467,6 +467,7 @@ export type Exercises = {
   duration: number;
   end_time: string;
   id: string;
+  mode?: string | null;
   paper?: string | Papers | null;
   sort?: number | null;
   start_time: string;
@@ -800,6 +801,19 @@ export type QuestionGroups = {
   user_updated?: string | DirectusUsers | null;
 };
 
+export type QuestionMistakes = {
+  date_created?: string | null;
+  date_updated?: string | null;
+  id: string;
+  question?: string | Questions | null;
+  sort?: number | null;
+  status: string;
+  student?: string | Students | null;
+  user_created?: string | DirectusUsers | null;
+  user_updated?: string | DirectusUsers | null;
+  wrong_count?: number | null;
+};
+
 export type QuestionPointAssignStrategies = {
   date_created?: string | null;
   date_updated?: string | null;
@@ -1041,6 +1055,7 @@ export type CustomDirectusTypes = {
   q_spreadsheet_scoring_groups: QSpreadsheetScoringGroups[];
   q_spreadsheet_scoring_items: QSpreadsheetScoringItems[];
   question_groups: QuestionGroups[];
+  question_mistakes: QuestionMistakes[];
   question_point_assign_strategies: QuestionPointAssignStrategies[];
   question_results: QuestionResults[];
   questions: Questions[];

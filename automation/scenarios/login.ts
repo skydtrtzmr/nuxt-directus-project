@@ -76,6 +76,8 @@ export async function runLoginScenario(router: Router): Promise<boolean> {
     );
     if (navigated) {
         // console.log("Automation: Login successful, navigation detected.");
+
+        await delay(1000);
     } else {
         console.warn(
             "Automation: Login might have failed or navigation timed out after submit."

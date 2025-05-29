@@ -59,7 +59,7 @@
                                         class="question-btn-wrapper"
                                     >
                                         <Button
-                                            :severity="isGroupAnswered(group, section) ? 'primary' : 'secondary'"
+                                            :severity="isGroupCompleted(group as EnhancedPaperSectionGroup, section) ? 'primary' : 'secondary'"
                                             class="question-card"
                                             :class="{
                                                 'selected': selectedQuestion && 
@@ -74,7 +74,7 @@
                                         >
                                             {{ group.sort_in_section }}
                                         </Button>
-                                        <span class="flag-indicator" :class="{'visible': isGroupFlagged(group, section)}">?</span>
+                                        <span class="flag-indicator" :class="{'visible': isGroupFlagged(group as EnhancedPaperSectionGroup, section)}">?</span>
                                     </div>
                                 </template>
                             </div>
@@ -90,16 +90,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick, watch, onUnmounted } from "vue";
+import { ref, onMounted, nextTick, watch, onUnmounted, computed } from "vue";
 import type {
     PaperSections,
     QuestionResults,
     QuestionGroups,
     Questions,
+    PaperSectionsQuestions,
     PaperSectionsQuestionGroups
 } from "~~/types/directus_types";
 import { useGlobalStore } from "~~/stores/examDone"; // 引入 Pinia store
 import { useLoadingStateStore } from "@/stores/loadingState"; // 引入 Pinia store
+
+// 为从 ExamPage 传递过来的、增加了 group_question_ids 的题组对象定义类型
+interface EnhancedPaperSectionGroup extends PaperSectionsQuestionGroups {
+    group_question_ids?: number[]; // <--- 改为 number[]，因为 PaperSectionsQuestions['id'] 是 number
+}
 
 const props = defineProps<{
     submittedPaperSections: PaperSections[];
@@ -129,6 +135,26 @@ const maxWidth = 600; // 最大宽度
 
 // 控制章节展开/折叠的状态和样式
 const sectionStyles = ref<{ [key: number]: any }>({});
+
+// 新增：创建 questionResultsMap 计算属性
+const questionResultsMap = computed(() => {
+    const map = new Map<string, QuestionResults>();
+    if (props.questionResults) {
+        for (const result of props.questionResults) {
+            let key: string | undefined = undefined;
+            if (typeof result.question_in_paper_id === 'number') {
+                key = String(result.question_in_paper_id);
+            } else if (result.question_in_paper_id && typeof result.question_in_paper_id === 'object' && 'id' in result.question_in_paper_id) {
+                // @ts-ignore
+                key = String(result.question_in_paper_id.id);
+            }
+            if (key !== undefined) {
+                map.set(key, result);
+            }
+        }
+    }
+    return map;
+});
 
 const toggleSidebar = () => {
     isSidebarCollapsed.value = !isSidebarCollapsed.value;
@@ -317,81 +343,70 @@ const handleQuestionGroupClick = async (group: any, section: PaperSections) => {
     }
 };
 
-// 获取题目样式
-const getQuestionSeverity = (question: any | undefined) => {
-    if (!question || !question.result) return "secondary";
-    
-    if (
-        question.result.submit_ans_select_radio ||
-        (question.result.submit_ans_select_multiple_checkbox &&
-            (question.result.submit_ans_select_multiple_checkbox as any[]).length > 0)
-    ) {
-        return "primary";
-    } else {
-        return "secondary";
-    }
+// 新的辅助函数，根据 question_in_paper_id 从 questionResults 中查找结果
+const getQuestionResultById = (questionInPaperId: number | undefined | null): QuestionResults | null => {
+    if (!props.questionResults || questionInPaperId === undefined || questionInPaperId === null) return null;
+    // question_in_paper_id 在 QuestionResults 中是 number | PaperSectionsQuestions | null
+    // PaperSectionsQuestions['id'] 是 number
+    // 因此，这里应该比较 number
+
+    // 修改为从 map 中获取
+    const result = questionResultsMap.value.get(String(questionInPaperId));
+    return result || null;
 };
 
-// 获取题组样式（检查题组内的所有题目是否都已经作答）
-const getQuestionGroupSeverity = (group: any, section: PaperSections) => {
-    // 如果题组ID是对象而非字符串，或者为null
-    const groupId = group.question_groups_id
-        ? (typeof group.question_groups_id === 'string' 
-            ? group.question_groups_id 
-            : group.question_groups_id.id)
-        : null;
-    
-    if (!groupId) return "secondary";
-    
-    // 获取该题组下的所有题目IDs
-    const groupQuestionIds = group.group_question_ids || [];
-    
-    // 如果找不到题目，返回secondary
-    if (groupQuestionIds.length === 0) return "secondary";
-    
-    // 获取该题组对应的实际题目列表
-    const groupQuestions = section.questions.filter(q => groupQuestionIds.includes(q.id));
-    
-    // 检查题组内是否有至少一个题目已作答
-    const hasAnsweredQuestion = groupQuestions.some(question => {
-        if (!question.result) return false;
-        
-        return (
-            question.result.submit_ans_select_radio ||
-            (question.result.submit_ans_select_multiple_checkbox &&
-                (question.result.submit_ans_select_multiple_checkbox as any[]).length > 0)
+// 判断题目是否已回答
+const isQuestionAnswered = (question: PaperSectionsQuestions): boolean => {
+    // question.id 是 PaperSectionsQuestions['id']，类型是 number
+    if (!question || question.id === undefined || question.id === null) return false;
+    const result = getQuestionResultById(question.id);
+    return !!result && (
+        (result.submit_ans_select_radio !== null && result.submit_ans_select_radio !== undefined) ||
+        (Array.isArray(result.submit_ans_select_multiple_checkbox) && result.submit_ans_select_multiple_checkbox.length > 0)
+        // TODO: 添加对其他题目类型答案的判断
+    );
+};
+
+// 判断题目是否被标记
+const isQuestionFlagged = (question: PaperSectionsQuestions): boolean => {
+    if (!question || question.id === undefined || question.id === null) return false;
+    const result = getQuestionResultById(question.id);
+    return !!result && result.is_flagged === true;
+};
+
+// 判断题组内是否有题目已完成/回答 - 用于决定题组按钮的severity 'primary' or 'secondary'
+const isGroupCompleted = (group: EnhancedPaperSectionGroup, section: PaperSections): boolean => {
+    if (!group || !group.group_question_ids || group.group_question_ids.length === 0) return false;
+    const questionIdsInGroup = group.group_question_ids; // <--- 移除不必要的 'as number[]'，类型应该直接匹配
+
+    // 根据之前的逻辑，题组的 'primary' 状态是只要有 *一个* 题目回答了就行
+    return questionIdsInGroup.some(qId => {
+        const result = getQuestionResultById(qId);
+        return !!result && (
+            (result.submit_ans_select_radio !== null && result.submit_ans_select_radio !== undefined) ||
+            (Array.isArray(result.submit_ans_select_multiple_checkbox) && result.submit_ans_select_multiple_checkbox.length > 0)
         );
     });
-    
-    return hasAnsweredQuestion ? "primary" : "secondary";
+};
+
+// 判断题组内是否有任一题目被标记
+const isGroupFlagged = (group: EnhancedPaperSectionGroup, section: PaperSections): boolean => {
+    if (!group || !group.group_question_ids || group.group_question_ids.length === 0) return false;
+    const questionIdsInGroup = group.group_question_ids;
+    // console.log(`[QuestionList] Checking group flags for group ${typeof group.id === 'string' ? group.id : JSON.stringify(group.id)}, question IDs:`, questionIdsInGroup); // 保留此处的 console.log 以便用户确认
+
+    return questionIdsInGroup.some(qId => {
+        const result = getQuestionResultById(qId);
+        // console.log(`[QuestionList] For qId ${qId}, result:`, result ? { id: result.id, flagged: result.is_flagged, q_in_p_id: result.question_in_paper_id } : null); // 保留此处的 console.log 以便用户确认
+        return !!result && result.is_flagged === true;
+    });
 };
 
 // 获取环境变量，确定是否运行测试
-const {
-    public: { isTest },
-} = useRuntimeConfig();
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // 自动化测试部分，仍然保留
 onMounted(async () => {
-    // if (isTest) {
-    //     if (props.exam_page_mode !== "review") {
-    //         // 等待所有题目准备就绪
-    //         await loadingStateStore.waitUntilReady("examPage");
-            
-    //         // 点击所有题目
-    //         await nextTick();
-    //         await delay(500);
-            
-    //         for (const item of refItems.value) {
-    //             item.click();
-    //             await delay(500);
-    //         }
-            
-    //         // 设置全部题目已完成
-    //         globalStore.setAllDone(true);
-    //     }
-    // }
     
     // 检查是否为移动设备，初始化时自动收起
     checkMobileView();
@@ -408,55 +423,6 @@ onUnmounted(() => {
         window.removeEventListener('resize', checkMobileView);
     }
 });
-
-// 判断题目是否被标记为有疑问
-const isQuestionFlagged = (question: any) => {
-    if (!question || !question.result) return false;
-    return question.result.is_flagged === true;
-};
-
-// 判断题组中是否有题目被标记为有疑问
-const isGroupFlagged = (group: any, section: PaperSections) => {
-    // 获取该题组下的所有题目IDs
-    const groupQuestionIds = group.group_question_ids || [];
-    
-    // 如果找不到题目，返回false
-    if (groupQuestionIds.length === 0) return false;
-    
-    // 获取该题组对应的实际题目列表
-    const groupQuestions = section.questions.filter(q => groupQuestionIds.includes(q.id));
-    
-    // 检查题组内是否有至少一个题目被标记
-    return groupQuestions.some(question => isQuestionFlagged(question));
-};
-
-// 判断题目是否已作答
-const isQuestionAnswered = (question: any) => {
-    if (!question || !question.result) return false;
-    
-    return (
-        !!question.result.submit_ans_select_radio ||
-        (question.result.submit_ans_select_multiple_checkbox &&
-            Array.isArray(question.result.submit_ans_select_multiple_checkbox) &&
-            question.result.submit_ans_select_multiple_checkbox.length > 0) ||
-        !!question.result.submit_ans_text
-    );
-};
-
-// 判断题组中是否有题目已作答
-const isGroupAnswered = (group: any, section: PaperSections) => {
-    // 获取该题组下的所有题目IDs
-    const groupQuestionIds = group.group_question_ids || [];
-    
-    // 如果找不到题目，返回false
-    if (groupQuestionIds.length === 0) return false;
-    
-    // 获取该题组对应的实际题目列表
-    const groupQuestions = section.questions.filter(q => groupQuestionIds.includes(q.id));
-    
-    // 检查题组内是否有至少一个题目已作答
-    return groupQuestions.some(question => isQuestionAnswered(question));
-};
 </script>
 
 <style scoped>

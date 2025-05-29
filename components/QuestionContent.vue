@@ -24,6 +24,8 @@
                     :exam_page_mode="exam_page_mode"
                     :renderMarkdown="renderMarkdown"
                     :questionType="selectedQuestion.questions_id.type"
+                    :currentQuestionResult="currentQuestionResult"
+                    :questionResults="props.questionResults"
                 />
             </template>
             
@@ -47,12 +49,15 @@
 <script setup lang="ts">
 import { computed, watch } from "vue";
 import QMcBase from "~/components/question_type/QMcBase.vue";
+import type { QuestionResults } from "~/types/directus_types";
 
 const props = defineProps<{
     selectedQuestion: any | null;
     exam_page_mode: string;
     renderMarkdown: (content: string) => string;
     groupMode: boolean;
+    currentQuestionResult: QuestionResults | null;
+    questionResults: QuestionResults[];
 }>();
 
 // Helper function to get question type label
