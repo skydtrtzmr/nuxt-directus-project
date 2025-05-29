@@ -96,7 +96,7 @@
                     icon="pi pi-arrow-left"
                     label="上一题"
                     class="p-button-outlined p-button-sm"
-                    :aria-label="isGroupMode ? '上一题组' : '上一题'"
+                    :aria-label="isGroupMode ? '上一题' : '上一题'"
                 />
                 <Button 
                     @click="handleUnifiedToggleFlag"
@@ -111,7 +111,7 @@
                     iconPos="right"
                     label="下一题"
                     class="p-button-sm"
-                    :aria-label="isGroupMode ? '下一题组' : '下一题'"
+                    :aria-label="isGroupMode ? '下一题' : '下一题'"
                 />
             </div>
         </div>

@@ -110,6 +110,11 @@ const props = defineProps<{
     questionResults: QuestionResults[];
 }>();
 
+console.log("props.questionData.questions_id.stem", props.questionData.questions_id.stem);
+
+console.log("renderMarkdown", props.renderMarkdown(props.questionData.questions_id.stem));
+
+
 const dynamicQuestionTypeForQuestionResult = computed(() => {
     return props.questionType;
 });
