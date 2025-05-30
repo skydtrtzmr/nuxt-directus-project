@@ -105,9 +105,6 @@ const loginSubmit = async () => {
 };
 
 // 获取环境变量，确定是否运行测试
-const {
-    public: { isTest },
-} = useRuntimeConfig();
 
 </script>
 

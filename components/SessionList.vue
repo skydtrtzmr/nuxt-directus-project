@@ -374,6 +374,7 @@ const fetchPracticeSessions = async () => {
                 "extra_time",
                 "actual_end_time",
                 "actual_start_time",
+                // 这里要获取这个actual_start_time，用来判断是否是首次参加
                 "submit_status",
                 "exercises_students_id.students_id.directus_user",
             ],
@@ -436,74 +437,63 @@ const formatDateTime = (dateTime: any) => {
 
 const joinSession = async (sessionId: string) => {
     // 首先判断考试/练习时间
-    // console.log("当前时间：");
-    // console.log(dayjs(Date.now()));
-    const now_time = dayjs(Date.now());
+    const now_time = dayjs(); // 使用 dayjs() 获取当前时间，更简洁
 
-    const session_info: PracticeSessions = practice_sessions_ref.value.find(
+    const session_info = practice_sessions_ref.value.find(
         (item) => item.id === sessionId
-    )!;
+    );
+
+    if (!session_info) {
+        console.error("[SessionList] Session not found with id:", sessionId);
+        // 可以考虑向用户显示一个错误提示
+        return;
+    }
 
     // 注意因为session可能是字符串或对象，要用"as"来断言类型
-    // console.log("开始时间：");
-    const session_start_time = dayjs(
-        (
-            (session_info.exercises_students_id! as ExercisesStudents)
-                .exercises_id as Exercises
-        ).start_time
-    );
-    // console.log(session_start_time);
+    const exercisesStudentsEntry = session_info.exercises_students_id as ExercisesStudents;
+    const exerciseDetails = exercisesStudentsEntry.exercises_id as Exercises;
 
-    // console.log("结束时间：");
-    const session_end_time = dayjs(
-        (
-            (session_info.exercises_students_id! as ExercisesStudents)
-                .exercises_id as Exercises
-        ).end_time
-    );
-    // console.log(
-    //     dayjs(
-    //         (
-    //             (session_info.exercises_students_id! as ExercisesStudents)
-    //                 .exercises_id as Exercises
-    //         ).end_time
-    //     )
-    // );
+    const session_start_time = dayjs(exerciseDetails.start_time);
+    const session_end_time = dayjs(exerciseDetails.end_time);
 
     if (now_time.isBefore(session_start_time)) {
         not_started_dialog_visible.value = true;
-        // console.log("未到开始时间！");
-
         return;
     }
 
     if (now_time.isAfter(session_end_time)) {
         have_ended_dialog_visible.value = true;
-        // console.log("已过结束时间！");
-
         return;
     }
 
-    // console.log(`参加${sessionTypeText.value}：${sessionId}`);
-    // 参加考试/练习之后，需要修改submit_status为doing。
-    updateSubmitStatus(
-        practice_sessions_ref.value.find((item) => item.id === sessionId)!
-    );
+    try {
+        // 参加考试/练习之后，需要修改submit_status为doing。
+        await updateSubmitStatus(session_info);
 
-    // 只有第一次才记录实际开始时间，以后就不再记录了。
-    if (session_info.actual_start_time === null) {
-        submitActualStartTime(
-            practice_sessions_ref.value.find((item) => item.id === sessionId)!
-        );
+        // 只有第一次才记录实际开始时间，以后就不再记录了。
+        if (session_info.actual_start_time === null) {
+            await submitActualStartTime(session_info);
+            // 成功提交实际开始时间后，可以考虑更新本地的 session_info.actual_start_time
+            // 但由于马上要跳转，下一页会重新获取数据，所以可能不是必须的。
+            // 如果希望立即反映，可以手动更新或重新获取该 session 的数据。
+            // 例如: session_info.actual_start_time = dayjs().toISOString(); // 模拟更新
+        }
+
+        // CAUTION: 注意 (此注释保留，因为是重要提示)
+        // 在更新"实际开始时间"后，要等后台directus根据它和"时长"计算出"实际结束时间"，
+        // 并更新到数据库中，此时页面去获取信息才能确保后续endTime不是null。
+        // 解决方法：要在加载Page时确保expected_end_time字段不为空。
+        // （当前 useExamTimer 的设计是在前端计算结束时间，所以主要依赖 actual_start_time, duration, extra_time 的准确性）
+
+        // 跳转到具体的页面
+        router.push(`/exam/${sessionId}`);
+        // 跳转到具体的页面，页面path的最后一项就是practice_sessions的id。
+    } catch (error) {
+        console.error(`[SessionList] Error joining session ${sessionId}:`, error);
+        // 此处可以向用户显示一个通用错误消息
+        // 例如使用 PrimeVue 的 Toast 服务
+        // toast.add({ severity: 'error', summary: '操作失败', detail: '无法加入，请稍后重试', life: 3000 });
     }
-    // CAUTION: 注意
-    // 在更新"实际开始时间"后，要等后台directus根据它和"时长"计算出"实际结束时间"，
-    // 并更新到数据库中，此时页面去获取信息才能确保后续endTime不是null。
-    // 解决方法：要在加载Page时确保expected_end_time字段不为空。
-
-    // 跳转到具体的页面
-    router.push(`/exam/${sessionId}`);
-    // 跳转到具体的页面，页面path的最后一项就是practice_sessions的id。
 };
 
 const reviewSession = (sessionId: string) => {
@@ -565,9 +555,6 @@ const getSubmitStatusAction = (practice_session: PracticeSessions) => {
 };
 
 // 获取环境变量，确定是否运行测试
-const {
-    public: { isTest },
-} = useRuntimeConfig();
 
 onMounted(async () => {
     await fetchPracticeSessions(); // 注意要await！确保PracticeSessions.value已经被赋值

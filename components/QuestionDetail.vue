@@ -16,63 +16,27 @@
                             {{ selectedQuestion.sort_in_section || "?" }}
                         </span>
                         <template v-if="isGroupMode">
-                            {{
-                                selectedQuestion.questionGroup
-                                    ? selectedQuestion.questionGroup.title ||
-                                      "题组"
-                                    : "题组"
-                            }}
+                            {{ selectedQuestion.questionGroup?.title || "题组" }}
                         </template>
                         <template v-else>
-                            {{ selectedQuestion.questions_id.title || "试题" }}
+                            {{ (selectedQuestion.questions_id as Questions)?.title || "试题" }}
                         </template>
                     </h3>
                     <div class="flex items-center gap-3">
-                        <Button
-                            v-if="!isGroupMode"
-                            :icon="
-                                isQuestionFlagged
-                                    ? 'pi pi-flag-fill'
-                                    : 'pi pi-flag'
-                            "
-                            :class="{ 'p-button-danger': isQuestionFlagged }"
-                            class="p-button-rounded p-button-sm"
-                            @click="toggleQuestionFlag"
-                            :aria-label="
-                                isQuestionFlagged ? '取消标记疑问' : '标记疑问'
-                            "
-                            v-tooltip.bottom="
-                                isQuestionFlagged ? '取消标记疑问' : '标记疑问'
-                            "
-                        />
                         <Tag
                             v-if="
                                 !isGroupMode &&
-                                selectedQuestion.result &&
-                                selectedQuestion.result.point_value
+                                currentSingleQuestionResult &&
+                                currentSingleQuestionResult.point_value !== null &&
+                                currentSingleQuestionResult.point_value !== undefined
                             "
-                            :severity="getScoreSeverity(selectedQuestion)"
+                            :severity="getScoreSeverity"
                             class="font-medium"
                         >
-                            {{ getScoreDisplay(selectedQuestion) }}
+                            {{ getScoreDisplay }}
                         </Tag>
                     </div>
                 </div>
-                <p
-                    v-if="
-                        !isGroupMode &&
-                        selectedQuestion.questions_id.description
-                    "
-                    class="mt-4 text-surface-600 dark:text-surface-400 bg-surface-100 dark:bg-surface-800 p-3 rounded-md"
-                >
-                    <span
-                        v-html="
-                            renderMarkdown(
-                                selectedQuestion.questions_id.description || ''
-                            )
-                        "
-                    ></span>
-                </p>
             </template>
             <div v-else class="text-center p-5 text-surface-500">
                 <i class="pi pi-book mr-2"></i>请选择一个题目开始答题
@@ -95,20 +59,29 @@
                         "
                         :questionGroup="selectedQuestion.questionGroup"
                         :practiceSessionId="practiceSessionId"
-                        :questionResults="questionResults"
+                        :questionResults="props.questionResults"
                         :exam_page_mode="exam_page_mode"
                         :groupQuestions="selectedQuestion.groupQuestions || []"
-                        :renderMarkdown="renderMarkdown"
+                        :renderMarkdown="render"
                     />
 
                     <!-- 单题模式 -->
-                    <QuestionContent
+                    <ScrollPanel
                         v-else-if="selectedQuestion"
-                        :selectedQuestion="selectedQuestion"
-                        :exam_page_mode="exam_page_mode"
-                        :renderMarkdown="renderMarkdown"
-                        :groupMode="false"
-                    />
+                        style="width: 100%; height: 100%"
+                        :pt="{
+                            bary: 'hover:bg-primary-400 bg-primary-300 opacity-100'
+                        }"
+                    >
+                        <QuestionContent
+                            :selectedQuestion="selectedQuestion"
+                            :exam_page_mode="exam_page_mode"
+                            :renderMarkdown="render"
+                            :groupMode="false"
+                            :currentQuestionResult="currentSingleQuestionResult"
+                            :questionResults="props.questionResults"
+                        />
+                    </ScrollPanel>
                 </div>
             </div>
         </div>
@@ -117,12 +90,20 @@
             v-if="selectedQuestion && exam_page_mode !== 'review'"
             class="question-footer p-4 bg-surface-50 dark:bg-surface-700 border-t border-surface-200 dark:border-surface-600"
         >
-            <div class="navigation-buttons flex justify-between">
+            <div class="navigation-buttons flex justify-between items-center">
                 <Button
                     @click="navigateQuestion(-1)"
                     icon="pi pi-arrow-left"
                     label="上一题"
                     class="p-button-outlined p-button-sm"
+                    :aria-label="isGroupMode ? '上一题' : '上一题'"
+                />
+                <Button 
+                    @click="handleUnifiedToggleFlag"
+                    :icon="unifiedFlagIcon"
+                    :label="unifiedFlagLabel"
+                    class="p-button-sm p-button-warning" 
+                    v-tooltip.top="unifiedFlagLabel"
                 />
                 <Button
                     @click="navigateQuestion(1)"
@@ -130,6 +111,7 @@
                     iconPos="right"
                     label="下一题"
                     class="p-button-sm"
+                    :aria-label="isGroupMode ? '下一题' : '下一题'"
                 />
             </div>
         </div>
@@ -140,22 +122,10 @@
 import { watch, computed, ref, onMounted } from "vue";
 import QuestionContent from "~/components/QuestionContent.vue";
 import QuestionGroupContent from "~/components/QuestionGroupContent.vue";
-import type { QuestionResults } from "~/types/directus_types";
-// @ts-ignore
-import markdownit from "markdown-it";
-
-// 创建markdown-it实例
-const md = markdownit({
-    html: true,
-    breaks: true,
-    linkify: true,
-});
-
-// 渲染markdown内容为HTML
-const renderMarkdown = (content: string) => {
-    if (!content) return "";
-    return md.render(content);
-};
+import type { QuestionResults, PaperSectionsQuestions, Questions } from "~/types/directus_types";
+import { useMarkdown } from '~/composables/useMarkdown';
+import ScrollPanel from 'primevue/scrollpanel';
+const { render } = useMarkdown();
 
 const props = defineProps<{
     selectedQuestion: any | null;
@@ -164,11 +134,24 @@ const props = defineProps<{
     questionResults: QuestionResults[];
 }>();
 
-// console.log("selectedQuestion in QuestionDetail", props.selectedQuestion.value);
-
 const emit = defineEmits(["navigate-question"]);
 
-// 判断是否为题组模式
+
+
+// Helper: Get result for a question by its PaperSectionsQuestions ID
+const getResultByPsqId = (psqId: string | number | undefined | null): QuestionResults | null => {
+    if (!props.questionResults || psqId === undefined || psqId === null) return null;
+    const psqIdStr = String(psqId);
+    return props.questionResults.find(qr => {
+        const qrPsq = qr.question_in_paper_id;
+        if (typeof qrPsq === 'object' && qrPsq !== null && 'id' in qrPsq) {
+            return String(qrPsq.id) === psqIdStr;
+        }
+        return String(qrPsq) === psqIdStr;
+    }) || null;
+};
+
+// Is current view in group mode?
 const isGroupMode = computed(() => {
     return (
         props.selectedQuestion &&
@@ -177,66 +160,180 @@ const isGroupMode = computed(() => {
     );
 });
 
-// 判断当前题目是否被标记为有疑问
-const isQuestionFlagged = computed(() => {
-    if (!props.selectedQuestion || !props.selectedQuestion.result) return false;
-    return props.selectedQuestion.result.is_flagged === true;
+// For single question mode: the result of the currently selected single question
+const currentSingleQuestionResult = computed<QuestionResults | null>(() => {
+    if (isGroupMode.value || !props.selectedQuestion || !props.selectedQuestion.id) return null;
+    return getResultByPsqId(props.selectedQuestion.id);
 });
 
-// 切换单题"疑问"标记状态
-// 步骤：
-//  1. 本地翻转 result.is_flagged，立即反馈 UI
-//  2. 调用后端接口更新数据库
-//  3. 用后端返回的 response.is_flagged 再次同步本地状态
-const toggleQuestionFlag = async () => {
-    if (
-        !props.selectedQuestion ||
-        !props.selectedQuestion.result ||
-        !props.selectedQuestion.result.id
-    )
-        return;
+// --- Unified Flagging Logic --- 
 
-    try {
-        // 先更新本地状态，提供即时反馈
-        const updatedFlag = !isQuestionFlagged.value;
-        if (props.selectedQuestion && props.selectedQuestion.result) {
-            props.selectedQuestion.result.is_flagged = updatedFlag;
+// Is the current single question (if not group mode) flagged?
+const isSingleQuestionFlagged = computed(() => {
+    if (isGroupMode.value || !currentSingleQuestionResult.value) return false;
+    return !!currentSingleQuestionResult.value.is_flagged;
+});
+
+// Are all sub-questions in the current group flagged?
+const areAllSubQuestionsInGroupFlagged = computed(() => {
+    if (!isGroupMode.value || !props.selectedQuestion || !props.selectedQuestion.groupQuestions || props.selectedQuestion.groupQuestions.length === 0) {
+        return false; // Not in group mode or no sub-questions
+    }
+    return props.selectedQuestion.groupQuestions.every((subQuestion: PaperSectionsQuestions) => {
+        const result = getResultByPsqId(subQuestion.id);
+        return !!result?.is_flagged;
+    });
+});
+
+// Unified flag icon for the bottom button
+const unifiedFlagIcon = computed(() => {
+    if (isGroupMode.value) {
+        return areAllSubQuestionsInGroupFlagged.value ? 'pi pi-flag-fill' : 'pi pi-flag';
+    }
+    return isSingleQuestionFlagged.value ? 'pi pi-flag-fill' : 'pi pi-flag';
+});
+
+// Unified flag label for the bottom button
+const unifiedFlagLabel = computed(() => {
+    if (isGroupMode.value) {
+        return areAllSubQuestionsInGroupFlagged.value ? '取消标记' : '标记本题';
+    }
+    return isSingleQuestionFlagged.value ? '取消标记' : '标记本题';
+});
+
+// Unified toggle flag function for the bottom button
+const handleUnifiedToggleFlag = async () => {
+    if (props.exam_page_mode === 'review') return;
+    const { updateItem } = useDirectusItems();
+    const MAX_RETRIES = 3;
+    const RETRY_DELAY_MS = 1000;
+
+    if (!isGroupMode.value) {
+        // --- Single Question Mode --- 
+        if (!currentSingleQuestionResult.value || !currentSingleQuestionResult.value.id) {
+            console.warn("Cannot toggle flag: No current single question result or result ID.");
+            return;
+        }
+        const resultIdToUpdate = currentSingleQuestionResult.value.id;
+        const currentFlagStatus = !!currentSingleQuestionResult.value.is_flagged;
+        const newFlagStatus = !currentFlagStatus;
+        const resultIndex = props.questionResults.findIndex(qr => qr.id === resultIdToUpdate);
+        let originalResultData: QuestionResults | null = null;
+
+        // 乐观更新
+        if (resultIndex !== -1) {
+            originalResultData = JSON.parse(JSON.stringify(props.questionResults[resultIndex]));
+            props.questionResults[resultIndex].is_flagged = newFlagStatus;
+        } else {
+            console.warn("Cannot find single question result in local array to optimistically update flag.");
+        }
+        // 重试逻辑 
+        let retries = 0;
+        while (retries < MAX_RETRIES) {
+            try {
+                await updateItem<QuestionResults>({
+                    collection: "question_results",
+                    id: resultIdToUpdate,
+                    item: { is_flagged: newFlagStatus },
+                });
+                console.log(`单题 (Result ID: ${resultIdToUpdate}) 标记状态已更新为: ${newFlagStatus}`);
+                return; // 成功
+            } catch (error) {
+                retries++;
+                console.error(`更新单题 (Result ID: ${resultIdToUpdate}) 标记状态失败 (尝试 ${retries}/${MAX_RETRIES}):`, error);
+                if (retries >= MAX_RETRIES) {
+                    console.error("达到最大重试次数，更新单题标记状态失败。");
+                    // 回滚
+                    if (resultIndex !== -1 && originalResultData) {
+                        props.questionResults.splice(resultIndex, 1, originalResultData);
+                    }
+                    return;
+                }
+                await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
+            }
+        }
+    } else {
+        // --- Group Mode --- 
+        if (!props.selectedQuestion || !props.selectedQuestion.groupQuestions || props.selectedQuestion.groupQuestions.length === 0) {
+            console.warn("Cannot toggle group flag: No group questions available.");
+            return;
         }
 
-        // 然后提交到数据库
-        const { updateItem } = useDirectusItems();
-
-        const submitted_flag = {
-            is_flagged: updatedFlag,
-        };
-
-        const response = await updateItem({
-            collection: "question_results",
-            id: props.selectedQuestion.result.id,
-            item: submitted_flag,
-        });
-
-        console.log(
-            `题目已${updatedFlag ? "标记" : "取消标记"}为疑问:`,
-            response
-        );
-    } catch (error) {
-        // 如果提交失败，恢复原状态
-        if (props.selectedQuestion && props.selectedQuestion.result) {
-            props.selectedQuestion.result.is_flagged =
-                !props.selectedQuestion.result.is_flagged;
+        const targetFlagStatus = !areAllSubQuestionsInGroupFlagged.value;
+        const subQuestions = props.selectedQuestion.groupQuestions as PaperSectionsQuestions[];
+        // 构建需要处理的更新列表，并进行乐观更新
+        const updatesToProcess: {resultId: string, psqId: string | number, originalResult: QuestionResults | null, newStatus: boolean, resultIndex: number}[] = [];
+        for (const subQuestion of subQuestions) {
+            const result = getResultByPsqId(subQuestion.id);
+            if (result && result.id) {
+                const resultIndex = props.questionResults.findIndex(qr => qr.id === result.id);
+                if (resultIndex !== -1) {
+                    updatesToProcess.push({
+                        resultId: result.id,
+                        psqId: subQuestion.id,
+                        originalResult: JSON.parse(JSON.stringify(props.questionResults[resultIndex])),
+                        newStatus: targetFlagStatus,
+                        resultIndex: resultIndex
+                    });
+                    props.questionResults[resultIndex].is_flagged = targetFlagStatus; // 乐观更新
+                }
+            } else {
+                console.warn(`No result found for sub-question ${subQuestion.id} in group, cannot toggle flag.`);
+            }
         }
-        console.error("更新标记状态时出错:", error);
+
+        if (updatesToProcess.length === 0) {
+            console.warn("No valid sub-question results found to toggle flag for the group.");
+            return;
+        }
+
+        // 尝试更新所有子题目的标记状态
+        let overallSuccess = true;
+        for (const update of updatesToProcess) {
+            let retries = 0;
+            let successThisUpdate = false;
+            while (retries < MAX_RETRIES) {
+                try {
+                    await updateItem<QuestionResults>({
+                        collection: "question_results",
+                        id: update.resultId,
+                        item: { is_flagged: update.newStatus },
+                    });
+                    console.log(`题组内小题 (PSQ ID: ${update.psqId}, Result ID: ${update.resultId}) 标记状态已更新为: ${update.newStatus}`);
+                    successThisUpdate = true;
+                    break; // 当前子题目更新成功，跳出重试循环
+                } catch (error) {
+                    retries++;
+                    console.error(`更新题组内小题 (Result ID: ${update.resultId}) 标记状态失败 (尝试 ${retries}/${MAX_RETRIES}):`, error);
+                    if (retries >= MAX_RETRIES) {
+                        console.error(`达到最大重试次数，题组内小题 (Result ID: ${update.resultId}) 标记状态更新失败。`);
+                        overallSuccess = false;
+                        break; // 当前子题目更新失败，跳出重试循环
+                    }
+                    await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
+                }
+            }
+            if (!successThisUpdate) {
+                // 如果单个子题目最终失败，也标记整体失败，以便回滚
+                overallSuccess = false;
+            }
+        }
+
+        if (overallSuccess) {
+            console.log(`题组标记操作完成，目标状态: ${targetFlagStatus}`);
+        } else {
+            console.error("题组标记操作中至少有一个小题更新失败，将回滚所有更改。");
+            // 如果任何一个子题目的更新最终失败，则回滚所有已进行的乐观更新
+            for (const update of updatesToProcess) {
+                if (update.originalResult && props.questionResults[update.resultIndex]?.id === update.resultId) {
+                     // 仅当 originalResult 存在且本地数组中的项确实是我们要回滚的项时才执行 splice
+                    props.questionResults.splice(update.resultIndex, 1, update.originalResult);
+                }
+            }
+            alert("标记题组时发生错误，部分或全部标记可能未成功，已尝试回滚所有更改。");
+        }
     }
 };
-
-// 监听选中题目变化
-// watch(
-//     () => props.selectedQuestion,
-//     (newQuestion) => {
-//         console.log("QuestionDetail - 选中题目更新为:", newQuestion);
-//     }
-// );
 
 // 导航到上一题或下一题
 const navigateQuestion = (direction: number) => {
@@ -244,50 +341,29 @@ const navigateQuestion = (direction: number) => {
 };
 
 // 获取分数展示文本
-const getScoreDisplay = (question: any) => {
-    if (!question || !question.result) return "";
-
-    const score = question.result.score;
-    const pointValue = question.result.point_value;
-
-    if (
-        score === undefined ||
-        score === null ||
-        pointValue === undefined ||
-        pointValue === null
-    ) {
-        return "";
+const getScoreDisplay = computed(() => {
+    if (isGroupMode.value || !currentSingleQuestionResult.value) return "";
+    const score = currentSingleQuestionResult.value.score;
+    const pointValue = currentSingleQuestionResult.value.point_value;
+    if (score === undefined || score === null || pointValue === undefined || pointValue === null || pointValue === 0) {
+        return ""; // 或者显示 "未评分" 等
     }
-
     return `${score}/${pointValue}分`;
-};
+});
 
 // 获取分数标签样式
-const getScoreSeverity = (question: any) => {
-    if (!question || !question.result) return "info";
-
-    const score = question.result.score;
-    const pointValue = question.result.point_value;
-
-    if (
-        score === undefined ||
-        score === null ||
-        pointValue === undefined ||
-        pointValue === null
-    ) {
+const getScoreSeverity = computed(() => {
+    if (isGroupMode.value || !currentSingleQuestionResult.value) return "info";
+    const score = currentSingleQuestionResult.value.score;
+    const pointValue = currentSingleQuestionResult.value.point_value;
+    if (score === undefined || score === null || pointValue === undefined || pointValue === null || pointValue === 0) {
         return "info";
     }
-
     const percentage = (score / pointValue) * 100;
-
-    if (percentage >= 80) {
-        return "success";
-    } else if (percentage >= 60) {
-        return "warning";
-    } else {
-        return "danger";
-    }
-};
+    if (percentage >= 80) return "success";
+    if (percentage >= 60) return "warning";
+    return "danger";
+});
 </script>
 
 <style scoped>
@@ -338,16 +414,14 @@ const getScoreSeverity = (question: any) => {
 }
 
 .navigation-buttons .p-button {
-    min-width: 120px;
-    padding: 0.5rem 1rem;
-    border-radius: 2rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
+    min-width: auto; /* Allow button to shrink with icon only */
+    padding: 0.75rem 1rem; /* Adjust padding as needed */
 }
 
-.navigation-buttons .p-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+/* Add some margin to the central flag button if needed */
+.navigation-buttons .p-button-warning {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
 }
 
 /* Markdown样式 */

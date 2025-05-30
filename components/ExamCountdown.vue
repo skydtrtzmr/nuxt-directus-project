@@ -17,16 +17,12 @@
             <div class="space-y-2 text-sm">
                 <div class="flex justify-between items-center">
                     <span class="text-gray-600 dark:text-gray-400">开始时间：</span>
-                    <span class="font-medium">{{ formatDateTime(actualStartTime) }}</span>
+                    <span class="font-medium">{{ actualStartTimeDisplay }}</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-gray-600 dark:text-gray-400">结束时间：</span>
-                    <span class="font-medium">{{ formatDateTime(examEndTime) }}</span>
+                    <span class="font-medium">{{ examEndTimeDisplay }}</span>
                 </div>
-                <!-- <div class="flex justify-between items-center">
-                    <span class="text-gray-600 dark:text-gray-400">当前时间：</span>
-                    <span class="font-medium">{{ currentTime }}</span>
-                </div> -->
             </div>
         </div>
     </div>
@@ -34,46 +30,18 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-import dayjs from 'dayjs';
-import type { PracticeSessions } from "~~/types/directus_types";
 
 const props = defineProps<{
     isClient: boolean;
-    actualStartTime: string;
-    examEndTime: dayjs.Dayjs;
-    practiceSessionTime: PracticeSessions;
+    actualStartTimeDisplay: string;
+    examEndTimeDisplay: string;
     formattedCountDown: string;
 }>();
 
 const showDetails = ref(false);
-const currentTime = ref('');
 
 const toggleDetails = () => {
     showDetails.value = !showDetails.value;
-};
-
-const formatDateTime = (dateTime: string | dayjs.Dayjs) => {
-    if (!dateTime) return '未设置';
-    return dayjs(dateTime).format('MM-DD HH:mm:ss');
-};
-
-let timeInterval: NodeJS.Timeout | null = null;
-
-onMounted(() => {
-    if (props.isClient) {
-        updateCurrentTime();
-        timeInterval = setInterval(updateCurrentTime, 1000);
-    }
-});
-
-onUnmounted(() => {
-    if (timeInterval) {
-        clearInterval(timeInterval);
-    }
-});
-
-const updateCurrentTime = () => {
-    currentTime.value = dayjs().format('MM-DD HH:mm:ss');
 };
 </script>
 

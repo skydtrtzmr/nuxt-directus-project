@@ -10,9 +10,7 @@ const {
 } = useRuntimeConfig();
 
 console.log("连接 Redis 成功，创建redis实例");
-
-// TODO 还真不要改成现在这样！现在这样所有客户端都共用一个redis实例（在服务器上），这会导致并发问题！
-// 就应该像之前写的dynamic-script那样，每个客户端都有自己的redis实例，每次执行都创建一个连接池。
+// ioredis会给一个实例分配一个连接池，其中每个连接池中包含多个连接。
 
 // https://blog.51cto.com/u_16213418/11828350
 

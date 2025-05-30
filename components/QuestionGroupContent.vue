@@ -117,45 +117,8 @@
                                     >
                                         <h3 class="text-lg font-medium">
                                             （{{ index + 1 }}）
-                                            {{ questionItem.questions_id.title }}
+                                            {{ typeof questionItem.questions_id === 'object' && questionItem.questions_id !== null ? questionItem.questions_id.title : '' }}
                                         </h3>
-                                        <div class="flex items-center gap-2">
-                                            <Button
-                                                :icon="
-                                                    isQuestionFlagged(
-                                                        questionItem
-                                                    )
-                                                        ? 'pi pi-flag-fill'
-                                                        : 'pi pi-flag'
-                                                "
-                                                :class="{
-                                                    'p-button-danger':
-                                                        isQuestionFlagged(
-                                                            questionItem
-                                                        ),
-                                                }"
-                                                class="p-button-rounded p-button-sm p-button-text"
-                                                @click="
-                                                    toggleQuestionFlag(
-                                                        questionItem
-                                                    )
-                                                "
-                                                :aria-label="
-                                                    isQuestionFlagged(
-                                                        questionItem
-                                                    )
-                                                        ? '取消标记疑问'
-                                                        : '标记疑问'
-                                                "
-                                                v-tooltip.bottom="
-                                                    isQuestionFlagged(
-                                                        questionItem
-                                                    )
-                                                        ? '取消标记疑问'
-                                                        : '标记疑问'
-                                                "
-                                            />
-                                        </div>
                                     </div>
                                     <QuestionContent
                                         :selectedQuestion="
@@ -167,6 +130,8 @@
                                         :exam_page_mode="exam_page_mode"
                                         :renderMarkdown="renderMarkdown"
                                         :groupMode="true"
+                                        :currentQuestionResult="getCurrentQuestionResultForSubQuestion(String(questionItem.id))"
+                                        :questionResults="props.questionResults"
                                     />
                                 </div>
                             </template>
@@ -187,6 +152,7 @@ import type {
     QuestionGroups,
     Questions,
     QuestionResults,
+    PaperSectionsQuestions,
 } from "~/types/directus_types";
 import QuestionContent from "~/components/QuestionContent.vue";
 
@@ -195,13 +161,11 @@ const props = defineProps<{
     practiceSessionId: string;
     questionResults: QuestionResults[];
     exam_page_mode: string;
-    groupQuestions?: any[]; // 接收从父组件传递的题组内题目列表
+    groupQuestions?: PaperSectionsQuestions[];
     renderMarkdown: (content: string) => string;
 }>();
 
 // console.log("questionGroup in QuestionGroupContent", props.questionGroup);
-
-const emit = defineEmits(["flag-question"]);
 
 // 控制公共题干区域的收缩状态
 const isStemCollapsed = ref(false);
@@ -257,115 +221,40 @@ const stopStemResize = () => {
     document.body.style.cursor = "";
 };
 
-// 判断题目是否被标记为有疑问
-const isQuestionFlagged = (question: any) => {
-    if (!question || !question.result) return false;
-    return question.result.is_flagged === true;
+// 获取题组内小题的作答结果
+const getCurrentQuestionResultForSubQuestion = (
+    questionInPaperId: string
+): QuestionResults | null => {
+    if (!props.questionResults || props.questionResults.length === 0) {
+        return null;
+    }
+    const result = props.questionResults.find(
+        (qr) => String(qr.question_in_paper_id) === questionInPaperId
+    );
+    return result || null;
 };
 
-// 标记或取消标记题目
-const toggleQuestionFlag = async (question: any) => {
-    if (!question || !question.result || !question.result.id) return;
-
-    // 先更新本地状态，提供即时反馈
-    const updatedFlag = !isQuestionFlagged(question);
-    question.result.is_flagged = updatedFlag;
-
-    try {
-        // 直接提交到数据库
-        const { updateItem } = useDirectusItems();
-
-        const submitted_flag = {
-            is_flagged: updatedFlag,
-        };
-
-        const response = await updateItem({
-            collection: "question_results",
-            id: question.result.id,
-            item: submitted_flag,
-        });
-
-        console.log(
-            `题目已${updatedFlag ? "标记" : "取消标记"}为疑问:`,
-            response
-        );
-    } catch (error) {
-        // 如果提交失败，恢复原状态
-        question.result.is_flagged = !updatedFlag;
-        console.error("更新标记状态时出错:", error);
+// 获取题目左侧边框的样式
+const getQuestionBorderClass = (questionItem: PaperSectionsQuestions) => {
+    const result = getCurrentQuestionResultForSubQuestion(String(questionItem.id));
+    if (props.exam_page_mode === "review") {
+        if (!result) return "border-surface-300"; // 未作答
+        return result.score && result.score > 0
+            ? "border-green-500" // 回顾模式，答对
+            : "border-red-500"; // 回顾模式，答错或未评分
     }
+    if (result) {
+        // 检查是否有答案提交，对于选择题，radio是字符串，checkbox是数组
+        const hasAnswered =
+            result.submit_ans_select_radio ||
+            (Array.isArray(result.submit_ans_select_multiple_checkbox) &&
+                result.submit_ans_select_multiple_checkbox.length > 0);
+        return hasAnswered ? "border-blue-500" : "border-surface-300"; // 已作答 vs 未作答
+    }
+    return "border-surface-300"; // 默认或无结果
 };
 
-// 检测设备类型
-onMounted(() => {
-    // 检查是否为移动设备
-    const checkMobile = () => {
-        isMobile.value = window.innerWidth < 768;
-    };
-
-    // 初始检查
-    checkMobile();
-
-    // 监听窗口大小变化
-    window.addEventListener("resize", checkMobile);
-
-    // 组件卸载时移除事件监听
-    onUnmounted(() => {
-        window.removeEventListener("resize", checkMobile);
-    });
-});
-
-/**
- * 获取题组内的题目列表并按照正确的顺序排序
- * 在题组模式下，优先按照题目的sort_in_group字段排序，而非sort_in_section
- */
-const groupQuestions = computed(() => {
-    if (props.groupQuestions && props.groupQuestions.length > 0) {
-        // 如果父组件传递了题组内题目列表，优先使用
-        return [...props.groupQuestions].sort((a, b) => {
-            // 题组模式下，优先使用sort_in_group字段排序
-            const aSort = a.questions_id?.sort_in_group ?? 999;
-            const bSort = b.questions_id?.sort_in_group ?? 999;
-
-            // 如果sort_in_group相同或不存在，再使用sort_in_section作为备选
-            if (aSort === bSort) {
-                return (a.sort_in_section || 0) - (b.sort_in_section || 0);
-            }
-
-            return aSort - bSort;
-        });
-    }
-
-    return [];
-});
-
-/**
- * 获取题目边框类样式，基于题目的完成状态
- * 用于直观显示题目是否已作答及结果正确性
- */
-const getQuestionBorderClass = (question: any) => {
-    if (!question.result) return "border-gray-300";
-
-    // 如果题目已作答，根据答案正确性决定颜色
-    if (
-        question.result.submit_ans_select_radio ||
-        (question.result.submit_ans_select_multiple_checkbox &&
-            question.result.submit_ans_select_multiple_checkbox.length > 0) ||
-        question.result.submit_ans_text
-    ) {
-        return question.result.score >= question.result.point_value
-            ? "border-green-500"
-            : "border-red-500";
-    }
-
-    // 未作答
-    return "border-gray-300";
-};
-
-/**
- * 为题目对象添加组内索引，确保在题组模式下正确标识每个题目
- * 这对于解决题组内多个题目选项ID冲突问题非常重要
- */
+// 增强题目对象，添加索引信息（如果需要的话）
 const enhanceQuestionWithIndex = (question: any, index: number) => {
     return {
         ...question,
@@ -422,6 +311,53 @@ const getQuestionScoreSeverity = (question: any) => {
         return "danger";
     }
 };
+
+// 检测设备类型
+onMounted(() => {
+    // 检查是否为移动设备
+    const checkMobile = () => {
+        isMobile.value = window.innerWidth < 768;
+    };
+
+    // 初始检查
+    checkMobile();
+
+    // 监听窗口大小变化
+    window.addEventListener("resize", checkMobile);
+
+    // 组件卸载时移除事件监听
+    onUnmounted(() => {
+        // 移除事件监听器
+        document.removeEventListener("mousemove", resizingStem);
+        document.removeEventListener("mouseup", stopStemResize);
+        window.removeEventListener("resize", checkMobile);
+    });
+});
+
+/**
+ * 获取题组内的题目列表并按照正确的顺序排序
+ * 在题组模式下，优先按照题目的sort_in_group字段排序，而非sort_in_section
+ */
+const groupQuestions = computed(() => {
+    if (props.groupQuestions && props.groupQuestions.length > 0) {
+        return [...props.groupQuestions].sort((a, b) => {
+            const aQsId = a.questions_id;
+            const bQsId = b.questions_id;
+
+            const aSort = (typeof aQsId === 'object' && aQsId !== null && 'sort_in_group' in aQsId) ? aQsId.sort_in_group ?? 999 : 999;
+            const bSort = (typeof bQsId === 'object' && bQsId !== null && 'sort_in_group' in bQsId) ? bQsId.sort_in_group ?? 999 : 999;
+
+            if (aSort === bSort) {
+                return (a.sort_in_section || 0) - (b.sort_in_section || 0);
+            }
+            return Number(aSort) - Number(bSort);
+        });
+    }
+    return [];
+});
+
+console.log("groupQuestions: ", groupQuestions.value);
+
 </script>
 
 <style scoped>

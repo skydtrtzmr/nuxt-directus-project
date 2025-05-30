@@ -33,9 +33,8 @@
                 <div class="mb-4">
                     <ExamCountdown
                         :isClient="isClient"
-                        :actualStartTime="actual_start_time"
-                        :examEndTime="examEndTime"
-                        :practiceSessionTime="practiceSessionTime"
+                        :actualStartTimeDisplay="actual_start_time"
+                        :examEndTimeDisplay="examEndTime"
                         :formattedCountDown="formattedCountDown"
                         class="desktop-compact-mode"
                     />
@@ -74,9 +73,8 @@
                 <div v-if="exam_page_mode !== 'review'" class="ml-2">
                     <ExamCountdown
                         :isClient="isClient"
-                        :actualStartTime="actual_start_time"
-                        :examEndTime="examEndTime"
-                        :practiceSessionTime="practiceSessionTime"
+                        :actualStartTimeDisplay="actual_start_time"
+                        :examEndTimeDisplay="examEndTime"
                         :formattedCountDown="formattedCountDown"
                         class="mobile-compact-mode"
                     />
@@ -117,7 +115,6 @@
 
 <script setup lang="ts">
 import type { PracticeSessions, Papers } from "~~/types/directus_types";
-import dayjs from "dayjs";
 
 const props = defineProps<{
     exam_page_mode: string;
@@ -125,7 +122,7 @@ const props = defineProps<{
     paper: Papers;
     isClient: boolean;
     actual_start_time: string;
-    examEndTime: dayjs.Dayjs;
+    examEndTime: string;
     practiceSessionTime: PracticeSessions;
     formattedCountDown: string;
     examScore: number | null;

@@ -225,12 +225,12 @@ export async function runCompleteExamScenario(
         );
 
         if (!mainQuestionArea) {
-            // console.log(
-            //     `自动化测试：未能找到主题目区域 ${mainQuestionLoopIndex}。可能已到题目末尾或出现问题。`
-            // );
+            console.log(
+                `自动化测试：未能找到主题目区域 ${mainQuestionLoopIndex}。可能已到题目末尾或出现问题。`
+            );
             break;
         }
-        // console.log(`自动化测试：找到主题目区域 ${mainQuestionLoopIndex}。`);
+        console.log(`自动化测试：找到主题目区域 ${mainQuestionLoopIndex}。`);
         mainQuestionArea.scrollIntoView({
             behavior: "smooth",
             block: "center",
@@ -242,7 +242,7 @@ export async function runCompleteExamScenario(
         );
 
         if (groupContentElement) {
-            // console.log("自动化测试：检测到题组模式。");
+            console.log("自动化测试：检测到题组模式。");
             const groupQuestionItems =
                 groupContentElement.querySelectorAll("div.question-item");
             if (groupQuestionItems.length === 0) {
@@ -303,9 +303,9 @@ export async function runCompleteExamScenario(
                     `自动化测试：无法确定单题 ${mainQuestionLoopIndex} 的类型。将跳过选择。`
                 );
             } else {
-                // console.log(
-                //     `自动化测试：单题 ${mainQuestionLoopIndex} 的类型确定为: ${questionType}`
-                // );
+                console.log(
+                    `自动化测试：单题 ${mainQuestionLoopIndex} 的类型确定为: ${questionType}`
+                );
                 // 在单题模式下，mainQuestionArea 本身 (或其子组件 QuestionContent) 是上下文
                 // .question-type-tag 应位于 mainQuestionArea 内部，由 QuestionContent 渲染
                 await selectDeterministicOptions(
@@ -329,9 +329,9 @@ export async function runCompleteExamScenario(
             nextQuestionButton.offsetParent !== null &&
             !nextQuestionButton.disabled
         ) {
-            // console.log(
-            //     `自动化测试：点击主题目/题组 ${mainQuestionLoopIndex} 后的"下一题"按钮。`
-            // );
+            console.log(
+                `自动化测试：点击主题目/题组 ${mainQuestionLoopIndex} 后的"下一题"按钮。`
+            );
             nextQuestionButton.click();
             await delay(1000);
 
@@ -343,9 +343,9 @@ export async function runCompleteExamScenario(
                 endDialogMessageElementButton &&
                 !endDialogMessageElementButton.disabled
             ) {
-                // console.log(
-                //     "自动化测试：检测到'已经是最后一题'提示框，点击确定并准备交卷。"
-                // );
+                console.log(
+                    "自动化测试：检测到'已经是最后一题'提示框，点击确定并准备交卷。"
+                );
                 endDialogMessageElementButton.click();
                 await delay(500);
                 break;
@@ -353,9 +353,9 @@ export async function runCompleteExamScenario(
             mainQuestionLoopIndex++;
             await delay(2000); // 等待下一个题目/题组加载
         } else {
-            // console.log(
-            //     `自动化测试：主题目/题组 ${mainQuestionLoopIndex} 后未找到"下一题"按钮或按钮不可交互。假设考试结束。`
-            // );
+            console.log(
+                `自动化测试：主题目/题组 ${mainQuestionLoopIndex} 后未找到"下一题"按钮或按钮不可交互。假设考试结束。`
+            );
             break;
         }
     }
@@ -374,26 +374,36 @@ export async function runCompleteExamScenario(
     submitExamButton.scrollIntoView({ behavior: "smooth", block: "center" });
     await delay(400);
     submitExamButton.click();
-    // console.log("自动化测试：已点击最终的提交考试按钮。");
+    console.log("自动化测试：已点击最终的提交考试按钮。");
 
     await delay(1000);
-    
+
     const confirmSubmitButton = document.querySelector(
         "button[aria-label='确定交卷']"
     ) as HTMLButtonElement | null;
 
-    if (
-        confirmSubmitButton &&
-        !confirmSubmitButton.disabled
-    ) {
-        // console.log(
-        //     "自动化测试：检测到确认提交试卷对话框，点击确定。"
-        // );
+    if (confirmSubmitButton && !confirmSubmitButton.disabled) {
+        // console.log("自动化测试：检测到确认提交试卷对话框，点击确定交卷。");
         confirmSubmitButton.click();
         await delay(500);
-    }else {
+    } else {
         console.warn("自动化测试：确认提交试卷对话框中的确定按钮未找到。");
     }
+
+    // 会弹出提示框“即将退出考试”，需点击确定。
+    const readyToExitExamButton = document.querySelector(
+        "button[aria-label='确定']"
+    ) as HTMLButtonElement | null;  
+
+    if (readyToExitExamButton && !readyToExitExamButton.disabled) {
+        // console.log("自动化测试：检测到提示退出对话框，点击确定。");
+        readyToExitExamButton.click();
+        await delay(500);
+    } else {
+        console.warn("自动化测试：提示退出对话框中的确定按钮未找到。");
+    }
+
+    // 确定后，会自动开始跳转。
 
     const navigatedAfterSubmit = await waitForNavigation(
         router,
