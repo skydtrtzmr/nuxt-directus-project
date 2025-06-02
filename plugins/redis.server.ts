@@ -1,4 +1,3 @@
-import { Redis } from "ioredis";
 
 export default defineNuxtPlugin(() => {
     console.log("redis.server.ts plugin");
