@@ -43,7 +43,7 @@
                         :inputId="`option_${option.key.toLowerCase()}_${uniqueId}`"
                         name="option"
                         :value="option.key"
-                        @change="updateAnswer"
+                        @change="handleAnswerChangeAndOptimisticUpdate"
                     />
                     <Checkbox
                         v-if="
@@ -54,7 +54,7 @@
                         :inputId="`option_${option.key.toLowerCase()}_${uniqueId}`"
                         :name="`option_${option.key.toLowerCase()}`"
                         :value="option.key"
-                        @change="updateAnswer"
+                        @change="handleAnswerChangeAndOptimisticUpdate"
                     />
                     <label
                         :for="`option_${option.key.toLowerCase()}_${uniqueId}`"
@@ -112,6 +112,55 @@ const props = defineProps<{
     questionResults: QuestionResults[];
 }>();
 
+// 防抖延迟时间 (毫秒)
+const DEBOUNCE_DELAY_MS = 800;
+
+/**
+ * 防抖函数
+ * @param fn 要执行的函数
+ * @param delay 延迟时间 (毫秒)
+ */
+function debounce(fn: Function, delay: number) {
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    let lastArgs: any[] | null = null;
+    // let lastThis: any = null; // 'this' context, not strictly needed for arrow functions / module scope functions
+
+    const debounced = (...args: any[]) => {
+        lastArgs = args;
+        // lastThis = this;
+        if (timeoutId !== null) {
+            clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(() => {
+            if (lastArgs) {
+                fn.apply(null, lastArgs); // Using null for 'this' as actualApiSubmit is an arrow function
+            }
+            timeoutId = null;
+            // lastArgs = null; // Optionally clear after execution
+        }, delay);
+    };
+
+    debounced.flush = () => {
+        if (timeoutId !== null) {
+            clearTimeout(timeoutId);
+            if (lastArgs) {
+                fn.apply(null, lastArgs); // Using null for 'this'
+            }
+            timeoutId = null;
+            // lastArgs = null; // Optionally clear after execution
+        }
+    };
+
+    debounced.cancel = () => {
+        if (timeoutId !== null) {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+            lastArgs = null; // Clear pending args on cancel
+        }
+    };
+    return debounced;
+}
+
 const dynamicQuestionTypeForQuestionResult = computed(() => {
     return props.questionType;
 });
@@ -140,12 +189,99 @@ const localAnswer = ref<string | string[]>(
 );
 
 /**
+ * 实际的API提交逻辑
+ */
+const actualApiSubmit = async (
+    questionResultForApi: QuestionResults,
+    payloadForApi: any,
+    originalDataForRollback: QuestionResults | null,
+    resultIndexForRollback: number
+) => {
+    if (!questionResultForApi || !questionResultForApi.id) {
+        console.error("actualApiSubmit: questionResultForApi 或其 ID 缺失。");
+        return;
+    }
+
+    const MAX_RETRIES = 3;
+    const RETRY_DELAY_MS = 1000;
+    let retries = 0;
+
+    while (retries < MAX_RETRIES) {
+        try {
+            const response = await $fetch(
+                `/question-results-mq/question_result`,
+                {
+                    baseURL: url,
+                    method: "POST",
+                    body: {
+                        collection: "question_results",
+                        id: questionResultForApi.id,
+                        item: {
+                            ...payloadForApi,
+                            practice_session_id: questionResultForApi.practice_session_id as string,
+                        },
+                    },
+                }
+            );
+            console.log("答案已通过MQ提交更新:", response);
+            return; // 成功
+        } catch (error) {
+            retries++;
+            console.error(
+                `通过MQ更新答案时出错 (尝试 ${retries}/${MAX_RETRIES}):`,
+                error
+            );
+            if (retries >= MAX_RETRIES) {
+                console.error("达到最大重试次数，更新答案失败。");
+                // 回滚乐观更新
+                if (resultIndexForRollback !== -1 && originalDataForRollback) {
+                    props.questionResults.splice(
+                        resultIndexForRollback,
+                        1,
+                        originalDataForRollback // 恢复原始数据
+                    );
+                    // 恢复 localAnswer 的值以反映回滚
+                    if (
+                        props.questionType === "q_mc_multi" ||
+                        props.questionType === "q_mc_flexible"
+                    ) {
+                        localAnswer.value = Array.isArray(originalDataForRollback.submit_ans_select_multiple_checkbox)
+                            ? [...originalDataForRollback.submit_ans_select_multiple_checkbox]
+                            : [];
+                    } else {
+                        localAnswer.value = originalDataForRollback.submit_ans_select_radio || "";
+                    }
+                }
+                return; // 失败
+            }
+            await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
+        }
+    }
+};
+
+// 创建 debouncedActualApiSubmit 函数
+const debouncedActualApiSubmit = debounce(actualApiSubmit, DEBOUNCE_DELAY_MS) as {
+    (...args: Parameters<typeof actualApiSubmit>): void;
+    flush: () => void;
+    cancel: () => void;
+};
+
+/**
  * 监听整个questionData对象的变化，确保在题目切换时重置答案
  * 这确保了切换题目时能显示正确的已选答案
  */
 watch(
     () => props.currentQuestionResult,
-    (newResult) => {
+    (newResult, oldResult) => {
+        // 如果题目已更改，则刷新上一题的待处理提交
+        if (oldResult && oldResult.id && newResult?.id !== oldResult.id) {
+            console.log(
+                `题目从 ${oldResult.id} 切换到 ${newResult?.id}. 执行上一题 (${oldResult.id}) 的待处理提交。`
+            );
+            debouncedActualApiSubmit.flush();
+        }
+
+        // 为新题目重置 localAnswer
         if (
             props.questionType === "q_mc_multi" ||
             props.questionType === "q_mc_flexible"
@@ -187,10 +323,10 @@ const blockQuestion = computed(() => {
 });
 
 /**
- * 更新答案到数据库
- * 当用户选择答案时触发，将结果保存到question_results表
+ * 当用户选择/更改答案时调用。
+ * 执行乐观更新并调度 API 提交。
  */
-const updateAnswer = async () => {
+const handleAnswerChangeAndOptimisticUpdate = async () => {
     if (!props.currentQuestionResult || !props.currentQuestionResult.id) {
         console.error("无法更新答案：currentQuestionResult 或其 ID 缺失。");
         return;
@@ -204,25 +340,14 @@ const updateAnswer = async () => {
 
     const resultIdToUpdate = props.currentQuestionResult.id;
     let newAnswerPayload: any = {};
-    let previousAnswer: any;
 
     if (
         props.questionType === "q_mc_multi" ||
         props.questionType === "q_mc_flexible"
     ) {
-        newAnswerPayload.submit_ans_select_multiple_checkbox =
-            localAnswer.value;
-        previousAnswer = Array.isArray(
-            props.currentQuestionResult.submit_ans_select_multiple_checkbox
-        )
-            ? [
-                  ...props.currentQuestionResult
-                      .submit_ans_select_multiple_checkbox,
-              ]
-            : [];
+        newAnswerPayload.submit_ans_select_multiple_checkbox = localAnswer.value;
     } else {
         newAnswerPayload.submit_ans_select_radio = localAnswer.value;
-        previousAnswer = props.currentQuestionResult.submit_ans_select_radio;
     }
 
     const resultIndex = props.questionResults.findIndex(
@@ -230,16 +355,12 @@ const updateAnswer = async () => {
     );
     let originalResultDataForRollback: QuestionResults | null = null;
 
-    const MAX_RETRIES = 3;
-    const RETRY_DELAY_MS = 1000;
-    let retries = 0;
-
     // 乐观更新UI
     if (resultIndex !== -1) {
-        originalResultDataForRollback = {
+        originalResultDataForRollback = { // 创建浅拷贝用于回滚
             ...props.questionResults[resultIndex],
         };
-        const currentLocalAnswer = localAnswer.value;
+        const currentLocalAnswer = localAnswer.value; // 捕获当前的 localAnswer
         const updatedResultItem = {
             ...props.questionResults[resultIndex],
             ...(props.questionType === "q_mc_multi" ||
@@ -248,7 +369,7 @@ const updateAnswer = async () => {
                       submit_ans_select_multiple_checkbox: Array.isArray(
                           currentLocalAnswer
                       )
-                          ? [...currentLocalAnswer]
+                          ? [...currentLocalAnswer] // 确保多选答案是新数组
                           : [],
                   }
                 : { submit_ans_select_radio: currentLocalAnswer as string }),
@@ -256,62 +377,18 @@ const updateAnswer = async () => {
         props.questionResults.splice(resultIndex, 1, updatedResultItem);
     } else {
         console.warn("在本地 questionResults 数组中未找到要乐观更新的记录。");
+         // 如果找不到记录，可能不应该继续提交，或者初始状态应确保 currentQuestionResult 始终在 questionResults 中。
+        return;
     }
 
-    while (retries < MAX_RETRIES) {
-        try {
-            const response = await $fetch(
-                `/question-results-mq/question_result`,
-                {
-                    baseURL: url,
-                    method: "POST",
-                    body: {
-                        collection: "question_results",
-                        id: resultIdToUpdate,
-                        item: {
-                            ...newAnswerPayload,
-                            practice_session_id: props.currentQuestionResult
-                                .practice_session_id as string,
-                        },
-                    },
-                }
-            );
-            console.log("答案已通过MQ提交更新:", response);
-            return; // 成功，退出函数
-        } catch (error) {
-            retries++;
-            console.error(
-                `通过MQ更新答案时出错 (尝试 ${retries}/${MAX_RETRIES}):`,
-                error
-            );
-            if (retries >= MAX_RETRIES) {
-                console.error("达到最大重试次数，更新答案失败。");
-                // 回滚乐观更新
-                if (resultIndex !== -1 && originalResultDataForRollback) {
-                    props.questionResults.splice(
-                        resultIndex,
-                        1,
-                        originalResultDataForRollback
-                    );
-                    // 恢复 localAnswer 的值
-                    if (
-                        props.questionType === "q_mc_multi" ||
-                        props.questionType === "q_mc_flexible"
-                    ) {
-                        localAnswer.value = Array.isArray(previousAnswer)
-                            ? [...previousAnswer]
-                            : [];
-                    } else {
-                        localAnswer.value = previousAnswer as string;
-                    }
-                }
-                // 可以考虑在这里通知用户
-                return; // 退出函数
-            }
-            // 等待一段时间后重试
-            await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
-        }
-    }
+    // 调度防抖的 API 提交
+    // 传递 actualApiSubmit 所需的所有参数，包括用于回滚的数据
+    debouncedActualApiSubmit(
+        props.currentQuestionResult, // 当前提交的 QuestionResults 对象
+        newAnswerPayload,
+        originalResultDataForRollback,
+        resultIndex
+    );
 };
 
 /**
