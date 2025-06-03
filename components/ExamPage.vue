@@ -257,13 +257,15 @@ const userData = computed(() => {
 
     if (!practiceSession.value) return defaultData;
 
-    // return {
-    //     name: practiceSession.value["exercises_students_id-students_id-name"] || "考生",
-    //     student_number: practiceSession.value.students_id.number || 0,
-    //     email: practiceSession.value.students_id.email || "",
-    //     className: (practiceSession.value.students_id.class as Classes)?.name || "",
-    // };
-    return defaultData;
+    // console.log("practiceSession.value");
+    // console.log(practiceSession.value);
+    
+    return {
+        name: practiceSession?.value["exercises_students_id-students_id-name"] || "考生",
+        student_number: practiceSession.value["exercises_students_id-students_id-number"] || 0,
+        email: practiceSession.value["exercises_students_id-students_id-email"] || "",
+        className: (practiceSession.value["exercises_students_id-students_id-class-name"] as Classes)?.name || "",
+    };
 });
 
 const selectQuestion = (question: any) => {
