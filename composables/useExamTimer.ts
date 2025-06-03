@@ -133,10 +133,14 @@ export function useExamTimer() {
 
         const now = dayjs.utc(); // 获取当前 UTC 时间以进行比较
         const diffSeconds = examEndTime_dayjs_ref.value.diff(now, "second");
+        // console.log("diffSeconds:", diffSeconds);
+        // console.log("now:", now);
+        // console.log("examEndTime_dayjs_ref.value:", examEndTime_dayjs_ref.value);
 
         if (diffSeconds <= 0) {
             remainingSeconds_ref.value = 0;
             if (!isTimeUp_ref.value) {
+                // 检查isTimeUp_ref是否为false，如果是false，则考试状态标记为“时间已到”
                 console.log("[useExamTimer] Time is up! Setting isTimeUp_ref to true.");
                 isTimeUp_ref.value = true;
             }
