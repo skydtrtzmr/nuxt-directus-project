@@ -2,7 +2,9 @@ import { defineStore } from "pinia";
 import type { Students } from "~/types/directus_types";
 // import { useDirectusAuth, useDirectusUser } from "nuxt-directus";
 
-const { getItems } = useDirectusItems();
+// const { getItems } = useDirectusItems(); // 从顶层移除
+
+// useDirectusItems() 是一个 Nuxt composable，它依赖于 Nuxt 的上下文。在模块的顶层调用它，尤其是在服务器端渲染的早期阶段，可能会因为 Nuxt 应用实例尚未完全准备好而导致 getItems 函数未能正确初始化。如果这个未正确初始化的 getItems 函数在后续的 login action 中被调用，它可能会返回非预期的数据或导致错误，从而污染 Pinia 的状态。当 devalue 尝试序列化这个被污染的状态时，就可能触发 obj.hasOwnProperty is not a function 错误。
 
 interface User {
     id: string;
@@ -125,6 +127,7 @@ export const useAuth = defineStore("auth", {
             const { login } = useDirectusAuth();
             const router = useRouter();
             // console.log("auth store login");
+            const { getItems } = useDirectusItems(); // 在 action 内部调用
 
             try {
                 // Try to login
