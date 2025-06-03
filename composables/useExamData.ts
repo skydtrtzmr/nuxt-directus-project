@@ -320,6 +320,7 @@ export function useExamData() {
 
     return {
         practiceSession, // session信息（包括时间，有点重复了，后期优化） TODO
+        // 目前practiceSession已经不是标准结构了，被我扁平化了[2025-06-03]
         paper, // 试卷信息
         submittedPaperSections, // 最终试题信息
         // selectedQuestion is managed by ExamPage.vue, but its initial value is set here via ref

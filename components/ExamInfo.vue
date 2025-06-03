@@ -1,16 +1,20 @@
 <template>
-    <div
-        class="exam-info py-1 px-2 bg-transparent"
-    >
+    <div class="exam-info py-1 px-2 bg-transparent">
         <div class="flex items-center justify-between h-full">
-            <div class="overflow-hidden flex-1 text-center flex items-center justify-center pt-2">
-                <h2 class="text-lg font-semibold flex items-center justify-center truncate">
+            <div
+                class="overflow-hidden flex-1 text-center flex items-center justify-center pt-2"
+            >
+                <h2
+                    class="text-lg font-semibold flex items-center justify-center truncate"
+                >
                     <!-- <i class="pi pi-id-card text-primary mr-1 text-lg flex-shrink-0"></i> -->
                     <span class="truncate">{{ getExamTitle() }}</span>
                 </h2>
             </div>
             <div class="flex items-center gap-2">
-                <span class="inline-flex items-center text-xs text-surface-600 dark:text-surface-400">
+                <span
+                    class="inline-flex items-center text-xs text-surface-600 dark:text-surface-400"
+                >
                     <i class="pi pi-clock text-blue-500 mr-1"></i>
                     <span>{{ formattedDuration }}</span>
                 </span>
@@ -32,7 +36,10 @@ import type {
 import { computed, watchEffect, ref } from "vue";
 
 const props = defineProps<{
-    practiceSession: PracticeSessions;
+    // practiceSession: PracticeSessions;
+    practiceSession: any;
+    // [2025-06-03] 目前这个不是标准结构，而是被我扁平化处理的。
+    // TODO 以后这个估计要大改，改成exam考试和practice练习各自独立。
 }>();
 
 // 使用ref存储计算结果，使其可以在数据加载后更新
@@ -40,21 +47,14 @@ const duration = ref("60分钟");
 
 // 获取考试标题
 const getExamTitle = () => {
-    if (!props.practiceSession?.exercises_students_id) return "考试信息";
+    if (
+        !props.practiceSession ||
+        props.practiceSession === null ||
+        props.practiceSession === undefined
+    )
+        return "考试信息";
 
-    const esId = props.practiceSession.exercises_students_id;
-    if (typeof esId === "object" && "exercises_id" in esId) {
-        const exerciseId = esId.exercises_id;
-        if (
-            typeof exerciseId === "object" &&
-            exerciseId &&
-            "title" in exerciseId
-        ) {
-            return exerciseId.title || "考试信息";
-        }
-    }
-
-    return "考试信息";
+    return props.practiceSession["exercises_students_id-exercises_id-title"];
 };
 
 // 使用watchEffect监听数据变化，计算考试时长
@@ -78,7 +78,6 @@ watchEffect(() => {
         const durationValue = (exercisesId as Exercises)?.duration || 60; // 默认60分钟
 
         // console.log("durationValue", durationValue);
-        
 
         if (durationValue >= 60) {
             const hours = Math.floor(durationValue / 60);
@@ -140,7 +139,6 @@ const getExamDate = () => {
     return "";
 };
 
-
 // 格式化日期
 const formatDate = (dateString?: string) => {
     if (!dateString) return "";
@@ -168,7 +166,7 @@ const formatDate = (dateString?: string) => {
     .exam-info {
         font-size: 0.75rem;
     }
-    
+
     h2 {
         max-width: 200px;
         font-size: 0.875rem !important;

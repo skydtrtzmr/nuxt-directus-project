@@ -254,20 +254,16 @@ const userData = computed(() => {
         email: "",
         className: "",
     };
-    const esId = practiceSession.value?.exercises_students_id;
-    if (!esId || typeof esId !== "object" || !("students_id" in esId)) {
-        return defaultData;
-    }
-    const studentId = esId.students_id;
-    if (!studentId || typeof studentId !== "object") {
-        return defaultData;
-    }
-    return {
-        name: studentId.name || "考生",
-        student_number: studentId.number || 0,
-        email: studentId.email || "",
-        className: (studentId.class as Classes)?.name || "",
-    };
+
+    if (!practiceSession.value) return defaultData;
+
+    // return {
+    //     name: practiceSession.value["exercises_students_id-students_id-name"] || "考生",
+    //     student_number: practiceSession.value.students_id.number || 0,
+    //     email: practiceSession.value.students_id.email || "",
+    //     className: (practiceSession.value.students_id.class as Classes)?.name || "",
+    // };
+    return defaultData;
 });
 
 const selectQuestion = (question: any) => {
