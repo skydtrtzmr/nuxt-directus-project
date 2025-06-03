@@ -81,7 +81,7 @@ export default defineNuxtConfig({
                 // 打包docker的时候，已经没有这个nuxt.config.ts文件了。
                 // 参考：https://nuxtjs.org.cn/docs/guide/directory-structure/env
                 // 所以，不要尝试直接用.env文件配置*生产环境*下的directus的url。
-                // 必须通过执行命令时给命令行传参(.env文件中配置NUXT_PUBLIC_DIRECTUS_URL="http://127.0.0.1:8056/")的方式来配置。
+                // 必须通过执行命令时给命令行传参(.env文件中配置NUXT_PUBLIC_DIRECTUS_URL="http://127.0.0.1:8056")的方式来配置。
             },
             isTest: false, // 默认为false，如果是测试环境，则设置为true
             // 以下是AnythingLLM的配置，用于嵌入式聊天机器人

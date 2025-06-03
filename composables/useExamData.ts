@@ -38,9 +38,29 @@ export function useExamData() {
 
     const fetchQuestionResults = async (practice_session_id: string) => {
         const questionResultsData = await $fetch(
-            `${config.public.directus.url}fetch-practice-session-cache-endpoint/practice_session/${practice_session_id}/qresults`
+            `${config.public.directus.url}/fetch-practice-session-cache-endpoint/practice_session/${practice_session_id}/qresults`
         );
-        questionResults.value = questionResultsData as QuestionResults[];
+        // 类型断言为 any[] 以便修改
+        const processedQuestionResults = (questionResultsData as any[]).map(qr => {
+            if (qr.submit_ans_select_multiple_checkbox && typeof qr.submit_ans_select_multiple_checkbox === 'string') {
+                try {
+                    // 解析JSON字符串为数组
+                    console.log("qr.submit_ans_select_multiple_checkbox:", qr.submit_ans_select_multiple_checkbox);
+                    
+                    qr.submit_ans_select_multiple_checkbox = JSON.parse(qr.submit_ans_select_multiple_checkbox);
+                } catch (error) {
+                    // 如果解析失败，可以根据需求设置为 null, [], 或者保留原样并记录错误
+                    console.warn(`Failed to parse submit_ans_select_multiple_checkbox for question result id: ${qr.id}`, error);
+                    // 为保持与原类型一致，这里将其设置为空数组，如果原始字符串无效
+                    qr.submit_ans_select_multiple_checkbox = []; 
+                }
+            } else if (qr.submit_ans_select_multiple_checkbox === "") {
+                // 如果是空字符串，也转换为空数组，以保持类型一致性
+                qr.submit_ans_select_multiple_checkbox = [];
+            }
+            return qr;
+        });
+        questionResults.value = processedQuestionResults as QuestionResults[];
         console.log("questionResults:", questionResults.value);
         
     };
@@ -178,7 +198,7 @@ export function useExamData() {
     ) => {
         const paperFullData: Papers = await $fetch(
             // `/api/papers/full/${paperId}`
-            `${config.public.directus.url}fetch-paper-cache-endpoint/papers/${paperId}`
+            `${config.public.directus.url}/fetch-paper-cache-endpoint/papers/${paperId}`
         );
         console.log("paperFullData:");
         console.log(paperFullData);
