@@ -11,8 +11,6 @@ import type {
 } from "~~/types/directus_types";
 import { useDirectusItems, useRuntimeConfig } from "#imports"; // Nuxt auto-imports
 
-const config = useRuntimeConfig();
-
 export function useExamData() {
     const config = useRuntimeConfig();
     // 注意，这个一定要写在函数内部。
