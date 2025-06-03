@@ -38,9 +38,11 @@ export function useExamData() {
 
     const fetchQuestionResults = async (practice_session_id: string) => {
         const questionResultsData = await $fetch(
-            `${config.public.directus.url}fetch-practice-session-cache-endpoint/practice_session_qresults/${practice_session_id}/qresults`
+            `${config.public.directus.url}fetch-practice-session-cache-endpoint/practice_session/${practice_session_id}/qresults`
         );
         questionResults.value = questionResultsData as QuestionResults[];
+        console.log("questionResults:", questionResults.value);
+        
     };
 
     const fetchSubmittedSectionsList = async (

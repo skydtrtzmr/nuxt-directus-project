@@ -133,14 +133,22 @@ const maxWidth = 600; // 最大宽度
 // 控制章节展开/折叠的状态和样式
 const sectionStyles = ref<{ [key: number]: any }>({});
 
+console.log("questionResults:", props.questionResults);
+
+
 // 新增：创建 questionResultsMap 计算属性
 const questionResultsMap = computed(() => {
     const map = new Map<string, QuestionResults>();
     if (props.questionResults) {
+        // 每一个result是某学生一张试卷中的每一题答题结果
         for (const result of props.questionResults) {
             let key: string | undefined = undefined;
-            if (typeof result.question_in_paper_id === 'number') {
+            console.log("result in loop:", result);
+            
+            if (typeof result.question_in_paper_id === 'number' || typeof result.question_in_paper_id === 'string') {
                 key = String(result.question_in_paper_id);
+                console.log("有key");
+                
             } else if (result.question_in_paper_id && typeof result.question_in_paper_id === 'object' && 'id' in result.question_in_paper_id) {
                 // @ts-ignore
                 key = String(result.question_in_paper_id.id);
@@ -150,8 +158,13 @@ const questionResultsMap = computed(() => {
             }
         }
     }
+    console.log("Computed-map:", map);
+    
     return map;
 });
+
+console.log("questionResultsMap:", questionResultsMap.value);
+
 
 const toggleSidebar = () => {
     isSidebarCollapsed.value = !isSidebarCollapsed.value;
@@ -355,10 +368,14 @@ const getQuestionResultById = (questionInPaperId: number | undefined | null): Qu
 // 判断题目是否已回答
 const isQuestionAnswered = (question: PaperSectionsQuestions): boolean => {
     // question.id 是 PaperSectionsQuestions['id']，类型是 number
+    console.log("题目列表-question:", question);
+    
     if (!question || question.id === undefined || question.id === null) return false;
     const result = getQuestionResultById(question.id);
+    console.log("题目列表-result:", result);
+    
     return !!result && (
-        (result.submit_ans_select_radio !== null && result.submit_ans_select_radio !== undefined) ||
+        (result.submit_ans_select_radio !== null && result.submit_ans_select_radio !== undefined && result.submit_ans_select_radio !== "") ||
         (Array.isArray(result.submit_ans_select_multiple_checkbox) && result.submit_ans_select_multiple_checkbox.length > 0)
         // TODO: 添加对其他题目类型答案的判断
     );
