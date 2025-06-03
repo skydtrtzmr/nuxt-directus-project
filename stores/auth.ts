@@ -1,11 +1,15 @@
 import { defineStore } from "pinia";
+import type { Students } from "~/types/directus_types";
 // import { useDirectusAuth, useDirectusUser } from "nuxt-directus";
+
+const { getItems } = useDirectusItems();
 
 interface User {
     id: string;
     email: string | null | undefined;
     first_name?: string | null;
     last_name?: string | null | undefined;
+    student_id?: string | null | undefined; 
     // 添加其他用户字段
 }
 
@@ -137,7 +141,16 @@ export const useAuth = defineStore("auth", {
                     // 使用解构赋值提取所需的字段
                     const { id, email, first_name, last_name } =
                         directusUser.value;
-                    this.user = { id, email, first_name, last_name };
+
+                    // [2025-06-03] 获取对应学生信息
+                    const filters = { directus_user: id };
+                    const student_info = await getItems<Students>({
+                        collection: "students",
+                        params: {
+                            filter: filters,
+                        },
+                    });
+                    this.user = { id, email, first_name, last_name, student_id: student_info[0].id };
 
                     // Update the auth store with the user data
                     this.loggedIn = true;
