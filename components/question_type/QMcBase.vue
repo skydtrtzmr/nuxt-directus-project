@@ -2,7 +2,9 @@
 <!-- 这里是通用选择题内容组件 -->
 <template>
     <div
-        v-if="questionData && questionData.questions_id && currentQuestionResult"
+        v-if="
+            questionData && questionData.questions_id && currentQuestionResult
+        "
     >
         <!-- 题干 -->
         <div
@@ -110,10 +112,17 @@ const props = defineProps<{
     questionResults: QuestionResults[];
 }>();
 
-console.log("props.questionData.questions_id.stem", props.questionData.questions_id.stem);
+console.log(
+    "props.questionData.questions_id.stem",
+    props.questionData.questions_id.stem
+);
 
-console.log("renderMarkdown", props.renderMarkdown(props.questionData.questions_id.stem));
+console.log(
+    "renderMarkdown",
+    props.renderMarkdown(props.questionData.questions_id.stem)
+);
 
+console.log("currentQuestionResult:", props.currentQuestionResult);
 
 const dynamicQuestionTypeForQuestionResult = computed(() => {
     return props.questionType;
@@ -164,8 +173,7 @@ watch(
             }
         } else {
             if (newResult?.submit_ans_select_radio) {
-                localAnswer.value =
-                    newResult.submit_ans_select_radio;
+                localAnswer.value = newResult.submit_ans_select_radio;
             } else {
                 localAnswer.value = "";
             }
@@ -200,7 +208,9 @@ const updateAnswer = async () => {
         return;
     }
     if (!props.questionResults || !Array.isArray(props.questionResults)) {
-        console.error("无法更新答案：questionResults prop 未定义或不是数组。父组件可能未正确传递。");
+        console.error(
+            "无法更新答案：questionResults prop 未定义或不是数组。父组件可能未正确传递。"
+        );
         return;
     }
 
@@ -208,17 +218,28 @@ const updateAnswer = async () => {
     let newAnswerPayload: any = {};
     let previousAnswer: any;
 
-    if (props.questionType === "q_mc_multi" || props.questionType === "q_mc_flexible") {
-        newAnswerPayload.submit_ans_select_multiple_checkbox = localAnswer.value;
-        previousAnswer = Array.isArray(props.currentQuestionResult.submit_ans_select_multiple_checkbox)
-            ? [...props.currentQuestionResult.submit_ans_select_multiple_checkbox]
+    if (
+        props.questionType === "q_mc_multi" ||
+        props.questionType === "q_mc_flexible"
+    ) {
+        newAnswerPayload.submit_ans_select_multiple_checkbox =
+            localAnswer.value;
+        previousAnswer = Array.isArray(
+            props.currentQuestionResult.submit_ans_select_multiple_checkbox
+        )
+            ? [
+                  ...props.currentQuestionResult
+                      .submit_ans_select_multiple_checkbox,
+              ]
             : [];
     } else {
         newAnswerPayload.submit_ans_select_radio = localAnswer.value;
         previousAnswer = props.currentQuestionResult.submit_ans_select_radio;
     }
 
-    const resultIndex = props.questionResults.findIndex(qr => qr.id === resultIdToUpdate);
+    const resultIndex = props.questionResults.findIndex(
+        (qr) => qr.id === resultIdToUpdate
+    );
     let originalResultDataForRollback: QuestionResults | null = null;
 
     const MAX_RETRIES = 3;
@@ -227,13 +248,22 @@ const updateAnswer = async () => {
 
     // 乐观更新UI
     if (resultIndex !== -1) {
-        originalResultDataForRollback = { ...props.questionResults[resultIndex] };
+        originalResultDataForRollback = {
+            ...props.questionResults[resultIndex],
+        };
         const currentLocalAnswer = localAnswer.value;
         const updatedResultItem = {
             ...props.questionResults[resultIndex],
-            ...(props.questionType === "q_mc_multi" || props.questionType === "q_mc_flexible"
-                ? { submit_ans_select_multiple_checkbox: Array.isArray(currentLocalAnswer) ? [...currentLocalAnswer] : [] }
-                : { submit_ans_select_radio: currentLocalAnswer as string })
+            ...(props.questionType === "q_mc_multi" ||
+            props.questionType === "q_mc_flexible"
+                ? {
+                      submit_ans_select_multiple_checkbox: Array.isArray(
+                          currentLocalAnswer
+                      )
+                          ? [...currentLocalAnswer]
+                          : [],
+                  }
+                : { submit_ans_select_radio: currentLocalAnswer as string }),
         };
         props.questionResults.splice(resultIndex, 1, updatedResultItem);
     } else {
@@ -250,7 +280,11 @@ const updateAnswer = async () => {
                     body: {
                         collection: "question_results",
                         id: resultIdToUpdate,
-                        item: newAnswerPayload,
+                        item: {
+                            ...newAnswerPayload,
+                            practice_session_id: props.currentQuestionResult
+                                .practice_session_id as string,
+                        },
                     },
                 }
             );
@@ -258,15 +292,27 @@ const updateAnswer = async () => {
             return; // 成功，退出函数
         } catch (error) {
             retries++;
-            console.error(`通过MQ更新答案时出错 (尝试 ${retries}/${MAX_RETRIES}):`, error);
+            console.error(
+                `通过MQ更新答案时出错 (尝试 ${retries}/${MAX_RETRIES}):`,
+                error
+            );
             if (retries >= MAX_RETRIES) {
                 console.error("达到最大重试次数，更新答案失败。");
                 // 回滚乐观更新
                 if (resultIndex !== -1 && originalResultDataForRollback) {
-                    props.questionResults.splice(resultIndex, 1, originalResultDataForRollback);
+                    props.questionResults.splice(
+                        resultIndex,
+                        1,
+                        originalResultDataForRollback
+                    );
                     // 恢复 localAnswer 的值
-                    if (props.questionType === "q_mc_multi" || props.questionType === "q_mc_flexible") {
-                        localAnswer.value = Array.isArray(previousAnswer) ? [...previousAnswer] : [];
+                    if (
+                        props.questionType === "q_mc_multi" ||
+                        props.questionType === "q_mc_flexible"
+                    ) {
+                        localAnswer.value = Array.isArray(previousAnswer)
+                            ? [...previousAnswer]
+                            : [];
                     } else {
                         localAnswer.value = previousAnswer as string;
                     }
@@ -275,7 +321,7 @@ const updateAnswer = async () => {
                 return; // 退出函数
             }
             // 等待一段时间后重试
-            await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
+            await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
         }
     }
 };
