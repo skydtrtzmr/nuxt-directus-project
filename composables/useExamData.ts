@@ -249,29 +249,28 @@ export function useExamData() {
         current_selected_question_ref: Ref<any>
     ) => {
         try {
-            const practiceSessionResponse: PracticeSessions =
-                await getItemById<PracticeSessions>({
-                    collection: "practice_sessions",
-                    id: current_practice_session_id,
-                    params: {
-                        fields: [
-                            "id",
-                            "exercises_students_id.exercises_id.paper",
-                            "exercises_students_id.students_id.name",
-                            "exercises_students_id.students_id.number",
-                            "exercises_students_id.students_id.email",
-                            "exercises_students_id.students_id.class.name",
-                            "exercises_students_id.exercises_id.title",
-                            "exercises_students_id.exercises_id.duration",
-                            "score",
-                            "actual_start_time",
-                            "actual_end_time",
-                            "extra_time",
-                            "expected_end_time",
-                            "submit_status",
-                        ],
-                    },
-                });
+            const practiceSessionFields = [
+                "id",
+                "exercises_students_id.exercises_id.paper",
+                "exercises_students_id.students_id.name",
+                "exercises_students_id.students_id.number",
+                "exercises_students_id.students_id.email",
+                "exercises_students_id.students_id.class.name",
+                "exercises_students_id.exercises_id.title",
+                "exercises_students_id.exercises_id.duration",
+                "score",
+                "actual_start_time",
+                "actual_end_time",
+                "extra_time",
+                "expected_end_time",
+                "submit_status",
+            ];
+            // 将每个字段中的 "." 替换为 "-", 然后用 "," 连接
+            const fieldsQueryString = practiceSessionFields.map(field => field.replace(/\./g, '-')).join(",");
+
+            const practiceSessionResponse: any = await $fetch(
+                `${config.public.directus.url}/fetch-practice-session-info-endpoint/${current_practice_session_id}?fields=${fieldsQueryString}`
+            );
 
             if (practiceSessionResponse) {
                 practiceSession.value = practiceSessionResponse;
