@@ -325,6 +325,9 @@ const props = defineProps({
     },
 });
 
+
+const config = useRuntimeConfig();
+
 // console.log("props.mode:", props.mode);
 
 // 根据模式设置页面标题和其他文本
@@ -403,19 +406,50 @@ const fetchPracticeSessions = async () => {
     practice_sessions_ref.value = practice_sessions;
 };
 
-const updateSubmitStatus = async (practice_session: PracticeSessions) => {
+const updateSubmitStatus = async (
+    practice_session: PracticeSessions
+): Promise<Partial<PracticeSessions> | null> => {
     try {
-        let nowData = dayjs();
-        const newItem = {
-            actual_start_time: nowData,
-            submit_status: "doing",
+        // const nowIso = dayjs().toISOString(); // Use ISO string for consistency
+        const nowIso = dayjs();
+        const itemToUpdate = {
+            actual_start_time: nowIso,
+            submit_status: "doing" as const, // TypeScript const assertion
         };
-        await updateItem<PracticeSessions>({
-            collection: "practice_sessions",
-            id: practice_session.id,
-            item: newItem,
-        });
-    } catch (e) {}
+
+        // const updatedFields = await updateItem<PracticeSessions>({
+        //     collection: "practice_sessions",
+        //     id: practice_session.id,
+        //     item: itemToUpdate,
+        //     // params: { fields: ["id", "actual_start_time", "submit_status"] } // Optional: if your Directus SDK wrapper allows specifying returned fields
+        // });
+        
+        const updatedFields = await $fetch(
+            `${config.public.directus.url}/update-practice-session-info-endpoint/${practice_session.id}`,
+            {
+                method: 'PATCH',
+                body: itemToUpdate,
+                // query params for controlling response fields, if your endpoint supports it
+                // params: {
+                //   fields: 'id,actual_start_time,submit_status' 
+                // }
+            }
+        );
+
+        // If updateItem doesn't return the updated object, this function might return void or boolean.
+        // The critical part is that joinSession awaits this call.
+        // For this example, let's assume updatedFields contains what we need or indicates success.
+
+        if (updatedFields) {
+            return updatedFields;
+        }
+
+        return null; // Indicate failure
+
+    } catch (e) {
+        console.error("更新提交状态失败:", e);
+        return null;
+    }
 };
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -426,20 +460,16 @@ const formatDateTime = (dateTime: any) => {
 };
 
 const joinSession = async (sessionId: string) => {
-    // 首先判断考试/练习时间
-    const now_time = dayjs(); // 使用 dayjs() 获取当前时间，更简洁
-
+    const now_time = dayjs();
     const session_info = practice_sessions_ref.value.find(
         (item) => item.id === sessionId
     );
 
     if (!session_info) {
         console.error("[SessionList] Session not found with id:", sessionId);
-        // 可以考虑向用户显示一个错误提示
         return;
     }
 
-    // 注意因为session可能是字符串或对象，要用"as"来断言类型
     const exercisesStudentsEntry =
         session_info.exercises_students_id as ExercisesStudents;
     const exerciseDetails = exercisesStudentsEntry.exercises_id as Exercises;
@@ -447,44 +477,61 @@ const joinSession = async (sessionId: string) => {
     const session_start_time = dayjs(exerciseDetails.start_time);
     const session_end_time = dayjs(exerciseDetails.end_time);
 
-    if (now_time.isBefore(session_start_time)) {
-        not_started_dialog_visible.value = true;
-        return;
-    }
-
-    if (now_time.isAfter(session_end_time)) {
-        have_ended_dialog_visible.value = true;
-        return;
-    }
-
-    try {
-        // 参加考试/练习之后，需要修改submit_status为doing。
-        // 只有第一次才记录实际开始时间，以后就不再记录了。
-        if (session_info.actual_start_time === null) {
-            await updateSubmitStatus(session_info);
-            // 成功提交实际开始时间后，可以考虑更新本地的 session_info.actual_start_time
-            // 但由于马上要跳转，下一页会重新获取数据，所以可能不是必须的。
-            // 如果希望立即反映，可以手动更新或重新获取该 session 的数据。
-            // 例如: session_info.actual_start_time = dayjs().toISOString(); // 模拟更新
+    //  仅对考试模式检查严格时间，练习模式可以更灵活
+    if (props.mode === "exam") {
+        if (now_time.isBefore(session_start_time)) {
+            not_started_dialog_visible.value = true;
+            return;
         }
 
-        // CAUTION: 注意 (此注释保留，因为是重要提示)
-        // 在更新"实际开始时间"后，要等后台directus根据它和"时长"计算出"实际结束时间"，
-        // 并更新到数据库中，此时页面去获取信息才能确保后续endTime不是null。
-        // 解决方法：要在加载Page时确保expected_end_time字段不为空。
-        // （当前 useExamTimer 的设计是在前端计算结束时间，所以主要依赖 actual_start_time, duration, extra_time 的准确性）
+        if (now_time.isAfter(session_end_time)) {
+            have_ended_dialog_visible.value = true;
+            return;
+        }
+    }
 
-        // 跳转到具体的页面
+
+    try {
+        if (session_info.actual_start_time === null) {
+            const updateResult = await updateSubmitStatus(session_info); // Crucially, await here
+            if (!updateResult) {
+                console.error(
+                    "[SessionList] Failed to update session start time. Navigation aborted."
+                );
+                // Optionally, show a user-facing error message
+                // e.g., using a PrimeVue Toast or a dialog
+                // alert("无法开始，请稍后重试。");
+                return; // Do not navigate if the update failed
+            }
+            
+            // Optional: If updateResult contains the new status and time,
+            // you can update the local list item for immediate UI feedback,
+            // though navigation usually makes this less critical.
+            const index = practice_sessions_ref.value.findIndex(s => s.id === sessionId);
+            if (index !== -1) {
+                // Assuming updateResult gives back at least actual_start_time and submit_status
+                // Provide default values from session_info if updateResult or its properties are null/undefined
+                const actualStartTimeFromResult = (updateResult as any)?.actual_start_time || session_info.actual_start_time;
+                const submitStatusFromResult = (updateResult as any)?.submit_status || "doing";
+
+
+                practice_sessions_ref.value[index] = {
+                    ...practice_sessions_ref.value[index],
+                    actual_start_time: actualStartTimeFromResult, // Fallback to existing if not present
+                    submit_status: submitStatusFromResult, // Fallback to "doing"
+                };
+            }
+        }
+
+        // Navigation occurs only after actual_start_time has been successfully sent (and awaited)
         router.push(`/exam/${sessionId}`);
-        // 跳转到具体的页面，页面path的最后一项就是practice_sessions的id。
     } catch (error) {
         console.error(
             `[SessionList] Error joining session ${sessionId}:`,
             error
         );
-        // 此处可以向用户显示一个通用错误消息
-        // 例如使用 PrimeVue 的 Toast 服务
-        // toast.add({ severity: 'error', summary: '操作失败', detail: '无法加入，请稍后重试', life: 3000 });
+        // Optionally, show a user-facing error message
+        // alert("加入会话时发生错误，请重试。");
     }
 };
 
