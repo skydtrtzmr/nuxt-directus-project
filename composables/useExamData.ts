@@ -43,10 +43,7 @@ export function useExamData() {
         // 类型断言为 any[] 以便修改
         const processedQuestionResults = (questionResultsData as any[]).map(qr => {
             if (qr.submit_ans_select_multiple_checkbox && typeof qr.submit_ans_select_multiple_checkbox === 'string') {
-                try {
-                    // 解析JSON字符串为数组
-                    console.log("qr.submit_ans_select_multiple_checkbox:", qr.submit_ans_select_multiple_checkbox);
-                    
+                try {               
                     qr.submit_ans_select_multiple_checkbox = JSON.parse(qr.submit_ans_select_multiple_checkbox);
                 } catch (error) {
                     // 如果解析失败，可以根据需求设置为 null, [], 或者保留原样并记录错误
@@ -61,7 +58,6 @@ export function useExamData() {
             return qr;
         });
         questionResults.value = processedQuestionResults as QuestionResults[];
-        console.log("questionResults:", questionResults.value);
         
     };
 
@@ -200,8 +196,6 @@ export function useExamData() {
             // `/api/papers/full/${paperId}`
             `${config.public.directus.url}/fetch-paper-cache-endpoint/papers/${paperId}`
         );
-        console.log("paperFullData:");
-        console.log(paperFullData);
 
         const paperResponse: Papers = {
             id: paperFullData.id,

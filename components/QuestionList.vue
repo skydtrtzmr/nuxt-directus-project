@@ -157,13 +157,9 @@ const questionResultsMap = computed(() => {
             }
         }
     }
-    console.log("Computed-map:", map);
     
     return map;
 });
-
-console.log("questionResultsMap:", questionResultsMap.value);
-
 
 const toggleSidebar = () => {
     isSidebarCollapsed.value = !isSidebarCollapsed.value;
