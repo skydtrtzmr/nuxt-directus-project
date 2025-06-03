@@ -202,6 +202,7 @@ const unifiedFlagLabel = computed(() => {
 });
 
 // Unified toggle flag function for the bottom button
+// TODO 目前标记状态还没改为走redis缓存
 const handleUnifiedToggleFlag = async () => {
     if (props.exam_page_mode === 'review') return;
     const { updateItem } = useDirectusItems();

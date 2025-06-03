@@ -149,6 +149,8 @@ import { useExamTimer } from "@/composables/useExamTimer";
 import { useExamData } from "@/composables/useExamData";
 import { useQuestionNavigation } from "@/composables/useQuestionNavigation";
 
+const config = useRuntimeConfig();
+
 dayjs.extend(utc);
 
 const props = defineProps<{
@@ -272,25 +274,31 @@ const selectQuestion = (question: any) => {
     selectedQuestion.value = question;
 };
 
-const submitActualEndTime = async (examId: string) => {
-    try {
-        await updateItem<PracticeSessions>({
-            collection: "practice_sessions",
-            id: examId,
-            item: { actual_end_time: dayjs().toISOString() },
-        });
-    } catch (e) {
-        console.error("提交实际结束时间失败:", e);
-    }
-};
 
 const updateSubmitStatus = async (current_practice_session_id: string) => {
     try {
-        await updateItem<PracticeSessions>({
-            collection: "practice_sessions",
-            id: current_practice_session_id,
-            item: { submit_status: "done" },
-        });
+        // await updateItem<PracticeSessions>({
+        //     collection: "practice_sessions",
+        //     id: current_practice_session_id,
+        //     item: { submit_status: "done" },
+        // });
+        const itemToUpdate = {
+            actual_end_time: dayjs().toISOString(),
+            submit_status: "done" as const, // TypeScript const assertion
+        };
+        
+        const updatedFields = await $fetch(
+            `${config.public.directus.url}/update-practice-session-info-endpoint/${current_practice_session_id}`,
+            {
+                method: 'PATCH',
+                body: itemToUpdate,
+                // query params for controlling response fields, if your endpoint supports it
+                // params: {
+                //   fields: 'id,actual_start_time,submit_status' 
+                // }
+            }
+        );
+        
     } catch (e) {
         console.error("更新提交状态失败:", e);
     }
@@ -304,7 +312,6 @@ const submitExam = async (examId_to_submit: string) => {
         console.log("考试已提交，或为复习模式，跳过重复提交。");
         return;
     }
-    await submitActualEndTime(examId_to_submit);
     await updateSubmitStatus(examId_to_submit);
     if (practiceSession.value) {
         practiceSession.value.submit_status = "done";
