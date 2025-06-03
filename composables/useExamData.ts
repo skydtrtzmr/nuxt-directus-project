@@ -11,6 +11,8 @@ import type {
 } from "~~/types/directus_types";
 import { useDirectusItems, useRuntimeConfig } from "#imports"; // Nuxt auto-imports
 
+const config = useRuntimeConfig();
+
 export function useExamData() {
     const config = useRuntimeConfig();
     // 注意，这个一定要写在函数内部。
@@ -20,7 +22,7 @@ export function useExamData() {
 
     const { getItemById, getItems } = useDirectusItems();
 
-    const practiceSession = ref<PracticeSessions>({} as PracticeSessions);
+    const practiceSession = ref<any>({} as any);
     const paper = ref<Papers>({} as Papers);
     const submittedPaperSections = ref<PaperSections[]>([]);
     const initialSelectedQuestion = ref<any>(null); // Stores the initially selected question or group
@@ -230,25 +232,13 @@ export function useExamData() {
         current_practice_session_id: string,
         current_selected_question_ref: Ref<any>
     ) => {
-        if (practiceSession.value.exercises_students_id) {
-            const esId = practiceSession.value.exercises_students_id;
-            if (
-                typeof esId === "object" &&
-                esId &&
-                "exercises_id" in esId &&
-                esId.exercises_id
-            ) {
-                const exercisesId = esId.exercises_id;
-                if (typeof exercisesId === "object" && "paper" in exercisesId) {
-                    const paperId = exercisesId.paper as string;
-                    await fetchSubmittedPaper(
-                        paperId,
-                        current_practice_session_id,
-                        current_selected_question_ref
-                    );
-                }
-            }
-        }
+        const paperId =
+            practiceSession.value["exercises_students_id-exercises_id-paper"];
+        await fetchSubmittedPaper(
+            paperId,
+            current_practice_session_id,
+            current_selected_question_ref
+        );
     };
 
     const loadExamData = async (
