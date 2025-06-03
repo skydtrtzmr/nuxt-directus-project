@@ -26,7 +26,7 @@ export function useExamData() {
     const initialSelectedQuestion = ref<any>(null); // Stores the initially selected question or group
     const questionResults = ref<QuestionResults[]>([]);
     const examScore = ref<number | null>(null);
-    const practiceSessionTime = ref<PracticeSessions>({} as PracticeSessions);
+    const practiceSessionTime = ref<any>({} as any);
 
     // This will be returned to ExamPage to trigger side effects
     const timerInitParams = ref<{
@@ -41,31 +41,39 @@ export function useExamData() {
             `${config.public.directus.url}/fetch-practice-session-cache-endpoint/practice_session/${practice_session_id}/qresults`
         );
         // 类型断言为 any[] 以便修改
-        const processedQuestionResults = (questionResultsData as any[]).map(qr => {
-            if (qr.submit_ans_select_multiple_checkbox && typeof qr.submit_ans_select_multiple_checkbox === 'string') {
-                try {               
-                    qr.submit_ans_select_multiple_checkbox = JSON.parse(qr.submit_ans_select_multiple_checkbox);
-                } catch (error) {
-                    // 如果解析失败，可以根据需求设置为 null, [], 或者保留原样并记录错误
-                    console.warn(`Failed to parse submit_ans_select_multiple_checkbox for question result id: ${qr.id}`, error);
-                    // 为保持与原类型一致，这里将其设置为空数组，如果原始字符串无效
-                    qr.submit_ans_select_multiple_checkbox = []; 
+        const processedQuestionResults = (questionResultsData as any[]).map(
+            (qr) => {
+                if (
+                    qr.submit_ans_select_multiple_checkbox &&
+                    typeof qr.submit_ans_select_multiple_checkbox === "string"
+                ) {
+                    try {
+                        qr.submit_ans_select_multiple_checkbox = JSON.parse(
+                            qr.submit_ans_select_multiple_checkbox
+                        );
+                    } catch (error) {
+                        // 如果解析失败，可以根据需求设置为 null, [], 或者保留原样并记录错误
+                        console.warn(
+                            `Failed to parse submit_ans_select_multiple_checkbox for question result id: ${qr.id}`,
+                            error
+                        );
+                        // 为保持与原类型一致，这里将其设置为空数组，如果原始字符串无效
+                        qr.submit_ans_select_multiple_checkbox = [];
+                    }
+                } else if (qr.submit_ans_select_multiple_checkbox === "") {
+                    // 如果是空字符串，也转换为空数组，以保持类型一致性
+                    qr.submit_ans_select_multiple_checkbox = [];
                 }
-            } else if (qr.submit_ans_select_multiple_checkbox === "") {
-                // 如果是空字符串，也转换为空数组，以保持类型一致性
-                qr.submit_ans_select_multiple_checkbox = [];
+                return qr;
             }
-            return qr;
-        });
+        );
         questionResults.value = processedQuestionResults as QuestionResults[];
-        
     };
 
     const fetchSubmittedSectionsList = async (
         sections: PaperSections[],
         current_selected_question_ref: Ref<any>
     ) => {
-
         const sectionList = sections;
 
         // 开始：为 section.question_groups 添加 group_question_ids
@@ -266,7 +274,9 @@ export function useExamData() {
                 "submit_status",
             ];
             // 将每个字段中的 "." 替换为 "-", 然后用 "," 连接
-            const fieldsQueryString = practiceSessionFields.map(field => field.replace(/\./g, '-')).join(",");
+            const fieldsQueryString = practiceSessionFields
+                .map((field) => field.replace(/\./g, "-"))
+                .join(",");
 
             const practiceSessionResponse: any = await $fetch(
                 `${config.public.directus.url}/fetch-practice-session-info-endpoint/${current_practice_session_id}?fields=${fieldsQueryString}`
@@ -293,22 +303,11 @@ export function useExamData() {
 
                 const actualStartISO =
                     practiceSessionTime.value.actual_start_time;
-                let durationMins = 0;
-                let extraMins = 0;
-
-                const esId = practiceSessionTime.value.exercises_students_id;
-                if (
-                    esId &&
-                    typeof esId === "object" &&
-                    esId.exercises_id &&
-                    typeof esId.exercises_id === "object" &&
-                    typeof esId.exercises_id.duration === "number"
-                ) {
-                    durationMins = esId.exercises_id.duration;
-                }
-                if (typeof practiceSessionTime.value.extra_time === "number") {
-                    extraMins = practiceSessionTime.value.extra_time;
-                }
+                let durationMins =
+                    practiceSessionTime.value[
+                        "exercises_students_id-exercises_id-duration"
+                    ];
+                let extraMins = practiceSessionTime.value.extra_time;
 
                 if (actualStartISO) {
                     timerInitParams.value = {
