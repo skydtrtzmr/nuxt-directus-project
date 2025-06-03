@@ -327,8 +327,6 @@ const props = defineProps({
 
 // console.log("props.mode:", props.mode);
 
-
-
 // 根据模式设置页面标题和其他文本
 const pageTitle = computed(() =>
     props.mode === "exam" ? "考试中心" : "练习中心"
@@ -407,19 +405,11 @@ const fetchPracticeSessions = async () => {
 
 const updateSubmitStatus = async (practice_session: PracticeSessions) => {
     try {
-        const newItem = { submit_status: "doing" };
-        await updateItem<PracticeSessions>({
-            collection: "practice_sessions",
-            id: practice_session.id,
-            item: newItem,
-        });
-    } catch (e) {}
-};
-
-const submitActualStartTime = async (practice_session: PracticeSessions) => {
-    try {
         let nowData = dayjs();
-        const newItem = { actual_start_time: nowData };
+        const newItem = {
+            actual_start_time: nowData,
+            submit_status: "doing",
+        };
         await updateItem<PracticeSessions>({
             collection: "practice_sessions",
             id: practice_session.id,
@@ -450,7 +440,8 @@ const joinSession = async (sessionId: string) => {
     }
 
     // 注意因为session可能是字符串或对象，要用"as"来断言类型
-    const exercisesStudentsEntry = session_info.exercises_students_id as ExercisesStudents;
+    const exercisesStudentsEntry =
+        session_info.exercises_students_id as ExercisesStudents;
     const exerciseDetails = exercisesStudentsEntry.exercises_id as Exercises;
 
     const session_start_time = dayjs(exerciseDetails.start_time);
@@ -468,11 +459,9 @@ const joinSession = async (sessionId: string) => {
 
     try {
         // 参加考试/练习之后，需要修改submit_status为doing。
-        await updateSubmitStatus(session_info);
-
         // 只有第一次才记录实际开始时间，以后就不再记录了。
         if (session_info.actual_start_time === null) {
-            await submitActualStartTime(session_info);
+            await updateSubmitStatus(session_info);
             // 成功提交实际开始时间后，可以考虑更新本地的 session_info.actual_start_time
             // 但由于马上要跳转，下一页会重新获取数据，所以可能不是必须的。
             // 如果希望立即反映，可以手动更新或重新获取该 session 的数据。
@@ -489,7 +478,10 @@ const joinSession = async (sessionId: string) => {
         router.push(`/exam/${sessionId}`);
         // 跳转到具体的页面，页面path的最后一项就是practice_sessions的id。
     } catch (error) {
-        console.error(`[SessionList] Error joining session ${sessionId}:`, error);
+        console.error(
+            `[SessionList] Error joining session ${sessionId}:`,
+            error
+        );
         // 此处可以向用户显示一个通用错误消息
         // 例如使用 PrimeVue 的 Toast 服务
         // toast.add({ severity: 'error', summary: '操作失败', detail: '无法加入，请稍后重试', life: 3000 });
