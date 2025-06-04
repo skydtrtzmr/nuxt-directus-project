@@ -1,6 +1,6 @@
 // automation/scenarios/navigateToExamsFromHomepage.ts
 import type { Router } from 'vue-router';
-import { delay, waitForNavigation } from '../utils/domHelpers';
+import { delay, navigateToWithRetry } from '../utils/domHelpers';
 // import { log } from 'console';
 
 export async function runNavigateToExamsFromHomepageScenario(router: Router): Promise<boolean> {
@@ -9,11 +9,22 @@ export async function runNavigateToExamsFromHomepageScenario(router: Router): Pr
     
     // 如果当前不是首页，先尝试导航到首页
     if (router.currentRoute.value.path !== '/dashboard') {
-        router.push('/dashboard');
-        if (!await waitForNavigation(router, path => path === '/dashboard')) {
-            console.warn("Automation: Failed to navigate to homepage first.");
+        console.log("Automation: Current path is not /dashboard. Attempting to navigate to /dashboard with retries...");
+        const navigatedToDashboard = await navigateToWithRetry(
+            router,
+            () => router.push('/dashboard'),
+            path => path === '/dashboard',
+            { 
+                timeoutPerAttempt: 5000,
+                maxRetries: 3,
+                delayBetweenRetriesMs: 1000
+            }
+        );
+        if (!navigatedToDashboard) {
+            console.warn("Automation: Failed to navigate to /dashboard after multiple retries.");
             return false;
         }
+        console.log("Automation: Successfully navigated to /dashboard.");
     }
     
     // index.vue 的 onMounted 逻辑是直接跳转
@@ -24,23 +35,24 @@ export async function runNavigateToExamsFromHomepageScenario(router: Router): Pr
     console.log(`Automation: Adding random delay of ${randomDelay}ms before navigating to /exams.`);
     await delay(randomDelay);
 
-    // 要先执行跳转，然后再开始等待
-    router.push('/exams');
+    // 尝试导航到 /exams，带重试逻辑
+    console.log("Automation: Attempting to navigate to /exams with retries...");
+    const navigatedToExams = await navigateToWithRetry(
+        router,
+        () => router.push('/exams'),
+        path => path === '/exams',
+        {
+            timeoutPerAttempt: 10000,
+            maxRetries: 3,
+            delayBetweenRetriesMs: 1500
+        }
+    );
 
-    // 等待跳转到 /exams
-    const navigated = await waitForNavigation(router, path => path === '/exams', 10000);
-    if (navigated) {
+    if (navigatedToExams) {
         console.log("Automation: Successfully navigated to /exams.");
     } else {
-        console.log("path:", router.currentRoute.value.path);
-        
-        console.warn("Automation: Failed to navigate to /exams from homepage.");
-        // 尝试强制导航以防万一
-        router.push('/exams');
-        await delay(1000);
-        if (router.currentRoute.value.path !== '/exams') {
-            return false;
-        }
+        console.warn("Automation: Failed to navigate to /exams from homepage after multiple retries. Current path:", router.currentRoute.value.path);
+        return false;
     }
     return true;
 }

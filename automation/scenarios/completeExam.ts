@@ -1,6 +1,6 @@
 // automation/scenarios/completeExam.ts
 import type { Router } from "vue-router";
-import { delay, waitForElement, waitForNavigation } from "../utils/domHelpers";
+import { delay, waitForElement, navigateToWithRetry } from "../utils/domHelpers";
 
 // 从题型标签获取题目类型
 function getQuestionTypeFromTag(questionElement: HTMLElement): string | null {
@@ -266,7 +266,7 @@ export async function runCompleteExamScenario(
                         behavior: "smooth",
                         block: "nearest",
                     });
-                    await delay(500);
+                    await delay(1000);
                     // QuestionContent 组件嵌套在 div.question-item 内部
                     // .question-type-tag 将位于此 subQuestionElement 的 QuestionContent 部分
 
@@ -290,7 +290,7 @@ export async function runCompleteExamScenario(
                             answerCounters
                         );
                     }
-                    await delay(300);
+                    await delay(500);
                 }
             }
         } else {
@@ -317,7 +317,7 @@ export async function runCompleteExamScenario(
         }
 
         await delay(700);
-        // “下一题”按钮位于 QuestionDetail.vue 的页脚
+        // "下一题"按钮位于 QuestionDetail.vue 的页脚
         // 根据 QuestionDetail.vue, 下一题按钮有 label "下一题" 和 icon "pi pi-arrow-right"
         const nextQuestionButton = document.querySelector(
             ".question-footer button[aria-label='下一题']"
@@ -390,7 +390,7 @@ export async function runCompleteExamScenario(
         console.warn("自动化测试：确认提交试卷对话框中的确定按钮未找到。");
     }
 
-    // 会弹出提示框“即将退出考试”，需点击确定。
+    // 会弹出提示框"即将退出考试"，需点击确定。
     const readyToExitExamButton = document.querySelector(
         "button[aria-label='确定']"
     ) as HTMLButtonElement | null;  
@@ -404,12 +404,16 @@ export async function runCompleteExamScenario(
     }
 
     // 确定后，会自动开始跳转。
-
-    const navigatedAfterSubmit = await waitForNavigation(
+    console.log("自动化测试：等待考试提交后导航，带重试...");
+    const navigatedAfterSubmit = await navigateToWithRetry(
         router,
-        (path) => !path.includes(`/exam/${examId}`),
-        // 跳转到其他页面，等待 20 秒
-        20000
+        () => { /* 导航由之前的按钮点击触发 */ },
+        (path) => !path.includes(`/exam/${examId}`), // 条件：路径不再包含当前考试ID
+        {
+            timeoutPerAttempt: 20000, // 每次尝试等待20秒
+            maxRetries: 3,            // 最多重试3次
+            delayBetweenRetriesMs: 1000 // 重试间隔1秒
+        }
     );
 
     if (navigatedAfterSubmit) {

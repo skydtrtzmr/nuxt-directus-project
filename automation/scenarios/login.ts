@@ -4,18 +4,23 @@ import {
     fillInput,
     clickElement,
     delay,
-    waitForNavigation,
+    navigateToWithRetry,
 } from "../utils/domHelpers";
 
 export async function runLoginScenario(router: Router): Promise<boolean> {
     // console.log("Automation: Starting Login Scenario...");
     if (router.currentRoute.value.path !== "/auth/login") {
-        console.log("Automation: Not on login page, navigating...");
-        router.push("/auth/login");
-        if (
-            !(await waitForNavigation(router, (path) => path === "/auth/login"))
-        )
+        console.log("Automation: Not on login page, navigating with retries...");
+        const navigatedToLogin = await navigateToWithRetry(
+            router,
+            () => router.push("/auth/login"),
+            (path) => path === "/auth/login",
+            { timeoutPerAttempt: 5000, maxRetries: 3 }
+        );
+        if (!navigatedToLogin) {
+            console.warn("Automation: Failed to navigate to login page after multiple retries.");
             return false;
+        }
     }
 
     // 从 login.vue 的 onMounted 获取逻辑
@@ -66,21 +71,24 @@ export async function runLoginScenario(router: Router): Promise<boolean> {
     // 登录后，应用会跳转到 /dashboard
     // index.vue 的 onMounted 会再从 /dashboard (如果auth.login配置了redirect) 或直接从 / 跳转到 /exams
     // 此处我们等待跳转到 /exams，意味着后续脚本依赖此跳转
-    const navigated = await waitForNavigation(
+    console.log("Automation: Waiting for navigation after login with retries...");
+    const navigatedAfterLogin = await navigateToWithRetry(
         router,
+        () => { /* 导航由表单提交触发，此处无需额外操作 */ },
         (path) =>
             path.startsWith("/dashboard") ||
             path.startsWith("/exams") ||
-            path.startsWith("/"),
-        20000
+            path.startsWith("/"), // 首页本身也可能是一个有效的中间状态
+        { timeoutPerAttempt: 20000, maxRetries: 3, delayBetweenRetriesMs: 1000 }
     );
-    if (navigated) {
-        // console.log("Automation: Login successful, navigation detected.");
 
-        await delay(1000);
+    if (navigatedAfterLogin) {
+        // console.log("Automation: Login successful, navigation detected.");
+        await delay(1000); // 给后续页面加载一点时间
     } else {
         console.warn(
-            "Automation: Login might have failed or navigation timed out after submit."
+            "Automation: Login might have failed or navigation timed out after submit. Current path:", 
+            router.currentRoute.value.path
         );
         return false;
     }

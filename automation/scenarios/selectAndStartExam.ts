@@ -4,7 +4,7 @@ import {
     clickElement,
     delay,
     waitForElement,
-    waitForNavigation,
+    navigateToWithRetry,
 } from "../utils/domHelpers";
 
 export async function runSelectAndStartExamScenario(
@@ -15,10 +15,17 @@ export async function runSelectAndStartExamScenario(
     //     `Automation: Starting Select and Start Exam Scenario for "${examTitle}"...`
     // );
     if (router.currentRoute.value.path !== "/exams") {
-        console.log("Automation: Not on exams page, navigating...");
-        router.push("/exams");
-        if (!(await waitForNavigation(router, (path) => path === "/exams")))
+        console.log("Automation: Not on exams page, navigating with retries...");
+        const navigatedToExams = await navigateToWithRetry(
+            router,
+            () => router.push("/exams"),
+            (path) => path === "/exams",
+            { timeoutPerAttempt: 5000, maxRetries: 3 }
+        );
+        if (!navigatedToExams) {
+            console.warn("Automation: Failed to navigate to exams page after multiple retries.");
             return null;
+        }
     }
 
     await delay(2000); // 等待 DataView 加载完成
@@ -59,23 +66,29 @@ export async function runSelectAndStartExamScenario(
 
     // 等待导航到 /exam/:id 页面
     let examId: string | null = null;
-    const navigated = await waitForNavigation(router, (path) => {
-        const match = path.match(/^\/exam\/([^/]+)/);
-        if (match) {
-            examId = match[1];
-            return true;
-        }
-        return false;
-    });
+    console.log(`Automation: Waiting for navigation to exam page for "${examTitle}" with retries...`);
+    const navigatedToExamPage = await navigateToWithRetry(
+        router,
+        () => { /* 导航由 joinButton.click() 触发，此处无需额外操作 */ },
+        (path) => {
+            const match = path.match(/^\/exam\/([^/]+)/);
+            if (match) {
+                examId = match[1];
+                return true;
+            }
+            return false;
+        },
+        { timeoutPerAttempt: 10000, maxRetries: 3, delayBetweenRetriesMs: 1000 }
+    );
 
-    if (navigated && examId) {
+    if (navigatedToExamPage && examId) {
         console.log(
             `Automation: Successfully navigated to exam page for ID: ${examId}.`
         );
         return examId;
     } else {
         console.warn(
-            `Automation: Failed to navigate to exam page for "${examTitle}".`
+            `Automation: Failed to navigate to exam page for "${examTitle}" after multiple retries. Current path: ${router.currentRoute.value.path}`
         );
         return null;
     }

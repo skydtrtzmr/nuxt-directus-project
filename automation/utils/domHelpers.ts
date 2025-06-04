@@ -1,4 +1,6 @@
 // automation/utils/domHelpers.ts
+import type { Router } from 'vue-router';
+
 export async function delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -60,7 +62,7 @@ export async function fillInput(
 // 返回 false 表示当前路径还不满足条件。
 // 在 waitForNavigation 函数内部，会不断地获取当前页面的路径，并调用 pathCondition 函数，把当前路径传给它。如果 pathCondition 返回 true，waitForNavigation 就认为导航已经成功完成。如果超时仍未满足条件，则认为导航失败。
 // [2025-05-25] 注意，此函数仅仅用于等待验证是否成功跳转，本身并不包含跳转逻辑。
-export async function waitForNavigation(router: any, pathCondition: (path: string) => boolean, timeout = 20000): Promise<boolean> {
+export async function waitForNavigation(router: Router, pathCondition: (path: string) => boolean, timeout = 20000): Promise<boolean> {
     console.log("waitForNavigation");
     
     const startTime = Date.now();
@@ -76,4 +78,48 @@ export async function waitForNavigation(router: any, pathCondition: (path: strin
     }
     console.warn(`Automation: Timeout waiting for navigation to path matching condition. Current path: ${router.currentRoute.value.path}`);
     return false;
+}
+
+// 新增函数：执行导航操作并带重试逻辑
+export async function navigateToWithRetry(
+    router: Router,
+    navigationAction: () => Promise<any> | void, // 实际执行导航的函数，例如 () => router.push('/path')
+    pathCondition: (path: string) => boolean, // 验证导航是否成功的条件
+    options?: {
+        timeoutPerAttempt?: number; // 每次尝试等待导航完成的超时时间
+        maxRetries?: number; // 最大重试次数
+        delayBetweenRetriesMs?: number; // 两次重试之间的延迟
+    }
+): Promise<boolean> {
+    const {
+        timeoutPerAttempt = 20000, // 默认与 waitForNavigation 一致
+        maxRetries = 3, // 默认重试3次
+        delayBetweenRetriesMs = 1000 // 默认重试间隔1秒
+    } = options || {};
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        console.log(`Automation: Navigation attempt ${attempt} of ${maxRetries} to path matching condition...`);
+        
+        try {
+            await navigationAction(); // 执行导航动作
+        } catch (error) {
+            console.error(`Automation: Error during navigation action on attempt ${attempt}:`, error);
+            // 如果导航动作本身出错，也视为一次失败的尝试
+        }
+
+        if (await waitForNavigation(router, pathCondition, timeoutPerAttempt)) {
+            console.log(`Automation: Navigation successful after attempt ${attempt}.`);
+            return true; // 导航成功
+        }
+
+        const currentPath = router.currentRoute.value.path;
+        if (attempt < maxRetries) {
+            console.warn(`Automation: Navigation attempt ${attempt} failed. Current path: ${currentPath}. Retrying in ${delayBetweenRetriesMs}ms...`);
+            await delay(delayBetweenRetriesMs);
+        } else {
+            console.error(`Automation: Navigation failed after ${maxRetries} attempts. Current path: ${currentPath}.`);
+        }
+    }
+
+    return false; // 所有重试均失败
 }
