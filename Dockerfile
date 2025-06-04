@@ -17,7 +17,7 @@
 
 FROM node:22-alpine AS builder
 
-ENV HOST 0.0.0.0
+ENV HOST=0.0.0.0
 
 # 指定App根目录（作为之后的变量使用）
 ENV APP_ROOT=./nuxt-app

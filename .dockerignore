@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+
+# Node
+node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+*.pid
+*.seed
+*.log
+*.lock
+
+# Nuxt build cache and intermediate output
+.nuxt/
+dist/
+
+# Environment files (allow specific ones if needed by build, otherwise ignore)
+.env
+.env.*
+# Example: uncomment and modify if you need .env.production in build context
+# !.env.production 
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE specific
+.vscode/
+.idea/
+.cursor/
+
+# Archives (if any in project root not meant for image)
+*.zip
+*.tar.gz
+
+# Docker specific (sometimes useful)
+# Dockerfile # (though usually you want this in context)
+# docker-compose.yml 
