@@ -263,10 +263,10 @@ const userData = computed(() => {
     // console.log(practiceSession.value);
     
     return {
-        name: practiceSession?.value["exercises_students_id-students_id-name"] || "考生",
-        student_number: practiceSession.value["exercises_students_id-students_id-number"] || 0,
-        email: practiceSession.value["exercises_students_id-students_id-email"] || "",
-        className: (practiceSession.value["exercises_students_id-students_id-class-name"] as Classes)?.name || "",
+        name: practiceSession?.value["exercises_students_id__students_id-name"] || "考生",
+        student_number: practiceSession.value["exercises_students_id__students_id-number"] || 0,
+        email: practiceSession.value["exercises_students_id__students_id-email"] || "",
+        className: (practiceSession.value["exercises_students_id__students_id-class-name"] as Classes)?.name || "",
     };
 });
 

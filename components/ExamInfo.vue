@@ -54,7 +54,7 @@ const getExamTitle = () => {
     )
         return "考试信息";
 
-    return props.practiceSession["exercises_students_id-exercises_id-title"];
+    return props.practiceSession["exercises_students_id__exercises_id-title"];
 };
 
 // 使用watchEffect监听数据变化，计算考试时长

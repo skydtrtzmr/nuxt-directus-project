@@ -231,7 +231,7 @@ export function useExamData() {
         current_selected_question_ref: Ref<any>
     ) => {
         const paperId =
-            practiceSession.value["exercises_students_id-exercises_id-paper"];
+            practiceSession.value["exercises_students_id__exercises_id__paper"];
         await fetchSubmittedPaper(
             paperId,
             current_practice_session_id,
@@ -261,9 +261,9 @@ export function useExamData() {
                 "expected_end_time",
                 "submit_status",
             ];
-            // 将每个字段中的 "." 替换为 "-", 然后用 "," 连接
+            // 将每个字段中的 "." 替换为 "__", 然后用 "," 连接
             const fieldsQueryString = practiceSessionFields
-                .map((field) => field.replace(/\./g, "-"))
+                .map((field) => field.replace(/\./g, "__"))
                 .join(",");
 
             const practiceSessionResponse: any = await $fetch(
@@ -293,7 +293,7 @@ export function useExamData() {
                     practiceSessionTime.value.actual_start_time;
                 let durationMins =
                     practiceSessionTime.value[
-                        "exercises_students_id-exercises_id-duration"
+                        "exercises_students_id__exercises_id__duration"
                     ];
                 let extraMins = practiceSessionTime.value.extra_time;
 

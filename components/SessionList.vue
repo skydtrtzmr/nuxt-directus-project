@@ -103,8 +103,7 @@
                                     <div class="exam-info">
                                         <div class="exam-title">
                                             {{
-                                                item.exercises_students_id
-                                                    .exercises_id.title
+                                                item.exercises_students_id__exercises_id__title
                                             }}
                                         </div>
 
@@ -115,10 +114,7 @@
                                                     <strong>开始：</strong>
                                                     {{
                                                         formatDateTime(
-                                                            item
-                                                                .exercises_students_id
-                                                                .exercises_id
-                                                                .start_time
+                                                            item.exercises_students_id__exercises_id__start_time
                                                         )
                                                     }}
                                                 </span>
@@ -131,10 +127,7 @@
                                                     <strong>结束：</strong>
                                                     {{
                                                         formatDateTime(
-                                                            item
-                                                                .exercises_students_id
-                                                                .exercises_id
-                                                                .end_time
+                                                            item.exercises_students_id__exercises_id__end_time
                                                         )
                                                     }}
                                                 </span>
@@ -148,8 +141,7 @@
                                             {{ sessionTypeText }}时长：
                                             <div>
                                                 {{
-                                                    item.exercises_students_id
-                                                        .exercises_id.duration
+                                                    item.exercises_students_id__exercises_id__duration
                                                 }}分钟
                                             </div>
                                         </span>
@@ -200,8 +192,7 @@
                                 <div class="exam-card-header">
                                     <div class="exam-card-title">
                                         {{
-                                            item.exercises_students_id
-                                                .exercises_id.title
+                                            item.exercises_students_id__exercises_id__title
                                         }}
                                     </div>
                                     <Tag
@@ -219,10 +210,7 @@
                                             <div>
                                                 {{
                                                     formatDateTime(
-                                                        item
-                                                            .exercises_students_id
-                                                            .exercises_id
-                                                            .start_time
+                                                        item.exercises_students_id__exercises_id__start_time
                                                     )
                                                 }}
                                             </div>
@@ -236,10 +224,7 @@
                                             <div>
                                                 {{
                                                     formatDateTime(
-                                                        item
-                                                            .exercises_students_id
-                                                            .exercises_id
-                                                            .end_time
+                                                        item.exercises_students_id__exercises_id__end_time
                                                     )
                                                 }}
                                             </div>
@@ -256,8 +241,7 @@
                                             >
                                             <div>
                                                 {{
-                                                    item.exercises_students_id
-                                                        .exercises_id.duration
+                                                    item.exercises_students_id__exercises_id__duration
                                                 }}分钟
                                             </div>
                                         </div>
@@ -316,6 +300,7 @@ import type {
     ExercisesStudents,
 } from "~~/types/directus_types";
 import type { HintedString } from "@primevue/core";
+import { number } from "zod";
 
 const props = defineProps({
     mode: {
@@ -325,6 +310,27 @@ const props = defineProps({
     },
 });
 
+type flatPracticeSession_type = {
+    id: string;
+    title: string | null;
+    extra_time: number;
+    actual_end_time: string | null;
+    actual_start_time: string | null;
+    submit_status: string;
+    score: number;
+    expected_end_time: string | null;
+    exercises_students_id__exercises_id__title: string | null;
+    exercises_students_id__exercises_id__mode: string | null;
+    exercises_students_id__exercises_id__start_time: string | null;
+    exercises_students_id__exercises_id__end_time: string | null;
+    exercises_students_id__exercises_id__duration: number | null;
+    exercises_students_id__exercises_id__paper: string | null;
+    exercises_students_id__students_id__directus_user: string | null;
+    exercises_students_id__students_id__name: string | null;
+    exercises_students_id__students_id__number: number;
+    exercises_students_id__students_id__email: string | null;
+    exercises_students_id__students_id__class: string | null;
+};
 
 const config = useRuntimeConfig();
 
@@ -347,7 +353,10 @@ const sessionTypeText = computed(() =>
 const router = useRouter();
 
 const gridItems = ref([]);
-const practice_sessions_ref = ref<PracticeSessions[]>([]);
+// const practice_sessions_ref = ref<PracticeSessions[]>([]);
+const practice_sessions_ref = ref<flatPracticeSession_type[]>([]);
+// 注意这里practice_sessions的相关数据被我扁平化处理了，所以不能用已有的type。
+// 以后考虑专门写个type给它。
 const auth = useAuth();
 const current_user = auth.user; // 获取当前用户
 
@@ -361,54 +370,36 @@ const layout = ref<"grid" | "list" | undefined>("grid"); // 默认显示为网�
 const options = ref(["list", "grid"]);
 
 const fetchPracticeSessions = async () => {
-    const practice_sessions = await getItems<PracticeSessions>({
-        collection: "practice_sessions",
-        params: {
-            fields: [
-                "id",
-                "title",
-                "exercises_students_id.exercises_id.title",
-                "exercises_students_id.exercises_id.mode",
-                "exercises_students_id.exercises_id.start_time",
-                "exercises_students_id.exercises_id.end_time",
-                "exercises_students_id.exercises_id.duration",
-                "extra_time",
-                "actual_end_time",
-                "actual_start_time",
-                // 这里要获取这个actual_start_time，用来判断是否是首次参加
-                "submit_status",
-                "exercises_students_id.students_id.directus_user",
-            ],
-            filter: {
-                _and: [
-                    {
-                        exercises_students_id: {
-                            students_id: {
-                                directus_user: {
-                                    _eq: current_user!.id,
-                                },
-                            },
-                        },
-                    },
-                    {
-                        exercises_students_id: {
-                            exercises_id: {
-                                mode: {
-                                    _eq: props.mode,
-                                },
-                            },
-                        },
-                    },
-                ],
+    const user_ps: any = await $fetch(
+        `/fetch-user-ps-cache-endpoint/by-user/${current_user!.id}`,
+        {
+            baseURL: config.public.directus.url,
+        }
+    );
+    const practice_session_id_list: string[] = user_ps["practiceSessionIds"];
+
+    const practice_sessions: Record<string, flatPracticeSession_type> =
+        await $fetch(`/fetch-practice-session-info-endpoint/batch`, {
+            baseURL: config.public.directus.url,
+            method: "POST",
+            body: {
+                practice_session_ids: practice_session_id_list,
             },
-        },
-    });
-    practice_sessions_ref.value = practice_sessions;
+        });
+    const practiceSessionListOrdered: Array<flatPracticeSession_type> =
+        practice_session_id_list.map((id) => {
+            return practice_sessions[id] || null; // 如果映射中没有某个id（例如请求了但未返回），则设为null
+        });
+
+    console.log("practiceSessionListOrdered:");
+    console.log(practiceSessionListOrdered);
+
+    practice_sessions_ref.value = practiceSessionListOrdered;
 };
 
 const updateSubmitStatus = async (
-    practice_session: PracticeSessions
-): Promise<Partial<PracticeSessions> | null> => {
+    practice_session: flatPracticeSession_type
+): Promise<Partial<flatPracticeSession_type> | null> => {
     try {
         // const nowIso = dayjs().toISOString(); // Use ISO string for consistency
         const nowIso = dayjs();
@@ -423,15 +414,15 @@ const updateSubmitStatus = async (
         //     item: itemToUpdate,
         //     // params: { fields: ["id", "actual_start_time", "submit_status"] } // Optional: if your Directus SDK wrapper allows specifying returned fields
         // });
-        
+
         const updatedFields = await $fetch(
             `${config.public.directus.url}/update-practice-session-info-endpoint/${practice_session.id}`,
             {
-                method: 'PATCH',
+                method: "PATCH",
                 body: itemToUpdate,
                 // query params for controlling response fields, if your endpoint supports it
                 // params: {
-                //   fields: 'id,actual_start_time,submit_status' 
+                //   fields: 'id,actual_start_time,submit_status'
                 // }
             }
         );
@@ -445,7 +436,6 @@ const updateSubmitStatus = async (
         }
 
         return null; // Indicate failure
-
     } catch (e) {
         console.error("更新提交状态失败:", e);
         return null;
@@ -464,18 +454,20 @@ const joinSession = async (sessionId: string) => {
     const session_info = practice_sessions_ref.value.find(
         (item) => item.id === sessionId
     );
+    console.log("session_info:", session_info);
+    
 
     if (!session_info) {
         console.error("[SessionList] Session not found with id:", sessionId);
         return;
     }
 
-    const exercisesStudentsEntry =
-        session_info.exercises_students_id as ExercisesStudents;
-    const exerciseDetails = exercisesStudentsEntry.exercises_id as Exercises;
-
-    const session_start_time = dayjs(exerciseDetails.start_time);
-    const session_end_time = dayjs(exerciseDetails.end_time);
+    const session_start_time = dayjs(
+        session_info["exercises_students_id__exercises_id__start_time"]
+    );
+    const session_end_time = dayjs(
+        session_info["exercises_students_id__exercises_id__end_time"]
+    );
 
     //  仅对考试模式检查严格时间，练习模式可以更灵活
     if (props.mode === "exam") {
@@ -490,7 +482,6 @@ const joinSession = async (sessionId: string) => {
         }
     }
 
-
     try {
         if (session_info.actual_start_time === null) {
             const updateResult = await updateSubmitStatus(session_info); // Crucially, await here
@@ -503,17 +494,21 @@ const joinSession = async (sessionId: string) => {
                 // alert("无法开始，请稍后重试。");
                 return; // Do not navigate if the update failed
             }
-            
+
             // Optional: If updateResult contains the new status and time,
             // you can update the local list item for immediate UI feedback,
             // though navigation usually makes this less critical.
-            const index = practice_sessions_ref.value.findIndex(s => s.id === sessionId);
+            const index = practice_sessions_ref.value.findIndex(
+                (s) => s.id === sessionId
+            );
             if (index !== -1) {
                 // Assuming updateResult gives back at least actual_start_time and submit_status
                 // Provide default values from session_info if updateResult or its properties are null/undefined
-                const actualStartTimeFromResult = (updateResult as any)?.actual_start_time || session_info.actual_start_time;
-                const submitStatusFromResult = (updateResult as any)?.submit_status || "doing";
-
+                const actualStartTimeFromResult =
+                    (updateResult as any)?.actual_start_time ||
+                    session_info.actual_start_time;
+                const submitStatusFromResult =
+                    (updateResult as any)?.submit_status || "doing";
 
                 practice_sessions_ref.value[index] = {
                     ...practice_sessions_ref.value[index],
