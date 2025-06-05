@@ -364,8 +364,6 @@ const current_user = auth.user; // 获取当前用户
 const not_started_dialog_visible = ref(false);
 const have_ended_dialog_visible = ref(false);
 
-const { getItems, updateItem } = useDirectusItems();
-
 const layout = ref<"grid" | "list" | undefined>("grid"); // 默认显示为网格
 const options = ref(["list", "grid"]);
 

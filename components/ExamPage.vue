@@ -171,8 +171,6 @@ const confirm_submit_dialog_visible = ref(false);
 const sidebarCollapsed = ref(false);
 const sidebarWidth = ref(300);
 
-const { getItemById, getItems, updateItem } = useDirectusItems();
-
 // 路由参数：practice_session 的 ID
 const route = useRoute(); // 这里的useRoute是vue-router的useRoute方法，而非Nuxt的useRoute方法。
 

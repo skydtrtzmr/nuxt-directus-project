@@ -18,8 +18,6 @@ export function useExamData() {
     // 否则，如果写在外面，这行代码在 useExamData.ts 模块被导入和首次评估时就会执行。在页面刷新（特别是首次加载或 SSR 期间）的某些阶段，这个执行时机可能早于 Nuxt 应用实例完全准备好并提供给 useRuntimeConfig() 所需的上下文。于是变回导致报错：
     // 500 [nuxt] A composable that requires access to the Nuxt instance was called outside of a plugin, Nuxt hook, Nuxt middleware, or Vue setup function.
 
-    const { getItemById, getItems } = useDirectusItems();
-
     const practiceSession = ref<any>({} as any);
     const paper = ref<Papers>({} as Papers);
     const submittedPaperSections = ref<PaperSections[]>([]);
