@@ -1,5 +1,40 @@
 <!-- components/QuestionList.vue -->
 <template>
+    <!-- 
+        [PERF_OPTIMIZATION_SUGGESTION] 虚拟滚动优化建议
+        当前实现使用了 v-for 来渲染所有的题目按钮。当试卷题目数量非常多时（例如上百道），
+        一次性渲染所有 DOM 节点会导致严重的性能问题，包括：
+        1. 初始加载缓慢：创建大量 DOM 元素耗时。
+        2. 内存占用高：每个组件实例和 DOM 节点都占用内存。
+        3. 滚动卡顿：浏览器需要处理大量的元素，即使它们在屏幕外。
+
+        解决方案是采用"虚拟滚动"（Virtual Scrolling）技术。
+        虚拟滚动只渲染视口内可见的列表项，当用户滚动时，动态地回收离开视口的项并渲染进入视口的项。
+
+        推荐库:
+        - @tanstack/vue-virtual: 一个功能强大且灵活的无头（Headless）虚拟化库。
+        - vue-virtual-scroller: 一个易于使用的 Vue 虚拟滚动组件。
+
+        概念实现 (@tanstack/vue-virtual):
+        1. 在 <script setup> 中:
+           const parentRef = ref() // 滚动容器的 ref
+           const rowVirtualizer = useVirtualizer({
+               count: allQuestions.length, // 所有项的总数
+               getScrollElement: () => parentRef.value,
+               estimateSize: () => 50, // 估算的每项高度
+           })
+
+        2. 在 <template> 中:
+           <div ref="parentRef" class="scroll-container">
+               <div :style="{ height: `${rowVirtualizer.getTotalSize()}px`, position: 'relative' }"> // 撑开总高度
+                   <div v-for="virtualRow in rowVirtualizer.getVirtualItems()" :key="virtualRow.index"
+                        :style="{ position: 'absolute', top: 0, left: 0, width: '100%', transform: `translateY(${virtualRow.start}px)` }">
+                       // ... 这里渲染你的题目按钮，使用 allQuestions[virtualRow.index] 获取数据
+                   </div>
+               </div>
+           </div>
+        这需要对当前模板结构进行一些重构，将所有题目（包括单题和题组）扁平化为一个列表传递给虚拟化器。
+     -->
     <div 
         class="question-list-container" 
         :class="{'collapsed': isSidebarCollapsed}"
@@ -221,6 +256,12 @@ const checkMobileView = () => {
 
 // 修改toggleSection函数，增加动画效果控制
 const toggleSection = (index: number) => {
+    // [IMPROVEMENT_SUGGESTION] 改进动画实现
+    // 当前的折叠动画使用了 nextTick 和直接操作 DOM style.maxHeight。
+    // 虽然功能上可行，但更推荐使用 Vue 内置的 <Transition> 组件来处理这类 JS 动画。
+    // <Transition> 提供了更声明式的方式，并且可以利用 Vue 的过渡类名（如 .v-enter-active, .v-leave-active）来配合 CSS transition 实现更平滑、可维护性更好的动画效果。
+    // 这样做可以使 <script> 部分的逻辑更专注于状态管理，而不是 DOM 操作。
+
     const foundIndex = expandedSections.value.indexOf(index);
     
     // 获取章节内容的DOM元素

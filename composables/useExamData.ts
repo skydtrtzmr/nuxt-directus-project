@@ -72,6 +72,13 @@ export function useExamData() {
         sections: PaperSections[],
         current_selected_question_ref: Ref<any>
     ) => {
+        // [PERF_OPTIMIZATION_SUGGESTION] 后端优化建议
+        // 下方的循环和数据处理逻辑是为了将题目（questions）与其所属的题组（question_groups）进行关联。
+        // 这个操作在客户端执行，特别是对于题目数量多、题组复杂的试卷，会消耗大量的计算资源，阻塞UI渲染，导致页面加载变慢。
+        // 理想情况下，这部分数据关联逻辑应该在后端完成。
+        // API应该直接返回已经处理好的数据结构，即每个 section 的 question_groups 数组中，每个 group 对象都直接包含它下面的题目列表（group_question_ids）。
+        // 这样可以极大地减轻客户端的负担，加快页面渲染速度。
+
         const sectionList = sections;
 
         // 开始：为 section.question_groups 添加 group_question_ids
@@ -198,11 +205,18 @@ export function useExamData() {
         current_practice_session_id: string,
         current_selected_question_ref: Ref<any>
     ) => {
-        const paperFullData: Papers = await $fetch(
-            // `/api/papers/full/${paperId}`
-            `${config.public.directus.url}/fetch-paper-cache-endpoint/papers/${paperId}`
-        );
+        // [PERF_OPTIMIZATION] 通过Promise.all并行执行不相关的异步任务
+        // fetch-paper-cache-endpoint 和 fetchQuestionResults 之间没有依赖关系，可以并行处理
+        const [paperFullData] = await Promise.all([
+            $fetch<Papers>(
+                // `/api/papers/full/${paperId}`
+                `${config.public.directus.url}/fetch-paper-cache-endpoint/papers/${paperId}`
+            ),
+            fetchQuestionResults(current_practice_session_id),
+        ]);
 
+        // 从 await Promise.all(...) 返回的结果数组中，取出第一个元素，并将其赋值给一个名为 paperFullData 的新常量。”
+        // 数组中的第二个元素（也就是 fetchQuestionResults 的返回值）虽然也被返回了，但在这次赋值中被忽略了。如果您想同时获取第二个结果，可以这样写：const [paperFullData, questionResultsData] = await Promise.all([...]);
         const paperResponse: Papers = {
             id: paperFullData.id,
             status: paperFullData.status,
@@ -220,7 +234,8 @@ export function useExamData() {
                 paperResponse.paper_sections as PaperSections[],
                 current_selected_question_ref
             );
-            await fetchQuestionResults(current_practice_session_id);
+            // [PERF_OPTIMIZATION] fetchQuestionResults 已经通过 Promise.all 并行执行
+            // await fetchQuestionResults(current_practice_session_id);
         }
     };
 
