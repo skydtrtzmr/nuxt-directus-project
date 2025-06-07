@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
     studentData: {
         name: string;
         student_number: number;
@@ -25,6 +25,10 @@ defineProps<{
         className: string;
     };
 }>();
+console.log("props.studentData");
+console.log(props.studentData);
+
+
 </script>
 
 <style scoped>

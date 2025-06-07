@@ -54,28 +54,21 @@ const getExamTitle = () => {
     )
         return "考试信息";
 
-    return props.practiceSession["exercises_students_id__exercises_id-title"];
+    return props.practiceSession["exercises_students_id__exercises_id__title"];
 };
 
 // 使用watchEffect监听数据变化，计算考试时长
 watchEffect(() => {
     try {
         // 检查属性链上的每个对象是否存在
-        const exercisesStudents = props.practiceSession?.exercises_students_id;
-        if (!exercisesStudents || typeof exercisesStudents !== "object") {
-            duration.value = "60分钟"; // 默认值
-            return;
-        }
-
-        const exercisesId = (exercisesStudents as ExercisesStudents)
-            ?.exercises_id;
-        if (!exercisesId || typeof exercisesId !== "object") {
+        if (!props.practiceSession?.
+        exercises_students_id__exercises_id__duration) {
             duration.value = "60分钟"; // 默认值
             return;
         }
 
         // 安全获取时长
-        const durationValue = (exercisesId as Exercises)?.duration || 60; // 默认60分钟
+        const durationValue = props.practiceSession["exercises_students_id__exercises_id__duration"] || 60; // 默认60分钟
 
         // console.log("durationValue", durationValue);
 

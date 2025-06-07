@@ -257,14 +257,14 @@ const userData = computed(() => {
 
     if (!practiceSession.value) return defaultData;
 
-    // console.log("practiceSession.value");
-    // console.log(practiceSession.value);
+    console.log("practiceSession.value");
+    console.log(practiceSession.value);
     
     return {
-        name: practiceSession?.value["exercises_students_id__students_id-name"] || "考生",
-        student_number: practiceSession.value["exercises_students_id__students_id-number"] || 0,
-        email: practiceSession.value["exercises_students_id__students_id-email"] || "",
-        className: (practiceSession.value["exercises_students_id__students_id-class-name"] as Classes)?.name || "",
+        name: practiceSession?.value["exercises_students_id__students_id__name"] || "考生",
+        student_number: practiceSession.value["exercises_students_id__students_id__number"] || 0,
+        email: practiceSession.value["exercises_students_id__students_id__email"] || "",
+        className: (practiceSession.value["exercises_students_id__students_id__classes_id"] as Classes)?.name || "",
     };
 });
 
