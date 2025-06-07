@@ -275,11 +275,6 @@ const selectQuestion = (question: any) => {
 
 const updateSubmitStatus = async (current_practice_session_id: string) => {
     try {
-        // await updateItem<PracticeSessions>({
-        //     collection: "practice_sessions",
-        //     id: current_practice_session_id,
-        //     item: { submit_status: "done" },
-        // });
         const itemToUpdate = {
             actual_end_time: dayjs().toISOString(),
             submit_status: "done" as const, // TypeScript const assertion

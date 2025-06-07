@@ -406,13 +406,6 @@ const updateSubmitStatus = async (
             submit_status: "doing" as const, // TypeScript const assertion
         };
 
-        // const updatedFields = await updateItem<PracticeSessions>({
-        //     collection: "practice_sessions",
-        //     id: practice_session.id,
-        //     item: itemToUpdate,
-        //     // params: { fields: ["id", "actual_start_time", "submit_status"] } // Optional: if your Directus SDK wrapper allows specifying returned fields
-        // });
-
         const updatedFields = await $fetch(
             `${config.public.directus.url}/update-practice-session-info-endpoint/${practice_session.id}`,
             {
