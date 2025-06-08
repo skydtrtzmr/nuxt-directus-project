@@ -17,7 +17,7 @@ export function useExamData() {
     // 这样，useRuntimeConfig() 只有在 useExamData 这个组合式函数被实际调用时（例如，在 ExamPage.vue 的 setup 函数中）才会执行，此时 Nuxt 的上下文是可用的。
     // 否则，如果写在外面，这行代码在 useExamData.ts 模块被导入和首次评估时就会执行。在页面刷新（特别是首次加载或 SSR 期间）的某些阶段，这个执行时机可能早于 Nuxt 应用实例完全准备好并提供给 useRuntimeConfig() 所需的上下文。于是变回导致报错：
     // 500 [nuxt] A composable that requires access to the Nuxt instance was called outside of a plugin, Nuxt hook, Nuxt middleware, or Vue setup function.
-
+    const isLoading = ref(true); // 新增：用于跟踪加载状态
     const practiceSession = ref<any>({} as any);
     const paper = ref<Papers>({} as Papers);
     const submittedPaperSections = ref<PaperSections[]>([]);
@@ -257,6 +257,7 @@ export function useExamData() {
         exam_page_mode: string,
         current_selected_question_ref: Ref<any>
     ) => {
+        isLoading.value = true;
         try {
             const practiceSessionFields = [
                 "id",
@@ -328,6 +329,8 @@ export function useExamData() {
             }
         } catch (error) {
             console.error("useExamData: Error in loadExamData:", error);
+        } finally {
+            isLoading.value = false;
         }
     };
 
@@ -343,5 +346,6 @@ export function useExamData() {
         loadExamData,
         timerInitParams, // Expose for ExamPage to use
         shouldShowFinalSubmissionDialog, // Expose for ExamPage to use
+        isLoading, // 导出加载状态
     };
 }

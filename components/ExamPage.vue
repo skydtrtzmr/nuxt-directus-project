@@ -109,18 +109,31 @@
             ></QuestionList>
 
             <!-- 右侧：题目详情和答题区 -->
-            <QuestionDetail
+            <div
                 class="question-detail-container"
                 :class="{
                     'with-collapsed-sidebar': sidebarCollapsed,
                     'with-expanded-sidebar': !sidebarCollapsed,
                 }"
-                :exam_page_mode="exam_page_mode"
-                :selectedQuestion="selectedQuestion"
-                :practiceSessionId="practice_session_id"
-                :questionResults="questionResults"
-                @navigate-question="navigateToQuestion"
-            ></QuestionDetail>
+            >
+                <!-- 加载指示器 -->
+                <div
+                    v-if="isLoading"
+                    class="loading-spinner-container"
+                >
+                    <ProgressSpinner />
+                    <p>正在加载试卷，请稍候...</p>
+                </div>
+                <!-- 题目详情 -->
+                <QuestionDetail
+                    v-else
+                    :exam_page_mode="exam_page_mode"
+                    :selectedQuestion="selectedQuestion"
+                    :practiceSessionId="practice_session_id"
+                    :questionResults="questionResults"
+                    @navigate-question="navigateToQuestion"
+                ></QuestionDetail>
+            </div>
         </div>
     </div>
 </template>
@@ -190,6 +203,7 @@ const {
     loadExamData,
     timerInitParams,
     shouldShowFinalSubmissionDialog,
+    isLoading,
 } = useExamData();
 
 // selectedQuestion 仍然在 ExamPage.vue 中管理，但其初始值将由 loadExamData 设置
@@ -436,7 +450,22 @@ onUnmounted(() => {
     padding-left: 1rem;
     height: 100%;
     overflow: hidden;
+    /* 新增，用于居中加载动画 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.loading-spinner-container {
+    text-align: center;
+}
+
+.loading-spinner-container p {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    color: var(--text-color-secondary);
+}
+
 
 .question-detail-container.with-collapsed-sidebar {
     margin-left: 0;
