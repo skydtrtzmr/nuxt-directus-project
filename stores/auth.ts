@@ -127,7 +127,7 @@ export const useAuth = defineStore("auth", {
             const { login } = useDirectusAuth();
             const router = useRouter();
             // console.log("auth store login");
-            const { getItems } = useDirectusItems(); // 在 action 内部调用
+            // const { getItems } = useDirectusItems(); // 在 action 内部调用
 
             try {
                 // Try to login
@@ -145,15 +145,17 @@ export const useAuth = defineStore("auth", {
                     const { id, email, first_name, last_name } =
                         directusUser.value;
 
-                    // [2025-06-03] 获取对应学生信息
-                    const filters = { directus_user: id };
-                    const student_info = await getItems<Students>({
-                        collection: "students",
-                        params: {
-                            filter: filters,
-                        },
-                    });
-                    this.user = { id, email, first_name, last_name, student_id: student_info[0].id };
+                    // // [2025-06-03] 获取对应学生信息
+                    // const filters = { directus_user: id };
+                    // const student_info = await getItems<Students>({
+                    //     collection: "students",
+                    //     params: {
+                    //         filter: filters,
+                    //     },
+                    // });
+                    // this.user = { id, email, first_name, last_name, student_id: student_info[0].id };
+                    // [2025-06-08] 获取学生信息不再需要了。
+                    this.user = { id, email, first_name, last_name};
 
                     // Update the auth store with the user data
                     this.loggedIn = true;

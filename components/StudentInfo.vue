@@ -25,9 +25,6 @@ const props = defineProps<{
         className: string;
     };
 }>();
-console.log("props.studentData");
-console.log(props.studentData);
-
 
 </script>
 

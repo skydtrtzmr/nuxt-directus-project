@@ -10,6 +10,7 @@ import type {
     QuestionGroups,
 } from "~~/types/directus_types";
 import { useDirectusItems, useRuntimeConfig } from "#imports"; // Nuxt auto-imports
+import dayjs from "dayjs"; // 确保 dayjs 已导入
 
 export function useExamData() {
     const config = useRuntimeConfig();
@@ -215,7 +216,7 @@ export function useExamData() {
             fetchQuestionResults(current_practice_session_id),
         ]);
 
-        // 从 await Promise.all(...) 返回的结果数组中，取出第一个元素，并将其赋值给一个名为 paperFullData 的新常量。”
+        // 从 await Promise.all(...) 返回的结果数组中，取出第一个元素，并将其赋值给一个名为 paperFullData 的新常量。"
         // 数组中的第二个元素（也就是 fetchQuestionResults 的返回值）虽然也被返回了，但在这次赋值中被忽略了。如果您想同时获取第二个结果，可以这样写：const [paperFullData, questionResultsData] = await Promise.all([...]);
         const paperResponse: Papers = {
             id: paperFullData.id,
@@ -259,76 +260,75 @@ export function useExamData() {
     ) => {
         isLoading.value = true;
         try {
-            const practiceSessionFields = [
-                "id",
-                "exercises_students_id.exercises_id.paper",
-                "exercises_students_id.students_id.name",
-                "exercises_students_id.students_id.number",
-                "exercises_students_id.students_id.email",
-                "exercises_students_id.students_id.class.name",
-                "exercises_students_id.exercises_id.title",
-                "exercises_students_id.exercises_id.duration",
-                "score",
-                "actual_start_time",
-                "actual_end_time",
-                "extra_time",
-                "expected_end_time",
-                "submit_status",
-            ];
-            // 将每个字段中的 "." 替换为 "__", 然后用 "," 连接
-            const fieldsQueryString = practiceSessionFields
-                .map((field) => field.replace(/\./g, "__"))
-                .join(",");
-
-            const practiceSessionResponse: any = await $fetch(
-                `${config.public.directus.url}/fetch-practice-session-info-endpoint/${current_practice_session_id}?fields=${fieldsQueryString}`
+            // 首先，总是获取最新的会话信息
+            let sessionData: any = await $fetch(
+                `${config.public.directus.url}/fetch-practice-session-info-endpoint/${current_practice_session_id}`
             );
 
-            if (practiceSessionResponse) {
-                practiceSession.value = practiceSessionResponse;
-                practiceSessionTime.value = practiceSessionResponse;
-                examScore.value = Number(practiceSessionResponse.score) || null;
-
-                if (
-                    practiceSession.value.submit_status === "done" &&
-                    exam_page_mode !== "review"
-                ) {
-                    shouldShowFinalSubmissionDialog.value = true;
-                    // No need to call loadingStateStore here, ExamPage will handle it.
-                    return; // Exit early if already submitted and not in review mode
-                }
-
-                await afterFetchSubmittedExamContent(
-                    current_practice_session_id,
-                    current_selected_question_ref
+            // 如果是首次进入（状态为 'todo'），则更新状态
+            if (
+                exam_page_mode !== "review" &&
+                sessionData.submit_status === "todo"
+            ) {
+                console.log(
+                    "首次进入考试，正在更新状态为 'doing' 并记录开始时间..."
                 );
+                const itemToUpdate = {
+                    actual_start_time: dayjs().toISOString(),
+                    submit_status: "doing" as const,
+                };
 
-                const actualStartISO =
-                    practiceSessionTime.value.actual_start_time;
-                let durationMins =
-                    practiceSessionTime.value[
-                        "exercises_students_id__exercises_id__duration"
-                    ];
-                let extraMins = practiceSessionTime.value.extra_time;
+                await $fetch(
+                    `${config.public.directus.url}/update-practice-session-info-endpoint/${current_practice_session_id}`,
+                    {
+                        method: "PATCH",
+                        body: itemToUpdate,
+                    }
+                );
+                
+                // 不要用PATCH的返回消息覆盖，而是将更新的字段合并到现有的sessionData中
+                Object.assign(sessionData, itemToUpdate);
+                console.log("状态更新成功，sessionData已合并。");
+            }
 
-                if (actualStartISO) {
-                    timerInitParams.value = {
-                        actualStartISO,
-                        durationMins,
-                        extraMins,
-                    };
-                } else {
-                    console.error(
-                        "useExamData: Timer init params incomplete - actual_start_time missing.",
-                        "actualStartISO was:",
-                        actualStartISO
-                    );
-                }
+            // --- 后续逻辑使用已经确定状态的 sessionData ---
+
+            practiceSession.value = sessionData;
+            practiceSessionTime.value = sessionData; // 保持兼容
+            examScore.value = Number(sessionData.score) || null;
+
+            if (
+                sessionData.submit_status === "done" &&
+                exam_page_mode !== "review"
+            ) {
+                shouldShowFinalSubmissionDialog.value = true;
+                return; // 提前退出，因为已交卷
+            }
+
+            // 获取试卷内容和答题卡
+            await afterFetchSubmittedExamContent(
+                current_practice_session_id,
+                current_selected_question_ref
+            );
+
+            // 设置计时器参数
+            const actualStartISO = practiceSession.value.actual_start_time;
+            if (actualStartISO) {
+                timerInitParams.value = {
+                    actualStartISO,
+                    durationMins:
+                        practiceSession.value[
+                            "exercises_students_id__exercises_id__duration"
+                        ],
+                    extraMins: practiceSession.value.extra_time,
+                };
             } else {
-                console.error("useExamData: Failed to fetch practice session.");
+                console.error(
+                    "useExamData: 无法初始化计时器 - actual_start_time 缺失。"
+                );
             }
         } catch (error) {
-            console.error("useExamData: Error in loadExamData:", error);
+            console.error("useExamData: 加载考试数据时出错:", error);
         } finally {
             isLoading.value = false;
         }

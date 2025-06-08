@@ -429,44 +429,6 @@ const fetchPracticeSessions = async () => {
     }
 };
 
-const updateSubmitStatus = async (
-    practice_session: flatPracticeSession_type
-): Promise<Partial<flatPracticeSession_type> | null> => {
-    try {
-        // const nowIso = dayjs().toISOString(); // Use ISO string for consistency
-        const nowIso = dayjs();
-        const itemToUpdate = {
-            actual_start_time: nowIso,
-            submit_status: "doing" as const, // TypeScript const assertion
-        };
-
-        const updatedFields = await $fetch(
-            `${config.public.directus.url}/update-practice-session-info-endpoint/${practice_session.id}`,
-            {
-                method: "PATCH",
-                body: itemToUpdate,
-                // query params for controlling response fields, if your endpoint supports it
-                // params: {
-                //   fields: 'id,actual_start_time,submit_status'
-                // }
-            }
-        );
-
-        // If updateItem doesn't return the updated object, this function might return void or boolean.
-        // The critical part is that joinSession awaits this call.
-        // For this example, let's assume updatedFields contains what we need or indicates success.
-
-        if (updatedFields) {
-            return updatedFields;
-        }
-
-        return null; // Indicate failure
-    } catch (e) {
-        console.error("更新提交状态失败:", e);
-        return null;
-    }
-};
-
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // 格式化日期时间
@@ -474,13 +436,12 @@ const formatDateTime = (dateTime: any) => {
     return dayjs(dateTime).format("YYYY-MM-DD HH:mm");
 };
 
-const joinSession = async (sessionId: string) => {
+const joinSession = (sessionId: string) => {
     const now_time = dayjs();
     const session_info = practice_sessions_ref.value.find(
         (item) => item.id === sessionId
     );
     console.log("session_info:", session_info);
-    
 
     if (!session_info) {
         console.error("[SessionList] Session not found with id:", sessionId);
@@ -507,52 +468,8 @@ const joinSession = async (sessionId: string) => {
         }
     }
 
-    try {
-        if (session_info.actual_start_time === null) {
-            const updateResult = await updateSubmitStatus(session_info); // Crucially, await here
-            if (!updateResult) {
-                console.error(
-                    "[SessionList] Failed to update session start time. Navigation aborted."
-                );
-                // Optionally, show a user-facing error message
-                // e.g., using a PrimeVue Toast or a dialog
-                // alert("无法开始，请稍后重试。");
-                return; // Do not navigate if the update failed
-            }
-
-            // Optional: If updateResult contains the new status and time,
-            // you can update the local list item for immediate UI feedback,
-            // though navigation usually makes this less critical.
-            const index = practice_sessions_ref.value.findIndex(
-                (s) => s.id === sessionId
-            );
-            if (index !== -1) {
-                // Assuming updateResult gives back at least actual_start_time and submit_status
-                // Provide default values from session_info if updateResult or its properties are null/undefined
-                const actualStartTimeFromResult =
-                    (updateResult as any)?.actual_start_time ||
-                    session_info.actual_start_time;
-                const submitStatusFromResult =
-                    (updateResult as any)?.submit_status || "doing";
-
-                practice_sessions_ref.value[index] = {
-                    ...practice_sessions_ref.value[index],
-                    actual_start_time: actualStartTimeFromResult, // Fallback to existing if not present
-                    submit_status: submitStatusFromResult, // Fallback to "doing"
-                };
-            }
-        }
-
-        // Navigation occurs only after actual_start_time has been successfully sent (and awaited)
-        router.push(`/exam/${sessionId}`);
-    } catch (error) {
-        console.error(
-            `[SessionList] Error joining session ${sessionId}:`,
-            error
-        );
-        // Optionally, show a user-facing error message
-        // alert("加入会话时发生错误，请重试。");
-    }
+    // 直接导航，不再进行状态更新
+    router.push(`/exam/${sessionId}`);
 };
 
 const reviewSession = (sessionId: string) => {
