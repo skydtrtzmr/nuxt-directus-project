@@ -4,6 +4,7 @@ import {
     clickElement,
     delay,
     waitForElement,
+    waitForElementToDisappear,
     navigateToWithRetry,
 } from "../utils/domHelpers";
 
@@ -28,7 +29,24 @@ export async function runSelectAndStartExamScenario(
         }
     }
 
-    await delay(2000); // 等待 DataView 加载完成
+    // 等待加载指示器消失，而不是固定延迟
+    console.log("Automation: Waiting for exam list to load...");
+    const listLoaded = await waitForElementToDisappear(
+        ".session-list-loading",
+        20000
+    );
+    if (!listLoaded) {
+        console.error("Automation: Timed out waiting for exam list to load.");
+        return null;
+    }
+
+    // 确保至少一张考试卡片已渲染
+    const firstCard = await waitForElement(".exam-card", 5000);
+    if (!firstCard) {
+        console.warn("Automation: No exam cards found after list loaded.");
+        return null;
+    }
+    console.log("Automation: Exam list loaded successfully.");
 
     const examCards = document.querySelectorAll(".exam-card");
     if (examCards.length === 0) {

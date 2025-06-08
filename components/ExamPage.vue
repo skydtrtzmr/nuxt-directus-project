@@ -450,10 +450,9 @@ onUnmounted(() => {
     padding-left: 1rem;
     height: 100%;
     overflow: hidden;
-    /* 新增，用于居中加载动画 */
-    display: flex;
+    /* display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; */
 }
 
 .loading-spinner-container {

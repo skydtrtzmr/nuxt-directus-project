@@ -48,7 +48,17 @@
                 </div>
             </Dialog>
 
+            <!-- 新增：加载指示器 -->
+            <div
+                v-if="isLoading"
+                class="session-list-loading"
+            >
+                <ProgressSpinner />
+                <p>正在加载列表...</p>
+            </div>
+
             <DataView
+                v-else
                 :value="practice_sessions_ref"
                 :layout="layout"
                 dataKey="practice_sessions_ref.id"
@@ -367,32 +377,56 @@ const have_ended_dialog_visible = ref(false);
 const layout = ref<"grid" | "list" | undefined>("grid"); // 默认显示为网格
 const options = ref(["list", "grid"]);
 
+// state
+const isLoading = ref(true); // 新增：加载状态
+
 const fetchPracticeSessions = async () => {
-    const user_ps: any = await $fetch(
-        `/fetch-user-ps-cache-endpoint/by-user/${current_user!.id}`,
-        {
-            baseURL: config.public.directus.url,
+    isLoading.value = true;
+    try {
+        if (!current_user?.id) {
+            console.error("用户未登录，无法获取会话列表。");
+            practice_sessions_ref.value = [];
+            return;
         }
-    );
-    const practice_session_id_list: string[] = user_ps["practiceSessionIds"];
+        const user_ps: any = await $fetch(
+            `/fetch-user-ps-cache-endpoint/by-user/${current_user.id}`,
+            {
+                baseURL: config.public.directus.url,
+            }
+        );
+        const practice_session_id_list: string[] =
+            user_ps["practiceSessionIds"];
 
-    const practice_sessions: Record<string, flatPracticeSession_type> =
-        await $fetch(`/fetch-practice-session-info-endpoint/batch`, {
-            baseURL: config.public.directus.url,
-            method: "POST",
-            body: {
-                practice_session_ids: practice_session_id_list,
-            },
-        });
-    const practiceSessionListOrdered: Array<flatPracticeSession_type> =
-        practice_session_id_list.map((id) => {
-            return practice_sessions[id] || null; // 如果映射中没有某个id（例如请求了但未返回），则设为null
-        });
+        if (!practice_session_id_list || practice_session_id_list.length === 0) {
+            practice_sessions_ref.value = [];
+            return;
+        }
 
-    console.log("practiceSessionListOrdered:");
-    console.log(practiceSessionListOrdered);
+        const practice_sessions: Record<string, flatPracticeSession_type> =
+            await $fetch(`/fetch-practice-session-info-endpoint/batch`, {
+                baseURL: config.public.directus.url,
+                method: "POST",
+                body: {
+                    practice_session_ids: practice_session_id_list,
+                },
+            });
+        const practiceSessionListOrdered: Array<flatPracticeSession_type> =
+            practice_session_id_list
+                .map((id) => {
+                    return practice_sessions[id] || null; // 如果映射中没有某个id（例如请求了但未返回），则设为null
+                })
+                .filter((ps) => ps !== null); // 过滤掉null的项
 
-    practice_sessions_ref.value = practiceSessionListOrdered;
+        console.log("practiceSessionListOrdered:");
+        console.log(practiceSessionListOrdered);
+
+        practice_sessions_ref.value = practiceSessionListOrdered;
+    } catch (error) {
+        console.error("获取会话列表时出错:", error);
+        practice_sessions_ref.value = []; // 在出错时清空列表
+    } finally {
+        isLoading.value = false; // 确保加载状态在最后被设置为false
+    }
 };
 
 const updateSubmitStatus = async (
@@ -579,17 +613,18 @@ const getSubmitStatusAction = (practice_session: PracticeSessions) => {
     }
 };
 
-// 获取环境变量，确定是否运行测试
-
-onMounted(async () => {
-    await fetchPracticeSessions(); // 注意要await！确保PracticeSessions.value已经被赋值
+onMounted(() => {
+    fetchPracticeSessions();
 });
 </script>
 
 <style scoped>
 .page-header {
-    margin-bottom: 1.5rem;
-    padding-top: 0.5rem; /* 减少顶部留白 */
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: var(--surface-a);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .page-title {
@@ -924,5 +959,19 @@ onMounted(async () => {
     display: flex;
     justify-content: center;
     padding-top: 1rem;
+}
+
+.session-list-loading {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px; /* 确保加载动画有足够空间 */
+    text-align: center;
+}
+.session-list-loading p {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    color: var(--text-color-secondary);
 }
 </style>

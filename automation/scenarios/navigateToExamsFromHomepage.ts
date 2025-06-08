@@ -1,6 +1,6 @@
 // automation/scenarios/navigateToExamsFromHomepage.ts
 import type { Router } from 'vue-router';
-import { delay, navigateToWithRetry } from '../utils/domHelpers';
+import { delay, navigateToWithRetry, waitForElement } from '../utils/domHelpers';
 // import { log } from 'console';
 
 export async function runNavigateToExamsFromHomepageScenario(router: Router): Promise<boolean> {
@@ -27,13 +27,14 @@ export async function runNavigateToExamsFromHomepageScenario(router: Router): Pr
         console.log("Automation: Successfully navigated to /dashboard.");
     }
     
-    // index.vue 的 onMounted 逻辑是直接跳转
-    // console.log("Automation: Assuming index.vue will redirect to /exams. Waiting for redirection...");
-
-    // 生成1到3秒的随机延迟
-    const randomDelay = Math.floor(Math.random() * 2000) + 1000; // 1000ms to 2999ms, so 1 to ~3 seconds
-    console.log(`Automation: Adding random delay of ${randomDelay}ms before navigating to /exams.`);
-    await delay(randomDelay);
+    // 等待一个 dashboard 页面上的稳定元素，而不是使用随机延迟
+    console.log("Automation: Waiting for dashboard to be fully loaded...");
+    const dashboardElement = await waitForElement('.dashboard-header', 15000);
+    if (!dashboardElement) {
+        console.warn("Automation: Failed to find a stable element on the dashboard. The page might not have loaded correctly.");
+        return false;
+    }
+    console.log("Automation: Dashboard loaded. Proceeding to navigate to exams.");
 
     // 尝试导航到 /exams，带重试逻辑
     console.log("Automation: Attempting to navigate to /exams with retries...");

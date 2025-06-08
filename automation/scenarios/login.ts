@@ -5,6 +5,7 @@ import {
     clickElement,
     delay,
     navigateToWithRetry,
+    waitForElement,
 } from "../utils/domHelpers";
 
 export async function runLoginScenario(router: Router): Promise<boolean> {
@@ -40,11 +41,15 @@ export async function runLoginScenario(router: Router): Promise<boolean> {
     const currentUserEmail = fetchCurrentUserEmailResponse.email as any; // 假设API返回结构
     // console.log("Automation: Test user fetched:", currentUserEmail);
 
-    await delay(1000); // 等待页面元素渲染
+    // 等待邮件输入框出现，而不是固定延迟
+    const emailInput = await waitForElement('input[name="email"]', 10000);
+    if (!emailInput) {
+        console.error("Automation: Email input not found on login page.");
+        return false;
+    }
 
     if (!(await fillInput('input[name="email"]', currentUserEmail)))
         return false;
-    await delay(500);
 
     const passwordInput = currentUserEmail.split("@")[0];
     // PrimeVue Password 组件可能需要特殊处理其内部 input
@@ -65,7 +70,6 @@ export async function runLoginScenario(router: Router): Promise<boolean> {
         if (!(await fillInput('input[type="password"]', passwordInput)))
             return false;
     }
-    await delay(500);
 
     if (!(await clickElement('button#login-form[type="submit"]'))) return false; // 登录按钮
     // console.log("Automation: Login form submitted.");
@@ -90,7 +94,6 @@ export async function runLoginScenario(router: Router): Promise<boolean> {
 
     if (navigatedAfterLogin) {
         // console.log("Automation: Login successful, navigation detected.");
-        await delay(1000); // 给后续页面加载一点时间
     } else {
         console.warn(
             "Automation: Login might have failed or navigation timed out after submit. Current path:",
