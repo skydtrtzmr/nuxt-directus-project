@@ -1,6 +1,11 @@
 // automation/scenarios/completeExam.ts
 import type { Router } from "vue-router";
-import { delay, waitForElement, navigateToWithRetry } from "../utils/domHelpers";
+import {
+    delay,
+    waitForElement,
+    navigateToWithRetry,
+    retryAction,
+} from "../utils/domHelpers";
 
 // 从题型标签获取题目类型
 function getQuestionTypeFromTag(questionElement: HTMLElement): string | null {
@@ -270,10 +275,13 @@ export async function runCompleteExamScenario(
                     // QuestionContent 组件嵌套在 div.question-item 内部
                     // .question-type-tag 将位于此 subQuestionElement 的 QuestionContent 部分
 
-                    const questionType = getQuestionType(subQuestionElement);
+                    const questionType = await retryAction(
+                        () => getQuestionType(subQuestionElement),
+                        (type) => type !== null
+                    );
                     if (!questionType) {
                         console.warn(
-                            `自动化测试：无法确定子题目 ${
+                            `自动化测试：重试后仍无法确定子题目 ${
                                 i + 1
                             } 的类型。将跳过选择。`
                         );
@@ -295,12 +303,13 @@ export async function runCompleteExamScenario(
             }
         } else {
             // console.log("自动化测试：检测到单题模式 (或非题组结构)。");
-            const questionType = getQuestionType(
-                mainQuestionArea as HTMLElement
+            const questionType = await retryAction(
+                () => getQuestionType(mainQuestionArea as HTMLElement),
+                (type) => type !== null
             );
             if (!questionType) {
                 console.warn(
-                    `自动化测试：无法确定单题 ${mainQuestionLoopIndex} 的类型。将跳过选择。`
+                    `自动化测试：重试后仍无法确定单题 ${mainQuestionLoopIndex} 的类型。将跳过选择。`
                 );
             } else {
                 console.log(

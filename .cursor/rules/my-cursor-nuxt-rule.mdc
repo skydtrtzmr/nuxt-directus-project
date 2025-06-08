@@ -52,4 +52,3 @@ alwaysApply: true
 
 使用bullmq进行消息队列处理。
 
-使用ioredis与redis交互（但是以后可能改到后端处理此事）。

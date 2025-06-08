@@ -4,7 +4,7 @@ const {
     public: {
         directus: { url },
     },
-    private: { redisHost, redisPort, directus_token },
+    private: { directus_token },
 } = useRuntimeConfig();
 
 console.log("directus_token:", directus_token);

@@ -123,3 +123,37 @@ export async function navigateToWithRetry(
 
     return false; // 所有重试均失败
 }
+
+/**
+ * 通用重试操作函数
+ * @param action - 要执行的函数，它应该返回一个结果
+ * @param condition - 一个函数，用于判断action返回的结果是否满足成功条件
+ * @param options - 配置选项，包括最大重试次数和延迟
+ * @returns 如果成功，则返回action的结果；如果所有重试都失败，则返回null
+ */
+export async function retryAction<T>(
+    action: () => T | Promise<T>,
+    condition: (result: T) => boolean,
+    options?: {
+        maxRetries?: number;
+        delayMs?: number;
+    }
+): Promise<T | null> {
+    const { maxRetries = 5, delayMs = 1500 } = options || {};
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        const result = await action();
+        if (condition(result)) {
+            return result;
+        }
+
+        if (attempt < maxRetries) {
+            console.warn(`自动化测试：操作未满足条件，将在 ${delayMs}ms 后重试（第 ${attempt}/${maxRetries} 次）...`);
+            await delay(delayMs);
+        } else {
+            console.error(`自动化测试：操作在 ${maxRetries} 次重试后仍然失败。`);
+        }
+    }
+
+    return null;
+}

@@ -52,7 +52,6 @@ export default defineNuxtConfig({
     ],
 
     plugins: [
-        // '~/plugins/redis.server.ts',
     ],
 
     // 这个是给nuxt-vite-legacy用的，用来兼容旧版本浏览器
@@ -95,8 +94,6 @@ export default defineNuxtConfig({
         private: {
             // private意味着这些配置只能在服务器端代码中访问，不能在客户端代码中访问。
             directus_token: "PcxE6WQAfAOhKc646tNL1qakGv6tto1I", //  这里会被.env文件中的NUXT_PRIVATE_DIRECTUS_TOKEN覆盖。
-            redisHost: "127.0.0.1",
-            redisPort: 6279,
         },
     },
 

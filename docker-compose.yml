@@ -22,18 +22,6 @@ services:
       - 3201:3000
     env_file:
       - .env.production
-  # redis-container:
-  #   image: redis:6
-  #   ports:
-  #     - 6279:6379
-
-
-# [2025-05-19] 最新版已经把nuxt的redis去掉了，融合到directus中，直接使用directus的redis。
-# 这样的好处是:
-# 1. 减少容器数量，简化管理。
-# 2. 减少资源占用，提高性能。
-# 3. 减少配置，简化管理。
-# 4. 减少维护成本，提高开发效率。
 
 
 
