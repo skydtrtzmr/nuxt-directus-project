@@ -61,15 +61,12 @@ export async function runSelectAndStartExamScenario(
         return null;
     }
 
-    joinButton.click();
-    // console.log(`Automation: Clicked join button for "${examTitle}".`);
-
     // 等待导航到 /exam/:id 页面
     let examId: string | null = null;
     console.log(`Automation: Waiting for navigation to exam page for "${examTitle}" with retries...`);
     const navigatedToExamPage = await navigateToWithRetry(
         router,
-        () => { /* 导航由 joinButton.click() 触发，此处无需额外操作 */ },
+        () => joinButton.click(),
         (path) => {
             const match = path.match(/^\/exam\/([^/]+)/);
             if (match) {
@@ -78,7 +75,7 @@ export async function runSelectAndStartExamScenario(
             }
             return false;
         },
-        { timeoutPerAttempt: 10000, maxRetries: 3, delayBetweenRetriesMs: 1000 }
+        { timeoutPerAttempt: 10000, maxRetries: 5, delayBetweenRetriesMs: 2000 }
     );
 
     if (navigatedToExamPage && examId) {

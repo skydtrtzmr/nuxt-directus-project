@@ -19,7 +19,7 @@ export async function waitForElement(
                  return element;
             }
         }
-        await delay(100); // Poll every 100ms
+        await delay(200); // Poll every 200ms
     }
     console.warn(`Automation: Timeout waiting for element: ${selector}`);
     return null;
@@ -74,7 +74,7 @@ export async function waitForNavigation(router: Router, pathCondition: (path: st
             await delay(500); // 给页面一点时间加载内容
             return true;
         }
-        await delay(100);
+        await delay(200);
     }
     console.warn(`Automation: Timeout waiting for navigation to path matching condition. Current path: ${router.currentRoute.value.path}`);
     return false;
