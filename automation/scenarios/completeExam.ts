@@ -3,6 +3,7 @@ import type { Router } from "vue-router";
 import {
     delay,
     waitForElement,
+    waitForElementToDisappear,
     navigateToWithRetry,
     retryAction,
 } from "../utils/domHelpers";
@@ -210,7 +211,29 @@ export async function runCompleteExamScenario(
         return false;
     }
     // console.log("自动化测试：已确认在考试页面。");
-    await delay(3000);
+
+    // 新的等待逻辑：等待加载动画出现然后消失
+    console.log("自动化测试：等待试卷加载...");
+    const spinnerAppeared = await waitForElement(
+        ".loading-spinner-container",
+        10000 // 等待10秒
+    );
+    if (spinnerAppeared) {
+        console.log("自动化测试：加载指示器已出现，现在等待其消失...");
+        const spinnerDisappeared = await waitForElementToDisappear(
+            ".loading-spinner-container",
+            45000 // 给与更长的超时时间，以应对慢速网络
+        );
+        if (!spinnerDisappeared) {
+            console.error("自动化测试：等待加载指示器消失超时。测试终止。");
+            return false;
+        }
+    } else {
+        console.warn(
+            "自动化测试：未检测到加载指示器。可能页面已预加载或加载速度非常快。继续执行..."
+        );
+    }
+    console.log("自动化测试：试卷加载完成。");
 
     const answerCounters: IAnswerCounters = {
         q_mc_single: 0,

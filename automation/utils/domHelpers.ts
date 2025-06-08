@@ -25,6 +25,24 @@ export async function waitForElement(
     return null;
 }
 
+export async function waitForElementToDisappear(
+    selector: string,
+    timeout = 20000
+): Promise<boolean> {
+    const startTime = Date.now();
+    while (Date.now() - startTime < timeout) {
+        const element = document.querySelector(selector);
+        if (!element) {
+            return true; // 元素已消失
+        }
+        await delay(200); // Poll every 200ms
+    }
+    console.warn(
+        `Automation: Timeout waiting for element to disappear: ${selector}`
+    );
+    return false;
+}
+
 export async function clickElement(selector: string, timeout = 20000): Promise<boolean> {
     const element = await waitForElement(selector, timeout);
     if (element) {
