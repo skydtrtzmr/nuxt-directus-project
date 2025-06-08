@@ -8,9 +8,12 @@ import {
 } from "../utils/domHelpers";
 
 export async function runLoginScenario(router: Router): Promise<boolean> {
+    const config = useRuntimeConfig();
     // console.log("Automation: Starting Login Scenario...");
     if (router.currentRoute.value.path !== "/auth/login") {
-        console.log("Automation: Not on login page, navigating with retries...");
+        console.log(
+            "Automation: Not on login page, navigating with retries..."
+        );
         const navigatedToLogin = await navigateToWithRetry(
             router,
             () => router.push("/auth/login"),
@@ -18,24 +21,23 @@ export async function runLoginScenario(router: Router): Promise<boolean> {
             { timeoutPerAttempt: 5000, maxRetries: 3 }
         );
         if (!navigatedToLogin) {
-            console.warn("Automation: Failed to navigate to login page after multiple retries.");
+            console.warn(
+                "Automation: Failed to navigate to login page after multiple retries."
+            );
             return false;
         }
     }
 
     // 从 login.vue 的 onMounted 获取逻辑
-    const { data: fetchCurrentUserEmailResponse, error } = await useFetch(
-        "/api/fetch_test_user"
+    const fetchCurrentUserEmailResponse: Record<string, string> = await $fetch(
+        `${config.public.directus.url}/fetch-user-email-list-pop-endpoint/pop`
     );
-    if (error.value || !fetchCurrentUserEmailResponse.value) {
-        console.error(
-            "Automation: Failed to fetch current user for login.",
-            error.value
-        );
+    if (!fetchCurrentUserEmailResponse) {
+        console.error("Automation: Failed to fetch current user for login.");
         alert("自动化测试获取用户信息失败！");
         return false;
     }
-    const currentUserEmail = fetchCurrentUserEmailResponse.value as any; // 假设API返回结构
+    const currentUserEmail = fetchCurrentUserEmailResponse.email as any; // 假设API返回结构
     // console.log("Automation: Test user fetched:", currentUserEmail);
 
     await delay(1000); // 等待页面元素渲染
@@ -71,10 +73,14 @@ export async function runLoginScenario(router: Router): Promise<boolean> {
     // 登录后，应用会跳转到 /dashboard
     // index.vue 的 onMounted 会再从 /dashboard (如果auth.login配置了redirect) 或直接从 / 跳转到 /exams
     // 此处我们等待跳转到 /exams，意味着后续脚本依赖此跳转
-    console.log("Automation: Waiting for navigation after login with retries...");
+    console.log(
+        "Automation: Waiting for navigation after login with retries..."
+    );
     const navigatedAfterLogin = await navigateToWithRetry(
         router,
-        () => { /* 导航由表单提交触发，此处无需额外操作 */ },
+        () => {
+            /* 导航由表单提交触发，此处无需额外操作 */
+        },
         (path) =>
             path.startsWith("/dashboard") ||
             path.startsWith("/exams") ||
@@ -87,7 +93,7 @@ export async function runLoginScenario(router: Router): Promise<boolean> {
         await delay(1000); // 给后续页面加载一点时间
     } else {
         console.warn(
-            "Automation: Login might have failed or navigation timed out after submit. Current path:", 
+            "Automation: Login might have failed or navigation timed out after submit. Current path:",
             router.currentRoute.value.path
         );
         return false;

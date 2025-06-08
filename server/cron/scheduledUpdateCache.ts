@@ -17,7 +17,6 @@ export default defineCronHandler("everyThirtyMinutes", async () => {
     // do action
     console.log("Scheduled Update Cache");
 
-    console.log("准备执行返回学生list");
     // 仅测试用：返回学生用户的list
     // updateListCache(
     //     "student_user_email_list",
