@@ -1,0 +1,8 @@
+{
+    "mcpServers": {
+        "directus-sse": {
+            "type": "sse",
+            "url": "http://192.168.159.1:8000/sse"
+        }
+    }
+}

@@ -433,7 +433,7 @@ const isGroupCompleted = (group: EnhancedPaperSectionGroup, section: PaperSectio
     return questionIdsInGroup.some(qId => {
         const result = getQuestionResultById(qId);
         return !!result && (
-            (result.submit_ans_select_radio !== null && result.submit_ans_select_radio !== undefined) ||
+            (result.submit_ans_select_radio !== null && result.submit_ans_select_radio !== undefined && result.submit_ans_select_radio !== "") ||
             (Array.isArray(result.submit_ans_select_multiple_checkbox) && result.submit_ans_select_multiple_checkbox.length > 0)
         );
     });
