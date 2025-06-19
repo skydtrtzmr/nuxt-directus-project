@@ -15,18 +15,37 @@
                 </div>
                 <transition name="fade">
                     <div v-if="expandedSections.has(sectionIndex)" class="question-grid">
-                        <Button
-                            v-for="question in section.questions"
-                            :key="question.id"
-                            :label="String(question.sort_in_section)"
-                            :class="[
-                                'question-button',
-                                { 'answered': isQuestionAnswered(question) },
-                                { 'selected': selectedQuestion && selectedQuestion.id === question.id }
-                            ]"
-                            @click="selectQuestion(question)"
-                            outlined
-                        />
+                        <!-- 单题模式 -->
+                        <template v-if="section.question_mode !== 'group'">
+                            <Button
+                                v-for="question in section.questions"
+                                :key="question.id"
+                                :label="String(question.sort_in_section)"
+                                :class="[
+                                    'question-button',
+                                    { 'answered': isQuestionAnswered(question) },
+                                    { 'selected': selectedQuestion && !selectedQuestion.isGroupMode && selectedQuestion.id === question.id }
+                                ]"
+                                @click="handleQuestionClick(question)"
+                                outlined
+                            />
+                        </template>
+                        <!-- 题组模式 -->
+                        <template v-else>
+                             <Button
+                                v-for="group in section.question_groups"
+                                :key="group.id"
+                                :label="String(group.sort_in_section)"
+                                :class="[
+                                    'question-button',
+                                    'group-button',
+                                    { 'answered': isGroupCompleted(group, section) },
+                                    { 'selected': selectedQuestion && selectedQuestion.isGroupMode && selectedQuestion.id === group.id }
+                                ]"
+                                @click="handleQuestionGroupClick(group, section)"
+                                outlined
+                            />
+                        </template>
                     </div>
                 </transition>
             </div>
@@ -36,7 +55,11 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import type { PaperSections, QuestionResults, PaperSectionsQuestions } from "~~/types/directus_types";
+import type { PaperSections, QuestionResults, PaperSectionsQuestions, PaperSectionsQuestionGroups, QuestionGroups, Questions } from "~~/types/directus_types";
+
+interface EnhancedPaperSectionGroup extends PaperSectionsQuestionGroups {
+    group_question_ids?: number[];
+}
 
 const props = defineProps<{
     submittedPaperSections: PaperSections[];
@@ -73,39 +96,96 @@ const questionResultsMap = computed(() => {
     return map;
 });
 
+const getQuestionResultById = (questionInPaperId: number | undefined | null): QuestionResults | null => {
+    if (!props.questionResults || questionInPaperId === undefined || questionInPaperId === null) return null;
+    const result = questionResultsMap.value.get(String(questionInPaperId));
+    return result || null;
+};
+
 const isQuestionAnswered = (question: PaperSectionsQuestions) => {
-    const result = questionResultsMap.value.get(String(question.id));
+    const result = getQuestionResultById(question.id);
     if (!result) return false;
+    return (
+        (result.submit_ans_select_radio && result.submit_ans_select_radio.trim() !== '') ||
+        (Array.isArray(result.submit_ans_select_multiple_checkbox) && result.submit_ans_select_multiple_checkbox.length > 0)
+    );
+};
 
-    // 检查单选题答案
-    if (result.submit_ans_select_radio && result.submit_ans_select_radio.trim() !== '') {
-        return true;
-    }
+const isGroupCompleted = (group: EnhancedPaperSectionGroup, section: PaperSections): boolean => {
+    if (!group || !group.group_question_ids || group.group_question_ids.length === 0) return false;
+    const questionIdsInGroup = group.group_question_ids;
+    return questionIdsInGroup.some(qId => {
+        const result = getQuestionResultById(qId);
+        return !!result && (
+            (result.submit_ans_select_radio && result.submit_ans_select_radio.trim() !== '') ||
+            (Array.isArray(result.submit_ans_select_multiple_checkbox) && result.submit_ans_select_multiple_checkbox.length > 0)
+        );
+    });
+};
 
-    // 检查多选题答案 (类型是 unknown，所以要做类型守卫)
-    if (Array.isArray(result.submit_ans_select_multiple_checkbox) && result.submit_ans_select_multiple_checkbox.length > 0) {
-        return true;
-    }
+const handleQuestionClick = (question: any) => {
+    props.selectQuestion(question);
+};
 
-    return false;
+const handleQuestionGroupClick = (group: any, section: PaperSections) => {
+    if (!group || !group.question_groups_id) return;
+    
+    const questionGroup: QuestionGroups | null = (typeof group.question_groups_id === 'object') ? group.question_groups_id : null;
+    
+    const groupQuestionIds = group.group_question_ids || [];
+    const groupQuestions = section.questions.filter(q => groupQuestionIds.includes(q.id));
+    
+    const sortedGroupQuestions = [...groupQuestions].sort((a, b) => {
+        const aSort = (a.questions_id as Questions)?.sort_in_group ?? 999;
+        const bSort = (b.questions_id as Questions)?.sort_in_group ?? 999;
+        if (aSort === bSort) {
+            return (a.sort_in_section || 0) - (b.sort_in_section || 0);
+        }
+        return aSort - bSort;
+    });
+
+    const enhancedQuestion = {
+        ...group,
+        isGroupMode: true,
+        questionGroup: questionGroup,
+        questions_id: { type: 'group' },
+        groupQuestions: sortedGroupQuestions
+    };
+
+    props.selectQuestion(enhancedQuestion);
 };
 
 const totalQuestions = computed(() => {
-    return props.submittedPaperSections.reduce((acc, section) => acc + (section.questions?.length || 0), 0);
+    let count = 0;
+    props.submittedPaperSections.forEach(section => {
+        if (section.question_mode !== 'group') {
+            count += section.questions?.length || 0;
+        } else {
+            count += section.question_groups?.length || 0;
+        }
+    });
+    return count;
 });
 
 const answeredCount = computed(() => {
     let count = 0;
     props.submittedPaperSections.forEach(section => {
-        section.questions?.forEach(q => {
-            if (isQuestionAnswered(q)) {
-                count++;
-            }
-        });
+        if (section.question_mode !== 'group') {
+            section.questions?.forEach(q => {
+                if (isQuestionAnswered(q)) {
+                    count++;
+                }
+            });
+        } else {
+            section.question_groups?.forEach(g => {
+                if (isGroupCompleted(g, section)) {
+                    count++;
+                }
+            })
+        }
     });
     return count;
 });
-
 </script>
 
 <style scoped>
@@ -174,6 +254,23 @@ const answeredCount = computed(() => {
     padding: 0;
     font-size: 0.875rem;
     transition: all 0.2s;
+    justify-content: center;
+}
+
+.group-button::before {
+    content: "T";
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    background-color: var(--orange-500);
+    color: white;
+    font-size: 0.6rem;
+    font-weight: bold;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
     justify-content: center;
 }
 

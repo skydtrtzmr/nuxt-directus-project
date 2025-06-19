@@ -4,7 +4,14 @@
             <template v-if="selectedQuestion && selectedQuestion.questions_id">
                 <div class="title-container">
                     <span class="question-number">{{ selectedQuestion.sort_in_section || "?" }}</span>
-                    <h3 class="question-title">{{ selectedQuestion.questions_id.title || "试题" }}</h3>
+                    <h3 class="question-title">
+                        <template v-if="isGroupMode">
+                            {{ selectedQuestion.questionGroup?.title || "题组" }}
+                        </template>
+                        <template v-else>
+                            {{ selectedQuestion.questions_id.title || "试题" }}
+                        </template>
+                    </h3>
                 </div>
                 <div class="actions-container">
                     <Button
@@ -29,7 +36,18 @@
         </div>
 
         <div class="detail-content">
-            <ScrollPanel v-if="selectedQuestion" class="content-scrollpanel">
+            <!-- 题组模式 -->
+            <QuestionGroupContent
+                v-if="isGroupMode"
+                :questionGroup="selectedQuestion.questionGroup"
+                :practiceSessionId="practiceSessionId"
+                :questionResults="props.questionResults"
+                :exam_page_mode="exam_page_mode"
+                :groupQuestions="selectedQuestion.groupQuestions || []"
+                :renderMarkdown="render"
+            />
+            <!-- 单题模式 -->
+            <ScrollPanel v-else-if="selectedQuestion" class="content-scrollpanel">
                  <QuestionContent
                     :selectedQuestion="selectedQuestion"
                     :exam_page_mode="exam_page_mode"
@@ -46,6 +64,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import QuestionContent from "~/components/QuestionContent.vue";
+import QuestionGroupContent from "~/components/QuestionGroupContent.vue";
 import type { QuestionResults } from "~/types/directus_types";
 import { useMarkdown } from '~/composables/useMarkdown';
 
@@ -64,6 +83,14 @@ const navigateQuestion = (direction: -1 | 1) => {
     emit("navigate-question", direction);
 };
 
+const isGroupMode = computed(() => {
+    return (
+        props.selectedQuestion &&
+        props.selectedQuestion.isGroupMode === true &&
+        props.selectedQuestion.questionGroup !== undefined
+    );
+});
+
 const getResultByPsqId = (psqId: string | number | undefined | null): QuestionResults | null => {
     if (!props.questionResults || psqId === undefined || psqId === null) return null;
     const psqIdStr = String(psqId);
@@ -77,7 +104,7 @@ const getResultByPsqId = (psqId: string | number | undefined | null): QuestionRe
 };
 
 const currentSingleQuestionResult = computed<QuestionResults | null>(() => {
-    if (!props.selectedQuestion || !props.selectedQuestion.id) return null;
+    if (isGroupMode.value || !props.selectedQuestion || !props.selectedQuestion.id) return null;
     return getResultByPsqId(props.selectedQuestion.id);
 });
 
@@ -150,16 +177,17 @@ const currentSingleQuestionResult = computed<QuestionResults | null>(() => {
     flex: 1;
     overflow: hidden;
     position: relative;
+    padding: 1rem; /* Add padding for content */
 }
 
 .content-scrollpanel {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    padding: 1.5rem;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    width: calc(100% - 2rem);
+    height: calc(100% - 2rem);
+    padding-right: 1rem; /* To avoid content touching scrollbar */
 }
 </style> 
