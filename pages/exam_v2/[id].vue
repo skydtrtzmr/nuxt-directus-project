@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import ExamPageV2 from '~/components/v2/ExamPageV2.vue';
+import ExamPageV2 from '~~/components/v2/ExamPageV2.vue';
 
 definePageMeta({
     // middleware: ["auth"],

@@ -92,9 +92,9 @@ import { useExamData } from "@/composables/useExamData";
 import { useQuestionNavigation } from "@/composables/useQuestionNavigation";
 
 // V2 Components
-import ExamHeaderV2 from '~/components/v2/ExamHeaderV2.vue';
-import QuestionListV2 from '~/components/v2/QuestionListV2.vue';
-import QuestionDetailV2 from '~/components/v2/QuestionDetailV2.vue';
+import ExamHeaderV2 from '@/components/v2/ExamHeaderV2.vue';
+import QuestionListV2 from '@/components/v2/QuestionListV2.vue';
+import QuestionDetailV2 from '@/components/v2/QuestionDetailV2.vue';
 
 
 const config = useRuntimeConfig();
