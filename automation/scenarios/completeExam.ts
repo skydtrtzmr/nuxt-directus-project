@@ -216,13 +216,13 @@ export async function runCompleteExamScenario(
     console.log("自动化测试：等待试卷加载...");
     const spinnerAppeared = await waitForElement(
         ".loading-spinner-container",
-        10000 // 等待10秒
+        5000 // 等待10秒
     );
     if (spinnerAppeared) {
         console.log("自动化测试：加载指示器已出现，现在等待其消失...");
         const spinnerDisappeared = await waitForElementToDisappear(
             ".loading-spinner-container",
-            45000 // 给与更长的超时时间，以应对慢速网络
+            10000 // 给与更长的超时时间，以应对慢速网络
         );
         if (!spinnerDisappeared) {
             console.error("自动化测试：等待加载指示器消失超时。测试终止。");

@@ -4,7 +4,7 @@
 # docker build -t skydtrtzmr/my-directus-client:1.3.4 ./
 
 # 指定最新版本：
-# docker tag skydtrtzmr/my-directus-client:1.3.4 skydtrtzmr/my-directus-client:latest
+# docker tag skydtrtzmr/my-directus-client:1.3.5 skydtrtzmr/my-directus-client:latest
 # （注意替换为自己的镜像版本）
 
 ####################################################################################################
