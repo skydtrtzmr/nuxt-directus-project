@@ -8,7 +8,7 @@
             target="_blank"
             rel="noopener noreferrer"
             class="text-primary font-bold hover:underline"
-            >南京泰迪云智</a
+            >南京某某某某</a
         >
     </div>
 </template>

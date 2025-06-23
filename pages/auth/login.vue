@@ -132,7 +132,7 @@ const loginSubmit = async () => {
                         <div
                             class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4"
                         >
-                            欢迎使用学练考系统！
+                            欢迎使用AI会计智教云！
                         </div>
                         <span class="text-muted-color font-medium"
                             >登录以继续学习</span

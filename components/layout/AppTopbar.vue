@@ -20,7 +20,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
             </button>
             <router-link to="/" class="layout-topbar-logo">
                 <PracticeAgain />
-                <span>学练考系统</span>
+                <span>AI会计智教云</span>
             </router-link>
         </div>
 
