@@ -6,7 +6,6 @@ import { defineCronHandler } from "#nuxt/cron";
 // import { updateHashCache, updateListCache } from "~~/server/utils/redisUtils";
 // import directus_client from "~~/server/lib/directus";
 // import { readUsers, readItems } from "@directus/sdk";
-// import { fetchAllPaginatedData } from "../utils/directusUtils";
 
 // TODO 目前为了方便开发，在directus中把所有权限都开放了，所以现在发起请求的时候不需要带token。
 // 后续需要把权限控制好，只允许有权限的用户访问。
