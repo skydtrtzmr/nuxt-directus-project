@@ -131,7 +131,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2023 南京某某某某科技有限公司 版权所有</p>
+                <p>&copy; 2023 {{ settings!.company_name }} 版权所有</p>
             </div>
         </footer>
     </div>
@@ -139,6 +139,7 @@
 
 <script setup lang="ts">
 import { setBlockTracking } from "vue";
+import { set } from "zod";
 
 const { $directus, $readSingleton } = useNuxtApp();
 

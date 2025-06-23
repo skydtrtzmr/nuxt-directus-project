@@ -1,4 +1,8 @@
-<script setup></script>
+<script setup lang="ts">
+defineProps<{
+    companyName: string;
+}>();
+</script>
 
 <template>
     <div class="layout-footer">
@@ -8,7 +12,7 @@
             target="_blank"
             rel="noopener noreferrer"
             class="text-primary font-bold hover:underline"
-            >南京某某某某</a
+            >{{ companyName }}</a
         >
     </div>
 </template>

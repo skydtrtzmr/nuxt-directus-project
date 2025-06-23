@@ -22,7 +22,7 @@ const model = ref([
         items: [
             { label: "考试", icon: "pi pi-fw pi-file", to: "/exams" },
             { label: "练习", icon: "pi pi-fw pi-file", to: "/practices" },
-            { label: "在线表格", icon: "pi pi-fw pi-table", to: "/sheet" },
+            // { label: "在线表格", icon: "pi pi-fw pi-table", to: "/sheet" },
             // { label: "test", icon: "pi pi-fw pi-id-card", to: "/test" },
             { label: "知识库聊天", icon: "pi pi-fw pi-id-card", to: "/chat" },
             { label: "MCP", icon: "pi pi-fw pi-id-card", to: "/mcp" },
