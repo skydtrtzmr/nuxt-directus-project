@@ -4,6 +4,13 @@ import PracticeAgain from '~/assets/icons/practice-again.svg'
 // import AppConfigurator from './AppConfigurator.vue';
 
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
+
+const { $directus, $readSingleton } = useNuxtApp();
+
+const { data: settings } = await useAsyncData("settings", () => {
+    return $directus.request($readSingleton("settings"));
+});
+
 </script>
 
 <template>
@@ -17,7 +24,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
             </button>
             <router-link to="/" class="layout-topbar-logo">
                 <PracticeAgain />
-                <span>AI会计智教云</span>
+                <span>{{ settings!.student_portal_name }}</span>
             </router-link>
         </div>
 

@@ -28,6 +28,9 @@ const { data: shouldRunAutomationBasedOnDirectus, error: directusError } = await
   }
 );
 
+const { $directus } = useNuxtApp();
+console.log($directus);
+
 onMounted(async () => {
     // 使用从 useAsyncData 获取的值
     if (shouldRunAutomationBasedOnDirectus.value) {

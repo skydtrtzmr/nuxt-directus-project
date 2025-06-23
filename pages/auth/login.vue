@@ -15,6 +15,12 @@ definePageMeta({
     layout: "empty", // 登录时全屏显示，不需要侧边栏和顶部导航栏
 });
 
+const { $directus, $readSingleton } = useNuxtApp();
+
+const { data: settings } = await useAsyncData("settings", () => {
+    return $directus.request($readSingleton("settings"));
+});
+
 const email = ref("");
 const password = ref("");
 const checked = ref(false);
@@ -132,7 +138,7 @@ const loginSubmit = async () => {
                         <div
                             class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4"
                         >
-                            欢迎使用AI会计智教云！
+                            欢迎使用{{ settings!.student_portal_name }}！
                         </div>
                         <span class="text-muted-color font-medium"
                             >登录以继续学习</span

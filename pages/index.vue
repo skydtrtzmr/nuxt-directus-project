@@ -2,13 +2,29 @@
     <div class="home-container">
         <header class="header">
             <div class="header-content">
-                <h1 class="logo">AI会计智教云</h1>
+                <h1 class="logo">{{ settings!.student_portal_name }}</h1>
                 <nav class="main-nav">
                     <ul>
-                        <li><router-link to="/" class="nav-link active">首页</router-link></li>
-                        <li><router-link to="/auth/login" class="nav-link">登录</router-link></li>
-                        <li><router-link to="/auth/register" class="nav-link">注册</router-link></li>
-                        <li><router-link to="/about" class="nav-link">关于我们</router-link></li>
+                        <li>
+                            <router-link to="/" class="nav-link active"
+                                >首页</router-link
+                            >
+                        </li>
+                        <li>
+                            <router-link to="/auth/login" class="nav-link"
+                                >登录</router-link
+                            >
+                        </li>
+                        <li>
+                            <router-link to="/auth/register" class="nav-link"
+                                >注册</router-link
+                            >
+                        </li>
+                        <li>
+                            <router-link to="/about" class="nav-link"
+                                >关于我们</router-link
+                            >
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -18,14 +34,23 @@
             <section class="hero-section">
                 <div class="hero-content">
                     <h2 class="hero-title">提升学习效率，助力考试成功</h2>
-                    <p class="hero-description">我们提供全面的学习资源、练习题库和模拟考试，帮助您取得优异成绩</p>
+                    <p class="hero-description">
+                        我们提供全面的学习资源、练习题库和模拟考试，帮助您取得优异成绩
+                    </p>
                     <div class="hero-buttons">
-                        <router-link to="/auth/register" class="btn btn-primary">免费注册</router-link>
-                        <router-link to="/auth/login" class="btn btn-secondary">立即登录</router-link>
+                        <router-link to="/auth/register" class="btn btn-primary"
+                            >免费注册</router-link
+                        >
+                        <router-link to="/auth/login" class="btn btn-secondary"
+                            >立即登录</router-link
+                        >
                     </div>
                 </div>
                 <div class="hero-image">
-                    <img src="https://placehold.co/600x400" alt="学习场景插图" />
+                    <img
+                        src="https://placehold.co/600x400"
+                        alt="学习场景插图"
+                    />
                 </div>
             </section>
 
@@ -77,19 +102,25 @@
             <section class="cta-section">
                 <h2>准备好提升你的学习体验了吗？</h2>
                 <p>加入我们的学习平台，开启成功之旅</p>
-                <router-link to="/auth/register" class="btn btn-light">立即注册</router-link>
+                <router-link to="/auth/register" class="btn btn-light"
+                    >立即注册</router-link
+                >
             </section>
         </main>
 
         <footer class="footer">
             <div class="footer-content">
-                <div class="footer-logo">AI会计智教云</div>
+                <div class="footer-logo">{{ settings!.student_portal_name }}</div>
                 <div class="footer-links">
                     <h3>快速链接</h3>
                     <ul>
                         <li><router-link to="/">首页</router-link></li>
-                        <li><router-link to="/auth/login">登录</router-link></li>
-                        <li><router-link to="/auth/register">注册</router-link></li>
+                        <li>
+                            <router-link to="/auth/login">登录</router-link>
+                        </li>
+                        <li>
+                            <router-link to="/auth/register">注册</router-link>
+                        </li>
                         <li><router-link to="/about">关于我们</router-link></li>
                     </ul>
                 </div>
@@ -107,18 +138,25 @@
 </template>
 
 <script setup lang="ts">
+import { setBlockTracking } from "vue";
+
+const { $directus, $readSingleton } = useNuxtApp();
+
+const { data: settings } = await useAsyncData("settings", () => {
+    return $directus.request($readSingleton("settings"));
+});
+
 definePageMeta({
     name: "Index",
     layout: "empty",
 });
 
 const router = useRouter();
-
 </script>
 
 <style scoped>
 .home-container {
-    font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
     color: #333;
     line-height: 1.6;
 }
@@ -168,7 +206,8 @@ const router = useRouter();
     font-weight: 500;
 }
 
-.nav-link:hover, .nav-link.active {
+.nav-link:hover,
+.nav-link.active {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -377,7 +416,8 @@ const router = useRouter();
     color: #ffffff;
 }
 
-.footer-links h3, .footer-contact h3 {
+.footer-links h3,
+.footer-contact h3 {
     color: #ffffff;
     margin-bottom: 1rem;
     font-size: 1.3rem;
@@ -426,23 +466,24 @@ const router = useRouter();
     .hero-section {
         flex-direction: column;
     }
-    
-    .hero-content, .hero-image {
+
+    .hero-content,
+    .hero-image {
         text-align: center;
     }
-    
+
     .hero-buttons {
         justify-content: center;
     }
-    
+
     .features-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .stats-section {
         grid-template-columns: 1fr 1fr;
     }
-    
+
     .footer-content {
         grid-template-columns: 1fr;
         text-align: center;
