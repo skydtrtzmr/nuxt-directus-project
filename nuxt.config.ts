@@ -34,7 +34,6 @@ export default defineNuxtConfig({
         "@nuxtjs/tailwindcss",
         "@primevue/nuxt-module",
         "nuxt-svgo", // 加载svg图片为vue组件
-        "@pinia/nuxt",
         [
             "@pinia/nuxt",
             {
@@ -50,8 +49,14 @@ export default defineNuxtConfig({
         "nuxt-vite-legacy", // 兼容旧版本浏览器
         "nuxt-cron", // 定时任务
         "nuxt-purgecss",
-        ["nuxt-purgecss", { enabled: true }],
     ],
+
+    purgecss: {
+        enabled: false, // 设置为 false 来测试构建速度，定位问题
+        safelist: [
+            /* 比如动态类名、PrimeVue 特殊类等 */
+        ],
+    },
 
     plugins: [],
 
@@ -151,11 +156,7 @@ export default defineNuxtConfig({
         },
         ssr: {
             // 此项必须配置，否则pnpm dev打开univer sheet会报错。
-            noExternal: [
-                "rxjs",
-                "unplugin-vue-router",
-                "vue-router",
-            ],
+            noExternal: ["rxjs", "unplugin-vue-router", "vue-router"],
         },
     },
 });
