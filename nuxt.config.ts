@@ -49,10 +49,11 @@ export default defineNuxtConfig({
         "pinia-plugin-persistedstate/nuxt",
         "nuxt-vite-legacy", // 兼容旧版本浏览器
         "nuxt-cron", // 定时任务
+        "nuxt-purgecss",
+        ["nuxt-purgecss", { enabled: true }],
     ],
 
-    plugins: [
-    ],
+    plugins: [],
 
     // 这个是给nuxt-vite-legacy用的，用来兼容旧版本浏览器
     legacy: {
@@ -130,7 +131,7 @@ export default defineNuxtConfig({
         "@/assets/styles/layout/layout.scss",
         "primeicons/primeicons.css",
         // 可用的icon参见：https://primevue.org/icons/#list
-        "@/assets/styles/demo/demo.scss",
+        // "@/assets/styles/demo/demo.scss", // 注释掉这个文件，因为它可能包含大量非生产环境必需的样式。
     ],
     postcss: {
         plugins: {
@@ -146,15 +147,15 @@ export default defineNuxtConfig({
             alias: {
                 react: "react",
                 "react-dom": "react-dom",
-                "@univerjs/design/lib/index.css":
-                    "@univerjs/design/lib/index.css",
-                "@univerjs/presets/lib/styles/preset-sheets-core.css":
-                    "@univerjs/presets/lib/styles/preset-sheets-core.css",
             },
         },
         ssr: {
             // 此项必须配置，否则pnpm dev打开univer sheet会报错。
-            noExternal: ["@univerjs/presets", "rxjs", "unplugin-vue-router", "vue-router"],
+            noExternal: [
+                "rxjs",
+                "unplugin-vue-router",
+                "vue-router",
+            ],
         },
     },
 });

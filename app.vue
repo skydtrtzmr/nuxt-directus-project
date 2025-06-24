@@ -50,12 +50,5 @@ onMounted(async () => {
 </script>
 
 <style>
-/* 加载必要样式 */
-@import "@univerjs/design/lib/index.css";
-@import "@univerjs/presets/lib/styles/preset-sheets-core.css";
 
-/* 修复Univer的布局问题 */
-.univer-cell-editor {
-    z-index: 9999 !important;
-}
 </style>
