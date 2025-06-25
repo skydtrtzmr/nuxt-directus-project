@@ -10,6 +10,7 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 
 - [x] `review/[id]`页面，显示答案。
 - [ ] 添加做题操作自动脚本。
+- [ ] 重大bug，现在题目最多试卷一次出100题……超了就显示不出来……
 
 Bug：
 

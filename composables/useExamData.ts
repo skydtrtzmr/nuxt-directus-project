@@ -19,6 +19,7 @@ export function useExamData() {
     // 否则，如果写在外面，这行代码在 useExamData.ts 模块被导入和首次评估时就会执行。在页面刷新（特别是首次加载或 SSR 期间）的某些阶段，这个执行时机可能早于 Nuxt 应用实例完全准备好并提供给 useRuntimeConfig() 所需的上下文。于是变回导致报错：
     // 500 [nuxt] A composable that requires access to the Nuxt instance was called outside of a plugin, Nuxt hook, Nuxt middleware, or Vue setup function.
     const isLoading = ref(true); // 新增：用于跟踪加载状态
+    const loadError = ref<string | null>(null); // 新增：用于跟踪和显示加载错误
     const practiceSession = ref<any>({} as any);
     const paper = ref<Papers>({} as Papers);
     const submittedPaperSections = ref<PaperSections[]>([]);
@@ -259,79 +260,103 @@ export function useExamData() {
         current_selected_question_ref: Ref<any>
     ) => {
         isLoading.value = true;
-        try {
-            // 首先，总是获取最新的会话信息
-            let sessionData: any = await $fetch(
-                `${config.public.directus.url}/fetch-practice-session-info-endpoint/${current_practice_session_id}`
-            );
+        loadError.value = null;
+        const maxRetries = 3;
+        let attempt = 0;
 
-            // 如果是首次进入（状态为 'todo'），则更新状态
-            if (
-                exam_page_mode !== "review" &&
-                sessionData.submit_status === "todo"
-            ) {
-                console.log(
-                    "首次进入考试，正在更新状态为 'doing' 并记录开始时间..."
+        const delay = (ms: number) =>
+            new Promise((resolve) => setTimeout(resolve, ms));
+
+        while (attempt < maxRetries) {
+            try {
+                // 首先，总是获取最新的会话信息
+                let sessionData: any = await $fetch(
+                    `${config.public.directus.url}/fetch-practice-session-info-endpoint/${current_practice_session_id}`
                 );
-                const itemToUpdate = {
-                    actual_start_time: dayjs().toISOString(),
-                    submit_status: "doing" as const,
-                };
 
-                await $fetch(
-                    `${config.public.directus.url}/update-practice-session-info-endpoint/${current_practice_session_id}`,
-                    {
-                        method: "PATCH",
-                        body: itemToUpdate,
-                    }
+                // 如果是首次进入（状态为 'todo'），则更新状态
+                if (
+                    exam_page_mode !== "review" &&
+                    sessionData.submit_status === "todo"
+                ) {
+                    console.log(
+                        "首次进入考试，正在更新状态为 'doing' 并记录开始时间..."
+                    );
+                    const itemToUpdate = {
+                        actual_start_time: dayjs().toISOString(),
+                        submit_status: "doing" as const,
+                    };
+
+                    await $fetch(
+                        `${config.public.directus.url}/update-practice-session-info-endpoint/${current_practice_session_id}`,
+                        {
+                            method: "PATCH",
+                            body: itemToUpdate,
+                        }
+                    );
+
+                    // 不要用PATCH的返回消息覆盖，而是将更新的字段合并到现有的sessionData中
+                    Object.assign(sessionData, itemToUpdate);
+                    console.log("状态更新成功，sessionData已合并。");
+                }
+
+                // --- 后续逻辑使用已经确定状态的 sessionData ---
+
+                practiceSession.value = sessionData;
+                practiceSessionTime.value = sessionData; // 保持兼容
+                examScore.value = Number(sessionData.score) || null;
+
+                if (
+                    sessionData.submit_status === "done" &&
+                    exam_page_mode !== "review"
+                ) {
+                    shouldShowFinalSubmissionDialog.value = true;
+                    isLoading.value = false; // 同样需要设置
+                    return; // 提前退出，因为已交卷
+                }
+
+                // 获取试卷内容和答题卡
+                await afterFetchSubmittedExamContent(
+                    current_practice_session_id,
+                    current_selected_question_ref
                 );
-                
-                // 不要用PATCH的返回消息覆盖，而是将更新的字段合并到现有的sessionData中
-                Object.assign(sessionData, itemToUpdate);
-                console.log("状态更新成功，sessionData已合并。");
-            }
 
-            // --- 后续逻辑使用已经确定状态的 sessionData ---
-
-            practiceSession.value = sessionData;
-            practiceSessionTime.value = sessionData; // 保持兼容
-            examScore.value = Number(sessionData.score) || null;
-
-            if (
-                sessionData.submit_status === "done" &&
-                exam_page_mode !== "review"
-            ) {
-                shouldShowFinalSubmissionDialog.value = true;
-                return; // 提前退出，因为已交卷
-            }
-
-            // 获取试卷内容和答题卡
-            await afterFetchSubmittedExamContent(
-                current_practice_session_id,
-                current_selected_question_ref
-            );
-
-            // 设置计时器参数
-            const actualStartISO = practiceSession.value.actual_start_time;
-            if (actualStartISO) {
-                timerInitParams.value = {
-                    actualStartISO,
-                    durationMins:
-                        practiceSession.value[
-                            "exercises_students_id__exercises_id__duration"
-                        ],
-                    extraMins: practiceSession.value.extra_time,
-                };
-            } else {
+                // 设置计时器参数
+                const actualStartISO = practiceSession.value.actual_start_time;
+                if (actualStartISO) {
+                    timerInitParams.value = {
+                        actualStartISO,
+                        durationMins:
+                            practiceSession.value[
+                                "exercises_students_id__exercises_id__duration"
+                            ],
+                        extraMins: practiceSession.value.extra_time,
+                    };
+                } else {
+                    console.error(
+                        "useExamData: 无法初始化计时器 - actual_start_time 缺失。"
+                    );
+                }
+                isLoading.value = false; // 成功加载后
+                return; // 成功，退出函数
+            } catch (error) {
+                attempt++;
                 console.error(
-                    "useExamData: 无法初始化计时器 - actual_start_time 缺失。"
+                    `useExamData: 加载考试数据第 ${attempt} 次尝试失败:`,
+                    error
                 );
+                if (attempt >= maxRetries) {
+                    loadError.value = "加载考试数据失败，请检查网络后重试。";
+                    break; // 退出循环
+                }
+                const delayTime = Math.pow(2, attempt - 1) * 1000;
+                console.log(
+                    `将在 ${delayTime / 1000}s 后重试...`
+                );
+                await delay(delayTime);
             }
-        } catch (error) {
-            console.error("useExamData: 加载考试数据时出错:", error);
-        } finally {
-            isLoading.value = false;
         }
+        isLoading.value = false; // 所有重试失败后
     };
 
     return {
@@ -347,5 +372,6 @@ export function useExamData() {
         timerInitParams, // Expose for ExamPage to use
         shouldShowFinalSubmissionDialog, // Expose for ExamPage to use
         isLoading, // 导出加载状态
+        loadError, // 导出加载错误状态
     };
 }

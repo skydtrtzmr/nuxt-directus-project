@@ -109,6 +109,12 @@ export default defineNuxtConfig({
         autoRefresh: false, // 是否自动刷新token
     },
 
+    app: {
+        // 建议使用环境变量进行配置，方便在不同环境（开发、生产）中使用不同的配置
+        // 您需要在部署环境中设置 NUXT_PUBLIC_CDN_URL 这个环境变量
+        cdnURL: process.env.NUXT_PUBLIC_CDN_URL,
+    },
+
     cron: {
         runOnInit: true, // 是否在启动时立即执行定时任务
         timeZone: "UTC+8",

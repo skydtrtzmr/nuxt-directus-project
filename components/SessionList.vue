@@ -57,6 +57,22 @@
                 <p>正在加载列表...</p>
             </div>
 
+            <!-- 新增：错误状态 -->
+            <div
+                v-else-if="fetchError"
+                class="error-state"
+            >
+                <i class="pi pi-wifi-off error-icon"></i>
+                <h3>加载{{ sessionTypeText }}列表失败</h3>
+                <p>{{ fetchError }}</p>
+                <Button
+                    @click="fetchPracticeSessions"
+                    :label="'重试'"
+                    icon="pi pi-refresh"
+                    class="p-button-secondary"
+                />
+            </div>
+
             <DataView
                 v-else
                 :value="practice_sessions_ref"
@@ -379,54 +395,77 @@ const options = ref(["list", "grid"]);
 
 // state
 const isLoading = ref(true); // 新增：加载状态
+const fetchError = ref<string | null>(null); // 新增：用于跟踪和显示获取数据时的错误
 
 const fetchPracticeSessions = async () => {
     isLoading.value = true;
-    try {
-        if (!current_user?.id) {
-            console.error("用户未登录，无法获取会话列表。");
-            practice_sessions_ref.value = [];
-            return;
-        }
-        const user_ps: any = await $fetch(
-            `/fetch-user-ps-cache-endpoint/by-user/${current_user.id}`,
-            {
-                baseURL: config.public.directus.url,
+    fetchError.value = null; // 重置错误状态
+    const maxRetries = 3;
+    let attempt = 0;
+
+    while (attempt < maxRetries) {
+        try {
+            if (!current_user?.id) {
+                console.error("用户未登录，无法获取会话列表。");
+                practice_sessions_ref.value = [];
+                isLoading.value = false; // 结束加载
+                return;
             }
-        );
-        const practice_session_id_list: string[] =
-            user_ps["practiceSessionIds"];
+            const user_ps: any = await $fetch(
+                `/fetch-user-ps-cache-endpoint/by-user/${current_user.id}`,
+                {
+                    baseURL: config.public.directus.url,
+                }
+            );
+            const practice_session_id_list: string[] =
+                user_ps["practiceSessionIds"];
 
-        if (!practice_session_id_list || practice_session_id_list.length === 0) {
-            practice_sessions_ref.value = [];
-            return;
+            if (
+                !practice_session_id_list ||
+                practice_session_id_list.length === 0
+            ) {
+                practice_sessions_ref.value = [];
+                isLoading.value = false; // 结束加载
+                return;
+            }
+
+            const practice_sessions: Record<string, flatPracticeSession_type> =
+                await $fetch(`/fetch-practice-session-info-endpoint/batch`, {
+                    baseURL: config.public.directus.url,
+                    method: "POST",
+                    body: {
+                        practice_session_ids: practice_session_id_list,
+                    },
+                });
+            const practiceSessionListOrdered: Array<flatPracticeSession_type> =
+                practice_session_id_list
+                    .map((id) => {
+                        return practice_sessions[id] || null; // 如果映射中没有某个id（例如请求了但未返回），则设为null
+                    })
+                    .filter((ps): ps is flatPracticeSession_type => ps !== null); // 过滤掉null的项
+
+            console.log("practiceSessionListOrdered:");
+            console.log(practiceSessionListOrdered);
+
+            practice_sessions_ref.value = practiceSessionListOrdered;
+            isLoading.value = false; // 成功，结束加载
+            return; // 成功获取，退出循环
+        } catch (error) {
+            attempt++;
+            console.error(`获取会话列表第 ${attempt} 次尝试失败:`, error);
+
+            if (attempt >= maxRetries) {
+                fetchError.value = "无法连接到服务器，请检查您的网络。";
+                practice_sessions_ref.value = []; // 清空列表
+                break; // 退出循环
+            }
+            // Exponential backoff
+            const delayTime = Math.pow(2, attempt - 1) * 1000;
+            console.log(`将在 ${delayTime / 1000}s 后重试...`);
+            await delay(delayTime);
         }
-
-        const practice_sessions: Record<string, flatPracticeSession_type> =
-            await $fetch(`/fetch-practice-session-info-endpoint/batch`, {
-                baseURL: config.public.directus.url,
-                method: "POST",
-                body: {
-                    practice_session_ids: practice_session_id_list,
-                },
-            });
-        const practiceSessionListOrdered: Array<flatPracticeSession_type> =
-            practice_session_id_list
-                .map((id) => {
-                    return practice_sessions[id] || null; // 如果映射中没有某个id（例如请求了但未返回），则设为null
-                })
-                .filter((ps) => ps !== null); // 过滤掉null的项
-
-        console.log("practiceSessionListOrdered:");
-        console.log(practiceSessionListOrdered);
-
-        practice_sessions_ref.value = practiceSessionListOrdered;
-    } catch (error) {
-        console.error("获取会话列表时出错:", error);
-        practice_sessions_ref.value = []; // 在出错时清空列表
-    } finally {
-        isLoading.value = false; // 确保加载状态在最后被设置为false
     }
+    isLoading.value = false; // 所有重试失败后，结束加载
 };
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -814,6 +853,35 @@ onMounted(() => {
 
 .empty-state p {
     margin: 0;
+}
+
+/* 新增: 错误状态样式 */
+.error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 0;
+    text-align: center;
+    color: var(--text-color-secondary);
+    background-color: var(--surface-ground);
+    border-radius: var(--border-radius);
+}
+
+.error-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--yellow-500);
+}
+
+.error-state h3 {
+    font-size: 1.25rem;
+    margin: 0 0 0.5rem 0;
+    color: var(--text-color);
+}
+
+.error-state p {
+    margin: 0 0 1.5rem 0;
 }
 
 /* 深色模式适配 */
