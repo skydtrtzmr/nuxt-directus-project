@@ -261,7 +261,7 @@ export function useExamData() {
     ) => {
         isLoading.value = true;
         loadError.value = null;
-        const maxRetries = 5;
+        const maxRetries = 8;
         let attempt = 0;
 
         const delay = (ms: number) =>

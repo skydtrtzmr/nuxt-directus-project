@@ -400,7 +400,7 @@ const fetchError = ref<string | null>(null); // 新增：用于跟踪和显示�
 const fetchPracticeSessions = async () => {
     isLoading.value = true;
     fetchError.value = null; // 重置错误状态
-    const maxRetries = 5;
+    const maxRetries = 8;
     let attempt = 0;
 
     while (attempt < maxRetries) {
