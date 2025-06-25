@@ -7,6 +7,7 @@ import { runCompleteExamScenario } from "./scenarios/completeExam";
 import { delay, retryAction } from "./utils/domHelpers";
 
 let hasAutomationRun = false; // 防止重复执行
+let currentExamId: string | null = null; // 保存当前考试ID，用于断点续传
 
 export async function runFullAutomationSequence(router: Router): Promise<void> {
     if (hasAutomationRun) {
@@ -29,6 +30,7 @@ export async function runFullAutomationSequence(router: Router): Promise<void> {
     if (!loginSuccess) {
         console.error("Automation: Login scenario failed after retries. Aborting sequence.");
         alert("自动化测试失败：登录场景重试后仍然失败！");
+        hasAutomationRun = false; // 只有登录失败才完全重置，因为没有用户上下文
         return;
     }
     console.log("Automation: Login Scenario Completed.");
@@ -41,9 +43,9 @@ export async function runFullAutomationSequence(router: Router): Promise<void> {
         { maxRetries: 3, delayMs: 2000 }
     );
     if (!navToExamsSuccess) {
-        console.error("Automation: Navigate to Exams scenario failed after retries. Aborting sequence.");
-        alert("自动化测试失败：导航到考试页面场景重试后仍然失败！");
-        return;
+        console.error("Automation: Navigate to Exams scenario failed after retries.");
+        alert("自动化测试失败：导航到考试页面场景重试后仍然失败！\n\n用户已登录，您可以手动导航到考试页面继续测试。");
+        return; // 不重置hasAutomationRun，保持用户登录状态
     }
     console.log("Automation: Navigate to Exams Scenario Completed.");
     await delay(1000);
@@ -55,10 +57,12 @@ export async function runFullAutomationSequence(router: Router): Promise<void> {
         { maxRetries: 5, delayMs: 3000 } // 增加重试次数和延迟，因为这一步更容易受网络影响
     );
     if (!examId) {
-        console.error("Automation: Select and Start Exam scenario failed after retries. Aborting sequence.");
-        alert("自动化测试失败：选择并开始考试场景重试后仍然失败！");
-        return;
+        console.error("Automation: Select and Start Exam scenario failed after retries.");
+        alert("自动化测试失败：选择并开始考试场景重试后仍然失败！\n\n用户已登录，您可以手动选择考试继续测试。");
+        return; // 不重置hasAutomationRun，保持用户登录状态
     }
+    
+    currentExamId = examId; // 保存考试ID
     console.log(`Automation: Select and Start Exam Scenario Completed. Exam ID: ${examId}`);
     await delay(2000); // 给考试页面更多加载时间
 
@@ -70,11 +74,22 @@ export async function runFullAutomationSequence(router: Router): Promise<void> {
     );
     if (!completeExamSuccess) {
         console.error("Automation: Complete Exam scenario failed after retries.");
-        alert("自动化测试失败：完成考试场景重试后仍然失败！");
+        alert(`自动化测试失败：完成考试场景重试后仍然失败！\n\n用户已进入考试 ${examId}，您可以手动完成考试以确保数据完整性。`);
+        return; // 不重置hasAutomationRun，保持考试状态
     } else {
         console.log("Automation: Complete Exam Scenario Completed.");
+        currentExamId = null; // 清除考试ID，表示测试完成
         alert("自动化测试脚本执行完毕！");
     }
 
     console.log("Automation: Full Automation Sequence Finished.");
+}
+
+// 导出当前状态查询函数，方便调试
+export function getAutomationStatus() {
+    return {
+        hasRun: hasAutomationRun,
+        currentExamId: currentExamId,
+        canRetry: !hasAutomationRun || currentExamId !== null
+    };
 }

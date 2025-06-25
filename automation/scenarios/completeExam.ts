@@ -362,30 +362,32 @@ export async function runCompleteExamScenario(
         await delay(700);
         // "下一题"按钮位于 QuestionDetail.vue 的页脚
         // 根据 QuestionDetail.vue, 下一题按钮有 label "下一题" 和 icon "pi pi-arrow-right"
-        const nextQuestionButton = document.querySelector(
-            ".question-footer button[aria-label='下一题']"
-        ) as HTMLButtonElement | null;
+        const nextQuestionButton = await retryAction(
+            () => document.querySelector(
+                ".question-footer button[aria-label='下一题']"
+            ) as HTMLButtonElement | null,
+            (button) => button !== null && button.offsetParent !== null && !button.disabled,
+            { maxRetries: 3, delayMs: 1000 }
+        );
         // 可以添加对 icon 的检查以增加特异性: ".question-footer button[label='下一题'][icon='pi pi-arrow-right']"
 
-        if (
-            nextQuestionButton &&
-            nextQuestionButton.offsetParent !== null &&
-            !nextQuestionButton.disabled
-        ) {
+        if (nextQuestionButton) {
             console.log(
                 `自动化测试：点击主题目/题组 ${mainQuestionLoopIndex} 后的"下一题"按钮。`
             );
             nextQuestionButton.click();
             await delay(1000);
 
-            const endDialogMessageElementButton = document.querySelector(
-                ".p-dialog-content button[aria-label='确定']"
-            ) as HTMLButtonElement | null;
+            // 增加重试逻辑来等待对话框出现
+            const endDialogMessageElementButton = await retryAction(
+                () => document.querySelector(
+                    ".p-dialog-content button[aria-label='确定']"
+                ) as HTMLButtonElement | null,
+                (button) => button !== null && !button.disabled,
+                { maxRetries: 3, delayMs: 500 }
+            );
 
-            if (
-                endDialogMessageElementButton &&
-                !endDialogMessageElementButton.disabled
-            ) {
+            if (endDialogMessageElementButton) {
                 console.log(
                     "自动化测试：检测到'已经是最后一题'提示框，点击确定并准备交卷。"
                 );
@@ -406,7 +408,7 @@ export async function runCompleteExamScenario(
     // console.log("自动化测试：题目循环完成。正在尝试提交考试。");
     const submitExamButton = (await waitForElement(
         "button[aria-label*='Submit'], button[aria-label*='交卷']",
-        7000
+        10000 // 增加等待时间
     )) as HTMLButtonElement | null;
 
     if (!submitExamButton) {
@@ -421,11 +423,16 @@ export async function runCompleteExamScenario(
 
     await delay(1000);
 
-    const confirmSubmitButton = document.querySelector(
-        "button[aria-label='确定交卷']"
-    ) as HTMLButtonElement | null;
+    // 增加重试逻辑来等待确认对话框
+    const confirmSubmitButton = await retryAction(
+        () => document.querySelector(
+            "button[aria-label='确定交卷']"
+        ) as HTMLButtonElement | null,
+        (button) => button !== null && !button.disabled,
+        { maxRetries: 5, delayMs: 1000 }
+    );
 
-    if (confirmSubmitButton && !confirmSubmitButton.disabled) {
+    if (confirmSubmitButton) {
         // console.log("自动化测试：检测到确认提交试卷对话框，点击确定交卷。");
         confirmSubmitButton.click();
         await delay(500);
@@ -433,12 +440,16 @@ export async function runCompleteExamScenario(
         console.warn("自动化测试：确认提交试卷对话框中的确定按钮未找到。");
     }
 
-    // 会弹出提示框"即将退出考试"，需点击确定。
-    const readyToExitExamButton = document.querySelector(
-        "button[aria-label='确定']"
-    ) as HTMLButtonElement | null;  
+    // 增加重试逻辑来等待退出对话框
+    const readyToExitExamButton = await retryAction(
+        () => document.querySelector(
+            "button[aria-label='确定']"
+        ) as HTMLButtonElement | null,
+        (button) => button !== null && !button.disabled,
+        { maxRetries: 5, delayMs: 1000 }
+    );
 
-    if (readyToExitExamButton && !readyToExitExamButton.disabled) {
+    if (readyToExitExamButton) {
         // console.log("自动化测试：检测到提示退出对话框，点击确定。");
         readyToExitExamButton.click();
         await delay(500);
@@ -453,9 +464,9 @@ export async function runCompleteExamScenario(
         () => { /* 导航由之前的按钮点击触发 */ },
         (path) => !path.includes(`/exam/${examId}`), // 条件：路径不再包含当前考试ID
         {
-            timeoutPerAttempt: 20000, // 每次尝试等待20秒
+            timeoutPerAttempt: 25000, // 增加超时时间
             maxRetries: 3,            // 最多重试3次
-            delayBetweenRetriesMs: 1000 // 重试间隔1秒
+            delayBetweenRetriesMs: 2000 // 增加重试间隔
         }
     );
 

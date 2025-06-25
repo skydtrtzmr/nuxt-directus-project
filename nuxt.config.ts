@@ -28,7 +28,6 @@ const MyPreset = definePreset(Aura, {
 
 export default defineNuxtConfig({
     devtools: { enabled: true },
-
     modules: [
         "nuxt-directus",
         "@nuxtjs/tailwindcss",

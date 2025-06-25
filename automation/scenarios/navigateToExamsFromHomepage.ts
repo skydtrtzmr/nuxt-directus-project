@@ -44,7 +44,7 @@ export async function runNavigateToExamsFromHomepageScenario(router: Router): Pr
         path => path === '/exams',
         {
             timeoutPerAttempt: 10000,
-            maxRetries: 3,
+            maxRetries: 5,
             delayBetweenRetriesMs: 1500
         }
     );
