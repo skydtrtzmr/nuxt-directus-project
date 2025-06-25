@@ -367,7 +367,7 @@ export async function runCompleteExamScenario(
                 ".question-footer button[aria-label='下一题']"
             ) as HTMLButtonElement | null,
             (button) => button !== null && button.offsetParent !== null && !button.disabled,
-            { maxRetries: 3, delayMs: 1000 }
+            { maxRetries: 5, delayMs: 1000 }
         );
         // 可以添加对 icon 的检查以增加特异性: ".question-footer button[label='下一题'][icon='pi pi-arrow-right']"
 

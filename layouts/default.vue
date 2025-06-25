@@ -18,11 +18,7 @@ watch(isSidebarActive, (newVal) => {
     }
 });
 
-const { $directus, $readSingleton } = useNuxtApp();
-
-const { data: settings } = await useAsyncData("settings", () => {
-    return $directus.request($readSingleton("settings"));
-});
+const { settings } = useSettings();
 
 
 const containerClass = computed(() => {
@@ -129,7 +125,7 @@ onMounted(() => {
                     <slot />
                 </div>
             </div>
-            <app-footer :companyName=settings.company_name></app-footer>
+            <app-footer :companyName="settings.company_name"></app-footer>
         </div>
         <div class="layout-mask" @click="resetMenu"></div>
     </div>

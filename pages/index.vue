@@ -2,7 +2,7 @@
     <div class="home-container">
         <header class="header">
             <div class="header-content">
-                <h1 class="logo">{{ settings!.student_portal_name }}</h1>
+                <h1 class="logo">{{ settings.student_portal_name }}</h1>
                 <nav class="main-nav">
                     <ul>
                         <li>
@@ -110,7 +110,7 @@
 
         <footer class="footer">
             <div class="footer-content">
-                <div class="footer-logo">{{ settings!.student_portal_name }}</div>
+                <div class="footer-logo">{{ settings.student_portal_name }}</div>
                 <div class="footer-links">
                     <h3>快速链接</h3>
                     <ul>
@@ -131,7 +131,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2023 {{ settings!.company_name }} 版权所有</p>
+                <p>&copy; 2023 {{ settings.company_name }} 版权所有</p>
             </div>
         </footer>
     </div>
@@ -141,11 +141,7 @@
 import { setBlockTracking } from "vue";
 import { set } from "zod";
 
-const { $directus, $readSingleton } = useNuxtApp();
-
-const { data: settings } = await useAsyncData("settings", () => {
-    return $directus.request($readSingleton("settings"));
-});
+const { settings } = useSettings();
 
 definePageMeta({
     name: "Index",

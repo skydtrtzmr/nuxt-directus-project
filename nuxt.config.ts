@@ -28,6 +28,9 @@ const MyPreset = definePreset(Aura, {
 
 export default defineNuxtConfig({
     devtools: { enabled: true },
+    nitro: {
+        compressPublicAssets: true,
+    },
     modules: [
         "nuxt-directus",
         "@nuxtjs/tailwindcss",

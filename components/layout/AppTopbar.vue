@@ -8,11 +8,7 @@ defineSlots();
 
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
-const { $directus, $readSingleton } = useNuxtApp();
-
-const { data: settings } = await useAsyncData("settings", () => {
-    return $directus.request($readSingleton("settings"));
-});
+const { settings } = useSettings();
 </script>
 
 <template>
@@ -26,7 +22,7 @@ const { data: settings } = await useAsyncData("settings", () => {
             </button>
             <router-link to="/" class="layout-topbar-logo">
                 <PracticeAgain />
-                <span>{{ settings!.student_portal_name }}</span>
+                <span>{{ settings.student_portal_name }}</span>
             </router-link>
         </div>
 
