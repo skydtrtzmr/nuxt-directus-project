@@ -41,7 +41,7 @@ export async function runSelectAndStartExamScenario(
     }
 
     // 确保至少一张考试卡片已渲染
-    const firstCard = await waitForElement(".exam-card", 5000);
+    const firstCard = await waitForElement(".exam-card", 10000);
     if (!firstCard) {
         console.warn("Automation: No exam cards found after list loaded.");
         return null;
@@ -93,14 +93,48 @@ export async function runSelectAndStartExamScenario(
             }
             return false;
         },
-        { timeoutPerAttempt: 10000, maxRetries: 5, delayBetweenRetriesMs: 2000 }
+        { timeoutPerAttempt: 15000, maxRetries: 5, delayBetweenRetriesMs: 3000 }
     );
 
     if (navigatedToExamPage && examId) {
-        console.log(
-            `Automation: Successfully navigated to exam page for ID: ${examId}.`
+        console.log(`Automation: URL navigation successful to exam page for ID: ${examId}.`);
+        
+        // 增强验证：确保考试页面内容真的加载完成
+        console.log("Automation: Verifying exam page content is loaded...");
+        
+        // 等待考试页面的关键元素加载
+        const examPageContentLoaded = await waitForElement(
+            "div.question-detail, .loading-spinner-container, .exam-header",
+            10000
         );
-        return examId;
+        
+        if (!examPageContentLoaded) {
+            console.warn(`Automation: Exam page content did not load for exam ID: ${examId}`);
+            return null;
+        }
+        
+        // 如果有加载动画，等待其消失
+        const loadingSpinner = document.querySelector(".loading-spinner-container");
+        if (loadingSpinner) {
+            console.log("Automation: Loading spinner detected, waiting for it to disappear...");
+            const spinnerDisappeared = await waitForElementToDisappear(
+                ".loading-spinner-container",
+                15000
+            );
+            if (!spinnerDisappeared) {
+                console.warn(`Automation: Loading spinner did not disappear for exam ID: ${examId}`);
+                return null;
+            }
+        }
+        
+        // 再次验证我们确实在正确的考试页面
+        if (router.currentRoute.value.path.includes(`/exam/${examId}`)) {
+            console.log(`Automation: Successfully verified exam page is fully loaded for ID: ${examId}.`);
+            return examId;
+        } else {
+            console.warn(`Automation: Route verification failed. Expected path to contain /exam/${examId}, but got: ${router.currentRoute.value.path}`);
+            return null;
+        }
     } else {
         console.warn(
             `Automation: Failed to navigate to exam page for "${examTitle}" after multiple retries. Current path: ${router.currentRoute.value.path}`

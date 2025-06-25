@@ -1,7 +1,7 @@
 # TODO 修改中，现在有bug。
 
 # 配置完成后，运行以下命令进行构建镜像：
-# docker build -t skydtrtzmr/my-directus-client:1.3.7 ./
+# docker build -t skydtrtzmr/my-directus-client:1.3.8 ./
 
 # 指定最新版本：
 # docker tag skydtrtzmr/my-directus-client:1.3.7 skydtrtzmr/my-directus-client:latest

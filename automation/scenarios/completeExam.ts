@@ -204,25 +204,36 @@ export async function runCompleteExamScenario(
 ): Promise<boolean> {
     // console.log(`自动化测试：开始执行完成考试场景，考试ID "${examId}"...`);
 
-    if (!router.currentRoute.value.path.includes(`/exam/${examId}`)) {
+    // 增强路径验证：使用重试机制等待正确的路径
+    console.log(`自动化测试：正在验证是否在正确的考试页面 (ID: ${examId})...`);
+    const routeVerificationSuccess = await retryAction(
+        () => {
+            const currentPath = router.currentRoute.value.path;
+            return currentPath.includes(`/exam/${examId}`);
+        },
+        (isOnCorrectPath) => isOnCorrectPath === true,
+        { maxRetries: 5, delayMs: 2000 }
+    );
+
+    if (!routeVerificationSuccess) {
         console.warn(
-            `自动化测试：当前不在正确的考试页面。期望路径包含 /exam/${examId}, 实际为 ${router.currentRoute.value.path}`
+            `自动化测试：重试后仍不在正确的考试页面。期望路径包含 /exam/${examId}, 实际为 ${router.currentRoute.value.path}`
         );
         return false;
     }
-    // console.log("自动化测试：已确认在考试页面。");
+    console.log("自动化测试：已确认在考试页面。");
 
     // 新的等待逻辑：等待加载动画出现然后消失
     console.log("自动化测试：等待试卷加载...");
     const spinnerAppeared = await waitForElement(
         ".loading-spinner-container",
-        5000 // 等待10秒
+        5000 // 等待5秒
     );
     if (spinnerAppeared) {
         console.log("自动化测试：加载指示器已出现，现在等待其消失...");
         const spinnerDisappeared = await waitForElementToDisappear(
             ".loading-spinner-container",
-            10000 // 给与更长的超时时间，以应对慢速网络
+            15000 // 给与更长的超时时间，以应对慢速网络
         );
         if (!spinnerDisappeared) {
             console.error("自动化测试：等待加载指示器消失超时。测试终止。");

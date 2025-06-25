@@ -52,7 +52,7 @@ export default defineNuxtConfig({
     ],
 
     purgecss: {
-        enabled: false, // 设置为 false 来测试构建速度，定位问题
+        enabled: true, // 设置为 false 来测试构建速度，定位问题
         safelist: [
             /* 比如动态类名、PrimeVue 特殊类等 */
         ],

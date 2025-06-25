@@ -4,7 +4,7 @@ import { runLoginScenario } from "./scenarios/login";
 import { runNavigateToExamsFromHomepageScenario } from "./scenarios/navigateToExamsFromHomepage";
 import { runSelectAndStartExamScenario } from "./scenarios/selectAndStartExam";
 import { runCompleteExamScenario } from "./scenarios/completeExam";
-import { delay } from "./utils/domHelpers";
+import { delay, retryAction } from "./utils/domHelpers";
 
 let hasAutomationRun = false; // 防止重复执行
 
@@ -20,53 +20,61 @@ export async function runFullAutomationSequence(router: Router): Promise<void> {
     // console.log("Automation: Starting Full Automation Sequence...");
     await delay(2000); // 初始延迟，等待应用完全初始化
 
-    // 序列 1: 登录
-    const loginSuccess = await runLoginScenario(router);
+    // 序列 1: 登录 (带重试)
+    const loginSuccess = await retryAction(
+        () => runLoginScenario(router),
+        (result) => result === true,
+        { maxRetries: 3, delayMs: 2000 }
+    );
     if (!loginSuccess) {
-        console.error("Automation: Login scenario failed. Aborting sequence.");
+        console.error("Automation: Login scenario failed after retries. Aborting sequence.");
+        alert("自动化测试失败：登录场景重试后仍然失败！");
         return;
     }
-    // console.log("Automation: Login Scenario Completed.");
+    console.log("Automation: Login Scenario Completed.");
     await delay(1000);
 
-    // // 序列 2: 从主页（或登录后自动跳转到的页面）导航到考试列表
-    // // loginScenario 应该已经处理了登录后的跳转，现在我们确保在 /exams
-    const navToExamsSuccess = await runNavigateToExamsFromHomepageScenario(
-        router
+    // 序列 2: 从主页导航到考试列表 (带重试)
+    const navToExamsSuccess = await retryAction(
+        () => runNavigateToExamsFromHomepageScenario(router),
+        (result) => result === true,
+        { maxRetries: 3, delayMs: 2000 }
     );
     if (!navToExamsSuccess) {
-        console.error(
-            "Automation: Navigate to Exams scenario failed. Aborting sequence."
-        );
+        console.error("Automation: Navigate to Exams scenario failed after retries. Aborting sequence.");
+        alert("自动化测试失败：导航到考试页面场景重试后仍然失败！");
         return;
     }
-    // console.log("Automation: Navigate to Exams Scenario Completed.");
+    console.log("Automation: Navigate to Exams Scenario Completed.");
     await delay(1000);
 
-    // // 序列 3: 选择特定考试并开始
-    const examId = await runSelectAndStartExamScenario(
-        router,
-        "自动化测试专用考试"
-    ); // 从 SessionList.vue 来的标题
+    // 序列 3: 选择特定考试并开始 (带重试)
+    const examId = await retryAction(
+        () => runSelectAndStartExamScenario(router, "自动化测试专用考试"),
+        (result) => result !== null && typeof result === "string",
+        { maxRetries: 5, delayMs: 3000 } // 增加重试次数和延迟，因为这一步更容易受网络影响
+    );
     if (!examId) {
-        console.error(
-            "Automation: Select and Start Exam scenario failed. Aborting sequence."
-        );
+        console.error("Automation: Select and Start Exam scenario failed after retries. Aborting sequence.");
+        alert("自动化测试失败：选择并开始考试场景重试后仍然失败！");
         return;
     }
-    // console.log(
-    //     `Automation: Select and Start Exam Scenario Completed. Exam ID: ${examId}`
-    // );
-    await delay(1000);
+    console.log(`Automation: Select and Start Exam Scenario Completed. Exam ID: ${examId}`);
+    await delay(2000); // 给考试页面更多加载时间
 
-    // // 序列 4: 完成并提交考试
-    const completeExamSuccess = await runCompleteExamScenario(router, examId);
+    // 序列 4: 完成并提交考试 (带重试)
+    const completeExamSuccess = await retryAction(
+        () => runCompleteExamScenario(router, examId),
+        (result) => result === true,
+        { maxRetries: 3, delayMs: 3000 }
+    );
     if (!completeExamSuccess) {
-        console.error("Automation: Complete Exam scenario failed.");
+        console.error("Automation: Complete Exam scenario failed after retries.");
+        alert("自动化测试失败：完成考试场景重试后仍然失败！");
     } else {
         console.log("Automation: Complete Exam Scenario Completed.");
+        alert("自动化测试脚本执行完毕！");
     }
 
-    // console.log("Automation: Full Automation Sequence Finished.");
-    alert("自动化测试脚本执行完毕！");
+    console.log("Automation: Full Automation Sequence Finished.");
 }

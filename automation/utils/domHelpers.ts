@@ -111,7 +111,7 @@ export async function navigateToWithRetry(
 ): Promise<boolean> {
     const {
         timeoutPerAttempt = 20000, // 默认与 waitForNavigation 一致
-        maxRetries = 3, // 默认重试3次
+        maxRetries = 5, // 默认重试3次
         delayBetweenRetriesMs = 1000 // 默认重试间隔1秒
     } = options || {};
 
