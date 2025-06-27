@@ -1,99 +1,113 @@
-import { defineStore } from 'pinia'
-import type { AppSettings } from '~/types/settings'
-import { DEFAULT_SETTINGS } from '~/types/settings'
+import { defineStore } from "pinia";
+import type { AppSettings } from "~/types/settings";
+import { DEFAULT_SETTINGS } from "~/types/settings";
 
 interface SettingsState {
-  settings: AppSettings | null
-  isLoading: boolean
-  error: string | null
-  lastFetchTime: number | null
+    settings: AppSettings | null;
+    isLoading: boolean;
+    error: string | null;
+    lastFetchTime: number | null;
 }
 
-export const useSettingsStore = defineStore('settings', {
-  state: (): SettingsState => ({
-    settings: null,
-    isLoading: false,
-    error: null,
-    lastFetchTime: null
-  }),
+export const useSettingsStore = defineStore("settings", {
+    state: (): SettingsState => ({
+        settings: null,
+        isLoading: false,
+        error: null,
+        lastFetchTime: null,
+    }),
 
-  getters: {
-    // 提供默认值，确保页面不会因为数据缺失而崩溃
-    safeSettings(): AppSettings {
-      return this.settings || DEFAULT_SETTINGS
+    getters: {
+        // 提供默认值，确保页面不会因为数据缺失而崩溃
+        safeSettings(): AppSettings {
+            return this.settings || DEFAULT_SETTINGS;
+        },
+
+        isDataStale(): boolean {
+            if (!this.lastFetchTime) return true;
+            // 数据超过5分钟认为过期
+            return Date.now() - this.lastFetchTime > 5 * 60 * 1000;
+        },
     },
 
-    isDataStale(): boolean {
-      if (!this.lastFetchTime) return true
-      // 数据超过5分钟认为过期
-      return Date.now() - this.lastFetchTime > 5 * 60 * 1000
-    }
-  },
-
-  actions: {
-    async fetchSettings(force = false) {
-      // 如果数据还新鲜且不强制刷新，直接返回
-      if (this.settings && !this.isDataStale && !force) {
-        return this.settings
-      }
-
-      // 如果正在加载中，等待当前请求完成
-      if (this.isLoading) {
-        return new Promise((resolve) => {
-          const checkLoading = () => {
-            if (!this.isLoading) {
-              resolve(this.settings)
-            } else {
-              setTimeout(checkLoading, 100)
+    actions: {
+        async fetchSettings(force = false) {
+            // 如果数据还新鲜且不强制刷新，直接返回
+            if (this.settings && !this.isDataStale && !force) {
+                return this.settings;
             }
-          }
-          checkLoading()
-        })
-      }
 
-      this.isLoading = true
-      this.error = null
+            // 如果正在加载中，等待当前请求完成
+            if (this.isLoading) {
+                return new Promise((resolve) => {
+                    const checkLoading = () => {
+                        if (!this.isLoading) {
+                            resolve(this.settings);
+                        } else {
+                            setTimeout(checkLoading, 100);
+                        }
+                    };
+                    checkLoading();
+                });
+            }
 
-      try {
-        const { $directus, $readSingleton } = useNuxtApp()
-        
-        // 设置超时时间，避免无限等待
-        const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('请求超时')), 10000)
-        )
-        
-        const fetchPromise = $directus.request($readSingleton("settings"))
-        
-        const settings = await Promise.race([fetchPromise, timeoutPromise]) as AppSettings
-        
-        this.settings = settings
-        this.lastFetchTime = Date.now()
-        this.error = null
-        
-        return settings
-      } catch (error) {
-        console.error('获取系统设置失败:', error)
-        this.error = error instanceof Error ? error.message : '获取设置失败'
-        
-        // 如果是首次加载失败，返回默认值
-        if (!this.settings) {
-          this.settings = this.safeSettings
-        }
-        
-        return this.settings
-      } finally {
-        this.isLoading = false
-      }
+            this.isLoading = true;
+            this.error = null;
+
+            try {
+                const { $directus, $readSingleton } = useNuxtApp();
+
+                // 设置超时时间，避免无限等待
+                const timeoutPromise = new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error("请求超时")), 10000)
+                );
+
+                const fetchPromise = $directus.request(
+                    $readSingleton("settings")
+                );
+
+                // const settings = (await Promise.race([
+                //     fetchPromise,
+                //     timeoutPromise,
+                // ])) as AppSettings;
+
+                // [TODO] 暂时不给服务器打请求；
+                const settings = {
+                    // 学生门户名称
+                    student_portal_name: "考试系统学生端",
+                    // 公司名称
+                    company_name: "南京某某公司"
+                  }
+
+                this.settings = settings;
+                this.lastFetchTime = Date.now();
+                this.error = null;
+
+                return settings;
+            } catch (error) {
+                console.error("获取系统设置失败:", error);
+                this.error =
+                    error instanceof Error ? error.message : "获取设置失败";
+
+                // 如果是首次加载失败，返回默认值
+                if (!this.settings) {
+                    this.settings = this.safeSettings;
+                }
+
+                return this.settings;
+            } finally {
+                this.isLoading = false;
+            }
+        },
+
+        // 清除缓存，强制重新获取
+        invalidateCache() {
+            this.lastFetchTime = null;
+        },
+
+        // 重置错误状态
+        clearError() {
+            this.error = null;
+        },
     },
-
-    // 清除缓存，强制重新获取
-    invalidateCache() {
-      this.lastFetchTime = null
-    },
-
-    // 重置错误状态
-    clearError() {
-      this.error = null
-    }
-  }
-}) 
+});

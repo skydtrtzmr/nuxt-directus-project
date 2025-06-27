@@ -12,7 +12,7 @@ export async function fetchWithRetry<T>(
     fetchOptions: any = {},
     retryOptions: { maxRetries?: number; delayMs?: number } = {}
 ): Promise<T> {
-    const { maxRetries = 5, delayMs = 1000 } = retryOptions;
+    const { maxRetries = 8, delayMs = 1000 } = retryOptions;
     let attempt = 0;
 
     while (attempt < maxRetries) {

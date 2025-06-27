@@ -25,7 +25,7 @@ export async function runFullAutomationSequence(router: Router): Promise<void> {
     const loginSuccess = await retryAction(
         () => runLoginScenario(router),
         (result) => result === true,
-        { maxRetries: 3, delayMs: 2000 }
+        { maxRetries: 5, delayMs: 2000 }
     );
     if (!loginSuccess) {
         console.error("Automation: Login scenario failed after retries. Aborting sequence.");
@@ -40,7 +40,7 @@ export async function runFullAutomationSequence(router: Router): Promise<void> {
     const navToExamsSuccess = await retryAction(
         () => runNavigateToExamsFromHomepageScenario(router),
         (result) => result === true,
-        { maxRetries: 3, delayMs: 2000 }
+        { maxRetries: 5, delayMs: 2000 }
     );
     if (!navToExamsSuccess) {
         console.error("Automation: Navigate to Exams scenario failed after retries.");
@@ -70,7 +70,7 @@ export async function runFullAutomationSequence(router: Router): Promise<void> {
     const completeExamSuccess = await retryAction(
         () => runCompleteExamScenario(router, examId),
         (result) => result === true,
-        { maxRetries: 3, delayMs: 3000 }
+        { maxRetries: 5, delayMs: 3000 }
     );
     if (!completeExamSuccess) {
         console.error("Automation: Complete Exam scenario failed after retries.");

@@ -116,6 +116,7 @@
                         </div>
                     </div>
                 </ScrollPanel>
+                <Calculator />
             </div>
         </div>
 

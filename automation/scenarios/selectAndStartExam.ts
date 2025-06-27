@@ -21,7 +21,7 @@ export async function runSelectAndStartExamScenario(
             router,
             () => router.push("/exams"),
             (path) => path === "/exams",
-            { timeoutPerAttempt: 5000, maxRetries: 3 }
+            { timeoutPerAttempt: 5000, maxRetries: 5 }
         );
         if (!navigatedToExams) {
             console.warn("Automation: Failed to navigate to exams page after multiple retries.");

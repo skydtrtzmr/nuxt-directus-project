@@ -100,7 +100,7 @@ export async function runLoginScenario(router: Router): Promise<boolean> {
                 path.startsWith("/"), // 首页本身也可能是一个有效的中间状态
             {
                 timeoutPerAttempt: 20000,
-                maxRetries: 3,
+                maxRetries: 5,
                 delayBetweenRetriesMs: 1000,
             }
         );

@@ -16,8 +16,8 @@ export async function runNavigateToExamsFromHomepageScenario(router: Router): Pr
             path => path === '/dashboard',
             { 
                 timeoutPerAttempt: 5000,
-                maxRetries: 3,
-                delayBetweenRetriesMs: 1000
+                maxRetries: 6,
+                delayBetweenRetriesMs: 1500
             }
         );
         if (!navigatedToDashboard) {

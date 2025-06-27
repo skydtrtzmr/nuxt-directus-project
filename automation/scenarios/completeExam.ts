@@ -384,7 +384,7 @@ export async function runCompleteExamScenario(
                     ".p-dialog-content button[aria-label='确定']"
                 ) as HTMLButtonElement | null,
                 (button) => button !== null && !button.disabled,
-                { maxRetries: 3, delayMs: 500 }
+                { maxRetries: 5, delayMs: 500 }
             );
 
             if (endDialogMessageElementButton) {
@@ -465,7 +465,7 @@ export async function runCompleteExamScenario(
         (path) => !path.includes(`/exam/${examId}`), // 条件：路径不再包含当前考试ID
         {
             timeoutPerAttempt: 25000, // 增加超时时间
-            maxRetries: 3,            // 最多重试3次
+            maxRetries: 5,            // 最多重试3次
             delayBetweenRetriesMs: 2000 // 增加重试间隔
         }
     );
