@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import type { Students } from "~/types/directus_types";
-// import { useDirectusAuth, useDirectusUser } from "nuxt-directus";
+import { useDirectusAuth, useDirectusUser } from "nuxt-directus";
 
 // const { getItems } = useDirectusItems(); // 从顶层移除
 

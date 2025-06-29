@@ -1,5 +1,4 @@
 import { useRuntimeConfig } from "#app";
-import { useDirectusItems } from "#imports"; // Nuxt auto-imports
 import { useSettingsStore } from "~/stores/settings";
 
 /**

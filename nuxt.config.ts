@@ -32,7 +32,6 @@ export default defineNuxtConfig({
         compressPublicAssets: true,
     },
     modules: [
-        "nuxt-directus",
         "@nuxtjs/tailwindcss",
         "@primevue/nuxt-module",
         "nuxt-svgo", // 加载svg图片为vue组件
@@ -103,12 +102,6 @@ export default defineNuxtConfig({
             // private意味着这些配置只能在服务器端代码中访问，不能在客户端代码中访问。
             directus_token: "PcxE6WQAfAOhKc646tNL1qakGv6tto1I", //  这里会被.env文件中的NUXT_PRIVATE_DIRECTUS_TOKEN覆盖。
         },
-    },
-
-    directus: {
-        devtools: true,
-        autoFetch: false, // 是否自动获取用户信息。如果开着这个的话，项目启动时如果token失效会报错。
-        autoRefresh: false, // 是否自动刷新token
     },
 
     app: {
