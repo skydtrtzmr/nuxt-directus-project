@@ -32,6 +32,14 @@ export const useSettingsStore = defineStore("settings", {
 
     actions: {
         async fetchSettings(force = false) {
+            // 安全检查：如果在服务器端，但不在请求上下文中，则跳过获取
+            if (process.server && !useRequestEvent()) {
+                console.warn(
+                    "fetchSettings a été appelé en dehors d'un contexte de requête côté serveur. L'extraction est ignorée."
+                );
+                return this.settings || this.safeSettings;
+            }
+
             // 如果数据还新鲜且不强制刷新，直接返回
             if (this.settings && !this.isDataStale && !force) {
                 return this.settings;
@@ -70,14 +78,6 @@ export const useSettingsStore = defineStore("settings", {
                     fetchPromise,
                     timeoutPromise,
                 ])) as AppSettings;
-
-                // [TODO] 暂时不给服务器打请求；
-                // const settings = {
-                //     // 学生门户名称
-                //     student_portal_name: "考试系统学生端",
-                //     // 公司名称
-                //     company_name: "南京某某公司"
-                //   }
 
                 this.settings = settings;
                 this.lastFetchTime = Date.now();

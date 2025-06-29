@@ -8,19 +8,26 @@
 </template>
 
 <script setup lang="ts">
-const { register } = useDirectusAuth();
-// console.log('register');
+import { useAuth } from "~/stores/auth";
 
+const authStore = useAuth();
+const router = useRouter();
 
 const email = ref("");
 const password = ref("");
 
 const onSubmit = async () => {
     try {
-        await register({ email: email.value, password: password.value });
-        alert("Registered successfully");
+        await authStore.register({
+            email: email.value,
+            password: password.value,
+        });
+        // 注册并登录成功后，跳转到首页
+        // (跳转逻辑已在 authStore.register -> login 中处理)
+        alert("注册成功！");
     } catch (e) {
-        alert("Registered failed");
+        console.error(e);
+        alert("注册失败");
     }
 };
 </script>
