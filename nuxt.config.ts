@@ -64,7 +64,7 @@ export default defineNuxtConfig({
 
     // 这个是给nuxt-vite-legacy用的，用来兼容旧版本浏览器
     legacy: {
-        targets: ["chrome 69", "chrome 84"],
+        targets: ["chrome 69", "chrome 84", "chrome 88"],
         modernPolyfills: ["es.global-this", "es.string.replace-all"],
         // 这里引入的文件参见这里：https://unpkg.com/browse/core-js@3.39.0/
     },

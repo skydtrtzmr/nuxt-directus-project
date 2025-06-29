@@ -7,6 +7,8 @@ export interface AppSettings {
   student_portal_name: string
   // 公司名称
   company_name: string
+  // 是否为测试环境
+  is_test_env?: boolean
   // 其他可能的设置字段
   app_version?: string
   maintenance_mode?: boolean
@@ -25,6 +27,7 @@ export interface AppSettings {
 export const DEFAULT_SETTINGS: AppSettings = {
   student_portal_name: '学习考试系统',
   company_name: '教育科技有限公司',
+  is_test_env: false,
   app_version: '1.0.0',
   maintenance_mode: false,
   max_upload_size: 10485760, // 10MB

@@ -66,18 +66,18 @@ export const useSettingsStore = defineStore("settings", {
                     $readSingleton("settings")
                 );
 
-                // const settings = (await Promise.race([
-                //     fetchPromise,
-                //     timeoutPromise,
-                // ])) as AppSettings;
+                const settings = (await Promise.race([
+                    fetchPromise,
+                    timeoutPromise,
+                ])) as AppSettings;
 
                 // [TODO] 暂时不给服务器打请求；
-                const settings = {
-                    // 学生门户名称
-                    student_portal_name: "考试系统学生端",
-                    // 公司名称
-                    company_name: "南京某某公司"
-                  }
+                // const settings = {
+                //     // 学生门户名称
+                //     student_portal_name: "考试系统学生端",
+                //     // 公司名称
+                //     company_name: "南京某某公司"
+                //   }
 
                 this.settings = settings;
                 this.lastFetchTime = Date.now();
