@@ -1,6 +1,6 @@
 <template>
     <NuxtLayout>
-        <!-- <NuxtRouteAnnouncer /> -->
+        <NuxtRouteAnnouncer />
         <NuxtLoadingIndicator />
         <NuxtPage />
     </NuxtLayout>
@@ -29,7 +29,7 @@ const { data: shouldRunAutomationBasedOnDirectus, error: directusError } = await
 );
 
 onMounted(async () => {
-    // 使用从 useAsyncData 获取的值
+    // 使用从 useAsyncData 获取的值  
     if (shouldRunAutomationBasedOnDirectus.value) {
         console.log("Automation: Test environment (Directus, server-fetched) detected. Initializing automation sequence...");
         // 等待Vue Router完全准备好并且初始导航完成

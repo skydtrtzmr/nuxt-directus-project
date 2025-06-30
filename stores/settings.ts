@@ -33,7 +33,7 @@ export const useSettingsStore = defineStore("settings", {
     actions: {
         async fetchSettings(force = false) {
             // 安全检查：如果在服务器端，但不在请求上下文中，则跳过获取
-            if (process.server && !useRequestEvent()) {
+            if (import.meta.server && !useRequestEvent()) {
                 console.warn(
                     "fetchSettings a été appelé en dehors d'un contexte de requête côté serveur. L'extraction est ignorée."
                 );
@@ -71,7 +71,7 @@ export const useSettingsStore = defineStore("settings", {
                 );
 
                 const fetchPromise = $directus.request(
-                    $readSingleton("settings")
+                    $readSingleton("global")
                 );
 
                 const settings = (await Promise.race([

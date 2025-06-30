@@ -5,20 +5,10 @@ import {
     readItems,
     readSingleton,
     authentication,
+    readMe,
     type AuthenticationStorage,
+    registerUser,
 } from "@directus/sdk";
-
-// 注意这个不能写在export外面，会报错：
-//  A composable that requires access to the Nuxt instance was called outside of a plugin, Nuxt hook, Nuxt middleware, or Vue setup function.
-// 要写在export里面。
-// const {
-//     public: {
-//         directus: { url },
-//     },
-//     private: { directus_token },
-// } = useRuntimeConfig();
-
-// const directus = createDirectus(url).with(rest());
 
 export default defineNuxtPlugin(() => {
     const {
@@ -30,22 +20,21 @@ export default defineNuxtPlugin(() => {
     } = useRuntimeConfig();
 
     // 使用 Nuxt 的 useCookie 实现持久化存储
-    class NuxtCookieStorage implements AuthenticationStorage {
+    class NuxtCookieStorage {
+        cookie = useCookie("directus-data");
         get() {
-            const cookie = useCookie<any>("directus_session_data");
-            return cookie.value ?? null;
+            return this.cookie.value;
         }
         set(value: any) {
-            const cookie = useCookie<any>("directus_session_data");
-            cookie.value = value;
+            this.cookie.value = value;
         }
     }
-    const storage = new NuxtCookieStorage();
+    const storage = new NuxtCookieStorage() as AuthenticationStorage;
 
     // 创建带有身份验证功能的 Directus 实例
     const directus = createDirectus(url)
-        .with(authentication("cookie", { storage }))
-        .with(rest());
+        .with(authentication("cookie", { credentials: "include", storage }))
+        .with(rest({ credentials: "include" }));
 
     return {
         provide: {
@@ -54,6 +43,7 @@ export default defineNuxtPlugin(() => {
             readItem,
             readItems,
             readSingleton,
+            registerUser,
         },
     };
 });

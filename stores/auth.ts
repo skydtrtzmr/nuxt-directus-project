@@ -64,7 +64,7 @@ export const useAuth = defineStore("auth", {
         async fetchUser() {
             const { $directus } = useNuxtApp();
             try {
-                const me = await ($directus as any).users.me.read();
+                const me = await $directus.request(readMe());
                 if (me) {
                     this.user = me as AuthUser;
                     this.loggedIn = true;
@@ -72,6 +72,8 @@ export const useAuth = defineStore("auth", {
                 }
                 return this.user;
             } catch (error) {
+                console.log("fetchUser error");
+
                 this.resetState();
                 return null;
             }

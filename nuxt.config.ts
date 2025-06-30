@@ -7,6 +7,9 @@ import Lara from "@primevue/themes/lara";
 import Nora from "@primevue/themes/Nora";
 import { definePreset } from "@primevue/themes";
 
+console.log("import.meta.env.API_URL in config.ts", import.meta.env.API_URL);
+
+
 const MyPreset = definePreset(Aura, {
     semantic: {
         // 在这里切换主题色
