@@ -6,9 +6,9 @@
             <!-- 题型标签区域 -->
             <div class="question-type-section">
                 <div class="question-type-wrapper">
-                    <div class="question-type-icon">
+                    <!-- <div class="question-type-icon">
                         <i :class="getQuestionTypeIcon(selectedQuestion.questions_id.type)"></i>
-                    </div>
+                    </div> -->
                     <div class="question-type-info">
                         <span class="question-type-label">{{ getQuestionTypeLabel(selectedQuestion.questions_id.type) }}</span>
                         <span class="question-type-description">{{ getQuestionTypeDescription(selectedQuestion.questions_id.type) }}</span>

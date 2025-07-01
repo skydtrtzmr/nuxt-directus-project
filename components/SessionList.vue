@@ -442,7 +442,8 @@ const fetchPracticeSessions = async () => {
                     .map((id) => {
                         return practice_sessions[id] || null; // 如果映射中没有某个id（例如请求了但未返回），则设为null
                     })
-                    .filter((ps): ps is flatPracticeSession_type => ps !== null); // 过滤掉null的项
+                    .filter((ps): ps is flatPracticeSession_type => ps !== null)
+                    .filter((ps) => ps.exercises_students_id__exercises_id__mode === props.mode); // 过滤掉null的项
 
             console.log("practiceSessionListOrdered:");
             console.log(practiceSessionListOrdered);
