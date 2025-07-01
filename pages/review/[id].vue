@@ -54,19 +54,19 @@ useHead({
             defer: true
         }
     ],
-    style: [
-        {
-            innerHTML: `
-                #dify-chatbot-bubble-button {
-                    background-color: #1C64F2 !important;
-                }
-                #dify-chatbot-bubble-window {
-                    width: 24rem !important;
-                    height: 40rem !important;
-                }
-            `
-        }
-    ]
+    // style: [
+    //     {
+    //         innerHTML: `
+    //             #dify-chatbot-bubble-button {
+    //                 background-color: #1C64F2 !important;
+    //             }
+    //             #dify-chatbot-bubble-window {
+    //                 width: 24rem !important;
+    //                 height: 40rem !important;
+    //             }
+    //         `
+    //     }
+    // ]
 });
 </script>
 
