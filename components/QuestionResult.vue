@@ -1,10 +1,19 @@
 <template>
     <div class="question-result-container">
         <!-- 结果状态卡片 -->
-        <div class="result-status-card" :class="isCorrectAnswer ? 'correct-answer' : 'incorrect-answer'">
+        <div
+            class="result-status-card"
+            :class="isCorrectAnswer ? 'correct-answer' : 'incorrect-answer'"
+        >
             <div class="status-header">
                 <div class="status-icon">
-                    <i :class="isCorrectAnswer ? 'pi pi-check-circle' : 'pi pi-times-circle'"></i>
+                    <i
+                        :class="
+                            isCorrectAnswer
+                                ? 'pi pi-check-circle'
+                                : 'pi pi-times-circle'
+                        "
+                    ></i>
                 </div>
                 <div class="status-text">
                     {{ isCorrectAnswer ? "回答正确" : "回答错误" }}
@@ -12,7 +21,9 @@
                 <div class="score-badge">
                     <span class="score-value">{{ questionResult.score }}</span>
                     <span class="score-divider">/</span>
-                    <span class="total-score">{{ questionResult.point_value }}</span>
+                    <span class="total-score">{{
+                        questionResult.point_value
+                    }}</span>
                     <span class="score-unit">分</span>
                 </div>
             </div>
@@ -27,7 +38,9 @@
                         <i class="pi pi-user"></i>
                         <span class="answer-label">考生答案</span>
                     </div>
-                    <div class="answer-content">{{ getSubmittedAnswer() || "未作答" }}</div>
+                    <div class="answer-content">
+                        {{ getSubmittedAnswer() || "未作答" }}
+                    </div>
                 </div>
 
                 <!-- 正确答案 -->
@@ -49,24 +62,38 @@
                     <span class="analysis-title">题目解析</span>
                 </div>
                 <div class="analysis-actions">
-                    <Button 
+                    <Button
                         @click="copyQuestionDataForAI"
-                        icon="pi pi-star"
+                        icon="pi pi-sparkles"
+                        label="AI解析"
                         class="ai-copy-button"
                         :loading="copyLoading"
                         v-tooltip.top="'复制题目信息到AI助手获取详细解析'"
-                        text
+                        severity="warning"
                         rounded
                     />
                     <!-- 状态反馈 - 绝对定位不影响布局 -->
-                    <div v-if="copyStatus" class="copy-status-message" :class="copyStatusClass">
-                        <i :class="copyStatus.includes('✅') ? 'pi pi-check' : 'pi pi-exclamation-triangle'"></i>
+                    <div
+                        v-if="copyStatus"
+                        class="copy-status-message"
+                        :class="copyStatusClass"
+                    >
+                        <i
+                            :class="
+                                copyStatus.includes('✅')
+                                    ? 'pi pi-check'
+                                    : 'pi pi-exclamation-triangle'
+                            "
+                        ></i>
                         <span>{{ copyStatus }}</span>
                     </div>
                 </div>
             </div>
             <div class="analysis-content" v-if="getAnalysis()">
-                <div v-html="renderMarkdown(getAnalysis())" class="markdown-content"></div>
+                <div
+                    v-html="renderMarkdown(getAnalysis())"
+                    class="markdown-content"
+                ></div>
             </div>
             <div class="analysis-content" v-else>
                 <p class="no-analysis-text">暂无题目解析</p>
@@ -77,11 +104,8 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import Button from 'primevue/button';
-import type {
-    QuestionResults,
-    Questions,
-} from "~/types/directus_types";
+import Button from "primevue/button";
+import type { QuestionResults, Questions } from "~/types/directus_types";
 
 const props = defineProps<{
     questionResult: QuestionResults;
@@ -95,23 +119,23 @@ const props = defineProps<{
 }>();
 
 // 复制状态相关
-const copyStatus = ref('')
-const copyStatusClass = ref('')
-const copyLoading = ref(false)
+const copyStatus = ref("");
+const copyStatusClass = ref("");
+const copyLoading = ref(false);
 
 // 格式化答案显示
 const formatAnswerDisplay = (answer: any): string => {
     if (answer === null || answer === undefined) {
         return "未作答";
     }
-    
+
     // 如果是数组，格式化为逗号分隔的字符串
     if (Array.isArray(answer)) {
         return answer.length > 0 ? answer.join(", ") : "未作答";
     }
-    
+
     // 如果是字符串形式的数组（如 "['A','B']" 或 '["A","B"]'）
-    if (typeof answer === 'string') {
+    if (typeof answer === "string") {
         try {
             const parsed = JSON.parse(answer);
             if (Array.isArray(parsed)) {
@@ -120,21 +144,31 @@ const formatAnswerDisplay = (answer: any): string => {
         } catch (e) {
             // 如果不是JSON格式，直接返回字符串
         }
-        
+
         // 处理其他字符串格式，如果为空字符串则显示未作答
         return answer.trim() || "未作答";
     }
-    
+
     // 其他类型转为字符串
     return String(answer);
 };
 
 // 获取学生提交的答案
 const getSubmittedAnswer = (): string => {
-    if (props.question_type === "q_mc_single" || props.question_type === "q_mc_binary") {
-        return formatAnswerDisplay(props.questionResult.submit_ans_select_radio);
-    } else if (props.question_type === "q_mc_multi" || props.question_type === "q_mc_flexible") {
-        return formatAnswerDisplay(props.questionResult.submit_ans_select_multiple_checkbox);
+    if (
+        props.question_type === "q_mc_single" ||
+        props.question_type === "q_mc_binary"
+    ) {
+        return formatAnswerDisplay(
+            props.questionResult.submit_ans_select_radio
+        );
+    } else if (
+        props.question_type === "q_mc_multi" ||
+        props.question_type === "q_mc_flexible"
+    ) {
+        return formatAnswerDisplay(
+            props.questionResult.submit_ans_select_multiple_checkbox
+        );
     }
     return "未作答";
 };
@@ -144,19 +178,40 @@ const getCorrectAnswer = (): string => {
     if (!props.questionData || !props.questionData.questions_id) {
         return "缺少题目数据";
     }
-    
+
     const questionInfo = props.questionData.questions_id;
-    
+
     if (props.question_type === "q_mc_single" && questionInfo.q_mc_single) {
-        return formatAnswerDisplay(questionInfo.q_mc_single.correct_option) || "单选题缺少正确答案";
-    } else if (props.question_type === "q_mc_binary" && questionInfo.q_mc_binary) {
-        return formatAnswerDisplay(questionInfo.q_mc_binary.correct_option) || "判断题缺少正确答案";
-    } else if (props.question_type === "q_mc_multi" && questionInfo.q_mc_multi) {
-        return formatAnswerDisplay(questionInfo.q_mc_multi.correct_options) || "多选题缺少正确答案";
-    } else if (props.question_type === "q_mc_flexible" && questionInfo.q_mc_flexible) {
-        return formatAnswerDisplay(questionInfo.q_mc_flexible.correct_options) || "不定项选择题缺少正确答案";
+        return (
+            formatAnswerDisplay(questionInfo.q_mc_single.correct_option) ||
+            "单选题缺少正确答案"
+        );
+    } else if (
+        props.question_type === "q_mc_binary" &&
+        questionInfo.q_mc_binary
+    ) {
+        return (
+            formatAnswerDisplay(questionInfo.q_mc_binary.correct_option) ||
+            "判断题缺少正确答案"
+        );
+    } else if (
+        props.question_type === "q_mc_multi" &&
+        questionInfo.q_mc_multi
+    ) {
+        return (
+            formatAnswerDisplay(questionInfo.q_mc_multi.correct_options) ||
+            "多选题缺少正确答案"
+        );
+    } else if (
+        props.question_type === "q_mc_flexible" &&
+        questionInfo.q_mc_flexible
+    ) {
+        return (
+            formatAnswerDisplay(questionInfo.q_mc_flexible.correct_options) ||
+            "不定项选择题缺少正确答案"
+        );
     }
-    
+
     return "无法获取正确答案";
 };
 
@@ -165,19 +220,28 @@ const getAnalysis = (): string => {
     if (!props.questionData || !props.questionData.questions_id) {
         return "";
     }
-    
+
     const questionInfo = props.questionData.questions_id;
-    
+
     if (props.question_type === "q_mc_single" && questionInfo.q_mc_single) {
         return questionInfo.q_mc_single.analysis || "";
-    } else if (props.question_type === "q_mc_binary" && questionInfo.q_mc_binary) {
+    } else if (
+        props.question_type === "q_mc_binary" &&
+        questionInfo.q_mc_binary
+    ) {
         return questionInfo.q_mc_binary.analysis || "";
-    } else if (props.question_type === "q_mc_multi" && questionInfo.q_mc_multi) {
+    } else if (
+        props.question_type === "q_mc_multi" &&
+        questionInfo.q_mc_multi
+    ) {
         return questionInfo.q_mc_multi.analysis || "";
-    } else if (props.question_type === "q_mc_flexible" && questionInfo.q_mc_flexible) {
+    } else if (
+        props.question_type === "q_mc_flexible" &&
+        questionInfo.q_mc_flexible
+    ) {
         return questionInfo.q_mc_flexible.analysis || "";
     }
-    
+
     return "";
 };
 
@@ -186,8 +250,9 @@ const getOptionText = (optionKey: string): string => {
     if (!props.questionData || !props.questionData.questions_id) {
         return "";
     }
-    
-    const questionDetails = props.questionData.questions_id[props.question_type];
+
+    const questionDetails =
+        props.questionData.questions_id[props.question_type];
     if (questionDetails) {
         const text = questionDetails[`option_${optionKey.toLowerCase()}`];
         return text || "";
@@ -223,7 +288,7 @@ const generateQuestionMarkdown = (): string => {
     let markdown = `${stem}\n\n`;
 
     // 生成选项
-    validOptions.forEach(option => {
+    validOptions.forEach((option) => {
         markdown += `${option.key}. ${option.text}\n\n`;
     });
 
@@ -246,9 +311,9 @@ const generateQuestionMarkdown = (): string => {
 
 // 复制题目数据到剪贴板
 const copyQuestionDataForAI = async () => {
-    copyLoading.value = true
+    copyLoading.value = true;
     const markdownText = generateQuestionMarkdown();
-    
+
     try {
         // 现代浏览器使用navigator.clipboard
         if (navigator.clipboard && window.isSecureContext) {
@@ -259,10 +324,10 @@ const copyQuestionDataForAI = async () => {
             fallbackCopyText(markdownText);
         }
     } catch (error) {
-        console.error('复制失败:', error);
-        showCopyError('复制失败，请手动复制文本');
+        console.error("复制失败:", error);
+        showCopyError("复制失败，请手动复制文本");
     } finally {
-        copyLoading.value = false
+        copyLoading.value = false;
     }
 };
 
@@ -270,51 +335,51 @@ const copyQuestionDataForAI = async () => {
 const fallbackCopyText = (text: string) => {
     try {
         // 创建临时textarea
-        const textarea = document.createElement('textarea');
+        const textarea = document.createElement("textarea");
         textarea.value = text;
-        textarea.style.position = 'fixed';
-        textarea.style.opacity = '0';
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
         document.body.appendChild(textarea);
-        
+
         // 选中并复制
         textarea.select();
         textarea.setSelectionRange(0, 99999); // 移动端兼容
-        
-        const successful = document.execCommand('copy');
+
+        const successful = document.execCommand("copy");
         document.body.removeChild(textarea);
-        
+
         if (successful) {
             showCopySuccess();
         } else {
-            showCopyError('复制功能不支持，请查看控制台获取文本内容');
-            console.log('题目内容：', generateQuestionMarkdown());
+            showCopyError("复制功能不支持，请查看控制台获取文本内容");
+            console.log("题目内容：", generateQuestionMarkdown());
         }
     } catch (error) {
-        console.error('备用复制方案也失败:', error);
-        showCopyError('复制功能不可用，请查看控制台获取文本内容');
-        console.log('题目内容：', generateQuestionMarkdown());
+        console.error("备用复制方案也失败:", error);
+        showCopyError("复制功能不可用，请查看控制台获取文本内容");
+        console.log("题目内容：", generateQuestionMarkdown());
     }
 };
 
 // 显示复制成功状态
 const showCopySuccess = () => {
-    copyStatus.value = '✅ 题目内容已复制到剪贴板！';
-    copyStatusClass.value = 'success';
-    
+    copyStatus.value = "✅ 题目内容已复制到剪贴板！";
+    copyStatusClass.value = "success";
+
     // 5秒后清除状态
     setTimeout(() => {
-        copyStatus.value = '';
+        copyStatus.value = "";
     }, 5000);
 };
 
 // 显示复制失败状态
 const showCopyError = (message: string) => {
-    copyStatus.value = '❌ ' + message;
-    copyStatusClass.value = 'error';
-    
+    copyStatus.value = "❌ " + message;
+    copyStatusClass.value = "error";
+
     // 5秒后清除状态
     setTimeout(() => {
-        copyStatus.value = '';
+        copyStatus.value = "";
     }, 5000);
 };
 
@@ -420,7 +485,8 @@ const answerClass = computed(() => {
     color: var(--p-primary-600);
 }
 
-.score-divider, .total-score {
+.score-divider,
+.total-score {
     color: var(--p-surface-600);
 }
 
@@ -565,7 +631,7 @@ const answerClass = computed(() => {
 }
 
 /* AI解析按钮样式 */
-:deep(.ai-copy-button) {
+/* :deep(.ai-copy-button) {
     color: var(--p-purple-600) !important;
     border: 1px solid var(--p-purple-300) !important;
     background: transparent !important;
@@ -583,7 +649,7 @@ const answerClass = computed(() => {
 
 :deep(.ai-copy-button:active) {
     transform: scale(0.95) !important;
-}
+} */
 
 .copy-status-message {
     position: absolute;
@@ -658,7 +724,7 @@ const answerClass = computed(() => {
     background: var(--p-surface-100);
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
-    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-family: "JetBrains Mono", "Consolas", monospace;
     color: var(--p-surface-800);
 }
 

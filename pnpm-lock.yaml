@@ -54,8 +54,8 @@ importers:
         specifier: ^4.4.0
         version: 4.4.0(@nuxt/kit@3.17.4(magicast@0.3.5))(@pinia/nuxt@0.11.1(magicast@0.3.5)(pinia@3.0.3(typescript@5.8.3)(vue@3.5.13(typescript@5.8.3))))(pinia@3.0.3(typescript@5.8.3)(vue@3.5.13(typescript@5.8.3)))
       primeicons:
-        specifier: ^6.0.1
-        version: 6.0.1
+        specifier: ^7.0.0
+        version: 7.0.0
       primevue:
         specifier: ^4.2.3
         version: 4.3.4(vue@3.5.13(typescript@5.8.3))
@@ -4087,8 +4087,8 @@ packages:
     resolution: {integrity: sha512-mQUvGU6aUFQ+rNvTIAcZuWGRT9a6f6Yrg9bHs4ImKF+HZCEK+plBvnAZYSIQztknZF2qnzNtr6F8s0+IuptdlQ==}
     engines: {node: ^14.13.1 || >=16.0.0}
 
-  primeicons@6.0.1:
-    resolution: {integrity: sha512-KDeO94CbWI4pKsPnYpA1FPjo79EsY9I+M8ywoPBSf9XMXoe/0crjbUK7jcQEDHuc0ZMRIZsxH3TYLv4TUtHmAA==}
+  primeicons@7.0.0:
+    resolution: {integrity: sha512-jK3Et9UzwzTsd6tzl2RmwrVY/b8raJ3QZLzoDACj+oTJ0oX7L9Hy+XnVwgo4QVKlKpnP/Ur13SXV/pVh4LzaDw==}
 
   primevue@4.3.4:
     resolution: {integrity: sha512-zYQFBXI7BIEglc99MzNmQ/huZnzUYzF2JXQT3OFFUIUfz6aHW5hCdjyYPoThDICjKYAladqvvLkW7XQT+Kf08Q==}
@@ -9846,7 +9846,7 @@ snapshots:
 
   pretty-bytes@6.1.1: {}
 
-  primeicons@6.0.1: {}
+  primeicons@7.0.0: {}
 
   primevue@4.3.4(vue@3.5.13(typescript@5.8.3)):
     dependencies:
