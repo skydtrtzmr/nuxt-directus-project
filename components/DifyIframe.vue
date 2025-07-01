@@ -17,7 +17,7 @@
         
         <iframe
             ref="chatIframe"
-            src="http://localhost/chatbot/S5qckSjGKqfJycCP"
+            :src="`${baseApiUrl}/chatbot/${chatbotRag}`"
             style="width: 100%; height: 100%; min-height: 700px"
             frameborder="0"
             allow="microphone"
@@ -28,6 +28,12 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+
+const {
+    public: {
+        dify: { baseApiUrl, chatbotRag },
+    },
+} = useRuntimeConfig();
 
 const copyStatus = ref('')
 const copyStatusClass = ref('')

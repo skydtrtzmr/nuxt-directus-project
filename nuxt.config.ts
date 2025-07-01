@@ -100,7 +100,8 @@ export default defineNuxtConfig({
                     "http://localhost:3101/embed/anythingllm-chat-widget.min.js",
             },
             dify: {
-                baseApiUrl: "http://localhost:3001"
+                baseApiUrl: "http://localhost:3001",
+                chatbotRag: "S5qckSjGKqfJycCP"
             },
         },
         private: {
