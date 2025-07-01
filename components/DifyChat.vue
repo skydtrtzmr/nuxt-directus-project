@@ -7,10 +7,16 @@
 <script lang="ts" setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
+const {
+    public: {
+        dify: { baseApiUrl, chatbotRag },
+    },
+} = useRuntimeConfig();
+
 // Dify Chatbot Configuration
 const difyConfig = {
-  token: 'S5qckSjGKqfJycCP',
-  baseUrl: 'http://localhost', // 注意：生产环境可能需要修改此 URL
+  token: chatbotRag,
+  baseUrl: baseApiUrl, // 注意：生产环境可能需要修改此 URL
   systemVariables: {
     // user_id: '在这里定义用户 ID',
     // conversation_id: '在这里定义会话 ID (必须是有效的 UUID)',

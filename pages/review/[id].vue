@@ -1,6 +1,7 @@
 <!-- pages/review/[id].vue -->
 <template>
     <ExamPage :exam_page_mode="exam_page_mode"/>
+    <DifyChat />
 </template>
 
 <script setup lang="ts">
@@ -21,6 +22,11 @@ const exam_page_mode = ref("review"); // 考试模式，practice表示练习模�
 // const practice_session_id = Array.isArray(route.params.id)
 //     ? route.params.id[0]
 //     : route.params.id;
+
+const DifyChat = defineAsyncComponent(() =>
+  import('~~/components/DifyChat.vue')
+)
+
 </script>
 
 <style scoped></style>
