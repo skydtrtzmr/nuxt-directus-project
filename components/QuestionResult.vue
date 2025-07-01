@@ -403,28 +403,27 @@ const answerClass = computed(() => {
     flex-direction: column;
     gap: 1rem;
     padding: 1rem;
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: #f5f5f5;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
 }
 
 /* 结果状态卡片 */
 .result-status-card {
-    border-radius: 8px;
+    border-radius: 4px;
     padding: 1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid;
+    transition: all 0.2s ease;
 }
 
 .result-status-card.correct-answer {
-    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
-    border: 2px solid #22c55e;
+    background: #f0f9ff;
+    border-color: #22c55e;
 }
 
 .result-status-card.incorrect-answer {
-    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-    border: 2px solid #ef4444;
+    background: #fef2f2;
+    border-color: #ef4444;
 }
 
 .status-header {
@@ -434,15 +433,14 @@ const answerClass = computed(() => {
 }
 
 .status-icon {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.25rem;
-    font-weight: bold;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .correct-answer .status-icon {
@@ -456,7 +454,7 @@ const answerClass = computed(() => {
 }
 
 .status-text {
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 600;
     flex: 1;
 }
@@ -474,34 +472,33 @@ const answerClass = computed(() => {
     align-items: baseline;
     gap: 0.25rem;
     padding: 0.375rem 0.75rem;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 16px;
+    background: white;
+    border-radius: 4px;
     font-weight: 600;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e0e0e0;
 }
 
 .score-value {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     color: var(--p-primary-600);
 }
 
 .score-divider,
 .total-score {
-    color: var(--p-surface-600);
+    color: #666;
 }
 
 .score-unit {
     font-size: 0.875rem;
-    color: var(--p-surface-500);
+    color: #666;
 }
 
 /* 答案对比区域 */
 .answer-comparison-section {
     background: white;
-    border-radius: 8px;
+    border-radius: 4px;
     padding: 1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    border: 1px solid var(--p-surface-200);
+    border: 1px solid #e0e0e0;
 }
 
 .answer-grid {
@@ -517,73 +514,71 @@ const answerClass = computed(() => {
 }
 
 .answer-card {
-    border-radius: 6px;
+    border-radius: 4px;
     padding: 0.875rem;
-    border: 2px solid;
-    transition: all 0.3s ease;
+    border: 1px solid;
+    transition: all 0.2s ease;
 }
 
 .answer-card:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .student-answer {
-    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-    border-color: var(--p-blue-300);
+    background: #f8fafc;
+    border-color: #3b82f6;
 }
 
 .correct-answer-card {
-    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-    border-color: var(--p-green-300);
+    background: #f0fdf4;
+    border-color: #22c55e;
 }
 
 .answer-header {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
     margin-bottom: 0.75rem;
     font-weight: 600;
-    color: var(--p-surface-700);
+    color: #333;
 }
 
 .answer-header i {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
 }
 
 .student-answer .answer-header i {
-    background: var(--p-blue-500);
+    background: #3b82f6;
     color: white;
 }
 
 .correct-answer-card .answer-header i {
-    background: var(--p-green-500);
+    background: #22c55e;
     color: white;
 }
 
 .answer-content {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--p-surface-800);
-    background: rgba(255, 255, 255, 0.7);
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #333;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 0.75rem;
+    border-radius: 4px;
     border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 /* 题目解析区域 */
 .analysis-section {
     background: white;
-    border-radius: 8px;
+    border-radius: 4px;
     padding: 1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    border: 1px solid var(--p-surface-200);
+    border: 1px solid #e0e0e0;
 }
 
 .analysis-header {
@@ -592,7 +587,7 @@ const answerClass = computed(() => {
     justify-content: space-between;
     margin-bottom: 0.75rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--p-surface-100);
+    border-bottom: 1px solid #e0e0e0;
 }
 
 .analysis-left {
@@ -602,14 +597,14 @@ const answerClass = computed(() => {
 }
 
 .analysis-left i {
-    color: var(--p-amber-500);
+    color: #f59e0b;
     font-size: 1rem;
 }
 
 .analysis-title {
     font-size: 1rem;
     font-weight: 600;
-    color: var(--p-surface-800);
+    color: #333;
 }
 
 .analysis-actions {
@@ -619,37 +614,16 @@ const answerClass = computed(() => {
 }
 
 .analysis-content {
-    color: var(--p-surface-700);
-    line-height: 1.7;
+    color: #333;
+    line-height: 1.6;
 }
 
 .no-analysis-text {
-    color: var(--p-surface-500);
+    color: #666;
     font-style: italic;
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
 }
-
-/* AI解析按钮样式 */
-/* :deep(.ai-copy-button) {
-    color: var(--p-purple-600) !important;
-    border: 1px solid var(--p-purple-300) !important;
-    background: transparent !important;
-    transition: all 0.2s ease !important;
-    width: 2.5rem !important;
-    height: 2.5rem !important;
-}
-
-:deep(.ai-copy-button:hover) {
-    color: white !important;
-    background: var(--p-purple-500) !important;
-    border-color: var(--p-purple-500) !important;
-    transform: scale(1.05) !important;
-}
-
-:deep(.ai-copy-button:active) {
-    transform: scale(0.95) !important;
-} */
 
 .copy-status-message {
     position: absolute;
@@ -660,25 +634,25 @@ const answerClass = computed(() => {
     align-items: center;
     gap: 0.375rem;
     padding: 0.5rem 0.75rem;
-    border-radius: 6px;
+    border-radius: 4px;
     font-size: 0.8rem;
     font-weight: 500;
     animation: slideIn 0.3s ease-out;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     z-index: 10;
     white-space: nowrap;
+    border: 1px solid;
 }
 
 .copy-status-message.success {
-    background: var(--p-green-50);
-    color: var(--p-green-700);
-    border: 1px solid var(--p-green-200);
+    background: #f0fdf4;
+    color: #166534;
+    border-color: #22c55e;
 }
 
 .copy-status-message.error {
-    background: var(--p-red-50);
-    color: var(--p-red-700);
-    border: 1px solid var(--p-red-200);
+    background: #fef2f2;
+    color: #991b1b;
+    border-color: #ef4444;
 }
 
 @keyframes slideIn {
@@ -694,7 +668,7 @@ const answerClass = computed(() => {
 
 /* Markdown样式优化 */
 :deep(.markdown-content) {
-    line-height: 1.7;
+    line-height: 1.6;
 }
 
 :deep(.markdown-content) h1,
@@ -704,66 +678,66 @@ const answerClass = computed(() => {
 :deep(.markdown-content) h5,
 :deep(.markdown-content) h6 {
     margin-top: 1.5em;
-    margin-bottom: 0.75em;
+    margin-bottom: 0.5em;
     font-weight: 600;
-    color: var(--p-surface-800);
+    color: #333;
 }
 
 :deep(.markdown-content) p {
     margin-bottom: 1em;
-    color: var(--p-surface-700);
+    color: #333;
 }
 
 :deep(.markdown-content) ul,
 :deep(.markdown-content) ol {
-    padding-left: 2em;
+    padding-left: 1.5em;
     margin-bottom: 1em;
 }
 
 :deep(.markdown-content) code {
-    background: var(--p-surface-100);
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
+    background: #f5f5f5;
+    padding: 0.125rem 0.375rem;
+    border-radius: 3px;
     font-family: "JetBrains Mono", "Consolas", monospace;
-    color: var(--p-surface-800);
+    color: #333;
 }
 
 :deep(.markdown-content) pre {
-    background: var(--p-surface-50);
-    padding: 1.5rem;
-    border-radius: 8px;
+    background: #f5f5f5;
+    padding: 1rem;
+    border-radius: 4px;
     overflow-x: auto;
     margin: 1rem 0;
-    border: 1px solid var(--p-surface-200);
+    border: 1px solid #e0e0e0;
 }
 
 :deep(.markdown-content) blockquote {
-    border-left: 4px solid var(--p-primary-400);
-    padding: 1rem 1.5rem;
-    background: var(--p-primary-50);
+    border-left: 3px solid var(--p-primary-500);
+    padding: 0.75rem 1rem;
+    background: #f8f9fa;
     margin: 1rem 0;
-    border-radius: 0 8px 8px 0;
-    color: var(--p-surface-700);
+    border-radius: 0 4px 4px 0;
+    color: #333;
 }
 
 :deep(.markdown-content) table {
     width: 100%;
     border-collapse: collapse;
     margin: 1rem 0;
-    border-radius: 8px;
+    border-radius: 4px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
 }
 
 :deep(.markdown-content) th,
 :deep(.markdown-content) td {
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--p-surface-200);
+    padding: 0.75rem;
+    border: 1px solid #e0e0e0;
 }
 
 :deep(.markdown-content) th {
-    background: var(--p-surface-100);
+    background: #f5f5f5;
     font-weight: 600;
-    color: var(--p-surface-800);
+    color: #333;
 }
 </style>
