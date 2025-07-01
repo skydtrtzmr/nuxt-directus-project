@@ -423,6 +423,7 @@ onUnmounted(() => {
     flex-direction: column;
     height: 100vh;
     overflow: hidden;
+    background: #f5f5f5;
 }
 
 .question-area {
@@ -431,12 +432,18 @@ onUnmounted(() => {
     overflow: hidden;
     position: relative;
     height: calc(100vh - 120px); /* 减去头部高度 */
+    gap: 1rem;
+    padding: 1rem;
+    background: #f5f5f5;
 }
 
 .question-list-container {
     height: 100%;
     transition: width 0.3s ease;
     overflow: hidden;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
 }
 
 .question-list-container.collapsed {
@@ -447,31 +454,34 @@ onUnmounted(() => {
 .question-detail-container {
     flex: 1;
     transition: all 0.3s ease;
-    padding-left: 1rem;
     height: 100%;
     overflow: hidden;
-    /* display: flex;
-    justify-content: center;
-    align-items: center; */
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
 }
 
 .loading-spinner-container {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 2rem;
 }
 
 .loading-spinner-container p {
     margin-top: 1rem;
-    font-size: 1.2rem;
-    color: var(--text-color-secondary);
+    font-size: 1.1rem;
+    color: #666;
 }
-
 
 .question-detail-container.with-collapsed-sidebar {
     margin-left: 0;
 }
 
 .question-detail-container.with-expanded-sidebar {
-    margin-left: 0.5rem;
+    margin-left: 0;
 }
 
 /* 确保滚动条不会导致布局抖动 */
@@ -485,6 +495,8 @@ onUnmounted(() => {
     .question-area {
         flex-direction: column;
         height: calc(100vh - 80px);
+        gap: 0.5rem;
+        padding: 0.5rem;
     }
     .question-list-container {
         width: 100% !important;
@@ -492,13 +504,12 @@ onUnmounted(() => {
         max-height: 30vh;
     }
     .question-list-container.collapsed {
-        max-height: 10px !important;
-        height: 10px !important;
+        max-height: 40px !important;
+        height: 40px !important;
     }
     .question-detail-container {
         width: 100%;
         margin-left: 0 !important;
-        padding-left: 0;
         height: 70vh;
     }
 }
