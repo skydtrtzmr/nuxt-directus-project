@@ -42,42 +42,34 @@
         </div>
 
         <!-- 题目解析区域 -->
-        <div class="analysis-section" v-if="getAnalysis()">
+        <div class="analysis-section">
             <div class="analysis-header">
-                <i class="pi pi-lightbulb"></i>
-                <span class="analysis-title">题目解析</span>
+                <div class="analysis-left">
+                    <i class="pi pi-lightbulb"></i>
+                    <span class="analysis-title">题目解析</span>
+                </div>
+                <div class="analysis-actions">
+                    <Button 
+                        @click="copyQuestionDataForAI"
+                        icon="pi pi-star"
+                        class="ai-copy-button"
+                        :loading="copyLoading"
+                        v-tooltip.top="'复制题目信息到AI助手获取详细解析'"
+                        text
+                        rounded
+                    />
+                    <!-- 状态反馈 - 绝对定位不影响布局 -->
+                    <div v-if="copyStatus" class="copy-status-message" :class="copyStatusClass">
+                        <i :class="copyStatus.includes('✅') ? 'pi pi-check' : 'pi pi-exclamation-triangle'"></i>
+                        <span>{{ copyStatus }}</span>
+                    </div>
+                </div>
             </div>
-            <div class="analysis-content">
+            <div class="analysis-content" v-if="getAnalysis()">
                 <div v-html="renderMarkdown(getAnalysis())" class="markdown-content"></div>
             </div>
-        </div>
-
-        <!-- AI解析功能区域 -->
-        <div class="ai-analysis-section">
-            <div class="ai-section-header">
-                <div class="ai-icon-wrapper">
-                    <i class="pi pi-sparkles"></i>
-                </div>
-                <div class="ai-text-content">
-                    <h4 class="ai-title">AI智能解析</h4>
-                    <p class="ai-description">复制题目信息到AI助手获取详细解析</p>
-                </div>
-            </div>
-            
-            <div class="ai-actions">
-                <Button 
-                    @click="copyQuestionDataForAI"
-                    icon="pi pi-copy"
-                    label="复制题目信息"
-                    class="ai-copy-button"
-                    :loading="copyLoading"
-                />
-                
-                <!-- 状态反馈 -->
-                <div v-if="copyStatus" class="copy-status-message" :class="copyStatusClass">
-                    <i :class="copyStatus.includes('✅') ? 'pi pi-check' : 'pi pi-exclamation-triangle'"></i>
-                    <span>{{ copyStatus }}</span>
-                </div>
+            <div class="analysis-content" v-else>
+                <p class="no-analysis-text">暂无题目解析</p>
             </div>
         </div>
     </div>
@@ -344,19 +336,19 @@ const answerClass = computed(() => {
 .question-result-container {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    padding: 1.5rem;
+    gap: 1rem;
+    padding: 1rem;
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* 结果状态卡片 */
 .result-status-card {
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -373,19 +365,19 @@ const answerClass = computed(() => {
 .status-header {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.75rem;
 }
 
 .status-icon {
-    width: 48px;
-    height: 48px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: bold;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
 
 .correct-answer .status-icon {
@@ -399,7 +391,7 @@ const answerClass = computed(() => {
 }
 
 .status-text {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     font-weight: 600;
     flex: 1;
 }
@@ -416,15 +408,15 @@ const answerClass = computed(() => {
     display: flex;
     align-items: baseline;
     gap: 0.25rem;
-    padding: 0.5rem 1rem;
+    padding: 0.375rem 0.75rem;
     background: rgba(255, 255, 255, 0.9);
-    border-radius: 20px;
+    border-radius: 16px;
     font-weight: 600;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .score-value {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     color: var(--p-primary-600);
 }
 
@@ -440,16 +432,16 @@ const answerClass = computed(() => {
 /* 答案对比区域 */
 .answer-comparison-section {
     background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     border: 1px solid var(--p-surface-200);
 }
 
 .answer-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 @media (max-width: 768px) {
@@ -459,15 +451,15 @@ const answerClass = computed(() => {
 }
 
 .answer-card {
-    border-radius: 10px;
-    padding: 1.25rem;
+    border-radius: 6px;
+    padding: 0.875rem;
     border: 2px solid;
     transition: all 0.3s ease;
 }
 
 .answer-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .student-answer {
@@ -522,30 +514,42 @@ const answerClass = computed(() => {
 /* 题目解析区域 */
 .analysis-section {
     background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     border: 1px solid var(--p-surface-200);
 }
 
 .analysis-header {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid var(--p-surface-100);
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--p-surface-100);
 }
 
-.analysis-header i {
+.analysis-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.analysis-left i {
     color: var(--p-amber-500);
-    font-size: 1.25rem;
+    font-size: 1rem;
 }
 
 .analysis-title {
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--p-surface-800);
+}
+
+.analysis-actions {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .analysis-content {
@@ -553,99 +557,50 @@ const answerClass = computed(() => {
     line-height: 1.7;
 }
 
-/* AI解析功能区域 */
-.ai-analysis-section {
-    background: linear-gradient(135deg, #fafafa 0%, #f4f4f5 100%);
-    border: 2px solid var(--p-purple-200);
-    border-radius: 16px;
-    padding: 1.5rem;
-    position: relative;
-    overflow: hidden;
-}
-
-.ai-analysis-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--p-purple-400), var(--p-blue-400), var(--p-cyan-400));
-}
-
-.ai-section-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.25rem;
-}
-
-.ai-icon-wrapper {
-    width: 48px;
-    height: 48px;
-    background: linear-gradient(135deg, var(--p-purple-500), var(--p-purple-600));
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.25rem;
-    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-}
-
-.ai-text-content {
-    flex: 1;
-}
-
-.ai-title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--p-surface-800);
-    margin: 0 0 0.25rem 0;
-}
-
-.ai-description {
-    font-size: 0.875rem;
-    color: var(--p-surface-600);
+.no-analysis-text {
+    color: var(--p-surface-500);
+    font-style: italic;
     margin: 0;
+    font-size: 0.9rem;
 }
 
-.ai-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
+/* AI解析按钮样式 */
 :deep(.ai-copy-button) {
-    background: linear-gradient(135deg, var(--p-purple-500), var(--p-purple-600)) !important;
-    border: none !important;
-    color: white !important;
-    font-weight: 600 !important;
-    padding: 0.75rem 1.5rem !important;
-    border-radius: 10px !important;
-    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3) !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    color: var(--p-purple-600) !important;
+    border: 1px solid var(--p-purple-300) !important;
+    background: transparent !important;
+    transition: all 0.2s ease !important;
+    width: 2.5rem !important;
+    height: 2.5rem !important;
 }
 
 :deep(.ai-copy-button:hover) {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4) !important;
-    background: linear-gradient(135deg, var(--p-purple-600), var(--p-purple-700)) !important;
+    color: white !important;
+    background: var(--p-purple-500) !important;
+    border-color: var(--p-purple-500) !important;
+    transform: scale(1.05) !important;
 }
 
 :deep(.ai-copy-button:active) {
-    transform: translateY(0) !important;
+    transform: scale(0.95) !important;
 }
 
 .copy-status-message {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    font-size: 0.875rem;
+    gap: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
     font-weight: 500;
     animation: slideIn 0.3s ease-out;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    white-space: nowrap;
 }
 
 .copy-status-message.success {
