@@ -113,7 +113,7 @@
         </div>
 
         <div class="dashboard-section recommendations-section">
-            <div class="section-header">
+            <!-- <div class="section-header">
                 <h2>推荐学习</h2>
             </div>
             <div class="recommendations">
@@ -150,7 +150,7 @@
                         >
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -176,14 +176,14 @@ const stats = ref({
 const exams = ref([
     {
         id: 1,
-        title: "高等数学期中考试",
+        title: "初级会计实务期中考试",
         duration: 120,
         dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
         progress: 60,
     },
     {
         id: 2,
-        title: "英语听力测试",
+        title: "经济法基础测试",
         duration: 45,
         dueDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
         progress: 25,
@@ -195,21 +195,21 @@ const activities = ref([
     {
         id: 1,
         type: "exam",
-        title: "完成了物理模拟测试",
+        title: "完成了初级会计实务模拟测试",
         description: "得分: 92/100",
         time: new Date(Date.now() - 2 * 60 * 60 * 1000),
     },
     {
         id: 2,
         type: "practice",
-        title: "完成了英语词汇练习",
+        title: "完成了经济法基础练习",
         description: "正确率: 85%",
         time: new Date(Date.now() - 5 * 60 * 60 * 1000),
     },
     {
         id: 3,
         type: "study",
-        title: "学习了微积分基础知识",
+        title: "学习了经济法基础基础知识",
         description: "学习时长: 45分钟",
         time: new Date(Date.now() - 24 * 60 * 60 * 1000),
     },
@@ -219,8 +219,8 @@ const activities = ref([
 const recommendations = ref([
     {
         id: 1,
-        title: "高等数学进阶课程",
-        description: "深入理解微积分和线性代数的核心概念",
+        title: "初级会计实务进阶课程",
+        description: "深入理解经济法基础和线性代数的核心概念",
         type: "课程",
         duration: "8小时",
         image: "https://placehold.co/300x200",
