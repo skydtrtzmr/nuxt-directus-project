@@ -3,11 +3,10 @@
         v-if="paper"
         class="paper-info py-1 px-2 bg-transparent"
     >
-        <div class="flex items-center justify-between">
-            <div class="flex-1 text-center flex items-center justify-center">
-                <div class="flex items-center overflow-hidden">
-                    <!-- <i class="pi pi-file-pdf text-primary mr-1 text-lg flex-shrink-0"></i> -->
-                    <h3 class="text-base font-medium truncate">{{ paper.title }}</h3>
+        <div class="flex items-center justify-between gap-2">
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-center">
+                    <h3 class="paper-title text-base font-medium text-center">{{ paper.title }}</h3>
                 </div>
             </div>
             
@@ -63,19 +62,65 @@ const formatCurrentDate = () => {
     transition: all 0.3s ease;
 }
 
+.paper-title {
+    line-height: 1.3;
+    word-break: break-word;
+    hyphens: auto;
+}
+
 @media (hover: hover) {
     .paper-info:hover {
         transform: translateY(-1px);
     }
 }
 
+/* 移动端优化 */
+@media screen and (max-width: 768px) {
+    .paper-info {
+        font-size: 0.875rem;
+        padding: 0.375rem 0.5rem;
+    }
+    
+    .paper-title {
+        font-size: 0.875rem;
+        line-height: 1.2;
+    }
+    
+    /* 在移动端允许标题换行而不是截断 */
+    .flex.items-center.justify-between {
+        flex-direction: column;
+        gap: 0.375rem;
+        align-items: center;
+    }
+    
+    .flex-1.min-w-0 {
+        width: 100%;
+    }
+}
+
 @media screen and (max-width: 640px) {
     .paper-info {
+        font-size: 0.8rem;
+    }
+    
+    .paper-title {
+        font-size: 0.8rem;
+        max-width: none; /* 移除最大宽度限制 */
+    }
+}
+
+/* 超小屏幕 */
+@media screen and (max-width: 480px) {
+    .paper-title {
         font-size: 0.75rem;
     }
     
-    h3 {
-        max-width: 150px;
+    .flex.gap-2 {
+        gap: 0.25rem;
+    }
+    
+    .flex.gap-2 span {
+        font-size: 0.7rem;
     }
 }
 </style>

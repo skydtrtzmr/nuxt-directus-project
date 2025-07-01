@@ -10,7 +10,7 @@
             <!-- 中间：考试信息和试卷信息 -->
             <div class="col-span-6 grid grid-rows-2 gap-1">
                 <!-- 考试信息 -->
-                <div class="row-span-1">
+                <div class="row-span-1 overflow-hidden">
                     <ExamInfo
                         v-if="practiceSession"
                         :practiceSession="practiceSession"
@@ -18,7 +18,7 @@
                     />
                 </div>
                 <!-- 试卷信息 -->
-                <div class="row-span-1">
+                <div class="row-span-1 overflow-hidden">
                     <PaperInfo
                         v-if="paper"
                         :paper="paper"
@@ -67,10 +67,10 @@
 
         <!-- 移动视图 -->
         <div class="md:hidden">
-            <!-- 第一行：考生信息和倒计时 -->
+            <!-- 第一行：考生信息和倒计时/得分 -->
             <div class="flex items-center justify-between px-3 py-2 border-b border-gray-100">
-                <StudentInfo :studentData="studentData" class="flex-1 text-sm" />
-                <div v-if="exam_page_mode !== 'review'" class="ml-2">
+                <StudentInfo :studentData="studentData" class="flex-1 text-sm min-w-0" />
+                <div v-if="exam_page_mode !== 'review'" class="ml-2 flex-shrink-0">
                     <ExamCountdown
                         :isClient="isClient"
                         :actualStartTimeDisplay="actual_start_time"
@@ -79,13 +79,13 @@
                         class="mobile-compact-mode"
                     />
                 </div>
-                <div v-else class="score-info current-score mobile-score">
+                <div v-else class="score-info current-score mobile-score ml-2 flex-shrink-0">
                     得分：{{ examScore }}
                 </div>
             </div>
 
-            <!-- 第二行：考试信息和试卷信息 -->
-            <div class="grid grid-cols-2 gap-2 px-3 py-2">
+            <!-- 第二行：考试信息和试卷信息 - 改为上下布局以给试卷标题更多空间 -->
+            <div class="px-3 py-2 space-y-1">
                 <ExamInfo
                     v-if="practiceSession"
                     :practiceSession="practiceSession"
@@ -213,10 +213,18 @@ const onSubmit = () => {
 /* 确保组件内容不会过高 */
 :deep(.col-span-6) {
     max-height: 60px;
-    overflow: hidden;
+    overflow: visible; /* 改为 visible 以显示完整内容 */
 }
 
 :deep(.grid-rows-2) {
     grid-template-rows: 1fr 1fr;
+}
+
+/* 优化移动端布局 */
+@media (max-width: 640px) {
+    /* 在小屏幕上给标题更多空间 */
+    .space-y-1 > * + * {
+        margin-top: 0.5rem;
+    }
 }
 </style> 
