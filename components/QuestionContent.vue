@@ -208,7 +208,8 @@ const sharedStemContent = computed(() => {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
+    padding: 1rem;
 }
 
 /* 题型标签区域 */
@@ -216,151 +217,145 @@ const sharedStemContent = computed(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.25rem 1.5rem;
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-    border: 2px solid var(--p-surface-200);
-    border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    padding: 1rem;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
 }
 
 .question-type-wrapper {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.75rem;
 }
 
 .question-type-icon {
-    width: 48px;
-    height: 48px;
-    background: linear-gradient(135deg, var(--p-primary-500), var(--p-primary-600));
-    border-radius: 12px;
+    width: 36px;
+    height: 36px;
+    background: var(--p-primary-500);
+    border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 1.25rem;
-    box-shadow: 0 4px 12px rgba(var(--p-primary-500-rgb), 0.3);
+    font-size: 1rem;
+    flex-shrink: 0;
 }
 
 .question-type-info {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.125rem;
 }
 
 .question-type-label {
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 600;
-    color: var(--p-surface-800);
+    color: #333;
 }
 
 .question-type-description {
-    font-size: 0.875rem;
-    color: var(--p-surface-500);
+    font-size: 0.75rem;
+    color: #666;
 }
 
 .question-type-badge {
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.875rem;
-    font-weight: 600;
+    padding: 0.375rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
     color: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* 题型标签颜色 */
 .tag-blue {
-    background: linear-gradient(135deg, var(--p-blue-500), var(--p-blue-600));
+    background: var(--p-blue-500);
 }
 .tag-green {
-    background: linear-gradient(135deg, var(--p-green-500), var(--p-green-600));
+    background: var(--p-green-500);
 }
 .tag-orange {
-    background: linear-gradient(135deg, var(--p-orange-500), var(--p-orange-600));
+    background: var(--p-orange-500);
 }
 .tag-purple {
-    background: linear-gradient(135deg, var(--p-purple-500), var(--p-purple-600));
+    background: var(--p-purple-500);
 }
 .tag-gray {
-    background: linear-gradient(135deg, var(--p-surface-400), var(--p-surface-500));
+    background: #666;
 }
 
 /* 公共题干区域 */
 .shared-stem-section {
     background: white;
-    border: 2px solid var(--p-amber-200);
-    border-radius: 16px;
+    border: 1px solid #f0c674;
+    border-radius: 4px;
     overflow: hidden;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .shared-stem-header {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1.25rem 1.5rem;
-    background: linear-gradient(135deg, var(--p-amber-50), var(--p-amber-100));
-    border-bottom: 1px solid var(--p-amber-200);
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: #fffbf0;
+    border-bottom: 1px solid #f0c674;
 }
 
 .shared-stem-icon {
-    width: 40px;
-    height: 40px;
-    background: var(--p-amber-500);
-    border-radius: 10px;
+    width: 28px;
+    height: 28px;
+    background: #f0c674;
+    border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 1.125rem;
-    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+    font-size: 0.875rem;
+    flex-shrink: 0;
 }
 
 .shared-stem-title {
-    font-size: 1.125rem;
+    font-size: 0.875rem;
     font-weight: 600;
-    color: var(--p-amber-800);
+    color: #8b6914;
     margin: 0;
 }
 
 .shared-stem-content {
-    padding: 1.5rem;
+    padding: 1rem;
     background: white;
 }
 
 /* 题目主要内容区域 */
 .question-main-content {
     background: white;
-    border: 2px solid var(--p-surface-200);
-    border-radius: 16px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 1rem;
     min-height: 200px;
 }
 
 /* 未知题型样式 */
 .unknown-question-type {
     display: flex;
-    gap: 1.5rem;
-    padding: 2rem;
-    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-    border: 2px solid var(--p-red-300);
-    border-radius: 16px;
-    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.15);
+    gap: 1rem;
+    padding: 1rem;
+    background: #fef2f2;
+    border: 1px solid #f87171;
+    border-radius: 4px;
 }
 
 .unknown-type-icon {
-    width: 60px;
-    height: 60px;
-    background: var(--p-red-500);
+    width: 40px;
+    height: 40px;
+    background: #ef4444;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 1.5rem;
+    font-size: 1.125rem;
     flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 .unknown-type-content {
@@ -368,38 +363,40 @@ const sharedStemContent = computed(() => {
 }
 
 .unknown-type-title {
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 600;
-    color: var(--p-red-700);
-    margin: 0 0 0.5rem 0;
+    color: #dc2626;
+    margin: 0 0 0.25rem 0;
 }
 
 .unknown-type-message {
-    color: var(--p-red-600);
-    margin: 0 0 1rem 0;
-    line-height: 1.6;
+    color: #dc2626;
+    margin: 0 0 0.75rem 0;
+    line-height: 1.5;
+    font-size: 0.875rem;
 }
 
 .unknown-type-details {
-    margin-top: 1rem;
+    margin-top: 0.75rem;
 }
 
 .unknown-type-details summary {
     cursor: pointer;
     font-weight: 500;
-    color: var(--p-red-700);
-    padding: 0.5rem 0;
+    color: #dc2626;
+    padding: 0.25rem 0;
+    font-size: 0.875rem;
 }
 
 .unknown-type-data {
     background: rgba(239, 68, 68, 0.1);
-    border: 1px solid var(--p-red-300);
-    border-radius: 8px;
-    padding: 1rem;
-    margin-top: 0.5rem;
+    border: 1px solid #f87171;
+    border-radius: 4px;
+    padding: 0.75rem;
+    margin-top: 0.375rem;
     overflow-x: auto;
-    font-size: 0.875rem;
-    color: var(--p-red-800);
+    font-size: 0.75rem;
+    color: #dc2626;
 }
 
 /* 加载状态 */
@@ -407,33 +404,30 @@ const sharedStemContent = computed(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 300px;
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border: 2px solid var(--p-surface-200);
-    border-radius: 16px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    min-height: 200px;
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
 }
 
 .loading-animation {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1rem;
     text-align: center;
 }
 
 .loading-spinner {
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, var(--p-primary-500), var(--p-primary-600));
+    width: 40px;
+    height: 40px;
+    background: var(--p-primary-500);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 1.5rem;
-    box-shadow: 0 4px 16px rgba(var(--p-primary-500-rgb), 0.3);
-    animation: pulse 2s infinite;
+    font-size: 1.125rem;
 }
 
 .loading-content {
@@ -441,55 +435,50 @@ const sharedStemContent = computed(() => {
 }
 
 .loading-title {
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 600;
-    color: var(--p-surface-800);
-    margin: 0 0 0.5rem 0;
+    color: #333;
+    margin: 0 0 0.25rem 0;
 }
 
 .loading-description {
-    color: var(--p-surface-500);
+    color: #666;
     margin: 0;
-    line-height: 1.6;
-}
-
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.05);
-        opacity: 0.8;
-    }
+    line-height: 1.5;
+    font-size: 0.875rem;
 }
 
 /* 响应式设计 */
 @media screen and (max-width: 768px) {
     .question-container {
-        gap: 1rem;
+        gap: 0.75rem;
+        padding: 0.75rem;
     }
     
     .question-type-section {
         flex-direction: column;
-        gap: 1rem;
+        gap: 0.75rem;
         text-align: center;
+        padding: 0.75rem;
     }
     
     .question-type-wrapper {
         flex-direction: column;
         text-align: center;
+        gap: 0.5rem;
     }
     
     .shared-stem-header {
         flex-direction: column;
         text-align: center;
-        gap: 0.75rem;
+        gap: 0.5rem;
+        padding: 0.75rem;
     }
     
     .unknown-question-type {
         flex-direction: column;
         text-align: center;
+        gap: 0.75rem;
     }
     
     .unknown-type-icon {
@@ -499,8 +488,8 @@ const sharedStemContent = computed(() => {
 
 /* Markdown 内容样式优化 */
 :deep(.markdown-content) {
-    line-height: 1.7;
-    color: var(--p-surface-700);
+    line-height: 1.6;
+    color: #333;
 }
 
 :deep(.markdown-content) h1,
@@ -510,116 +499,103 @@ const sharedStemContent = computed(() => {
 :deep(.markdown-content) h5,
 :deep(.markdown-content) h6 {
     margin-top: 1.5em;
-    margin-bottom: 0.75em;
+    margin-bottom: 0.5em;
     font-weight: 600;
-    color: var(--p-surface-800);
-    line-height: 1.4;
+    color: #333;
+    line-height: 1.3;
 }
 
 :deep(.markdown-content) h1 {
-    font-size: 1.875rem;
-}
-
-:deep(.markdown-content) h2 {
     font-size: 1.5rem;
 }
 
-:deep(.markdown-content) h3 {
+:deep(.markdown-content) h2 {
     font-size: 1.25rem;
 }
 
+:deep(.markdown-content) h3 {
+    font-size: 1.125rem;
+}
+
 :deep(.markdown-content) p {
-    margin-bottom: 1.2em;
-    line-height: 1.7;
+    margin-bottom: 1em;
+    line-height: 1.6;
 }
 
 :deep(.markdown-content) ul,
 :deep(.markdown-content) ol {
-    padding-left: 2em;
-    margin-bottom: 1.2em;
-    line-height: 1.6;
+    padding-left: 1.5em;
+    margin-bottom: 1em;
+    line-height: 1.5;
 }
 
 :deep(.markdown-content) li {
-    margin-bottom: 0.5em;
+    margin-bottom: 0.25em;
 }
 
 :deep(.markdown-content) code {
-    background: var(--p-surface-100);
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
+    background: #f5f5f5;
+    padding: 0.125rem 0.375rem;
+    border-radius: 3px;
     font-family: 'JetBrains Mono', 'Consolas', monospace;
-    color: var(--p-surface-800);
+    color: #333;
     font-size: 0.875em;
 }
 
 :deep(.markdown-content) pre {
-    background: var(--p-surface-50);
-    padding: 1.5rem;
-    border-radius: 12px;
+    background: #f5f5f5;
+    padding: 1rem;
+    border-radius: 4px;
     overflow-x: auto;
-    margin: 1.5rem 0;
-    border: 1px solid var(--p-surface-200);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    margin: 1rem 0;
+    border: 1px solid #e0e0e0;
 }
 
 :deep(.markdown-content) blockquote {
-    border-left: 4px solid var(--p-primary-400);
-    padding: 1rem 1.5rem;
-    background: var(--p-primary-50);
-    margin: 1.5rem 0;
-    border-radius: 0 12px 12px 0;
-    color: var(--p-surface-700);
-    position: relative;
-}
-
-:deep(.markdown-content) blockquote::before {
-    content: '"';
-    position: absolute;
-    top: -0.5rem;
-    left: 1rem;
-    font-size: 2rem;
-    color: var(--p-primary-400);
-    font-weight: bold;
+    border-left: 3px solid var(--p-primary-500);
+    padding: 0.75rem 1rem;
+    background: #f8f9fa;
+    margin: 1rem 0;
+    border-radius: 0 4px 4px 0;
+    color: #333;
 }
 
 :deep(.markdown-content) img {
     max-width: 100%;
     height: auto;
-    border-radius: 8px;
-    margin: 1.5rem 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    margin: 1rem 0;
 }
 
 :deep(.markdown-content) table {
     width: 100%;
     border-collapse: collapse;
-    margin: 1.5rem 0;
-    border-radius: 12px;
+    margin: 1rem 0;
+    border-radius: 4px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     background: white;
+    border: 1px solid #e0e0e0;
 }
 
 :deep(.markdown-content) th,
 :deep(.markdown-content) td {
-    padding: 1rem 1.25rem;
-    border: 1px solid var(--p-surface-200);
+    padding: 0.75rem;
+    border: 1px solid #e0e0e0;
     text-align: left;
 }
 
 :deep(.markdown-content) th {
-    background: linear-gradient(135deg, var(--p-surface-100), var(--p-surface-150));
+    background: #f5f5f5;
     font-weight: 600;
-    color: var(--p-surface-800);
+    color: #333;
 }
 
 :deep(.markdown-content) tr:nth-child(even) td {
-    background: var(--p-surface-50);
+    background: #fafafa;
 }
 
 :deep(.markdown-content) tr:hover td {
-    background: var(--p-primary-50);
+    background: #f0f8ff;
     transition: background-color 0.2s ease;
 }
 </style> 
