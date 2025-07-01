@@ -20,7 +20,7 @@ const model = ref([
     {
         label: "功能组件",
         items: [
-            { label: "考试", icon: "pi pi-fw pi-file", to: "/exams" },
+            // { label: "考试", icon: "pi pi-fw pi-file", to: "/exams" },
             { label: "练习", icon: "pi pi-fw pi-file", to: "/practices" },
             // { label: "在线表格", icon: "pi pi-fw pi-table", to: "/sheet" },
             // { label: "test", icon: "pi pi-fw pi-id-card", to: "/test" },
