@@ -1,7 +1,7 @@
 <template>
     <div>
         <iframe
-            src="http://localhost/chatbot/Ai3k0W6ZM4UkaiLA"
+            :src="`${baseApiUrl}/chatbot/${scenarioBasedChatbotRag}`"
             style="width: 100%; height: 100%; min-height: 700px"
             frameborder="0"
             allow="microphone"
@@ -10,6 +10,13 @@
     </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+const {
+    public: {
+        dify: { baseApiUrl, scenarioBasedChatbotRag },
+    },
+} = useRuntimeConfig();
+
+</script>
 
 <style></style>

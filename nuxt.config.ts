@@ -101,7 +101,9 @@ export default defineNuxtConfig({
             },
             dify: {
                 baseApiUrl: "http://localhost:3001",
-                chatbotRag: "S5qckSjGKqfJycCP"
+                chatbotRag: "S5qckSjGKqfJycCP",
+                scenarioBasedChatbotRag: "ekjCsbMYPohssULf",
+                mcpChatbotRag: "L6ATZMrB5jk1d9fw",
             },
         },
         private: {
