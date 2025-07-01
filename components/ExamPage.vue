@@ -423,7 +423,7 @@ onUnmounted(() => {
     flex-direction: column;
     height: 100vh;
     overflow: hidden;
-    background: #f5f5f5;
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
 .question-area {
@@ -432,18 +432,19 @@ onUnmounted(() => {
     overflow: hidden;
     position: relative;
     height: calc(100vh - 120px); /* 减去头部高度 */
-    gap: 1rem;
-    padding: 1rem;
-    background: #f5f5f5;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    background: transparent;
 }
 
 .question-list-container {
     height: 100%;
-    transition: width 0.3s ease;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
     background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .question-list-container.collapsed {
@@ -453,12 +454,13 @@ onUnmounted(() => {
 
 .question-detail-container {
     flex: 1;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     height: 100%;
     overflow: hidden;
     background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .loading-spinner-container {
@@ -467,13 +469,20 @@ onUnmounted(() => {
     align-items: center;
     justify-content: center;
     height: 100%;
-    padding: 2rem;
+    padding: 3rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 12px;
+    margin: 2rem;
 }
 
 .loading-spinner-container p {
-    margin-top: 1rem;
-    font-size: 1.1rem;
-    color: #666;
+    margin-top: 1.25rem;
+    font-size: 1.125rem;
+    color: #64748b;
+    font-weight: 500;
+    text-align: center;
+    max-width: 300px;
+    line-height: 1.6;
 }
 
 .question-detail-container.with-collapsed-sidebar {
@@ -482,6 +491,69 @@ onUnmounted(() => {
 
 .question-detail-container.with-expanded-sidebar {
     margin-left: 0;
+}
+
+/* 对话框美化 */
+:deep(.p-dialog .p-dialog-header) {
+    border-radius: 8px 8px 0 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-bottom: 1px solid #e2e8f0;
+}
+
+:deep(.p-dialog .p-dialog-content) {
+    padding: 2rem;
+    background: white;
+}
+
+:deep(.p-dialog .p-dialog-footer) {
+    background: white;
+    border-radius: 0 0 8px 8px;
+    padding: 1.5rem 2rem;
+}
+
+:deep(.p-dialog) {
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e2e8f0;
+}
+
+/* 按钮美化 */
+:deep(.p-button) {
+    border-radius: 6px;
+    font-weight: 500;
+    padding: 0.75rem 1.25rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+}
+
+:deep(.p-button:hover) {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+:deep(.p-button:active) {
+    transform: translateY(0);
+}
+
+:deep(.p-button-secondary) {
+    background: #f8fafc;
+    color: #475569;
+    border-color: #e2e8f0;
+}
+
+:deep(.p-button-secondary:hover) {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+:deep(.p-button-danger) {
+    background: #ef4444;
+    border-color: #ef4444;
+}
+
+:deep(.p-button-danger:hover) {
+    background: #dc2626;
+    border-color: #dc2626;
 }
 
 /* 确保滚动条不会导致布局抖动 */
@@ -495,8 +567,8 @@ onUnmounted(() => {
     .question-area {
         flex-direction: column;
         height: calc(100vh - 80px);
-        gap: 0.5rem;
-        padding: 0.5rem;
+        gap: 0.75rem;
+        padding: 0.75rem;
     }
     .question-list-container {
         width: 100% !important;
@@ -512,5 +584,40 @@ onUnmounted(() => {
         margin-left: 0 !important;
         height: 70vh;
     }
+    
+    .loading-spinner-container {
+        margin: 1rem;
+        padding: 2rem;
+    }
+    
+    .loading-spinner-container p {
+        font-size: 1rem;
+        margin-top: 1rem;
+    }
+}
+
+/* 进入动画 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.question-list-container,
+.question-detail-container {
+    animation: fadeInUp 0.4s ease-out;
+}
+
+.question-list-container {
+    animation-delay: 0.1s;
+}
+
+.question-detail-container {
+    animation-delay: 0.2s;
 }
 </style>
