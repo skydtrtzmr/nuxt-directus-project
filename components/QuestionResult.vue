@@ -58,19 +58,19 @@ const getSubmittedAnswer = () => {
 // 获取题目的正确答案
 const getCorrectAnswer = () => {
     if (!props.questionData || !props.questionData.questions_id) {
-        return "";
+        return "缺少题目数据";
     }
     
     const questionInfo = props.questionData.questions_id;
     
     if (props.question_type === "q_mc_single" && questionInfo.q_mc_single) {
-        return questionInfo.q_mc_single.correct_option || "";
+        return questionInfo.q_mc_single.correct_option || "单选题缺少正确答案";
     } else if (props.question_type === "q_mc_binary" && questionInfo.q_mc_binary) {
-        return questionInfo.q_mc_binary.correct_option || "";
+        return questionInfo.q_mc_binary.correct_option || "判断题缺少正确答案";
     } else if (props.question_type === "q_mc_multi" && questionInfo.q_mc_multi) {
-        return JSON.stringify(questionInfo.q_mc_multi.correct_options) || "";
+        return JSON.stringify(questionInfo.q_mc_multi.correct_options) || "多选题缺少正确答案";
     } else if (props.question_type === "q_mc_flexible" && questionInfo.q_mc_flexible) {
-        return JSON.stringify(questionInfo.q_mc_flexible.correct_options) || "";
+        return JSON.stringify(questionInfo.q_mc_flexible.correct_options) || "不定项选择题缺少正确答案";
     }
     
     return "";

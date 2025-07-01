@@ -9,7 +9,7 @@ import type {
     PaperSectionsQuestionGroups,
     QuestionGroups,
 } from "~~/types/directus_types";
-import { useDirectusItems, useRuntimeConfig } from "#imports"; // Nuxt auto-imports
+import { useRuntimeConfig } from "#imports"; // Nuxt auto-imports
 import dayjs from "dayjs"; // 确保 dayjs 已导入
 
 export function useExamData() {

@@ -1,7 +1,7 @@
 <template>
     <div>
         <iframe
-            src="http://localhost/chatbot/Qznu43em6cbjSHBN"
+            :src="`${baseApiUrl}/chatbot/L6ATZMrB5jk1d9fw`"
             style="width: 100%; height: 100%; min-height: 700px"
             frameborder="0"
             allow="microphone"
@@ -10,6 +10,12 @@
     </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+const {
+    public: {
+        dify: { baseApiUrl },
+    },
+} = useRuntimeConfig();
+</script>
 
 <style></style>
