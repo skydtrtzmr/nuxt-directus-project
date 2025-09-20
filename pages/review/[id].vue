@@ -29,45 +29,7 @@ const exam_page_mode = ref("review"); // 考试模式，practice表示练习模�
 //     : route.params.id;
 
 // 使用 useHead 注入 Dify 聊天组件的脚本和样式
-useHead({
-    script: [
-        {
-            innerHTML: `
-                window.difyChatbotConfig = {
-                    token: '${chatbotRag}',
-                    baseUrl: '${baseApiUrl}',
-                    systemVariables: {
-                        // user_id: 'YOU CAN DEFINE USER ID HERE',
-                        // conversation_id: 'YOU CAN DEFINE CONVERSATION ID HERE, IT MUST BE A VALID UUID',
-                    },
-                    userVariables: {
-                        // avatar_url: 'YOU CAN DEFINE USER AVATAR URL HERE',
-                        // name: 'YOU CAN DEFINE USER NAME HERE',
-                    },
-                }
-            `,
-            type: 'text/javascript'
-        },
-        {
-            src: `${baseApiUrl}/embed.min.js`,
-            id: chatbotRag,
-            defer: true
-        }
-    ],
-    // style: [
-    //     {
-    //         innerHTML: `
-    //             #dify-chatbot-bubble-button {
-    //                 background-color: #1C64F2 !important;
-    //             }
-    //             #dify-chatbot-bubble-window {
-    //                 width: 24rem !important;
-    //                 height: 40rem !important;
-    //             }
-    //         `
-    //     }
-    // ]
-});
+
 </script>
 
 <style scoped></style>

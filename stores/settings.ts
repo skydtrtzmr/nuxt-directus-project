@@ -71,7 +71,7 @@ export const useSettingsStore = defineStore("settings", {
                 );
 
                 const fetchPromise = $directus.request(
-                    $readSingleton("global")
+                    $readSingleton("settings")
                 );
 
                 const settings = (await Promise.race([

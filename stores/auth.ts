@@ -55,6 +55,7 @@ export const useAuth = defineStore("auth", {
                     this.access_token = response.access_token;
                     this.refresh_token = response.refresh_token;
                 }
+                console.log("刷新 token 成功");
             } catch (error) {
                 console.error("刷新 token 失败", error);
                 this.logout();
@@ -92,10 +93,7 @@ export const useAuth = defineStore("auth", {
             const router = useRouter();
 
             try {
-                const response = await $directus.login(
-                    email,
-                    password,
-                );
+                const response = await $directus.login(email, password, {mode:"session"});
 
                 if (response) {
                     this.access_token = response.access_token;
@@ -103,6 +101,20 @@ export const useAuth = defineStore("auth", {
                 }
 
                 await this.fetchUser();
+
+
+                $directus.connect(); // 连接消息服务器
+                console.log("socket connected");
+
+                $directus.onWebSocket("open", () => {
+                    const loginData = {
+                        type: "auth",
+                        email: email,
+                        password: password,
+                    };
+                    $directus.sendMessage(JSON.stringify(loginData));
+                });
+                // 发送登录消息
 
                 if (this.loggedIn && redirect) {
                     router.push(redirect);
@@ -119,7 +131,10 @@ export const useAuth = defineStore("auth", {
             const { $directus } = useNuxtApp();
             const router = useRouter();
             try {
-                await ($directus as any).auth.logout();
+                
+                $directus.disconnect(); // 断开消息服务器
+                console.log("socket disconnected");
+                await $directus.logout();
                 this.resetState();
                 router.push("/auth/login");
             } catch (e) {

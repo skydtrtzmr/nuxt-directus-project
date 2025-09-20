@@ -10,6 +10,7 @@
     "start": "nuxt start"
   },
   "dependencies": {
+    "@antv/g6": "^5.0.49",
     "@directus/sdk": "^19.1.0",
     "@pinia/nuxt": "^0.11.1",
     "@primevue/core": "^4.2.4",

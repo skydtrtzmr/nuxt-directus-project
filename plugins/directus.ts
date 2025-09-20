@@ -8,6 +8,7 @@ import {
     readMe,
     type AuthenticationStorage,
     registerUser,
+    realtime,
 } from "@directus/sdk";
 
 export default defineNuxtPlugin(() => {
@@ -34,7 +35,8 @@ export default defineNuxtPlugin(() => {
     // 创建带有身份验证功能的 Directus 实例
     const directus = createDirectus(url)
         .with(authentication("cookie", { credentials: "include", storage }))
-        .with(rest({ credentials: "include" }));
+        .with(rest({ credentials: "include" }))
+        .with(realtime());
 
     return {
         provide: {

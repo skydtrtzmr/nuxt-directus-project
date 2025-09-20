@@ -9,7 +9,6 @@ import { definePreset } from "@primevue/themes";
 
 console.log("import.meta.env.API_URL in config.ts", import.meta.env.API_URL);
 
-
 const MyPreset = definePreset(Aura, {
     semantic: {
         // 在这里切换主题色
@@ -168,4 +167,27 @@ export default defineNuxtConfig({
             noExternal: ["rxjs", "unplugin-vue-router", "vue-router"],
         },
     },
+
+    routeRules: {
+        "/directus/**": {
+            proxy: `${import.meta.env.API_URL}/**`
+        },
+    },
+    // 当客户端请求 /directus/... 路径时，Nuxt 不直接返回页面，而是
+    // 把这个请求代理（proxy）到 ${import.meta.env.API_URL}/...。
+    // 比如：
+    // 你前端请求 /directus/items/posts
+    // Nitro 服务器会把请求转发到：
+    // https://你的API_URL/items/posts
+    // 然后把结果返回给前端。
+
+    //  这其实就是 解决跨域（CORS）问题的一种方法 ——通过服务端代理。
+    // 🚦 为什么能解决跨域？
+    // 浏览器限制跨域（A 域访问 B 域要看 B 域的 CORS 头）。
+    // 但是 服务端和服务端之间没有跨域限制。
+    // routeRules 配置了代理后：
+    // 浏览器请求 → http://localhost:3000/directus/...（同源 ✅ 不跨域）
+    // Nuxt 内置服务器（Nitro）收到请求，代理转发给 https://api.example.com/...
+    // 返回结果再交给浏览器。
+    // 对浏览器来说，全程都是 同源 的请求。CORS 问题就绕过去了。
 });

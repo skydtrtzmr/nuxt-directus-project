@@ -32,9 +32,7 @@
             <div class="dashboard-section">
                 <div class="section-header">
                     <h2>进行中的考试</h2>
-                    <router-link to="/exams" class="view-all"
-                        >查看全部</router-link
-                    >
+                    <router-link to="/exams" class="view-all">查看全部</router-link>
                 </div>
                 <div v-if="exams.length > 0" class="exam-cards">
                     <div v-for="exam in exams" :key="exam.id" class="exam-card">
@@ -48,27 +46,18 @@
                             </div>
                         </div>
                         <div class="progress-bar">
-                            <div
-                                class="progress"
-                                :style="{ width: `${exam.progress}%` }"
-                            ></div>
+                            <div class="progress" :style="{ width: `${exam.progress}%` }"></div>
                         </div>
                         <div class="exam-progress-text">
                             完成度: {{ exam.progress }}%
                         </div>
-                        <router-link
-                            :to="`/exams/${exam.id}`"
-                            class="btn btn-primary"
-                            >继续考试</router-link
-                        >
+                        <router-link :to="`/exams/${exam.id}`" class="btn btn-primary">继续考试</router-link>
                     </div>
                 </div>
                 <div v-else class="empty-state">
                     <div class="empty-icon">📋</div>
                     <div class="empty-message">暂无进行中的考试</div>
-                    <router-link to="/exams" class="btn btn-primary"
-                        >浏览可用考试</router-link
-                    >
+                    <router-link to="/exams" class="btn btn-primary">浏览可用考试</router-link>
                 </div>
             </div>
 
@@ -77,16 +66,10 @@
                     <h2>最近学习活动</h2>
                 </div>
                 <div v-if="activities.length > 0" class="activity-list">
-                    <div
-                        v-for="activity in activities"
-                        :key="activity.id"
-                        class="activity-item"
-                    >
+                    <div v-for="activity in activities" :key="activity.id" class="activity-item">
                         <div class="activity-icon" :class="activity.type">
                             <span v-if="activity.type === 'exam'">📝</span>
-                            <span v-else-if="activity.type === 'practice'"
-                                >✏️</span
-                            >
+                            <span v-else-if="activity.type === 'practice'">✏️</span>
                             <span v-else>📚</span>
                         </div>
                         <div class="activity-content">
@@ -105,9 +88,7 @@
                 <div v-else class="empty-state">
                     <div class="empty-icon">🔍</div>
                     <div class="empty-message">暂无学习活动记录</div>
-                    <router-link to="/study" class="btn btn-primary"
-                        >开始学习</router-link
-                    >
+                    <router-link to="/study" class="btn btn-primary">开始学习</router-link>
                 </div>
             </div>
         </div>
@@ -156,10 +137,18 @@
 </template>
 
 <script setup lang="ts">
+
+import { useAuth } from "~~/stores/auth";
 definePageMeta({
     // middleware: ["auth"],
     name: "Dashboard",
 });
+
+
+const { $directus } = useNuxtApp();
+
+const auth = useAuth();
+const refreshToken = ref(auth.refresh_token);
 
 // 模拟用户数据
 const userName = ref("张三");
@@ -275,6 +264,39 @@ const formatTime = (time: Date) => {
         });
     }
 };
+
+// 添加socket功能
+
+const saveRefreshToken = (token: string) => {
+    refreshToken.value = token
+    localStorage.setItem('directus_refresh_token', token)
+}
+onMounted(() => {
+    const storedToken = localStorage.getItem('directus_refresh_token')
+    if (storedToken) {
+        refreshToken.value = storedToken
+        // $directus.connect()
+        $directus.onWebSocket('open', () => {
+            $directus.sendMessage({
+                type: 'auth',
+                refresh_token: storedToken
+            })
+        })
+    } else {
+        // $directus.connect()
+    }
+
+
+    const cleanup = $directus.onWebSocket('message', (message) => {
+        if (message.type === 'auth' && message.status === 'ok') {
+            saveRefreshToken(message.refresh_token)
+        }
+    })
+
+    onBeforeUnmount(cleanup)
+})
+
+
 </script>
 
 <style scoped>
